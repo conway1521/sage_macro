@@ -1,0 +1,23 @@
+# the lecture site is its own repository (deployed to GitHub Pages)
+sage-lectures/
+
+# macOS
+.DS_Store
+
+# Python build environments
+**/.venv/
+**/__pycache__/
+*.pyc
+
+# LaTeX build artifacts (keep the PDF and sources)
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
+
+# Julia (keep Project.toml and Manifest.toml for reproducibility)
+SAGE_Bewley/.ipynb_checkpoints/

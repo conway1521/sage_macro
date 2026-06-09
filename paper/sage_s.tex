@@ -1,0 +1,201 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{setspace}
+\onehalfspacing
+
+\title{Social Cohesion as a Coordination Problem:\\ Wellbeing and Policy in a Heterogeneous-Agent Economy}
+\author{Alessandro Conway\thanks{Draft. Built on a heterogeneous-agent model first developed in the author's master's thesis (Sciences Po, 2020). Code and figures are reproducible in Julia.}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent I embed social cohesion into a standard incomplete-markets economy. Households split time between market work and contributing to a social public good, and a social multiplier links the value of contributing to how much others contribute. Two results follow that a representative-agent or single-index model cannot deliver. First, the economy can have multiple equilibria and a tipping threshold in cohesion, so that identical fundamentals support a low-cohesion or a high-cohesion society. This multiplicity is an interaction effect: it requires inequality in agency, the capacity to convert effort into income, because higher-agency households are a swing group with a high opportunity cost of contributing who can coordinate a collective switch. With equal agency the economy has a unique equilibrium, so it is inequality, not social cohesion alone, that makes cohesion a coordination problem. Second, a budget-balanced make-work-pay policy raises consumption and material gain while eroding the public good and social cohesion. A planner using a single-index objective adopts the policy because the social cost is invisible to that objective; a planner who treats wellbeing as multidimensional sees a tradeoff. The contribution is conditional and deliberately so: if wellbeing is multidimensional, as the SAGE framework and the WELLBY literature hold, then standard welfare analysis reaches systematically different distributional conclusions, and a structural model is the instrument that surfaces them.
+\end{abstract}
+
+\section{Introduction}
+
+Across much of the rich world, measures of social and economic prosperity have come apart. \citet{snower2020} document a decoupling: indicators of social affiliation and individual empowerment diverged from real income per capita across developed countries over 2007 to 2017. The same period saw the politics of left-behind places, where \citet{rodrik2018} argues that globalization drove a wedge between groups able to take advantage of open markets and the rest, eroding social cohesion. These are facts about wellbeing that a focus on consumption or output does not capture.
+
+At the same time, a literature has matured around the claim that wellbeing is not the same object as the utility that economic agents maximize. \citet{benjamin2014,benjamin2023} show that subjective wellbeing measures do not correspond to decision utility, and argue that recovering overall wellbeing requires measuring and aggregating its separate components. \citet{layard2023} push the corresponding policy unit, the wellbeing-adjusted life year. If welfare is genuinely multidimensional, single-index welfare analysis is not merely incomplete; it can reach the wrong distributional conclusions, because it cannot see movements that offset within its single number.
+
+This paper asks what changes when social cohesion is taken seriously as a structural feature of a heterogeneous-agent economy, and what that implies for policy evaluation. I take the workhorse incomplete-markets model \citep{bewley1986,aiyagari1994} and let households allocate time between market work and contributing to a social public good, following the SAGE framework of \citet{snower2020}. The contribution to society is the time not worked. The value an agent places on the public good can rise with its size, a social multiplier in the sense of \citet{glaeser2003}.
+
+Two results follow. The first is positive. As the strength of the social return rises, the economy passes through a region of multiple equilibria. Below a threshold there is a unique low-cohesion equilibrium; above an upper threshold a unique high-cohesion one; in between, a low and a high equilibrium coexist and expectations or history select. This is a coordination structure that a representative agent cannot produce, and it gives one structural reason why observationally similar communities can settle into different levels of cohesion, a correlational frame for the persistence of left-behind places. The mechanism is specific, and it is an interaction. The multiplicity requires that agency be unequally distributed. Higher-agency households have a high return to work and so contribute little; they are a swing group whose collective switch into contribution sustains the high-cohesion equilibrium. With equal agency there is no swing group, the public-good map is single-valued, and the multiplicity disappears. It is therefore inequality in the capacity to convert effort into income, interacting with social cohesion, that turns cohesion into a coordination problem. The decoupling and the policy result below, by contrast, are present even with equal agency.
+
+The second result is normative. I introduce a recognizable policy, a budget-balanced make-work-pay subsidy to labour income, the kind of activation policy that real governments use. It raises the return to effort, so households work more and contribute less. Consumption and material gain rise; the public good and social cohesion fall. A planner maximizing consumption or decision utility sees an unambiguous gain and adopts the policy. A planner who evaluates welfare as multidimensional wellbeing sees a tradeoff that the first planner's objective cannot represent. Whether the policy is on net good depends on how the dimensions are weighed and, crucially, on whether they substitute. Under the non-substitutable view that SAGE and the wellbeing literature posit, the social loss is not automatically bought off by the material gain.
+
+The claim is conditional throughout, and that is its strength. I do not argue that wellbeing is multidimensional. I show that if it is, standard analysis misses a distributional tradeoff, and I give the mechanism. This sidesteps the philosophical dispute over whether utility is welfare and isolates a structural point that any reader can check.
+
+The paper sits at an intersection that is individually active but jointly sparse. The SAGE framework is, in its authors' words, an illustrative representative-agent exercise; the wellbeing-as-objective literature is largely empirical and applied; heterogeneous-agent macroeconomics is a mature toolkit \citep{kaplan2018} but is rarely paired with a multidimensional wellbeing objective. Putting them together is the contribution.
+
+\section{Model}
+
+\subsection{Environment}
+
+Time is discrete and there is a unit mass of infinitely lived households. A household is described by assets $a \ge 0$ and an idiosyncratic productivity state $z \in \{z_l, z_h\}$ that follows a Markov chain with transition matrix $\Pi$, obtained by Rouwenhorst discretization \citep{rouwenhorst1995} of a log AR(1) process and normalized so that $\mathbb{E}[z]=1$. Markets are incomplete: households self-insure by holding a riskless asset at exogenous gross rate $R$. The interest rate is taken as given, as in the original SAGE model; closing the model in general equilibrium is left to a sequel.
+
+Each period a household chooses consumption $c$, next-period assets $a' \ge 0$, and labour effort $e \in [0,1]$. The time not worked is a contribution to a social public good, $q = 1-e$. Agency $\alpha_z \in [0,1]$ governs how much of effort becomes income.
+
+\subsection{Preferences and the social dimension}
+
+Utility is additively separable between a consumption-and-effort material-gain term and a social-cohesion term:\footnote{The separable form is deliberate and load-bearing. Greenwood-Hercowitz-Huffman preferences \citep{ghh1988}, which place the effort cost inside the consumption bundle, eliminate the wealth effect on labour supply. Here the wealth effect is the mechanism: households with more assets have a lower marginal utility of consumption and so work less and contribute more, which is what makes the contribution margin respond to wealth and income type. Separable preferences retain that channel.}
+\begin{equation}
+u(c,e;z) = \underbrace{\Gamma\left(\frac{c^{1-\gamma}}{1-\gamma} - \phi\,\frac{e^{1+\psi}}{1+\psi}\right)}_{\text{material gain } U^c} + \; S(e;z,Q).
+\end{equation}
+The social term is the object of interest. I consider three forms,
+\begin{equation}
+S(e;z,Q) =
+\begin{cases}
+\Lambda B_z\, Q, & \text{additive,} \\
+\kappa\,\Lambda B_z\,(1-e), & \text{warm-glow,} \\
+\kappa\,\Lambda B_z\,Q\,(1-e), & \text{social multiplier,}
+\end{cases}
+\end{equation}
+where $Q$ is the aggregate public good, $B_z$ a taste for cohesion by type, $\Lambda$ the weight on cohesion, and $\kappa$ the strength of the behavioural social return. In the additive case the social term is separable and does not enter the choice of effort; this is the canonical baseline, the form in the original SAGE illustrative model, in which cohesion is a welfare overlay only. The warm-glow form is a private return to contributing, the act of contributing valued in itself, and it makes effort respond to social cohesion without any aggregate feedback. The multiplier form is the one new ingredient: the product of own contribution and the aggregate public good makes the marginal return to contributing rise with how much others contribute. This is a strategic complementarity in the sense of \citet{glaeser2003}, and it is the source of the multiplicity in Result 1. I introduce it deliberately; the additive SAGE term has no complementarity and produces no multiplicity. The product form is the simplest such complementarity and should be read as a modelling choice, not as following from the framework.
+
+\subsection{Budget and policy}
+
+The flow budget applies agency to labour income and carries the policy instrument:
+\begin{equation}
+c + a' = R\,a + (1+\tau)\,\alpha_z\, e\, z\, Z - T, \qquad a' \ge 0,
+\end{equation}
+where $\tau$ is a proportional make-work-pay subsidy to labour income, $T$ a lump-sum tax that finances it, and $Z$ an aggregate productivity multiplier equal to one in the stationary economy. The government budget balances, $T = \tau\,\mathbb{E}[\alpha_z e z]$. Setting $\tau = T = 0$ recovers laissez-faire.
+
+\subsection{The public good and equilibrium}
+
+The public good is the average contribution across the stationary distribution $\lambda$,
+\begin{equation}
+Q = \mathbb{E}_\lambda[\,1-e\,] = \int (1-e(a,z))\, d\lambda(a,z).
+\end{equation}
+With value function $V$, the household solves
+\begin{equation}
+V(a,z) = \max_{a'\ge 0,\; e\in[0,1]} \; u(c,e;z) + \beta \sum_{z'}\Pi(z,z')\,V(a',z'),
+\end{equation}
+subject to the budget, taking $Q$ as given. A stationary equilibrium is a set of policies, a distribution $\lambda$ invariant under the policies and $\Pi$, and a public good $Q = \mathbb{E}_\lambda[1-e]$, with the government budget balanced. In the multiplier case, define the map from a guessed public good to the realized one, $G(Q) = \mathbb{E}_{\lambda(Q)}[1-e]$. Equilibria are fixed points $Q = G(Q)$, and their number depends on $\kappa$.
+
+\section{Solution and calibration}
+
+The model is solved with a stable, fast Julia routine. Effort is discretized and folded into the per-period reward, so the only dynamic-programming action is next assets, and the resulting discrete dynamic program is solved by policy iteration. Effort is taken from this joint optimum rather than re-optimized separately, which matters: re-optimizing effort against an interpolated value function collapses it once the social term is behavioural. Next assets are then refined continuously with effort fixed, and the stationary distribution is computed by the lottery method of \citet{young2010}, which keeps it smooth. In the multiplier case an outer loop iterates on $Q$ to a fixed point; with the policy, an outer loop iterates on the lump-sum tax for budget balance.
+
+I calibrate the standard parameters to conventional annual values, summarized in Table \ref{tab:calib}, and treat the social-return strength $\kappa$ as a swept parameter rather than a point estimate, since no clean dataset disciplines it. The material-gain parameters take standard values. Agency and the cohesion taste are differentiated by type and follow the thesis, which built them from indicators of labour-market security, health, skills, and the quality of social support. The income process matches a moderate degree of wealth inequality. The headline tipping result is therefore reported as a threshold in a swept parameter, which I regard as the honest presentation.
+
+\begin{table}[t]
+\centering
+\caption{Calibration. Lower and higher income types where two values appear.}
+\label{tab:calib}
+\begin{tabular}{llcl}
+\toprule
+parameter & symbol & value & basis \\
+\midrule
+risk aversion & $\gamma$ & 1.5 & standard \\
+effort disutility & $\phi$ & 1.0 & normalization \\
+inverse Frisch & $\psi$ & 0.25 & Frisch elasticity near 0.25 \\
+discount factor & $\beta$ & 0.99 & annual \\
+gross interest rate & $R$ & 1.01 & annual real \\
+agency & $\alpha_l, \alpha_h$ & 0.765, 0.911 & empowerment indicators \\
+cohesion taste & $B_l, B_h$ & 0.80, 0.94 & social-support indicators \\
+material weight & $\Gamma$ & 1.0 & normalization \\
+cohesion weight & $\Lambda$ & 0.876 & preliminary \\
+income persistence & $\rho$ & 0.90 & income process \\
+income dispersion & $\eta$ & 0.10 & income process \\
+social strength & $\kappa$ & swept & no clean target \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Social cohesion as a coordination problem}
+
+Figure \ref{fig:bif} sweeps the social-return strength $\kappa$ and solves the public-good fixed point from a low start and a high start. The two branches coincide and rise with $\kappa$, split apart through a bistable window, then rejoin at the high-cohesion equilibrium. Within the window the economy supports both a low-cohesion and a high-cohesion equilibrium at the same fundamentals. Figure \ref{fig:map} shows the underlying mechanism: the map $G(Q)$ crosses the 45-degree line more than once, the signature of multiplicity.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.78\textwidth]{figures/paper1_bifurcation.png}
+\caption{Equilibrium cohesion against the social-return strength. The branches coincide for low strength, split through the shaded bistable window, and rejoin at the high-cohesion equilibrium.}
+\label{fig:bif}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.7\textwidth]{figures/paper1_map.png}
+\caption{The public-good map at a strength inside the bistable window. $G(Q)$ crosses the 45-degree line at the two stable equilibria.}
+\label{fig:map}
+\end{figure}
+
+The multiplicity is an interaction with inequality, not a property of social cohesion alone. Figure \ref{fig:agency} makes this precise by comparing the public-good map under unequal and equal agency at the same social-return strength. With unequal agency the map is S-shaped and crosses the 45-degree line three times, the two stable equilibria with an unstable one between them. With equal agency the map is single-valued and crosses once, so the economy has a unique equilibrium at every strength. The coordination problem therefore exists only when the capacity to convert effort into income is unequally distributed. The reason is that higher-agency households have a high return to work and contribute little, so they form a swing group whose collective movement into contribution can sustain the high-cohesion equilibrium; without such a group there is no collective switch. This is the sense in which the result is a social-cohesion-times-agency interaction rather than a pure social-cohesion phenomenon, and it identifies inequality itself as the source of the coordination failure.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/paper1_agency_map.png}
+\caption{The public-good map under unequal agency (left) and equal agency (right), at the same social-return strength. Unequal agency produces the S-shaped map with multiple equilibria; equal agency is single-valued. Agency inequality is what makes cohesion a coordination problem.}
+\label{fig:agency}
+\end{figure}
+
+Figure \ref{fig:who} identifies the coordinators. Lower-income households contribute a large share of their time in both equilibria; higher-income households contribute much less in the low-cohesion equilibrium and much more in the high-cohesion one. They are the marginal coordinators, because the opportunity cost of contributing is higher for them, so it is their behaviour that flips across the threshold.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.72\textwidth]{figures/paper1_who.png}
+\caption{Mean contribution by income group in the two equilibria. Higher-income households are the marginal coordinators.}
+\label{fig:who}
+\end{figure}
+
+Two points of discipline. The bistable window is narrow, and the two equilibria are both high-contribution rather than a stark collapse against flourishing; I do not overstate the magnitude. And I make no causal or spatial claim. The multiplicity is a structural possibility consistent with the persistence of low-cohesion communities, not a finding that any particular economy is bistable.
+
+\section{Policy-induced decoupling}
+
+I now introduce a budget-balanced make-work-pay subsidy of 20 percent to labour income under behavioural social cohesion. Table \ref{tab:policy} reports aggregates. The subsidy raises the return to effort, so households work more and contribute less. Consumption rises by about 10 percent and material gain improves; the public good falls by about 7 percent and social cohesion with it. Figure \ref{fig:dec} shows the decoupling by income group: the material dimension rises and the social dimension falls for both groups.
+
+\begin{table}[t]
+\centering
+\caption{A budget-balanced make-work-pay subsidy under behavioural social cohesion.}
+\label{tab:policy}
+\begin{tabular}{lccc}
+\toprule
+ & baseline & with subsidy & direction \\
+\midrule
+aggregate consumption & 0.739 & 0.811 & up 9.8\% \\
+public good $Q$ & 0.710 & 0.663 & down 6.7\% \\
+material gain $U^c$ & $-2.549$ & $-2.478$ & up \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.66\textwidth]{figures/paper1_decoupling.png}
+\caption{Policy-induced decoupling. The make-work-pay subsidy raises the material dimension and lowers the social dimension for both income groups.}
+\label{fig:dec}
+\end{figure}
+
+The contribution is the contrast between two planners ranking the same policy. A planner whose objective is consumption or decision utility sees the gain in Table \ref{tab:policy} and adopts the subsidy; the social cost does not appear in that objective. A planner who evaluates welfare as multidimensional wellbeing sees a tradeoff. The claim is not that the policy is bad. It is that standard policy evaluation hides a distributional wellbeing cost that the structure of its objective cannot represent.
+
+In this minimal version the social loss is roughly uniform across groups, because the public good is a single aggregate enjoyed in proportion to the taste $B_z$, while the material gain is somewhat larger for lower-income households. The strong heterogeneity in who bears the social loss arrives once agency is allowed to differ, which is the subject of the sequel.
+
+\section{Welfare: decision utility versus experienced wellbeing}
+
+The two-planner contrast rests on a distinction the recent literature has made precise. Decision utility is what households maximize. Experienced wellbeing is evaluated separately, over the dimensions material gain $U^c$ and social cohesion $U^s = \Lambda B_z Q$. \citet{benjamin2023} argue that subjective wellbeing is a function distinct from decision utility, and that recovering overall wellbeing requires aggregating its components. The two social objects in the model are deliberately not the same. What enters decision utility is the warm-glow or multiplier value of the act of contributing, the benefit that moves behaviour; what enters experienced wellbeing is $\Lambda B_z Q$, the enjoyment of the resulting public good. This is the framework's own distinction between contributing and receiving, and it is exactly the decision-utility versus experienced-wellbeing wedge that the empirical literature identifies.
+
+I leave the wellbeing aggregator $W$ as an explicit modelling choice. The decoupling result is robust to that choice in a specific sense: any aggregator that treats the dimensions as imperfect substitutes, including the allostatic Leontief form $W = \min(U^c, U^s)$ up to scaling that the SAGE framework suggests, or a low-elasticity constant-elasticity form, registers a loss where the single-index objective registers a gain. The non-substitutability is the substantive assumption and the main point of contestation, which is why the welfare claim is stated conditionally. The paper's logic is to take the multidimensional view seriously and trace its structural implications, not to adjudicate whether it is correct.
+
+\section{Discussion and extensions}
+
+Three extensions are natural. The model is partial equilibrium; closing it with a production side, so that an aggregate shock has price effects, is the first, and the modern method for the transition is the sequence-space Jacobian \citep{auclert2021}. That is also where the treatment of agency should be tightened: modelling it as a wedge that removes a fraction of labour income leaves open where the lost income goes, and a general-equilibrium version would either rebate it or attribute it to an explicit friction, which is cleaner than the partial-equilibrium deadweight loss used here. The second extension folds a sustainability or environment wedge into the material dimension, completing the dimensions of the framework and aligning it with the broader wellbeing-accounting agenda. The model is built to take these on one at a time, sharing a single engine.
+
+The limitations are the partial-equilibrium structure, the swept social-return parameter, and the modelling choice in the wellbeing aggregator. Each is deliberate given the aim, which is a tractable structural account rather than an empirically estimated one. Validation here is plausibility: the model can be disciplined to match a moderate degree of wealth inequality and the share of hand-to-mouth households, and its decoupling is qualitatively consistent with the stylized facts that motivated the framework. A direct empirical test of the tipping mechanism is a separate undertaking.
+
+\section{Conclusion}
+
+Embedding social cohesion in a heterogeneous-agent economy yields two results that single-index analysis cannot. A social multiplier produces multiple equilibria and a tipping threshold in cohesion, with higher-income households as the marginal coordinators. And a recognizable activation policy raises consumption while eroding cohesion, a distributional wellbeing cost that a consumption or decision-utility planner cannot see. If wellbeing is multidimensional, as the SAGE framework and the wellbeing literature hold, standard welfare analysis reaches systematically different conclusions, and the structural model is the instrument that makes the difference visible. The model is built to be extended one dimension at a time, and to be calibrated, in time, against the wellbeing data that the empirical community already collects.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
