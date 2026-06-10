@@ -296,7 +296,10 @@ function solve_model(p::SAGEParams; method = PFI, A0 = nothing,
         # economy-wide public good and the group's own mean contribution,
         #   A_eff[g] = (1-h)·Q + h·Qmean[g].
         h = p.homophily
-        Qm = fill(A0 === nothing ? 0.3 : A0, p.nz)
+        # A0 may be a scalar (symmetric start) or a per-group vector
+        # (asymmetric start, to hunt for segregated equilibria)
+        Qm = A0 === nothing ? fill(0.3, p.nz) :
+             A0 isa Number  ? fill(Float64(A0), p.nz) : collect(Float64, A0)
         local sol
         converged = false
         for _ in 1:maxit
