@@ -33,7 +33,7 @@ module SAGEBewley
 using QuantEcon, LinearAlgebra, Statistics, SparseArrays
 
 export SAGEParams, SAGESolution, solve_model, exponential_grid, income_process,
-       wealth_gini, frac_constrained, public_good_shares, update,
+       wealth_gini, income_gini, frac_constrained, public_good_shares, update,
        country_params, COUNTRIES
 
 # ----------------------------------------------------------------------------
@@ -403,15 +403,21 @@ function public_good_shares(s::SAGESolution)
     return contrib ./ sum(contrib)
 end
 
-"Wealth Gini from the stationary distribution."
-function wealth_gini(s::SAGESolution)
-    a = repeat(s.a_grid, 1, s.p.nz)
-    w = vec(s.λ); x = vec(a)
+"Gini of values `x` with population weights `w` (Lorenz-curve area)."
+function _gini(x::AbstractVector, w::AbstractVector)
     ord = sortperm(x); x = x[ord]; w = w[ord]
     cw = cumsum(w); cx = cumsum(w .* x); cx ./= cx[end]
-    # trapezoid area between Lorenz curve and 45°
-    G = 1 - sum((cw[2:end] .- cw[1:end-1]) .* (cx[2:end] .+ cx[1:end-1]))
-    return G
+    1 - sum((cw[2:end] .- cw[1:end-1]) .* (cx[2:end] .+ cx[1:end-1]))
+end
+
+"Wealth (assets) Gini from the stationary distribution."
+wealth_gini(s::SAGESolution) = _gini(vec(repeat(s.a_grid, 1, s.p.nz)), vec(s.λ))
+
+"Income (labour income α·e·z) Gini from the stationary distribution. Wealth and
+income inequality are distinct objects and can be reported and matched separately."
+function income_gini(s::SAGESolution)
+    inc = [s.p.α[iz] * s.e[ia, iz] * s.z_vals[iz] for ia in 1:s.p.na, iz in 1:s.p.nz]
+    _gini(vec(inc), vec(s.λ))
 end
 
 end # module
