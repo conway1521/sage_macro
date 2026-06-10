@@ -24,7 +24,7 @@ Below, what could be France-specific in the calibration, and the harmonised cros
 |---|---|---|
 | effort disutility phi | calibrated to French time use | calibrated per country to the country's time use (MTUS) |
 | real rate R | ECB-era | OECD long-term rate series, deflated, twenty-year average |
-| income process rho, eta | EU-SILC France | moment-matched to country wealth Gini (WID) and HtM share (KVW / national HFCS / SCF / CHFS / NIDS) |
+| income process rho, eta | EU-SILC France | moment-matched to country wealth Gini (Open Inequality Atlas, Conway 2025; harmonising WID, HFCS, LWS, SCF, DFA across 213 countries) and HtM share (KVW / national HFCS / SCF / CHFS / NIDS) |
 | agency alpha by education | OECD BLI France | OECD How's Life empowerment indicators per country, by education, on the same 0-1 band |
 | belonging taste B by education | OECD BLI France support network | OECD How's Life support-network item per country, by education; WVS Wave 7 where OECD does not cover |
 | cohesion weight Lambda | OECD YBLI France weights | OECD YBLI weights per country (baseline); life-satisfaction panel estimation per country (upgrade) |
@@ -59,7 +59,7 @@ The recipe is six steps, every step pointing at a public source. The whole thing
 2. **alpha by education.** Open the OECD *How's Life?* country profile. Take the empowerment indicators (labour-market security index, self-reported health, skills) and aggregate them with equal weights, by education group, scaled into the 0-1 band so that France's row reproduces the thesis numbers.
 3. **B by education.** Same source, the social-support indicator, by education group. If the country is outside OECD coverage, take the equivalent question from WVS Wave 7.
 4. **Lambda.** OECD YBLI weights for the cohesion dimension (baseline). For the upgrade, the design note is in the vault.
-5. **rho, eta.** Pick them jointly to match the country's wealth Gini (WID) and hand-to-mouth share (KVW where covered, national HFCS or SCF or CHFS or NIDS or LIS otherwise).
+5. **rho, eta.** Pick them jointly to match the country's wealth Gini (Open Inequality Atlas, Conway 2025; 213 countries with comparability tiers) and hand-to-mouth share (KVW where covered, national HFCS or SCF or CHFS or NIDS or LIS otherwise). For the moment menu the atlas also provides the top-1, top-10, and bottom-50 wealth shares for 53 countries through the companion Moments Atlas, which over-identifies the wealth moments when needed.
 6. **phi, kappa, sigma_m.** Calibrate phi to the country's MTUS work share, calibrate (kappa, sigma_m) jointly to the country's WVS Wave 7 participation rate and education gradient.
 
 Every step is reproducible from the named source; the script `scripts/calibrate_phi_country.jl` is the template for the per-country calibration; the row format is in `COUNTRIES`. A collaborator who knows their country can add it without touching the model.

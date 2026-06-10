@@ -165,6 +165,11 @@ update(p::SAGEParams; kwargs...) = SAGEParams(;
 #                   by CPI, twenty-year average. Annualised gross rate.
 #   ρ, η           moment-matched to (wealth Gini, hand-to-mouth share); the
 #                   targets per country are recorded in the validation script.
+#                   Wealth-Gini source: the Open Inequality Atlas (Conway 2025),
+#                   conway1521.github.io/open-inequality-atlas, harmonising WID,
+#                   HFCS, LWS, SCF, DFA across 213 countries with comparability
+#                   tiers. Companion Moments Atlas adds top-1/10/bottom-50
+#                   shares for 53 countries.
 #   α              OECD "How's Life?" empowerment indicators by education, or
 #                   WVS-equivalent items for non-OECD members (CN, ZA), scaled
 #                   into the model's 0-1 band so the FR row reproduces the
