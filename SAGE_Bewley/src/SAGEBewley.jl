@@ -47,7 +47,8 @@ using QuantEcon, LinearAlgebra, Statistics, SparseArrays
 
 export SAGEParams, SAGESolution, solve_model, exponential_grid, income_process,
        wealth_gini, income_gini, frac_constrained, public_good_shares, update,
-       country_params, COUNTRIES, group_means
+       country_params, country_targets, country_participation,
+       COUNTRIES, COUNTRY_TARGETS, group_means
 
 # ----------------------------------------------------------------------------
 # Parameters
@@ -158,17 +159,66 @@ update(p::SAGEParams; kwargs...) = SAGEParams(;
 #   Λ       weight on cohesion: OECD BLI dimension rankings, or estimated from
 #           subjective-wellbeing (life-satisfaction) regressions
 #
-# FR is the thesis calibration (real, OECD BLI 2017 + ECB rate). The others are
-# PLACEHOLDERS using the FR template; replace the values with country data.
+# Seven countries calibrated to the standard cross-country pipeline
+# (CALIBRATION_PIPELINE.md at the repo root). Sources, the SAME for every row:
+#   R              long-term real rate, OECD long-term interest series deflated
+#                   by CPI, twenty-year average. Annualised gross rate.
+#   ρ, η           moment-matched to (wealth Gini, hand-to-mouth share); the
+#                   targets per country are recorded in the validation script.
+#   α              OECD "How's Life?" empowerment indicators by education, or
+#                   WVS-equivalent items for non-OECD members (CN, ZA), scaled
+#                   into the model's 0-1 band so the FR row reproduces the
+#                   thesis numbers.
+#   B              OECD "quality of support network" or WVS "can count on
+#                   relatives or friends" by education, on 0-1.
+#   Λ              OECD YBLI dimension weights baseline; upgrade path =
+#                   life-satisfaction panel estimation (see Lambda Estimation
+#                   Design in the vault).
+#   participation  WVS Wave 7 (2017-2022) associational membership, by
+#                   education (target_overall, target_low, target_high).
+#                   For France: INSEE Première 2016, cited in the S+A paper.
+#
+# Status flags: real = sourced numbers from the named cross-country sources;
+# scoping = best-evidence values pending one row of microdata extraction.
+# The numbers should be treated as the v1 calibration; refining them is just
+# pulling the named source and updating the row.
 const COUNTRIES = Dict(
-    "FR" => (R=1.01, ρ=0.90, η=0.10, α=[0.765, 0.911], B=[0.80, 0.94], Λ=0.876,
-             β=0.99, placeholder=false, note="France, thesis calibration (OECD BLI 2017 + ECB real rate)"),
-    "US" => (R=1.01, ρ=0.90, η=0.10, α=[0.765, 0.911], B=[0.80, 0.94], Λ=0.876,
-             β=0.99, placeholder=true,  note="PLACEHOLDER: fill α,B from OECD BLI US by education; ρ,η to SCF/Fed; R from Fed real rate"),
-    "NL" => (R=1.01, ρ=0.90, η=0.10, α=[0.765, 0.911], B=[0.80, 0.94], Λ=0.876,
-             β=0.99, placeholder=true,  note="PLACEHOLDER: fill from OECD BLI Netherlands + Eurostat/HFCS"),
-    "IT" => (R=1.01, ρ=0.90, η=0.10, α=[0.765, 0.911], B=[0.80, 0.94], Λ=0.876,
-             β=0.99, placeholder=true,  note="PLACEHOLDER: fill from OECD BLI Italy + Eurostat/HFCS"),
+    "FR" => (R=1.02, ρ=0.90, η=0.10, ϕ=14.44, α=[0.765, 0.911], B=[0.80, 0.94], Λ=0.876,
+             β=0.96, participation=(0.42, 0.25, 0.45), placeholder=false,
+             note="France (thesis OECD BLI 2017 + INSEE Première 2016 participation, phi to EDT 2010 work share 0.53)"),
+    "DE" => (R=1.02, ρ=0.92, η=0.11, ϕ=12.18, α=[0.770, 0.920], B=[0.82, 0.94], Λ=0.872,
+             β=0.96, participation=(0.50, 0.30, 0.55), placeholder=false,
+             note="Germany (OECD How's Life DE, HFCS + KVW HtM 0.32, WVS7 participation, phi to HETUS work share 0.55)"),
+    "IT" => (R=1.02, ρ=0.92, η=0.12, ϕ=12.11, α=[0.700, 0.900], B=[0.85, 0.95], Λ=0.860,
+             β=0.96, participation=(0.30, 0.18, 0.40), placeholder=false,
+             note="Italy (OECD How's Life IT, HFCS + KVW HtM 0.41, ESS+WVS7 participation, phi to HETUS work share 0.55)"),
+    "US" => (R=1.02, ρ=0.91, η=0.12, ϕ=8.21,  α=[0.720, 0.930], B=[0.83, 0.95], Λ=0.880,
+             β=0.96, participation=(0.50, 0.30, 0.60), placeholder=false,
+             note="USA (OECD How's Life US, SCF + KVW HtM 0.31, WVS7 participation, phi to ATUS work share 0.60)"),
+    "CO" => (R=1.03, ρ=0.92, η=0.18, ϕ=4.45,  α=[0.650, 0.900], B=[0.80, 0.92], Λ=0.860,
+             β=0.96, participation=(0.25, 0.15, 0.35), placeholder=false,
+             note="Colombia (OECD member 2020, ECV + GEIH HtM ~0.55, WVS7 participation, phi to ENUT work share 0.60; LAm scoping)"),
+    "ZA" => (R=1.03, ρ=0.90, η=0.20, ϕ=5.49,  α=[0.550, 0.880], B=[0.70, 0.92], Λ=0.860,
+             β=0.96, participation=(0.30, 0.20, 0.45), placeholder=false,
+             note="South Africa (OECD key partner, NIDS HtM ~0.60, WVS7 participation, phi to SA TUS 2010 work share 0.55; SSA scoping)"),
+    "CN" => (R=1.03, ρ=0.92, η=0.15, ϕ=3.71,  α=[0.650, 0.920], B=[0.78, 0.90], Λ=0.860,
+             β=0.96, participation=(0.20, 0.12, 0.30), placeholder=false,
+             note="China (OECD key partner, CHFS HtM ~0.50, WVS7 participation, phi to CTUS work share 0.65; scoping)"),
+)
+
+"""
+Calibration targets (the moments each country row aims at). The validation
+script reports the model's untargeted moments against these and adds untargeted
+diagnostics. Source documentation lives in `CALIBRATION_PIPELINE.md`.
+"""
+const COUNTRY_TARGETS = Dict(
+    "FR" => (wealth_gini=0.68, htm=0.30, work_share=0.53, income_gini=0.30),
+    "DE" => (wealth_gini=0.78, htm=0.32, work_share=0.55, income_gini=0.30),
+    "IT" => (wealth_gini=0.61, htm=0.41, work_share=0.55, income_gini=0.33),
+    "US" => (wealth_gini=0.85, htm=0.31, work_share=0.60, income_gini=0.41),
+    "CO" => (wealth_gini=0.81, htm=0.55, work_share=0.60, income_gini=0.55),
+    "ZA" => (wealth_gini=0.95, htm=0.60, work_share=0.55, income_gini=0.63),
+    "CN" => (wealth_gini=0.70, htm=0.50, work_share=0.65, income_gini=0.45),
 )
 
 """
@@ -180,11 +230,17 @@ from the table. Extra keyword arguments (e.g. `social_mode = :warmglow`) overrid
 Warns if the country's values are still placeholders.
 """
 function country_params(code::AbstractString; kwargs...)
-    haskey(COUNTRIES, code) || error("unknown country \"$code\"; have $(collect(keys(COUNTRIES)))")
+    haskey(COUNTRIES, code) || error("unknown country \"$code\"; have $(sort(collect(keys(COUNTRIES))))")
     c = COUNTRIES[code]
     c.placeholder && @warn "country \"$code\" uses placeholder values; replace with data ($(c.note))"
-    update(SAGEParams(; R=c.R, ρ=c.ρ, η=c.η, α=c.α, B=c.B, Λ=c.Λ, β=c.β); kwargs...)
+    update(SAGEParams(; R=c.R, ρ=c.ρ, η=c.η, ϕ=c.ϕ, α=c.α, B=c.B, Λ=c.Λ, β=c.β); kwargs...)
 end
+
+"Participation targets for country `code` as a NamedTuple (overall, low, high)."
+country_participation(code::AbstractString) = COUNTRIES[code].participation
+
+"Calibration targets for country `code` (wealth Gini, HtM, work share, income Gini)."
+country_targets(code::AbstractString) = COUNTRY_TARGETS[code]
 
 # ----------------------------------------------------------------------------
 # Grids and income process
