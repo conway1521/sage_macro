@@ -1,0 +1,6 @@
+dimension,sage_letter,wellby_coefficient,relative_weight_G1,source,notes
+material gain,G,0.588,1.00,WHR2025_Table10 log GDP per capita,Normalising reference (weight set to 1)
+agency,A,0.947,1.61,WHR2025_Table10 freedom to make life choices,Freedom to choose is the closest survey analogue of agency
+social cohesion,S,2.510,4.27,WHR2025_Table10 social support,Having someone to count on; the strongest single dimension
+social cohesion (prosocial),S2,0.585,0.99,WHR2025_Table10 generosity,Secondary social anchor (giving); close to the gain weight
+environment,E,NA,NA,not in WHR,No environment term in the WHR regression; needs a separate source (phase 1 YBLI or a dedicated SWB-environment study)
