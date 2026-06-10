@@ -1,0 +1,145 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{setspace}
+\onehalfspacing
+
+\title{Agency and the Social Fabric:\\ Participation, Coordination, and Activation Policy in a Heterogeneous-Agent Economy}
+\author{Alessandro Conway\thanks{Draft. Companion to ``Wellbeing and the Social Fabric in a Heterogeneous-Agent Economy''; the two papers share one Julia engine, and every number and figure here is reproduced by the scripts sa\_main.jl and sa\_figures.jl in the public repository.}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent I model participation in social life as a discrete choice inside an incomplete-markets economy: join associative life, committing a minimum meaningful share of time, or do not, with the return to joining rising in how many others join, and agency, the capacity to convert effort into income, differing across education groups. Calibrated to the French participation rate and its education gradient, the model delivers four results. First, it reproduces the gradient and decomposes it: roughly half is the taste for belonging and half is agency operating through wealth, because higher agency makes households richer and the income effect makes the time commitment cheaper to bear, so the model explains why participation rises with income even though richer households face a higher price of time. Second, a discipline result with a sharp mechanism: the coordination traps this model class promises exist, but the parameter region that produces them and the region that fits the French moments do not overlap, because multiplicity requires belonging tastes to be similar across people while the observed gradient requires them to be dispersed; the calibrated economy sits at the edge of the coordination region, not inside it. Third, a budget-balanced make-work-pay subsidy collapses equilibrium participation from 37 to 8 percent: the direct effect of the policy is a fall of eight points, and the social feedback multiplies it three and a half times, as each exit lowers everyone else's reason to stay. Fourth, the contrast: raising the low-education group's agency lifts participation from 37 to 51 percent. Two pro-work policies, opposite social consequences: subsidising hours raises the price of time and unravels participation, while empowering people enriches them and crowds participation in. Policy evaluation that does not price the social fabric cannot distinguish between them.
+\end{abstract}
+
+\section{Introduction}
+
+The companion paper to this one embeds social cohesion in a heterogeneous-agent economy and establishes two things: that a recognisable activation policy buys consumption at the cost of the social fabric, with a regressive incidence invisible to single-index evaluation, and that the smooth social-multiplier route to multiple equilibria does not survive measured labour-supply elasticities. The second finding is constructive: it says that a credible account of social coordination needs a margin whose aggregate response can be steep without an implausible intensive-margin elasticity, and the theory of social interactions has long identified that margin as a discrete choice with complementarities \citep{brock2001}. This paper builds it, and puts agency, the second SAGE dimension \citep{snower2020}, at its centre.
+
+The discrete choice is participation in social life. One joins the association, the club, the standing commitment, or one does not; joining means committing a minimum meaningful share of time. This is not a modelling flourish but what the data measure: in the French statistical office's long-running series, 42 percent of residents belong to at least one association, the rate rises steeply with education, 56 percent above the baccalaureat against 22 percent with no diploma, and the pattern has been stable for thirty years \citep{insee2016}. Time-use data put participants' associative and social commitment at around a tenth of committed time \citep{roy2012}. The model is calibrated to exactly these moments: an aggregate participation rate of a third and group rates of one quarter and forty-five hundredths for the lower- and higher-education groups.
+
+Four results follow.
+
+First, the model reproduces the education gradient in participation and says where it comes from. Half the gap is the taste for belonging, which the underlying wellbeing indicators put higher among the more educated. The other half is agency, and it works through wealth: higher agency makes households richer, richer households have a lower marginal utility of consumption, and so the fixed time commitment costs them less in utility terms. The income effect beats the price-of-time effect. This resolves, inside a structural model, the apparent puzzle of why participation rises with income although richer people face a higher opportunity cost of time, the same force that makes volunteering an increasing function of education in every survey.
+
+Second, the coordination question is answered with a mechanism rather than an assertion. The model can produce multiple equilibria, a society where participation feeds on itself and one where its absence does. But a full scan of the parameter space shows the multiplicity region and the data-fitting region are disjoint: coordination traps require belonging tastes to be concentrated, so that many people change behaviour together, while the observed education gradient requires tastes to be dispersed. One cannot have both. The calibrated French economy sits at the boundary of the coordination region, close enough that the proximity matters for policy, outside it in the point estimate. I regard this as the honest quantitative answer to whether left-behind communities are coordination failures: in this model, disciplined by participation data, they are not, but the economy lives near the edge where they could be.
+
+Third, the activation-policy result of the companion paper becomes dramatic on the participation margin. A budget-balanced 20 percent make-work-pay subsidy raises the return to market hours and taxes everyone a lump sum to pay for it; both push against the time commitment. The direct effect, holding everyone else's participation fixed, is a fall of eight percentage points. The equilibrium effect is a fall of twenty-nine, from 37 percent participation to 8: the social feedback multiplies the direct effect three and a half times, because each household's exit lowers the belonging return of every other household. The same complementarity that could not fold the smooth model amplifies policy shocks on the discrete margin, and the amplification is the quantitatively dominant part of the social cost.
+
+Fourth, the contrast that makes the policy point usable. Raising the lower-education group's agency to the population mean, an empowerment policy in the SAGE sense, raises equilibrium participation from 37 to 51 percent, with both groups participating more. Two policies from the same pro-work family, opposite effects on the social fabric: subsidising hours raises the price of time and unravels participation; empowering people makes them richer and crowds participation in. An evaluation framework that does not carry the social dimension cannot tell these policies apart on the margin where they differ most.
+
+The paper proceeds as follows. Section 2 lays out the model and its relation to the shared engine. Section 3 calibrates. Section 4 presents the gradient and its decomposition. Section 5 maps where multiplicity lives and why the data sits outside it. Section 6 runs the two policies. Section 7 concludes with the welfare reading and the road to general equilibrium.
+
+\section{Model}
+
+\subsection{Households}
+
+The economy consists of two permanent education groups $g \in \{l, h\}$ of equal size, the clean separation of education from income risk: agency $\alpha_g$ and the belonging taste $B_g$ are constant within a group, while idiosyncratic productivity $z$ follows the same two-state Markov process within each group as in the companion paper. Within each group, households differ permanently in a belonging taste $m$, drawn from a lognormal distribution with unit mean and log standard deviation $\sigma_m$; tastes for social life are persistent traits, in the spirit of the persistent cooperator types measured by \citet{fischbacher2001}.
+
+Each period a household chooses consumption, savings $a' \ge 0$ at gross rate $R$, market effort $e$, and a participation indicator $d \in \{0, 1\}$. Participating commits a minimum meaningful time lump $\bar{q} = 0.10$ of the time endowment, so feasible effort satisfies $e + \bar{q} d \le 1$, and total committed time $T = e + \bar{q} d$ carries the usual convex disutility. The budget is
+\begin{equation}
+c + a' = R\,a + (1+\tau)\,\alpha_g\, e\, z - T_x, \qquad a' \ge 0,
+\end{equation}
+with $\tau$ the make-work-pay subsidy and $T_x$ the lump-sum tax that finances it.
+
+\subsection{The participation payoff and the fabric}
+
+The social fabric is participation time, $Q = \bar{q} \cdot P(d = 1)$, so the aggregate state is summarised by the participation rate. This replaces the companion paper's all-non-work-time fabric with the cleaner object the time-use and participation data actually measure; a free rider's leisure no longer builds fabric. The payoff to participating, per unit of committed lump, is
+\begin{equation}
+\kappa\,\Lambda\,B_g\,m\,\bigl(\,\omega + (1-\omega)\,P(d=1)\,\bigr),
+\end{equation}
+where $\kappa$ is the interaction strength, $\Lambda$ the cohesion weight carried over from the shared engine, and $\omega \in [0,1]$ the private share of the payoff: the warm-glow of participating that does not depend on how many others participate. The private share anchors participation away from zero, as it must, since people volunteer even in low-participation places; the complementarity share $(1-\omega)$ is the \citet{brock2001} interaction that makes participation feed on itself. The decision-utility versus experienced-wellbeing architecture of the companion paper is unchanged: the payoff above moves behaviour, while the wellbeing dashboard prices the enjoyed fabric.
+
+\subsection{Equilibrium and computation}
+
+A stationary equilibrium is a participation rate equal to the participation it induces. Define the aggregate map $G(r)$: given a conjectured rate $r$, each (group, taste) household solves its dynamic programme, and $G(r)$ is the implied population participation rate; equilibria are crossings $G(r) = r$, stable where the map crosses from above. Computation exploits a reduction: within a group, the payoff depends on $(\kappa, m, B_g, \omega, r)$ only through one scalar, so each group's response is precomputed once on a grid of that scalar at production resolution, and every map evaluation, calibration loop, and policy counterfactual is interpolation. This removes at source the near-fold grid sensitivity that a direct fixed-point probe suffers, and it makes the full parameter-space scan of Section 5 feasible. The household problem itself is the discrete dynamic programme of the shared engine, with the participation indicator added to the choice set and the stationary distribution computed exactly.
+
+\section{Calibration}
+
+Everything inherited from the companion paper stays at its sourced value: preferences (risk aversion 2, Frisch one half, the effort scale tied to the INSEE time-use work share), the income process, the discount factor and interest rate, agency $\alpha_l = 0.765$, $\alpha_h = 0.911$ and tastes $B_l = 0.80$, $B_h = 0.94$ from the OECD Better Life indicators by education, and the cohesion weight $\Lambda$. The participation lump $\bar{q} = 0.10$ is the time-use order of magnitude for participants' associative commitment. That leaves three new objects: the interaction strength $\kappa$, the taste dispersion $\sigma_m$, and the private share $\omega$.
+
+I calibrate $(\kappa, \sigma_m)$ to the two INSEE participation moments, group rates of 0.25 and 0.45 at a stable equilibrium, with $\omega = 0.30$ held at its central value and swept in robustness. The fit is tight: at $\kappa = 10.0$, $\sigma_m = 0.50$, the economy has a stable equilibrium with aggregate participation 0.371 and group rates 0.265 and 0.476, against targets of 0.25 and 0.45 (Figure \ref{fig:gradient}). The private share $\omega$ has no clean point estimate; it is swept over $\{0.15, 0.30, 0.50\}$ and results are reported with that sensitivity stated. All numbers below are robust to doubling the number of taste nodes, the check that the cruder prototype of the companion paper failed.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.58\textwidth]{figures/sa_gradient.png}
+\caption{Participation by education group: the INSEE-based calibration targets and the model's calibrated equilibrium.}
+\label{fig:gradient}
+\end{figure}
+
+\section{The gradient: taste or agency?}
+
+Why does participation rise with education? The model offers two channels and the calibration lets us weigh them. The taste channel is direct: $B_h > B_l$ in the wellbeing indicators, so the more educated value belonging more. The agency channel is indirect and runs through wealth: higher $\alpha$ converts effort into income at a better rate, higher income builds wealth, wealth lowers the marginal utility of consumption, and a cheaper marginal util makes the fixed time lump less costly to bear. Note the sign battle inside the agency channel: higher agency also raises the price of an hour, which pushes participation down. At the consensus labour-supply elasticity the income effect wins, which is what the data demand, since participation in fact rises with income.
+
+Shutting each channel down in turn at the calibrated point decomposes the gap of 21 percentage points: with tastes equalised the agency channel alone produces a gap of 10 points; with agency equalised the taste channel alone produces 10 points (Figure \ref{fig:decomp}). The gradient is, in this model, half who people are and half what they can afford, and the affordability half is a wealth effect, not a price effect. The distributional reading matters: the lower-education group participates less not only because it values belonging less on the survey measures, but because participation is a normal good and the group is poorer.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.62\textwidth]{figures/sa_decomposition.png}
+\caption{The education gap in participation at the calibrated equilibrium, and the gap with each channel shut down. Taste and agency-through-wealth each carry about half.}
+\label{fig:decomp}
+\end{figure}
+
+\section{Where multiplicity lives, and why the data sits outside it}
+
+The participation margin restores what the smooth model could not sustain: for concentrated taste distributions the aggregate map folds and the economy has genuinely distinct stable equilibria. The question the calibration answers is whether the French economy is in that region.
+
+It is not, and the reason is structural. Figure \ref{fig:region} scans the $(\kappa, \sigma_m)$ plane at the central private share. The multiplicity region sits at low taste dispersion: coordination requires that many households share similar thresholds, so that a change in the aggregate moves them together. The data-fitting region sits at higher dispersion: the observed education gradient, with group rates of 25 and 45 percent and interior participation within each group, requires tastes spread widely enough that participation rises smoothly across the population. The two regions are adjacent and disjoint; the calibrated point sits at the boundary of the multiplicity region, outside it. The same scan at $\omega = 0.15$ and $\omega = 0.50$ gives the same answer: at low $\omega$ multiplicity is widespread but nothing in it fits the moments; at high $\omega$ multiplicity disappears entirely.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.66\textwidth]{figures/sa_region.png}
+\caption{The $(\kappa, \sigma_m)$ plane at $\omega = 0.30$. Multiplicity (purple) requires concentrated belonging tastes; fitting the French participation moments (green) requires dispersed ones. The calibrated point (star) sits at the boundary.}
+\label{fig:region}
+\end{figure}
+
+Three readings, stated carefully. First, this is a discipline result in the tradition of the companion paper: the dramatic regime exists in the model, and the data declines to put the economy in it. Second, the mechanism is general and portable: any account of social tipping that relies on discrete-choice complementarity must confront the fact that observed participation gradients are evidence of taste heterogeneity, and taste heterogeneity is exactly what smooths tipping away. Third, the boundary matters: the calibrated economy is close to the coordination region, so forces that compress the taste distribution, segregation that homogenises social environments, for instance, would push it inside. That proximity, not membership, is the model's honest statement about coordination risk, and it makes the amplification result of the next section the policy-relevant face of the complementarity.
+
+\section{Two pro-work policies and the social fabric}
+
+\subsection{Make-work-pay: an eight-point policy and a twenty-nine-point collapse}
+
+The companion paper's activation experiment, a 20 percent labour-income subsidy financed by a lump-sum tax, runs here on the participation margin. Both arms of the policy push against participation: the subsidy raises the return to market hours, and the tax makes households poorer, which raises the utility cost of the time lump. The budget balances at a lump-sum tax of 0.093, about a fifth of mean labour income.
+
+Figure \ref{fig:map} shows the aggregate map before and after, and Figure \ref{fig:policy} the decomposition. The direct effect of the policy, evaluating every household's participation choice at the baseline belonging level, is a fall from 37.1 to 29.0 percent: eight points, the policy's true price-and-income effect. The equilibrium effect is a fall to 8.1 percent: twenty-nine points. The ratio is 3.6. The difference is the social feedback: each exit lowers the participation rate, which lowers the belonging return of everyone still in, which causes further exits, the complementarity working as an amplifier rather than as a source of multiplicity. The economy does not jump between equilibria, there is only one; it slides down a steep stretch of a unique fixed point, which is what living near the boundary of the coordination region means in practice.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.62\textwidth]{figures/sa_map.png}
+\caption{The aggregate participation map at the calibrated point (blue) and under the financed make-work-pay subsidy (orange), with stable equilibria marked. The policy shifts the whole response down; the equilibrium slides from 37 to 8 percent.}
+\label{fig:map}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.64\textwidth]{figures/sa_policy.png}
+\caption{Aggregate participation: baseline, the subsidy's direct effect, the subsidy in equilibrium, and the empowerment policy in equilibrium. The social feedback multiplies the subsidy's direct effect by 3.6.}
+\label{fig:policy}
+\end{figure}
+
+Honesty about the financing: the lump-sum tax does real work in this result, both because it is large and because it is regressive in utility terms. That is not a bug of the experiment; it is the experiment, the same financed policy as the companion paper, and the decomposition separates what the policy does directly from what the social structure does with it. The amplification factor, not the level, is the portable number.
+
+\subsection{Empowerment: the same goal, the opposite social consequence}
+
+The second policy raises the lower-education group's agency from 0.765 to the population mean of 0.838, holding everything else fixed: an investment in the capacity to convert effort into income, training, health, labour-market access, with no offsetting tax in this partial-equilibrium experiment. Equilibrium participation rises from 37.1 to 50.7 percent, with the lower-education group at 42 percent, nearly closing its gap, and the higher group at 60 (Figure \ref{fig:policy}, last bar). The channel is the gradient decomposition's wealth effect at work: empowered households are richer, the time lump costs them less in utility, they join, and the complementarity multiplies the inflow exactly as it multiplied the outflow before.
+
+The pair of experiments is the paper's policy message. Both are pro-work policies; a consumption-index evaluation would score both on output and miss the social margin entirely. They differ most precisely there: subsidising hours raises the price of time and the social feedback turns a modest retreat into a collapse, while raising agency enriches people and the same feedback turns a modest inflow into a boom. If the social dimension of wellbeing carries weight, as the SAGE framework and the wellbeing literature hold \citep{snower2020,benjamin2023,layard2023}, the two policies are not close substitutes; they sit on opposite sides of the dimension that single-index evaluation cannot see.
+
+\section{Conclusion}
+
+This paper gives the SAGE agency dimension a structural home on the social side of the model. Agency sets who can afford to participate: through wealth, not through the price of time, which is why participation rises with income in the model as in the data. The coordination question receives an honest quantitative answer with a portable mechanism: multiplicity requires concentrated tastes, observed gradients evidence dispersed ones, and the calibrated economy sits at the edge of the coordination region rather than inside it. Policy lives on that edge: the social complementarity amplifies a financed work subsidy's eight-point direct effect into a twenty-nine-point collapse of participation, and amplifies an empowerment policy into a participation boom of similar size in the opposite direction.
+
+The designed extensions are unchanged and now better motivated: a general-equilibrium close with transitions \citep{auclert2021}, so that the collapse and the boom have price feedbacks and dynamics; the estimation of the cohesion weight from life-satisfaction panels, which would let the participation results be priced in wellbeing units; and the environmental dimension, completing the framework. The engine is shared, the data targets are public, and every result in both papers is reproducible from the repository scripts.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

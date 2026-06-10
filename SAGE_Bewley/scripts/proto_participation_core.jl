@@ -18,6 +18,7 @@ function solve_participation(p::SAGEParams, Q_agg::Float64)
     s_ind = Int[]; a_ind = Int[]; Rvec = Float64[]
     rows = Int[]; cols = Int[]; vals = Float64[]
     Dpol = zeros(Int, n_s, na)
+    Epol = zeros(n_s, na)                  # effort at the joint optimum
     pair = 0
     for i_z in 1:nz
         z = z_vals[i_z]; α = p.α[i_z]; Bz = p.B[i_z]
@@ -26,21 +27,22 @@ function solve_participation(p::SAGEParams, Q_agg::Float64)
             res = p.R * a[i_a]; s = sidx(i_a, i_z)
             for k in 1:na
                 anext = a[k]
-                best = -Inf; bestd = 0
+                best = -Inf; bestd = 0; beste = 0.0
                 for d in (0, 1)
                     tmax = 1.0 - QBAR * d
                     for e in e_grid
                         e > tmax && break
-                        c = res + α * e * z * p.Z - anext
+                        c = res + (1 + p.subsidy) * α * e * z * p.Z - p.lumptax - anext
                         c <= 0 && continue
                         T = e + QBAR * d
                         ut = p.Γ * (c^(1 - p.γ) / (1 - p.γ) -
                                     p.ϕ * T^(1 + p.ψ) / (1 + p.ψ)) + belong * d
-                        ut > best && (best = ut; bestd = d)
+                        ut > best && (best = ut; bestd = d; beste = e)
                     end
                 end
                 best == -Inf && continue
                 Dpol[s, k] = bestd
+                Epol[s, k] = beste
                 pair += 1
                 push!(s_ind, s); push!(a_ind, k); push!(Rvec, best)
                 for i_zn in 1:nz
@@ -67,5 +69,11 @@ function solve_participation(p::SAGEParams, Q_agg::Float64)
     λ = vec(sum(T .* (1.0 / n_s), dims = 1)); λ ./= sum(λ)
 
     part = sum(λ[s] * Dpol[s, σ[s]] for s in 1:n_s)
-    return QBAR * part, part
+    # mean pre-subsidy labour income E[alpha e z], for budget-balance loops
+    meaninc = 0.0
+    for i_z in 1:nz, i_a in 1:na
+        s = sidx(i_a, i_z)
+        meaninc += λ[s] * p.α[i_z] * Epol[s, σ[s]] * z_vals[i_z]
+    end
+    return QBAR * part, part, meaninc
 end
