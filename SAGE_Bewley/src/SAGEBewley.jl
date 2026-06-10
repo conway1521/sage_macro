@@ -33,7 +33,8 @@ module SAGEBewley
 using QuantEcon, LinearAlgebra, Statistics, SparseArrays
 
 export SAGEParams, SAGESolution, solve_model, exponential_grid, income_process,
-       wealth_gini, frac_constrained, public_good_shares, update
+       wealth_gini, frac_constrained, public_good_shares, update,
+       country_params, COUNTRIES
 
 # ----------------------------------------------------------------------------
 # Parameters
@@ -81,6 +82,53 @@ end
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."
 update(p::SAGEParams; kwargs...) = SAGEParams(;
     (f => get(Dict(kwargs), f, getfield(p, f)) for f in fieldnames(SAGEParams))...)
+
+# ----------------------------------------------------------------------------
+# Country calibration (plug-and-play)
+# ----------------------------------------------------------------------------
+# Per-country dials. The standard preferences (γ, φ, ψ) are treated as universal;
+# the country-specific objects are the gross rate R, the income process (ρ, η),
+# agency by education type α, the cohesion taste by type B, and the cohesion
+# weight Λ. Index 1 = lower-education/income group, 2 = higher.
+#
+# Data sources, per parameter (same template for every country):
+#   R       real long-term rate (central bank / OECD), deflated by CPI
+#   ρ, η    earnings/income process; or set to match wealth Gini + hand-to-mouth
+#           share from EU-SILC / HFCS / SCF / WID
+#   α       agency: OECD Better Life Index empowerment indicators by education
+#           (labour-market security, self-reported health, PISA skills)
+#   B       cohesion taste: OECD BLI "quality of support network" by education,
+#           or ESS / Gallup social-support items
+#   Λ       weight on cohesion: OECD BLI dimension rankings, or estimated from
+#           subjective-wellbeing (life-satisfaction) regressions
+#
+# FR is the thesis calibration (real, OECD BLI 2017 + ECB rate). The others are
+# PLACEHOLDERS using the FR template; replace the values with country data.
+const COUNTRIES = Dict(
+    "FR" => (R=1.01, ρ=0.90, η=0.10, α=[0.765, 0.911], B=[0.80, 0.94], Λ=0.876,
+             β=0.99, placeholder=false, note="France, thesis calibration (OECD BLI 2017 + ECB real rate)"),
+    "US" => (R=1.01, ρ=0.90, η=0.10, α=[0.765, 0.911], B=[0.80, 0.94], Λ=0.876,
+             β=0.99, placeholder=true,  note="PLACEHOLDER: fill α,B from OECD BLI US by education; ρ,η to SCF/Fed; R from Fed real rate"),
+    "NL" => (R=1.01, ρ=0.90, η=0.10, α=[0.765, 0.911], B=[0.80, 0.94], Λ=0.876,
+             β=0.99, placeholder=true,  note="PLACEHOLDER: fill from OECD BLI Netherlands + Eurostat/HFCS"),
+    "IT" => (R=1.01, ρ=0.90, η=0.10, α=[0.765, 0.911], B=[0.80, 0.94], Λ=0.876,
+             β=0.99, placeholder=true,  note="PLACEHOLDER: fill from OECD BLI Italy + Eurostat/HFCS"),
+)
+
+"""
+    country_params(code; kwargs...) -> SAGEParams
+
+Build parameters for a country (e.g. "FR", "US", "NL", "IT") from `COUNTRIES`.
+Standard preferences and grids take SAGEParams defaults; country dials are set
+from the table. Extra keyword arguments (e.g. `social_mode = :warmglow`) override.
+Warns if the country's values are still placeholders.
+"""
+function country_params(code::AbstractString; kwargs...)
+    haskey(COUNTRIES, code) || error("unknown country \"$code\"; have $(collect(keys(COUNTRIES)))")
+    c = COUNTRIES[code]
+    c.placeholder && @warn "country \"$code\" uses placeholder values; replace with data ($(c.note))"
+    update(SAGEParams(; R=c.R, ρ=c.ρ, η=c.η, α=c.α, B=c.B, Λ=c.Λ, β=c.β); kwargs...)
+end
 
 # ----------------------------------------------------------------------------
 # Grids and income process
