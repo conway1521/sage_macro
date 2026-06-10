@@ -242,7 +242,7 @@ function solve_model(p::SAGEParams; method = PFI, A0 = nothing,
                      damp = 0.5, tol = 1e-4, maxit = 80)
     p.social_mode === :multiplier || return _solve_once(p, 0.0; method = method)
     A = A0 === nothing ? 0.3 : A0           # outer fixed point on the public good
-    sol = _solve_once(p, A; method = method)
+    local sol
     for _ in 1:maxit
         sol = _solve_once(p, A; method = method)
         (isnan(sol.Q) || isinf(sol.Q)) && break
@@ -344,25 +344,34 @@ function _solve_once(p::SAGEParams, A_social::Float64; method = PFI)
     V = Vmat
 
     # --- Stationary distribution via Young (2010) lottery -----------------
-    # Split each agent's continuous next-assets across the two bracketing
-    # grid nodes → smooth distribution (no sublattice sawtooth).
-    λ = fill(1.0 / (na * nz), na, nz)
-    for _ in 1:100_000
-        λnew = zeros(na, nz)
-        @inbounds for i_z in 1:nz, i_a in 1:na
-            m = λ[i_a, i_z]; m == 0.0 && continue
-            ap = anext[i_a, i_z]
-            k = clamp(searchsortedlast(a, ap), 1, na - 1)
-            w = clamp((a[k+1] - ap) / (a[k+1] - a[k]), 0.0, 1.0)
-            for i_zn in 1:nz
-                pz = m * Π[i_z, i_zn]
-                λnew[k,   i_zn] += pz * w
-                λnew[k+1, i_zn] += pz * (1 - w)
-            end
+    # Split each agent's continuous next-assets across the two bracketing grid
+    # nodes for a smooth distribution. Next-assets are fixed, so build the
+    # lottery transition ONCE as a sparse matrix and iterate with in-place
+    # sparse multiplies (no per-iteration re-location or allocation).
+    drows = Int[]; dcols = Int[]; dvals = Float64[]
+    @inbounds for i_z in 1:nz, i_a in 1:na
+        s = sidx(i_a, i_z)
+        ap = anext[i_a, i_z]
+        k = clamp(searchsortedlast(a, ap), 1, na - 1)
+        w = clamp((a[k+1] - ap) / (a[k+1] - a[k]), 0.0, 1.0)
+        for i_zn in 1:nz
+            pz = Π[i_z, i_zn]
+            push!(drows, s); push!(dcols, sidx(k,   i_zn)); push!(dvals, pz * w)
+            push!(drows, s); push!(dcols, sidx(k+1, i_zn)); push!(dvals, pz * (1 - w))
         end
-        maximum(abs.(λnew .- λ)) < 1e-12 && (λ = λnew; break)
-        λ = λnew
     end
+    Tt = transpose(sparse(drows, dcols, dvals, n_s, n_s))   # λ' = Tᵀ λ
+    λv = fill(1.0 / n_s, n_s); λn = similar(λv)
+    for _ in 1:100_000
+        mul!(λn, Tt, λv)
+        d = 0.0
+        @inbounds for i in eachindex(λv)
+            d = max(d, abs(λn[i] - λv[i]))
+        end
+        λv, λn = λn, λv
+        d < 1e-11 && break
+    end
+    λ = reshape(λv, na, nz)
 
     Uc = zeros(na, nz); Us = zeros(na, nz)
     # public good A = Q = E[1 - e] over the stationary distribution
