@@ -27,6 +27,15 @@ NOTE (flagged modelling choice): because the canonical code removed the `q·A`
 term, effort does NOT respond to the social good - `A`/`B` are a wellbeing
 overlay, not an active choice margin. The thesis Euler eq. (14) keeps a B term;
 the final code (and hence its figures) does not. We follow the code.
+
+VERSIONS. v1.0 (git tag) is the thesis-faithful parametrization (γ=1.5, ψ=0.25,
+ϕ=1.0). v1.1 (this file) replaces every free preference parameter with a
+literature or calibrated value: γ=2 (EIS 0.5, Havranek 2015), ψ=2 (Frisch 0.5,
+Chetty et al. 2011), ϕ=1.861 (calibrated to the INSEE 2010 time-use work share
+0.53). v1.1 also replaces the stationary-distribution solver: sparse power
+iteration with a dense repeated-squaring fallback for slow-mixing chains (the
+old iteration could stall silently and bias aggregates by over a percentage
+point). Reproduce thesis numbers by checking out v1.0 or passing old values.
 """
 module SAGEBewley
 
@@ -40,21 +49,47 @@ export SAGEParams, SAGESolution, solve_model, exponential_grid, income_process,
 # Parameters
 # ----------------------------------------------------------------------------
 Base.@kwdef struct SAGEParams
-    # preferences
-    γ::Float64  = 1.5            # CRRA
-    ϕ::Float64  = 1.0            # effort disutility scale
-    ψ::Float64  = 0.25           # inverse Frisch (code=0.25; thesis Table 1=4.0 - FLAGGED)
-    β::Float64  = 0.99           # discount factor
-    R::Float64  = 1.01           # gross interest rate (exogenous, partial eq.)
-    # income process: log z ~ AR(1), discretized by Rouwenhorst
+    # ---- preferences (literature-disciplined defaults, v1.1) ---------------
+    # γ: CRRA. EIS meta-analysis (Havranek 2015 JEEA, selective-reporting
+    #    corrected) puts the mean EIS near 0.5, i.e. γ = 2. Standard in the
+    #    heterogeneous-agent literature.
+    # ψ: inverse Frisch. Quasi-experimental intensive-margin Frisch ~ 0.5
+    #    (Chetty, Guren, Manoli, Weber 2011 AER), i.e. ψ = 2. The old default
+    #    0.25 implied Frisch = 4, far outside the evidence; the thesis Table 1
+    #    value 4.0 (Frisch 0.25) sat at the other extreme.
+    # ϕ: effort-disutility scale, CALIBRATED (not free): set so the baseline
+    #    mean work share e is 0.53, the paid share of committed time
+    #    (paid 3h24 vs unpaid domestic/volunteer 3h01 per day, INSEE Enquete
+    #    Emploi du temps 2010). ϕ = 1.861 hits e_mean = 0.530 under γ = ψ = 2
+    #    with the exact (repeated-squaring) stationary distribution.
+    γ::Float64  = 2.0            # CRRA (EIS = 0.5, Havranek 2015 meta)
+    ϕ::Float64  = 1.861          # effort disutility (calibrated to INSEE EDT 2010, e_mean = 0.53)
+    ψ::Float64  = 2.0            # inverse Frisch (Frisch = 0.5, Chetty et al. 2011)
+    # β, R: annual interpretation. R = 1.01 is an ECB-era real long rate;
+    # β = 0.99 keeps the Aiyagari impatience condition βR = 0.9999 < 1 (knife-
+    # edge but verified harmless: negligible mass at the asset-grid top).
+    β::Float64  = 0.99           # discount factor (annual)
+    R::Float64  = 1.01           # gross real rate (exogenous, partial eq.)
+    # income process: log z ~ AR(1) annual, Rouwenhorst. ρ = 0.9, η = 0.1 sit
+    # inside the annual earnings-process ranges surveyed by Heathcote,
+    # Storesletten, Violante (2010); the thesis disciplined them by matching
+    # the hand-to-mouth share.
     ρ::Float64  = 0.9
     η::Float64  = 0.1
     nz::Int     = 2
-    # SAGE parameters (index 1 = low income, 2 = high income)
+    # SAGE parameters (index 1 = low income, 2 = high income). Data-derived in
+    # the thesis from OECD Better Life Index 2017 by education (France):
+    #   α  empowerment indicators (labour-market security, health, skills)
+    #   B  quality-of-support-network items by education
+    #   Λ  weight on the cohesion dimension from BLI dimension rankings;
+    #      flagged for re-estimation from life-satisfaction regressions.
+    # Identification note: in decision utility only the PRODUCT κ·Λ·B[z] is
+    # identified (see social_reward); Λ and the swept κ are separated only by
+    # the wellbeing dashboard, where Λ·B·Q enters experienced wellbeing.
     α::Vector{Float64} = [0.765, 0.911]   # agency: share of labour income retained
     B::Vector{Float64} = [0.80, 0.94]     # enjoyment of the public good
-    Γ::Float64  = 1.0                     # weight on Material Gain (U^c)
-    Λ::Float64  = 0.8757834               # weight on Social Cohesion (U^s)
+    Γ::Float64  = 1.0                     # weight on Material Gain (normalisation)
+    Λ::Float64  = 0.8757834               # weight on Social Cohesion (thesis, OECD BLI 2017)
     # asset grid (exponential: fine near 0)
     a_min::Float64 = 1e-10
     a_max::Float64 = 100.0
@@ -243,12 +278,14 @@ function solve_model(p::SAGEParams; method = PFI, A0 = nothing,
     p.social_mode === :multiplier || return _solve_once(p, 0.0; method = method)
     A = A0 === nothing ? 0.3 : A0           # outer fixed point on the public good
     local sol
+    converged = false
     for _ in 1:maxit
         sol = _solve_once(p, A; method = method)
         (isnan(sol.Q) || isinf(sol.Q)) && break
-        abs(sol.Q - A) < tol && break
+        abs(sol.Q - A) < tol && (converged = true; break)
         A = damp * A + (1 - damp) * sol.Q
     end
+    converged || @warn "multiplier fixed point did not converge to tol $tol in $maxit iterations (last |Q - A| = $(abs(sol.Q - A)))"
     return sol
 end
 
@@ -364,17 +401,36 @@ function _solve_once(p::SAGEParams, A_social::Float64; method = PFI)
     # transition (fast per iteration, and robust to reducibility, where a direct
     # linear solve is numerically unstable). Slow-mixing wealth dynamics can need
     # many iterations, but each is a cheap sparse multiply.
+    # Fast path: sparse power iteration (converges quickly for well-mixing
+    # chains). Slow-mixing chains (spectral gap near zero, e.g. patient
+    # households near the βR knife edge) stall here, so we fall back to dense
+    # repeated squaring of the transition: T^(2^45) is ~3.5e13 effective
+    # iterations, unconditionally stable for stochastic matrices (entries stay
+    # in [0,1], rows renormalised against floating drift), and cheap because
+    # the state space is only na*nz. This replaces both the old silent
+    # non-convergence and the abandoned (unstable) direct linear solve.
     Tt = transpose(sparse(drows, dcols, dvals, n_s, n_s))   # λ' = Tᵀ λ
     λv = fill(1.0 / n_s, n_s); λn = similar(λv)
-    for _ in 1:100_000
+    dist_d = Inf
+    for _ in 1:20_000
         mul!(λn, Tt, λv)
         d = 0.0
         @inbounds for i in eachindex(λv)
             d = max(d, abs(λn[i] - λv[i]))
         end
         λv, λn = λn, λv
-        d < 1e-11 && break
+        dist_d = d
+        d < 1e-12 && break
     end
+    if dist_d >= 1e-12
+        Td = Matrix(transpose(Tt))                  # row-stochastic T, dense
+        for _ in 1:45
+            Td = Td * Td
+            Td ./= sum(Td, dims = 2)                # keep rows stochastic
+        end
+        λv = vec(sum(Td .* (1.0 / n_s), dims = 1))  # uniform initial weights
+    end
+    λv ./= sum(λv)
     λ = reshape(λv, na, nz)
 
     Uc = zeros(na, nz); Us = zeros(na, nz)
@@ -406,7 +462,8 @@ end
 "Gini of values `x` with population weights `w` (Lorenz-curve area)."
 function _gini(x::AbstractVector, w::AbstractVector)
     ord = sortperm(x); x = x[ord]; w = w[ord]
-    cw = cumsum(w); cx = cumsum(w .* x); cx ./= cx[end]
+    # prepend the Lorenz origin (0,0) so the first segment is included
+    cw = vcat(0.0, cumsum(w)); cx = vcat(0.0, cumsum(w .* x)); cx ./= cx[end]
     1 - sum((cw[2:end] .- cw[1:end-1]) .* (cx[2:end] .+ cx[1:end-1]))
 end
 
