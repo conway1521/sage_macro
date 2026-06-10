@@ -31,11 +31,15 @@ the final code (and hence its figures) does not. We follow the code.
 VERSIONS. v1.0 (git tag) is the thesis-faithful parametrization (γ=1.5, ψ=0.25,
 ϕ=1.0). v1.1 (this file) replaces every free preference parameter with a
 literature or calibrated value: γ=2 (EIS 0.5, Havranek 2015), ψ=2 (Frisch 0.5,
-Chetty et al. 2011), ϕ=1.861 (calibrated to the INSEE 2010 time-use work share
-0.53). v1.1 also replaces the stationary-distribution solver: sparse power
-iteration with a dense repeated-squaring fallback for slow-mixing chains (the
-old iteration could stall silently and bias aggregates by over a percentage
-point). Reproduce thesis numbers by checking out v1.0 or passing old values.
+Chetty et al. 2011), β=0.96 and R=1.02 (Aiyagari-tradition annual values; the
+thesis βR=0.9999 knife edge made the wealth distribution truncation-driven
+under γ=2), ϕ=14.0 (calibrated to the INSEE 2010 time-use work share 0.53).
+v1.1 also replaces the stationary-distribution solver: sparse power iteration
+with a dense repeated-squaring fallback for slow-mixing chains (the old
+iteration could stall silently and bias aggregates by over a percentage
+point). Side benefit of the corrected calibration: hand-to-mouth share ~0.33
+(Kaplan-Violante-Weidner range) and wealth Gini ~0.55, both far closer to data
+than the thesis values. Reproduce thesis numbers via the v1.0 tag.
 """
 module SAGEBewley
 
@@ -43,7 +47,7 @@ using QuantEcon, LinearAlgebra, Statistics, SparseArrays
 
 export SAGEParams, SAGESolution, solve_model, exponential_grid, income_process,
        wealth_gini, income_gini, frac_constrained, public_good_shares, update,
-       country_params, COUNTRIES
+       country_params, COUNTRIES, group_means
 
 # ----------------------------------------------------------------------------
 # Parameters
@@ -60,16 +64,21 @@ Base.@kwdef struct SAGEParams
     # ϕ: effort-disutility scale, CALIBRATED (not free): set so the baseline
     #    mean work share e is 0.53, the paid share of committed time
     #    (paid 3h24 vs unpaid domestic/volunteer 3h01 per day, INSEE Enquete
-    #    Emploi du temps 2010). ϕ = 1.861 hits e_mean = 0.530 under γ = ψ = 2
-    #    with the exact (repeated-squaring) stationary distribution.
+    #    Emploi du temps 2010). ϕ = 14.0 hits e_mean = 0.533 under γ = ψ = 2,
+    #    β = 0.96, R = 1.02, with the exact stationary distribution.
     γ::Float64  = 2.0            # CRRA (EIS = 0.5, Havranek 2015 meta)
-    ϕ::Float64  = 1.861          # effort disutility (calibrated to INSEE EDT 2010, e_mean = 0.53)
+    ϕ::Float64  = 14.0           # effort disutility (calibrated to INSEE EDT 2010, e_mean = 0.53)
     ψ::Float64  = 2.0            # inverse Frisch (Frisch = 0.5, Chetty et al. 2011)
-    # β, R: annual interpretation. R = 1.01 is an ECB-era real long rate;
-    # β = 0.99 keeps the Aiyagari impatience condition βR = 0.9999 < 1 (knife-
-    # edge but verified harmless: negligible mass at the asset-grid top).
-    β::Float64  = 0.99           # discount factor (annual)
-    R::Float64  = 1.01           # gross real rate (exogenous, partial eq.)
+    # β, R: annual interpretation. β = 0.96 is the standard annual discount
+    # factor of the Aiyagari (1994) tradition; R = 1.02 a long-run real rate
+    # (r* estimates, Holston-Laubach-Williams; OECD long averages). βR = 0.979
+    # sits safely inside the impatience region. The thesis pair β = 0.99,
+    # R = 1.01 (βR = 0.9999) was a knife edge: harmless under the thesis
+    # curvature γ = 1.5, but under the literature curvature γ = 2 the wealth
+    # distribution became truncation-driven (mass piling at the grid top and
+    # aggregates moving with a_max), i.e. no honest stationary equilibrium.
+    β::Float64  = 0.96           # discount factor (annual, Aiyagari 1994)
+    R::Float64  = 1.02           # gross real rate (long-run r* ~ 2%)
     # income process: log z ~ AR(1) annual, Rouwenhorst. ρ = 0.9, η = 0.1 sit
     # inside the annual earnings-process ranges surveyed by Heathcote,
     # Storesletten, Violante (2010); the thesis disciplined them by matching
@@ -106,6 +115,12 @@ Base.@kwdef struct SAGEParams
     #             back (social multiplier), solved by an outer fixed point on A
     social_mode::Symbol    = :off
     social_strength::Float64 = 1.0   # κ, scales the behavioural social return
+    # homophily h in [0,1]: weight on OWN-group contribution in the belonging
+    # aggregate, A_eff[g] = (1-h)·Q + h·Qmean[g] (bonding vs bridging social
+    # capital, Putnam 2000; homophily, McPherson-Smith-Lovin-Cook 2001).
+    # h = 0 reproduces the plain multiplier; only used when social_mode is
+    # :multiplier. Makes the fixed point per-group (one aggregate per z).
+    homophily::Float64 = 0.0
     # --- policy experiment (Paper 1 normative) ----------------------------
     # A proportional make-work-pay subsidy to labour income, financed by a
     # lump-sum tax (set externally for budget balance). Raises the return to
@@ -276,6 +291,24 @@ and the model is solved in one pass.
 function solve_model(p::SAGEParams; method = PFI, A0 = nothing,
                      damp = 0.5, tol = 1e-4, maxit = 80)
     p.social_mode === :multiplier || return _solve_once(p, 0.0; method = method)
+    if p.homophily > 0
+        # Per-group fixed point: the belonging aggregate of group g mixes the
+        # economy-wide public good and the group's own mean contribution,
+        #   A_eff[g] = (1-h)·Q + h·Qmean[g].
+        h = p.homophily
+        Qm = fill(A0 === nothing ? 0.3 : A0, p.nz)
+        local sol
+        converged = false
+        for _ in 1:maxit
+            sol = _solve_once(p, (1 - h) .* sol_total(Qm, p) .+ h .* Qm; method = method)
+            Qm_new = group_means(sol)
+            any(x -> isnan(x) || isinf(x), Qm_new) && break
+            maximum(abs.(Qm_new .- Qm)) < tol && (Qm = Qm_new; converged = true; break)
+            Qm = damp .* Qm .+ (1 - damp) .* Qm_new
+        end
+        converged || @warn "homophily fixed point did not converge to tol $tol in $maxit iterations"
+        return sol
+    end
     A = A0 === nothing ? 0.3 : A0           # outer fixed point on the public good
     local sol
     converged = false
@@ -289,8 +322,24 @@ function solve_model(p::SAGEParams; method = PFI, A0 = nothing,
     return sol
 end
 
-"Single solve of the household problem given a fixed aggregate public good `A_social`."
-function _solve_once(p::SAGEParams, A_social::Float64; method = PFI)
+"Group z-shares and mean contributions from a solution: Qmean[z] = E[1-e | z]."
+group_means(s::SAGESolution) =
+    [sum(s.λ[:, z] .* s.q[:, z]) / max(sum(s.λ[:, z]), 1e-300) for z in 1:s.p.nz]
+
+"Total public good implied by group means under the stationary z-shares of `p`."
+function sol_total(Qm::Vector{Float64}, p::SAGEParams)
+    mc = rouwenhorst(p.nz, p.ρ, p.η)
+    πz = stationary_distributions(mc)[1]
+    dot(πz, Qm)
+end
+
+"""
+Single solve of the household problem given a fixed social aggregate.
+`A_social` is a scalar (same belonging aggregate for everyone, the plain
+multiplier) or a length-nz vector (per-group aggregate, the homophily case).
+"""
+function _solve_once(p::SAGEParams, A_social; method = PFI)
+    Avec = A_social isa Number ? fill(Float64(A_social), p.nz) : A_social
     a = exponential_grid(p.a_min, p.a_max, p.na, p.pexp)
     z_vals, Π = income_process(p)
     na, nz = p.na, p.nz
@@ -318,7 +367,7 @@ function _solve_once(p::SAGEParams, A_social::Float64; method = PFI)
                 @inbounds for e in e_grid
                     c = res_assets + (1 + p.subsidy) * α * e * z * p.Z - p.lumptax - anext
                     c <= 0 && continue
-                    ut = uc(c, e, p) + social_reward(e, Bz, p, A_social)
+                    ut = uc(c, e, p) + social_reward(e, Bz, p, Avec[i_z])
                     if ut > best
                         best = ut; beste = e
                     end
@@ -358,7 +407,7 @@ function _solve_once(p::SAGEParams, A_social::Float64; method = PFI)
             ee = Epol[s, σ[s]]                   # effort from the DiscreteDP optimum
             cash0 = p.R * a[i_a]
             resources = cash0 + (1 + p.subsidy) * α * ee * z * p.Z - p.lumptax
-            soc = social_reward(ee, Bz, p, A_social)
+            soc = social_reward(ee, Bz, p, Avec[i_z])
             hi = min(resources - 1e-10, a[end])
             if hi <= a[1]
                 ba = a[1]
