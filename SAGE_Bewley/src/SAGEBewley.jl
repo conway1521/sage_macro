@@ -360,6 +360,10 @@ function _solve_once(p::SAGEParams, A_social::Float64; method = PFI)
             push!(drows, s); push!(dcols, sidx(k+1, i_zn)); push!(dvals, pz * (1 - w))
         end
     end
+    # Iterate the distribution to its stationary point with the prebuilt sparse
+    # transition (fast per iteration, and robust to reducibility, where a direct
+    # linear solve is numerically unstable). Slow-mixing wealth dynamics can need
+    # many iterations, but each is a cheap sparse multiply.
     Tt = transpose(sparse(drows, dcols, dvals, n_s, n_s))   # λ' = Tᵀ λ
     λv = fill(1.0 / n_s, n_s); λn = similar(λv)
     for _ in 1:100_000
