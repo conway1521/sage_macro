@@ -28,7 +28,9 @@ Primary procedure: pick rho and eta jointly to match two country moments, the we
 
 ### Wealth Gini target
 
-Primary source: the World Inequality Database at wid.world. Universal, harmonised, free, publicly hosted, updated annually. This is the right source precisely because it is the same source everywhere. Alternative: Credit Suisse Global Wealth Report (cited in the literature, similar numbers, less open).
+Primary source: the Open Inequality Atlas (Conway 2025), at conway1521.github.io/open-inequality-atlas. The atlas is exactly the object this pipeline needs: a harmonised wealth-Gini panel covering 213 countries from 1800 to 2025, built by reconciling the World Inequality Database, the ECB Household Finance and Consumption Survey, the Luxembourg Wealth Study, the US Survey of Consumer Finances, and the Federal Reserve Distributional Financial Accounts onto a single comparable series. Every observation carries a comparability tier (admin-anchored or survey-only), so the pipeline can prefer the stronger observation when both are present. The companion Moments Atlas adds top-1 percent, top-10 percent, and bottom-50 percent shares for 53 countries, which gives a richer set of distributional moments than the Gini alone. Free and openly licensed.
+
+Why this matters for the model. The Kaplan-Violante-Weidner hand-to-mouth measurement covers eight OECD countries; without a harmonised wealth-inequality source for the rest, every developing-country calibration has to argue with itself about which national survey to use. The atlas removes that argument by making the source the same for every country, with the methodological tier visible. The earlier alternatives (raw WID, Credit Suisse Global Wealth Report) remain available where the user wants a single underlying source, but the harmonised atlas is the default.
 
 ### Hand-to-mouth share target
 
