@@ -374,12 +374,34 @@ and where the wellbeing dashboard is separate from the choice model, is a
 class of model the wellbeing-empirics community does not currently have. The
 night's work made that claim more honest and therefore stronger.
 
-**Outstanding items I could not finish or fix tonight**, in priority order:
+**Addendum, the income-process limitation, prototyped after grading.** The
+education-times-income separation (two permanent education cells, each with a
+five-state Rouwenhorst income process; script proto_edu_income.jl) works with
+zero engine surgery and yields a calibration menu: eta = 0.15 delivers wealth
+Gini 0.69 and hand-to-mouth 0.28 (both at data) with income Gini 0.185 still
+low; eta = 0.25 delivers income Gini 0.335 (at data) but hand-to-mouth drops
+to 0.11. One risk parameter cannot hit all four moments; the standard
+completion is a persistent-plus-transitory income process (transitory shocks
+raise income inequality with little wealth effect), a half day on this
+architecture. The limitation is hereby downgraded from flaw to menu.
+
+**Outstanding items not finished tonight**, in priority order:
 1. Update the S paper text (sage_s.tex) to the v1.1 numbers and excise the
-   intensive-margin tipping claims; reframe per Section 4. (Half a day.)
-2. Richer income process (nz 5-7) and the income-Gini match. (Half a day.)
-3. The Brock-Durlauf participation model done properly (logit shocks inside
-   the DDP, calibration to ESS participation rates). (Days; the S+A core.)
+   intensive-margin tipping claims. This changes the paper's THESIS, so it
+   waits for sign-off rather than being done unilaterally overnight. The
+   rewrite plan: (i) keep title and framing on decoupling and the
+   two-planner result, which is robust and is the S paper; (ii) replace the
+   tipping section with the honest finding (no fold under measured
+   elasticities) presented as a RESULT about where multiplicity cannot live,
+   plus the participation-margin design as the S+A program; (iii) refresh
+   the calibration table from the Section 1.3 table; (iv) regenerate the
+   policy figure from v11_battery_policy.jl numbers; (v) add the homophily
+   segregation result as a short section or trailer for the next paper.
+2. The Brock-Durlauf participation model done properly (logit shocks inside
+   the DDP, private warm-glow anchor, calibration to ESS/INSEE participation
+   rates). (Days; the S+A core.)
+3. Persistent-plus-transitory income process on the education-cell
+   architecture (half a day; completes the moment menu above).
 4. Lambda re-estimation design note for the WISE collaboration pitch.
 5. QuantEcon lecture refresh to v1.1 defaults before submission.
 6. Country rows US/NL/IT from data.
