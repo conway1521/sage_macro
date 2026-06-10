@@ -202,13 +202,13 @@ const COUNTRIES = Dict(
              note="USA (OECD How's Life US, SCF + KVW HtM 0.31, WVS7 participation, phi to ATUS work share 0.60)"),
     "CO" => (R=1.03, ρ=0.92, η=0.18, ϕ=4.45,  α=[0.650, 0.900], B=[0.80, 0.92], Λ=0.860,
              β=0.96, participation=(0.25, 0.15, 0.35), placeholder=false,
-             note="Colombia (OECD member 2020, ECV + GEIH HtM ~0.55, WVS7 participation, phi to ENUT work share 0.60; LAm scoping)"),
+             note="Colombia (Atlas wealth Gini 0.81 from LAm DINA series; ECV/GEIH HtM ~0.55; OECD How's Life CO since 2020 OECD membership; WVS7 participation; phi to ENUT work share 0.60)"),
     "ZA" => (R=1.03, ρ=0.90, η=0.20, ϕ=5.49,  α=[0.550, 0.880], B=[0.70, 0.92], Λ=0.860,
              β=0.96, participation=(0.30, 0.20, 0.45), placeholder=false,
-             note="South Africa (OECD key partner, NIDS HtM ~0.60, WVS7 participation, phi to SA TUS 2010 work share 0.55; SSA scoping)"),
-    "CN" => (R=1.03, ρ=0.92, η=0.15, ϕ=3.71,  α=[0.650, 0.920], B=[0.78, 0.90], Λ=0.860,
+             note="South Africa (Atlas wealth Gini 0.95 + Chatterjee-Czajka-Gethin 2022 WBER top-10 share 86%; NIDS HtM ~0.60; OECD How's Life ZA key partner; WVS7; phi to SA TUS 2010 work share 0.55)"),
+    "CN" => (R=1.03, ρ=0.92, η=0.16, ϕ=3.71,  α=[0.650, 0.920], B=[0.78, 0.90], Λ=0.860,
              β=0.96, participation=(0.20, 0.12, 0.30), placeholder=false,
-             note="China (OECD key partner, CHFS HtM ~0.50, WVS7 participation, phi to CTUS work share 0.65; scoping)"),
+             note="China (Atlas wealth Gini 0.74 + Piketty-Yang-Zucman 2019 top-10 share 67%; CHFS HtM ~0.50; OECD key partner; WVS7; phi to CTUS 2018 work share 0.65)"),
 )
 
 """
@@ -223,7 +223,7 @@ const COUNTRY_TARGETS = Dict(
     "US" => (wealth_gini=0.85, htm=0.31, work_share=0.60, income_gini=0.41),
     "CO" => (wealth_gini=0.81, htm=0.55, work_share=0.60, income_gini=0.55),
     "ZA" => (wealth_gini=0.95, htm=0.60, work_share=0.55, income_gini=0.63),
-    "CN" => (wealth_gini=0.70, htm=0.50, work_share=0.65, income_gini=0.45),
+    "CN" => (wealth_gini=0.74, htm=0.50, work_share=0.65, income_gini=0.45),
 )
 
 """
