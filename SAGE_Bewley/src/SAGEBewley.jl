@@ -134,6 +134,15 @@ Base.@kwdef struct SAGEParams
     # effort, so it can erode the public good and social cohesion.
     subsidy::Float64 = 0.0           # proportional subsidy to labour income
     lumptax::Float64 = 0.0           # lump-sum tax financing it
+    # --- participation tax credit (Paper 2 normative) ---------------------
+    # A rebate on the opportunity cost of the time given to participation, the
+    # model analogue of France's 66 percent charitable-donations deduction and
+    # the UK's Gift Aid (25 percent basic-rate top-up). When a household
+    # participates (the discrete choice d = 1, costing QBAR units of time) it
+    # receives partcredit * α * z * Z * QBAR back into the budget. Acts WITH
+    # the social complementarity, unlike the work subsidy which fights it.
+    # Financed by the same lump-sum tax channel (lumptax) for budget balance.
+    partcredit::Float64 = 0.0        # rebate rate on the participation time lump
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."
