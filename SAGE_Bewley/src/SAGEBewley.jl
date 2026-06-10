@@ -86,6 +86,12 @@ Base.@kwdef struct SAGEParams
     ρ::Float64  = 0.9
     η::Float64  = 0.1
     nz::Int     = 2
+    # Optional override of the productivity process: supply explicit state
+    # values and a transition matrix (e.g. persistent x transitory composites,
+    # or an estimated process from data). When set, ρ and η are ignored and
+    # nz must equal length(z_vals_override). Defaults preserve old behaviour.
+    z_vals_override::Union{Nothing,Vector{Float64}} = nothing
+    Π_override::Union{Nothing,Matrix{Float64}}      = nothing
     # SAGE parameters (index 1 = low income, 2 = high income). Data-derived in
     # the thesis from OECD Better Life Index 2017 by education (France):
     #   α  empowerment indicators (labour-market security, health, skills)
@@ -198,6 +204,11 @@ that the stationary mean of `z` is 1. Returns positive productivity levels and
 the transition matrix.
 """
 function income_process(p::SAGEParams)
+    if p.z_vals_override !== nothing
+        length(p.z_vals_override) == p.nz ||
+            error("z_vals_override has length $(length(p.z_vals_override)) but nz = $(p.nz)")
+        return copy(p.z_vals_override), copy(p.Π_override)
+    end
     mc = rouwenhorst(p.nz, p.ρ, p.η)
     Π  = mc.p
     π_stat = stationary_distributions(mc)[1]
@@ -331,8 +342,8 @@ group_means(s::SAGESolution) =
 
 "Total public good implied by group means under the stationary z-shares of `p`."
 function sol_total(Qm::Vector{Float64}, p::SAGEParams)
-    mc = rouwenhorst(p.nz, p.ρ, p.η)
-    πz = stationary_distributions(mc)[1]
+    _, Π = income_process(p)              # respects any process override
+    πz = stationary_distributions(MarkovChain(Π))[1]
     dot(πz, Qm)
 end
 

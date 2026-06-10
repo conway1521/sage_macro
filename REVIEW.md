@@ -408,6 +408,25 @@ architecture. The limitation is hereby downgraded from flaw to menu.
 
 ---
 
+## Postscript (same night, part two)
+
+The outstanding items were executed in the hours after this report was
+written. Item 1: the paper is rewritten end to end (13 pages, new title,
+retraction reported as a discipline result, incidence sharpened, all numbers
+and figures regenerated from scripts/paper_v11_figures.jl). Item 2: the
+participation model is built and validated (scripts/participation_model.jl);
+calibrated to the French participation rate of one third with a private
+payoff share of 0.3, the economy sits inside the coordination region, a 15
+percent and a 51 percent participation equilibrium coexisting; near-fold
+point values are grid-sensitive (na 100 vs 140 differ), so the prototype
+establishes structure rather than point estimates, and the full build with
+smoothed discrete choice is the remaining step. Item 3: the income-process
+completion is mapped (scripts/proto_income_complete.jl) via a validated
+engine override for arbitrary processes; transitory shocks buy the income
+Gini at the hand-to-mouth share's expense, the known one-asset frontier.
+Item 4: the Lambda estimation design note is written (vault). The plain-
+language account of the whole arc is SYNTHESIS.md.
+
 ## 6. File map of the night
 
 - Engine: SAGE_Bewley/src/SAGEBewley.jl (v1.1: parameters, solver, Gini,
