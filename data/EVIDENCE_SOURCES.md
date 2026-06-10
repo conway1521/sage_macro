@@ -8,7 +8,9 @@ Located 2026-06-10. The WELLBY stream is pulled and verified (see EVIDENCE_WELLB
 - World Happiness Report 2025 Ch2 Statistical Appendix Table 10: the cross-country coefficients (G 0.588, S 2.510, A 0.947). Read directly.
 - WVS wave 7 individual participation coefficients (secondary).
 
-## 2. YBLI citizen weights (source located, ready to extract)
+## 2. YBLI citizen weights (RESOLVED 2026-06-10, see EVIDENCE_YBLI_WISE.md)
+
+UPDATE: the per-country weight table does NOT exist publicly. The 2018 paper disaggregates only by sex, age, and four world regions, never by country, and the scale is 0 to 5 (not 0 to 10). Genuine per-country figures require an OECD WISE Centre data request. The strategic finding: stated YBLI weights rank social cohesion LAST while revealed WELLBY weights rank it FIRST, which is the decision-versus-experienced-wellbeing distinction in the data. Full detail in EVIDENCE_YBLI_WISE.md. Original note retained below.
 
 The authoritative source is Balestra, Boarini and Tosetto (2018), "What matters the most to people? Evidence from the OECD Better Life Index users' responses", OECD Statistics Working Papers No. 2018/03, document SDD/DOC(2018)3. It analyses about 130,000 Better Life Index user responses since 2011, with the importance weights users place on the eleven wellbeing dimensions, by country and by population group. Ratings are expressed as a share of total, so equal weighting would give each dimension 9.09 percent.
 

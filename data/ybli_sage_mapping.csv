@@ -1,0 +1,14 @@
+bli_dimension,sage_letter,share_to_sage,justification
+Housing,G,1.0,Material living conditions; pure material gain
+Income,G,1.0,Disposable household income and wealth; the core material gain measure
+Jobs,G,0.5,Jobs bundles earnings (G) and security; earnings half to material gain
+Jobs,A,0.5,The job-security half is an agency/capability item (capacity to sustain a livelihood)
+Community,S,1.0,Quality of the social support network; the direct social cohesion measure
+Education,A,1.0,Education and skills; the capability that converts effort into outcomes (agency)
+Environment,E,1.0,Environmental quality; the environment dimension
+Civic engagement,A,0.6,Civic engagement and governance; voice and influence is agency
+Civic engagement,S,0.4,Civic participation also builds social cohesion (the participation fabric)
+Health,A,1.0,Health status; a core capability underpinning agency
+Safety,A,1.0,Personal security; a capability/freedom-from-harm item, closest to agency
+Work-life balance,S,1.0,Time available for family, friends and community; supports the social fabric
+Life satisfaction,OUTCOME,0.0,Subjective wellbeing is the OUTCOME being explained, not a weight; excluded from the mapping
