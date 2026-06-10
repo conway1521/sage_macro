@@ -28,11 +28,14 @@ function solve_participation(p::SAGEParams, Q_agg::Float64)
             for k in 1:na
                 anext = a[k]
                 best = -Inf; bestd = 0; beste = 0.0
+                # participation tax credit: rebate on the opportunity cost of
+                # the time lump, paid only when the household participates (d=1)
+                credit = p.partcredit * α * z * p.Z * QBAR
                 for d in (0, 1)
                     tmax = 1.0 - QBAR * d
                     for e in e_grid
                         e > tmax && break
-                        c = res + (1 + p.subsidy) * α * e * z * p.Z - p.lumptax - anext
+                        c = res + (1 + p.subsidy) * α * e * z * p.Z - p.lumptax - anext + credit * d
                         c <= 0 && continue
                         T = e + QBAR * d
                         ut = p.Γ * (c^(1 - p.γ) / (1 - p.γ) -
@@ -69,11 +72,15 @@ function solve_participation(p::SAGEParams, Q_agg::Float64)
     λ = vec(sum(T .* (1.0 / n_s), dims = 1)); λ ./= sum(λ)
 
     part = sum(λ[s] * Dpol[s, σ[s]] for s in 1:n_s)
-    # mean pre-subsidy labour income E[alpha e z], for budget-balance loops
-    meaninc = 0.0
+    # mean pre-subsidy labour income E[alpha e z], for budget-balance loops;
+    # and the participation wage base E[alpha z | d=1] * P, which is the credit's
+    # fiscal-cost base (the credit pays partcredit * alpha * z * Z * QBAR per
+    # participating household, so cost per capita = partcredit * QBAR * Z * partbase)
+    meaninc = 0.0; partbase = 0.0
     for i_z in 1:nz, i_a in 1:na
         s = sidx(i_a, i_z)
-        meaninc += λ[s] * p.α[i_z] * Epol[s, σ[s]] * z_vals[i_z]
+        meaninc  += λ[s] * p.α[i_z] * Epol[s, σ[s]] * z_vals[i_z]
+        partbase += λ[s] * p.α[i_z] * z_vals[i_z] * Dpol[s, σ[s]]
     end
-    return QBAR * part, part, meaninc
+    return QBAR * part, part, meaninc, partbase
 end
