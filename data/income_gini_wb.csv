@@ -1,0 +1,226 @@
+country,iso,year,income_gini_wb
+United States,USA,1963,36.7
+United States,USA,1964,37.4
+United States,USA,1965,36.8
+United States,USA,1966,37.1
+United States,USA,1967,36.9
+United States,USA,1968,36.3
+United States,USA,1969,36
+United States,USA,1970,36.6
+United States,USA,1971,36.9
+United States,USA,1972,36.7
+United States,USA,1973,36.1
+United States,USA,1974,35.5
+United States,USA,1975,35.7
+United States,USA,1976,35.6
+United States,USA,1977,35.5
+United States,USA,1978,34.8
+United States,USA,1979,34.8
+United States,USA,1980,34.7
+United States,USA,1981,35.5
+United States,USA,1982,36.7
+United States,USA,1983,37.3
+United States,USA,1984,37.3
+United States,USA,1985,37.6
+United States,USA,1986,37.6
+United States,USA,1987,37.2
+United States,USA,1988,37.7
+United States,USA,1989,38.2
+United States,USA,1990,38.3
+United States,USA,1991,38
+United States,USA,1992,38.4
+United States,USA,1993,40.4
+United States,USA,1994,40
+United States,USA,1995,39.9
+United States,USA,1996,40.3
+United States,USA,1997,40.5
+United States,USA,1998,40
+United States,USA,1999,40
+United States,USA,2000,40.1
+United States,USA,2001,40.6
+United States,USA,2002,40.4
+United States,USA,2003,40.8
+United States,USA,2004,40.5
+United States,USA,2005,41.3
+United States,USA,2006,41.7
+United States,USA,2007,41.1
+United States,USA,2008,41.1
+United States,USA,2009,40.9
+United States,USA,2010,40.2
+United States,USA,2011,41.2
+United States,USA,2012,41.2
+United States,USA,2013,40.9
+United States,USA,2014,41.7
+United States,USA,2015,41.5
+United States,USA,2016,41.3
+United States,USA,2017,41.4
+United States,USA,2018,41.8
+United States,USA,2019,41.9
+United States,USA,2020,40
+United States,USA,2021,39.7
+United States,USA,2022,41.7
+United States,USA,2023,41.8
+United States,USA,2024,41.8
+France,FRA,1970,37.1
+France,FRA,1975,35.9
+France,FRA,1979,34
+France,FRA,1984,33.4
+France,FRA,1990,32.1
+France,FRA,1996,32
+France,FRA,1997,31.9
+France,FRA,1998,31.7
+France,FRA,1999,32.5
+France,FRA,2000,32.6
+France,FRA,2001,32.5
+France,FRA,2002,31.8
+France,FRA,2003,31.4
+France,FRA,2004,30.6
+France,FRA,2005,29.8
+France,FRA,2006,29.7
+France,FRA,2007,32.4
+France,FRA,2008,33
+France,FRA,2009,32.7
+France,FRA,2010,33.7
+France,FRA,2011,33.3
+France,FRA,2012,33.1
+France,FRA,2013,32.5
+France,FRA,2014,32.3
+France,FRA,2015,32.7
+France,FRA,2016,31.9
+France,FRA,2017,31.6
+France,FRA,2018,32.4
+France,FRA,2019,31.2
+France,FRA,2020,30.7
+France,FRA,2021,31.5
+France,FRA,2022,31.2
+France,FRA,2023,31.8
+Germany,DEU,1991,29.3
+Germany,DEU,1992,29
+Germany,DEU,1993,28.4
+Germany,DEU,1994,29.1
+Germany,DEU,1995,28.7
+Germany,DEU,1996,28.3
+Germany,DEU,1997,28.2
+Germany,DEU,1998,28.1
+Germany,DEU,1999,29
+Germany,DEU,2000,28.7
+Germany,DEU,2001,29.9
+Germany,DEU,2002,29.9
+Germany,DEU,2003,29.9
+Germany,DEU,2004,30.1
+Germany,DEU,2005,31.6
+Germany,DEU,2006,31
+Germany,DEU,2007,31.2
+Germany,DEU,2008,30.6
+Germany,DEU,2009,30.4
+Germany,DEU,2010,30.2
+Germany,DEU,2011,30.4
+Germany,DEU,2012,30.9
+Germany,DEU,2013,31.4
+Germany,DEU,2014,30.8
+Germany,DEU,2015,31.4
+Germany,DEU,2016,31.3
+Germany,DEU,2017,31.3
+Germany,DEU,2018,31.9
+Germany,DEU,2019,32.2
+Germany,DEU,2020,32.5
+Germany,DEU,2021,33.6
+Germany,DEU,2022,33.7
+Italy,ITA,1977,34
+Italy,ITA,1978,33.3
+Italy,ITA,1979,33.3
+Italy,ITA,1980,32.9
+Italy,ITA,1981,31.6
+Italy,ITA,1982,29.2
+Italy,ITA,1983,29.8
+Italy,ITA,1984,31.3
+Italy,ITA,1986,31.2
+Italy,ITA,1987,34.2
+Italy,ITA,1989,32.1
+Italy,ITA,1991,31.1
+Italy,ITA,1993,35.1
+Italy,ITA,1995,35.2
+Italy,ITA,1998,36.7
+Italy,ITA,2000,35.2
+Italy,ITA,2002,34.7
+Italy,ITA,2003,34.9
+Italy,ITA,2004,34.3
+Italy,ITA,2005,33.8
+Italy,ITA,2006,33.7
+Italy,ITA,2007,32.9
+Italy,ITA,2008,33.8
+Italy,ITA,2009,33.8
+Italy,ITA,2010,34.7
+Italy,ITA,2011,35.1
+Italy,ITA,2012,35.2
+Italy,ITA,2013,34.9
+Italy,ITA,2014,34.7
+Italy,ITA,2015,35.4
+Italy,ITA,2016,35.2
+Italy,ITA,2017,35.9
+Italy,ITA,2018,35.2
+Italy,ITA,2019,34.6
+Italy,ITA,2020,35.2
+Italy,ITA,2021,34.8
+Italy,ITA,2022,33.7
+Italy,ITA,2023,34.3
+China,CHN,1981,28.2
+China,CHN,1984,27.1
+China,CHN,1987,29.4
+China,CHN,1990,32.2
+China,CHN,1993,33.9
+China,CHN,1996,35.2
+China,CHN,1999,38.7
+China,CHN,2002,42
+China,CHN,2005,40.9
+China,CHN,2008,43
+China,CHN,2010,43.7
+China,CHN,2011,42.4
+China,CHN,2012,42.2
+China,CHN,2013,39.7
+China,CHN,2014,39.2
+China,CHN,2015,38.6
+China,CHN,2016,38.5
+China,CHN,2017,39.1
+China,CHN,2018,38.5
+China,CHN,2019,38.2
+China,CHN,2020,37.1
+China,CHN,2021,35.7
+China,CHN,2022,36
+South Africa,ZAF,1993,59.3
+South Africa,ZAF,2000,57.8
+South Africa,ZAF,2005,65
+South Africa,ZAF,2008,62.5
+South Africa,ZAF,2010,60.9
+South Africa,ZAF,2014,59.6
+South Africa,ZAF,2022,54.1
+Colombia,COL,1980,55.1
+Colombia,COL,1988,53.1
+Colombia,COL,1989,52.8
+Colombia,COL,1991,51.3
+Colombia,COL,1992,51.3
+Colombia,COL,1996,56.8
+Colombia,COL,1999,58.5
+Colombia,COL,2000,58.4
+Colombia,COL,2001,57.3
+Colombia,COL,2002,56
+Colombia,COL,2003,53.6
+Colombia,COL,2004,55
+Colombia,COL,2005,53.9
+Colombia,COL,2008,55
+Colombia,COL,2009,54.1
+Colombia,COL,2010,54.4
+Colombia,COL,2011,53.3
+Colombia,COL,2012,53.6
+Colombia,COL,2013,53.5
+Colombia,COL,2014,53.6
+Colombia,COL,2015,52
+Colombia,COL,2016,51.7
+Colombia,COL,2017,50.9
+Colombia,COL,2018,51.6
+Colombia,COL,2019,52.5
+Colombia,COL,2020,54.4
+Colombia,COL,2021,55.1
+Colombia,COL,2022,54.8
+Colombia,COL,2023,54.6
+Colombia,COL,2024,54.4
