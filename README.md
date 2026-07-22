@@ -12,8 +12,11 @@ wellbeing dimensions one at a time.
   flags on one engine.
 - `paper/` the lead working paper (LaTeX), "Social Cohesion as a Coordination
   Problem", with its figures and bibliography.
-- `sage-lectures/` a QuantEcon-style lecture site (its own git repository, deployed
-  to GitHub Pages). Not tracked here.
+- The public lecture built from this engine lives in its own repository,
+  [sage-bewley](https://github.com/conway1521/sage-bewley), and is served at
+  conway1521.github.io/sage-bewley. That repository is the shareable front door;
+  this one is the research workshop (engine, papers, calibration, data). The local
+  `sage-lectures/` folder is that repository's working copy and is not tracked here.
 
 ## The model in one line
 
