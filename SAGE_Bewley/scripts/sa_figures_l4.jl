@@ -152,6 +152,9 @@ savefig(f4, joinpath(FIGDIR, "sa_policy.png")); println("F4 sa_policy")
 # a tight tolerance, and a loose one hides the shortfall. Show the calibration
 # loss as a surface instead, with the multiplicity region and the analytical
 # bound drawn on top of it.
+if get(ENV, "SKIP_F5", "0") == "1"
+    println("F5 skipped (SKIP_F5=1)")
+else
 print("F5 scanning the (kappa, sigma) plane ... "); flush(stdout)
 ks = collect(1.0:1.0:40.0)
 ss = collect(0.10:0.025:1.20)
@@ -181,6 +184,7 @@ scatter!(f5, [KAPPA], [SIGMA], c = :white, ms = 10, marker = :star5,
          msw = 1.5, msc = :black, label = "calibrated point")
 plot!(f5, legend = :topright)
 savefig(f5, joinpath(FIGDIR, "sa_region.png")); println("F5 sa_region")
+end
 
 # ---------- F6: the five scenarios side by side ------------------------------
 names6 = ["baseline", "work subsidy\n(20%)", "empowerment",
@@ -190,12 +194,12 @@ vals6  = [R["r0"], R["r_sub"], R["r_emp"],
 cost6  = [NaN, 100*R["T_sub"]/R["mi0"], 0.0,
           R["cred_25_100_cost"], R["cred_66_100_cost"]]
 f6 = plot(size = (760, 420), ylabel = "equilibrium participation rate",
-          legend = false, xticks = (1:5, names6), ylims = (0, 1.05))
+          legend = false, xticks = (1:5, names6), ylims = (0, 1.16))
 bar!(f6, 1:5, vals6, bar_width = 0.55, c = [BLUE, ORANGE, GREEN, PURPLE, GREY])
 hline!(f6, [R["r0"]], c = GREY, ls = :dash, lw = 1)
 for i in 1:5
     lbl = isnan(cost6[i]) ? "" : @sprintf("cost %.1f%%", cost6[i])
-    annotate!(f6, i, vals6[i] + 0.05, text(lbl, 7, :center, GREY))
+    annotate!(f6, i, vals6[i] + 0.045, text(lbl, 7, :center, GREY))
 end
 savefig(f6, joinpath(FIGDIR, "sa_three_policies.png")); println("F6 sa_three_policies")
 
