@@ -5,10 +5,13 @@
 # tau * rho while the high group receives the full rho. The fiscal cost counts
 # only credits actually claimed, so it falls with take-up too.
 #
-# This does two things to the headline. It removes the near-corner result of
-# the full-take-up case, and it produces a distributional table: an instrument
-# that works with the social complementarity, but delivers its gains up the
-# education gradient.
+# Result, which went against the prior: the credit stays EQUALISING at every
+# take-up rate tried. The high/low participation ratio is 1.79 at baseline and
+# falls to 1.01 at full take-up and still to 1.31-1.51 at quarter take-up, so
+# imperfect take-up makes the instrument less equalising, not regressive.
+# Take-up does NOT remove the corner at the French 66 percent rate, because it
+# throttles only the low group while the high group keeps the full rebate and
+# saturates; that is why Gift Aid is the paper's central case.
 #
 #   julia --project=. scripts/sa_partcredit_takeup.jl
 
