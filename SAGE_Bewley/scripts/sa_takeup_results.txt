@@ -1,0 +1,13 @@
+baseline: rate 0.371 (low 0.265, high 0.476), mean income 0.434
+
+Participation credit with imperfect take-up by the low-education group
+policy                 | rate    | low     | high    | hi/lo    | cost / mi
+baseline               |  0.371 |  0.265 |  0.476 |  1.79    |   ----
+France 66%, take-up 100% |  0.997 |  0.993 |  1.000 |  1.01    |  0.055 (12.7%)
+France 66%, take-up 50% |  0.941 |  0.881 |  1.000 |  1.13    |  0.041 (9.5%)
+France 66%, take-up 25% |  0.883 |  0.765 |  1.000 |  1.31    |  0.035 (8.1%)
+Gift Aid 25%, take-up 100% |  0.833 |  0.760 |  0.907 |  1.19    |  0.018 (4.1%)
+Gift Aid 25%, take-up 50% |  0.823 |  0.741 |  0.906 |  1.22    |  0.014 (3.2%)
+Gift Aid 25%, take-up 25% |  0.732 |  0.584 |  0.880 |  1.51    |  0.011 (2.6%)
+
+DONE
