@@ -49,6 +49,22 @@ Honest caveat: the fit is worse than the paper claims. The aggregate matches (0.
 
 Everything downstream was computed on the old footing and is being recomputed. The proposition is unaffected, because its bound uses observed participation rates rather than model output, and it strengthens on the corrected calibration: sigma-bar 0.4695 against sigma* 0.750, a ratio of 1.60 where the paper claimed 1.10.
 
+## Tier 1 additions (2026-06-10)
+
+Three checks the ladder was missing, plus resolution of the two Level 0 findings. Script `SAGE_Bewley/scripts/verify_T1.jl` and `verify_T1b.jl`.
+
+**T1.1 Euler-equation errors: PASS.** Mean log10 error -3.12, -3.34, -3.38 at na = 200, 300, 400, improving with refinement; maximum around -1.8, which is the usual borrowing-constraint kink. The household problem is solved accurately. This is the standard accuracy measure for the model class and it had never been run.
+
+**T1.2 stationary distribution invariance: PASS.** Pushing lambda through the Young lottery once returns it to itself with a maximum residual of 9.4e-13. Previously we only checked that lambda summed to one, which any correctly shaped vector does.
+
+**T1.3 hand-to-mouth: definition replaced.** The old `frac_constrained` summed the mass on the first asset grid node, so refining the grid shrank the measured set rather than resolving it; that is the whole explanation for the 0.44, 0.33, 0.30, 0.30 sequence. Replaced with wealth below a stated fraction of mean labour income, following what Kaplan, Violante and Weidner actually measure. A FOUR-WEEK threshold is the stable one, giving 0.3141 and 0.3169 at the two finest grids, converging to about 0.315. Wider thresholds are less stable, not more. Report 0.315 at a four-week threshold; the 0.33 quoted in the S paper and the QuantEcon lecture is the grid artifact.
+
+**T1.4 effort grid: resolved, and it was the cause.** Every quantity that depends on effort inherits the effort grid's resolution, because the engine recovers next-assets continuously but takes effort from the discrete grid (re-optimising effort against the interpolated continuation value collapses to a corner under the behavioural social term, so the engine deliberately does not). Since Q = E[1-e], the cohesion side is noisier than the consumption side throughout, which is exactly the pattern observed. At fixed na = 200 the oscillation damps cleanly as ne rises: dC +6.12, +5.51, +5.71, +5.61 and dQ -5.71, -4.92, -5.28, -5.24 for ne = 40, 80, 160, 320, with amplitude roughly halving per doubling. Budget residuals are ~1e-6 throughout, so the fiscal fixed point is not implicated.
+
+**Converged S-paper policy result.** At ne = 320: na = 200 gives +5.61 / -5.24, na = 300 gives +5.39 / -4.84, na = 400 gives +5.61 / -5.23. The na = 300 outlier is grid-alignment sensitivity rather than a trend, since 200 and 400 agree closely. Best estimate: consumption **+5.5 percent** (robust, matches the quoted figure) and public good **-5.1 percent** with about +/- 0.25 of alignment noise. The paper and the lecture quote -4.7, which is too small; the social cost is slightly LARGER than claimed, so the correction strengthens the paper's substantive point while invalidating its precision.
+
+Required settings for effort-dependent quantities: ne = 320. The production ne = 40 is adequate for consumption aggregates and inadequate for anything built on Q.
+
 ## Safe operating region
 
 Family spacing 0.2 or finer over the transition, at least 2000 taste quadrature nodes, na = 200 and ne = 40 for the household solve. Aggregate participation is then accurate to about 0.002. Do not quote cell-level responses from the reduction.
