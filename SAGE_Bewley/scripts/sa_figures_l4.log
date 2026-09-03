@@ -1,0 +1,10 @@
+Level 4 footing: kappa 10.75, sigma 0.750, omega 0.30, baseline rate 0.3530
+F1 sa_map
+F2 sa_gradient
+F3 sa_decomposition
+F4 sa_policy
+F5 scanning the (kappa, sigma) plane ... done: 33 multiplicity points, best fit distance 0.0642
+F5 sa_region
+F6 sa_three_policies
+F7 sa_gdpb
+ALL FIGURES WRITTEN

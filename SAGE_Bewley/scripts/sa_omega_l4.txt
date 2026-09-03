@@ -1,0 +1,2 @@
+omega  | kappa*  | sigma*  | rate    | group rates   | slope    | sigma-bar | ratio   | frontier
+0.15   |  13.00  |  0.740  | 0.3430  | 0.284 / 0.402 | 0.9321   | 0.6987   | 1.059  | 0.68

@@ -65,6 +65,24 @@ Three checks the ladder was missing, plus resolution of the two Level 0 findings
 
 Required settings for effort-dependent quantities: ne = 320. The production ne = 40 is adequate for consumption aggregates and inadequate for anything built on Q.
 
+## Level 4: the S+A results recomputed (2026-09-03)
+
+Everything the S+A paper reports is now produced by one script, `SAGE_Bewley/scripts/sa_level4.jl`, from one family cache, so no two numbers in that paper can sit on different footings again. Settings: concentrated belonging grid (83 nodes, spacing 0.2 across the transition), 2000 taste quadrature nodes, kappa = 10.75, sigma_m = 0.750, omega = 0.30, na = 200, ne = 40. Log in `sa_level4.txt`, machine-readable scalars in `sa_level4_results.txt`, figures from `sa_figures_l4.jl`, cross-country in `sa_countries_l4.jl`.
+
+**Participation is effort-grid insensitive, unlike the companion paper's Q.** This was the one thing that could have made Level 4 as expensive as Tier 1. It did not: doubling and redoubling the effort grid moves the calibrated equilibrium from 0.35303 to 0.35305 to 0.35307 and the group rates in the fifth decimal. Mean labour income, which does inherit the effort grid, moves by at most 0.3 percent, so the GDP column of the ledger carries that accuracy and nothing else does. The reason is structural: participation is a mass under a discrete choice, not an average of a finely graded object.
+
+**What moved.** Baseline 0.371 -> 0.353; group rates 0.265/0.476 -> 0.295/0.411; sigma-bar 0.454 -> 0.469; ratio to sigma* 1.10 -> 1.60; numerical multiplicity frontier 0.41 -> 0.30; proposition slope 0.91 -> 0.626 against a numerical 0.81 -> 0.618; subsidy direct effect -8pp -> -4.3pp; subsidy equilibrium effect -29pp -> -10.6pp; amplification 3.6 -> 2.47; empowerment +14pp -> +2.5pp; Gift Aid credit 83.3 percent at 4.1 percent cost -> 66.1 percent at 3.2 percent; France credit 99.7 at 12.7 -> 95.2 at 12.1.
+
+**Two conclusions reversed, and both were reported the wrong way round in the previous draft.**
+
+1. *Take-up incidence.* The old finding, that the credit stays equalising at every take-up rate, was itself an artefact of the coarse footing, so the refutation of my original hypothesis was wrong and the hypothesis was right. On the corrected numbers the baseline high/low ratio is 1.40, full take-up compresses it to 1.19, half take-up is neutral at 1.43, and quarter take-up is DISEQUALISING at 1.60 (Gift Aid) and 1.72 (France). The aggregate sign is unaffected: the credit is expansionary at every take-up rate.
+
+2. *The GDP-B ledger.* The model's own shadow price of the fabric is 0.1447, which is 33 percent of baseline GDP for a fully participating society. The breakeven price at which the work subsidy's material gain exactly offsets its loss of fabric is 0.2158, which is 50 percent of GDP. The model price is BELOW its own breakeven, so at the model's own valuation the work subsidy RAISES GDP-B by 1.5 percent. The old claim that it lowers GDP-B by 2.2 percent does not survive. What survives, and does not depend on the price at all, is the RANKING: on GDP the subsidy beats the credit (+5.2 against -3.9), on GDP-B the credit beats the subsidy (+5.6 against +1.5). The paper now reports the breakeven and hands the sign question to the WELLBY valuation literature.
+
+**A new analytical link, found in the course of the recomputation.** The equilibrium multiplier on any small policy shift is 1/(1 - G'(r*)), and G'(r*) is exactly the object the proposition bounds. At the corrected slope 0.618 that predicts 2.62 against the 2.47 measured on a ten-point move, the gap being map curvature. So the theorem that rules out coordination traps also caps the amplification factor, and the paper's two halves are one statement rather than two. This was not visible at the old numbers, where 1/(1-0.81) = 5.3 against a reported 3.6, an inconsistency nobody had checked.
+
+**The gradient shortfall is now stated rather than hidden.** The model's group gap is 11.7 points against an observed 20, about forty percent too flat, and no pair in the searched range closes it while keeping the aggregate. Its direction favours caution: the bound is largest when rates sit at one half, so evaluating at the model's rates (0.469) is conservative relative to evaluating at the observed ones (0.458).
+
 ## Safe operating region
 
 Family spacing 0.2 or finer over the transition, at least 2000 taste quadrature nodes, na = 200 and ne = 40 for the household solve. Aggregate participation is then accurate to about 0.002. Do not quote cell-level responses from the reduction.
