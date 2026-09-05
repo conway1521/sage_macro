@@ -161,7 +161,8 @@ participation credit (25%)   | 0.661  | 0.4187  |   -3.9  | 0.5143  |   +5.6
 participation credit (66%)   | 0.952  | 0.4075  |   -6.5  | 0.5453  |  +12.0
 
 breakeven price for the work subsidy  pi* = 0.2158  (50% of GDP per unit P)
-the model price is 0.7 times the breakeven, so the subsidy lowers GDP-B
+the model price is 0.67 times the breakeven, so at its own price the subsidy
+RAISES GDP-B; it lowers it only if the fabric is priced above 50% of GDP per unit P
 
 ============================================================================
 I. EFFORT-GRID ROBUSTNESS OF THE LEVEL 4 NUMBERS

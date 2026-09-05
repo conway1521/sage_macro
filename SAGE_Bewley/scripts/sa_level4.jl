@@ -24,7 +24,7 @@ include(joinpath(@__DIR__, "..", "src", "SAGEBewley.jl"))
 using .SAGEBewley
 include(joinpath(@__DIR__, "proto_participation_core.jl"))
 include(joinpath(@__DIR__, "sa_core.jl"))
-using Printf, Statistics
+using Printf, Statistics, DelimitedFiles
 
 # ---------------------------------------------------------------- settings --
 const UGRID  = vcat(collect(0.0:0.2:12.0), collect(12.5:0.5:16.0),
@@ -58,10 +58,24 @@ end
 const FAMS = Dict{NTuple{4,Float64},NTuple{4,Vector{Float64}}}()
 nfam = Ref(0)
 
+const CACHEDIR = joinpath(@__DIR__, "cache_l4")
+isdir(CACHEDIR) || mkpath(CACHEDIR)
+cachefile(key) = joinpath(CACHEDIR,
+    "fam_" * join([replace(@sprintf("%.6f", k), "." => "p") for k in key], "_") * ".txt")
+
 function family(α; subsidy = 0.0, lumptax = 0.0, partcredit = 0.0)
     key = (round(α, digits = 8), round(subsidy, digits = 8),
            round(lumptax, digits = 8), round(partcredit, digits = 8))
     haskey(FAMS, key) && return FAMS[key]
+    # Disk cache. A family is 83 solves of the household problem and depends on
+    # nothing but this key, so it is worth keeping across runs: with the cache
+    # warm the whole script is seconds rather than an hour and a half, which is
+    # what makes re-verification cheap enough to actually do.
+    f = cachefile(key)
+    if isfile(f)
+        d = readdlm(f, '\t'; skipstart = 1)
+        return FAMS[key] = (d[:, 1], d[:, 2], d[:, 3], d[:, 4])
+    end
     r = Float64[]; mi = Float64[]; pb = Float64[]
     for u in UGRID
         p = update(cell_params(α; na = NA, ne = NE,
@@ -73,6 +87,12 @@ function family(α; subsidy = 0.0, lumptax = 0.0, partcredit = 0.0)
     nfam[] += 1
     @printf("  [family %2d] alpha %.3f  sub %.2f  tax %.4f  credit %.2f\n",
             nfam[], α, subsidy, lumptax, partcredit); flush(stdout)
+    open(f, "w") do io
+        println(io, join(["u", "r", "minc", "pbase"], '\t'))
+        for i in eachindex(UGRID)
+            println(io, join([UGRID[i], r[i], mi[i], pb[i]], '\t'))
+        end
+    end
     FAMS[key] = (copy(UGRID), r, mi, pb)
 end
 
