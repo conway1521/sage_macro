@@ -8,7 +8,7 @@ include(joinpath(@__DIR__, "proto_participation_core.jl"))
 include(joinpath(@__DIR__, "sa_core.jl"))
 using Printf, Statistics, DelimitedFiles
 const UG = vcat(collect(0.0:0.2:12.0), collect(12.5:0.5:16.0), collect(17.0:1.0:30.0))
-const NQ=2000; const OM=0.30; const K=10.00; const S=0.495
+const NQ=2000; const OM=0.30; const K=10.00; const S=0.510
 const MS = taste_nodes_ln(S; n=NQ); const AMAX=4.0; const PEXP=3.0; const TH=0.005
 const FAMS = Dict{Any,Any}()
 fam(α) = get!(FAMS,α) do

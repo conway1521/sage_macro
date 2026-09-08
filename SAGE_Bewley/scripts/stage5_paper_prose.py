@@ -10,7 +10,7 @@ THETA = float(re.search(r"const THETA *= *([0-9.]+)", (S/"sa_level4.jl").read_te
 KAPPA = float(re.search(r"const KAPPA *= *([0-9.]+)", (S/"sa_level4.jl").read_text()).group(1))
 SIGMA = float(re.search(r"const SIGMA *= *([0-9.]+)", (S/"sa_level4.jl").read_text()).group(1))
 # theta limit at the final point: rows "kappa* .. | rate r .. | slope s .." at theta 0.005 and 0.0025
-lb = (S/"sa_recalibrate_l5b.txt").read_text()
+lb = (S/"sa_recalibrate_l5b_ne80.txt").read_text()
 rows = re.findall(r"rate ([0-9.]+) groups .*?\| slope ([0-9.]+) mult", lb)
 r_t5, s_t5 = float(rows[0][0]), float(rows[0][1]); r_t25, s_t25 = float(rows[1][0]), float(rows[1][1])
 na4 = re.search(r"na=400: rate ([0-9.]+) slope ([0-9.]+)\s+\(na=200: rate ([0-9.]+)", lb)

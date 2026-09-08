@@ -35,7 +35,7 @@ const NE_DEFAULT = 80
 
 const UGRID = vcat(collect(0.0:0.2:12.0), collect(12.5:0.5:16.0), collect(17.0:1.0:30.0))
 const NQ = 2000
-const OMEGA = 0.30; const KAPPA = 10.00; const SIGMA = 0.495
+const OMEGA = 0.30; const KAPPA = 10.00; const SIGMA = 0.510
 const Blow = CELL_LOW.B; const Bhigh = CELL_HIGH.B
 
 isdir(CACHEDIR) || mkpath(CACHEDIR)

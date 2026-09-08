@@ -25,7 +25,7 @@ const GRID  = (a_max = 4.0, pexp = 3.0)
 
 const UGRID = vcat(collect(0.0:0.2:12.0), collect(12.5:0.5:16.0), collect(17.0:1.0:30.0))
 const NQ = 2000
-const OMEGA = 0.30; const KAPPA = 10.00; const SIGMA = 0.495
+const OMEGA = 0.30; const KAPPA = 10.00; const SIGMA = 0.510
 const SUB = 0.20        # financed work subsidy
 const RHO = 0.25        # Gift Aid rate credit
 
