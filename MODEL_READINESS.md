@@ -103,15 +103,17 @@ $(\kappa, \sigma_m, \theta, n_e) = (10.00, 0.510, 0.005, 80)$, $\omega = 0.30$.
 | $n_e$ = 80 to 320 | slope 0.8983 to four decimals; level in a 0.0006 band |
 | Taste quadrature | 500 nodes suffice; 2000 used |
 | Map grid 101 to 1601 | level to the sixth decimal |
-| Linearisation identity at a one percent shock | $-0.1$ percent at stage 5; to be confirmed on the final families by `audit_sa.jl` |
+| Linearisation identity at a one percent shock | confirmed on the final families: $+0.2$ percent (8.304 measured against 8.284 predicted) |
 | Determinism | rerun reproduces the results file byte for byte |
 | Independent code path | the countries script reproduces France to four decimals |
-| Income process $n_z$ = 2 to 7 | conclusions stable, converged by 5 (stage 4 core; to be repeated) |
+| Income process $n_z$ = 2 to 7 | conclusions stable, converged by 5 (stage 4 core; not yet repeated at the final point, see Part 6) |
 | Private share $\omega$ | verdict holds at 0.15, 0.30, 0.50; the margin does not |
 
 The first four rows are the ones missing from every earlier draft, and they
 are why this draft is different in kind: the number has stopped moving because
-each surface it lives on has been shown flat.
+each surface it lives on has been shown flat. The identity row is the one
+that matters most, and it now passes on the exact families the paper quotes,
+not on a related but different footing.
 
 ## Part 4. What is fragile, and how it is reported
 
@@ -181,7 +183,15 @@ needs the $\omega$ measurement and more countries, and both are joint work.
 
 ## What the next session should do first
 
-Run `audit_sa.jl` at the final point and confirm the identity row before
-believing any of the above. Then repeat the $n_z$ sweep on the logit core. Then
-post. The one thing not to do is change the core again without recalibrating
-before reading a single number.
+The identity row is confirmed: `audit_sa.jl` ran clean at the final point,
+8.304 measured against 8.284 predicted at a one percent shock, 0.2 percent
+off. The paper (`sage_sa.tex`) has been rewritten end to end against this
+calibration, compiles at 22 pages, and was read through in full rather than
+checked by pattern-matching alone; two places where the prose logic itself
+had gone stale (the take-up disequalising claim, the GDP-B sign) were caught
+that way and would not have been caught by search-and-replace on numbers.
+
+Still open, in priority order: repeat the $n_z$ sweep on the logit core (an
+afternoon), then the SSRN post. The one thing not to do is change the core
+again without recalibrating before reading a single number; that is the
+mistake that produced the whole stage-4 detour.
