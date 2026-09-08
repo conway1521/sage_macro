@@ -16,7 +16,9 @@ which three were fixed months ago and one, the under-resolved response family,
 propagated into everything the S+A paper said. That one is fixed, and there is
 now a test that would have caught it on day one.
 
-What is not closed: the level of participation is imprecise, one free parameter
+Update 2026-09-08: the participation level is now converged (stage 5 in VERIFICATION.md); the two remaining items below stand.
+
+What is not closed: the level of participation was imprecise (now fixed), one free parameter
 moves the policy multiplier by a factor of six, and the model cannot reproduce
 the participation gradient at the headline calibration. None of those is a
 defect. All three should be reported rather than resolved.
@@ -209,7 +211,7 @@ from primitives.
 
 | surface | status | expected direction |
 |---|---|---|
-| Asset grid in the participation core | **not converged**: r* spans 0.340 to 0.360 over na 100 to 400 | levels imprecise, conclusions stable |
+| Asset grid in the participation core | **resolved 2026-09-08**: logit core at theta 0.01, na-error 9e-5, see VERIFICATION.md stage 5 | was: levels imprecise, conclusions stable |
 | Participation lump q-bar = 0.10 | never swept | scales the belonging payoff; likely reparameterises kappa |
 | Cell shares, fixed at 50/50 | never swept | shifts the aggregate, not the bound's form |
 | Euler errors in the participation core | never computed; only done for the engine | unknown |

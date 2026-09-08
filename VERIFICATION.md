@@ -83,6 +83,35 @@ Everything the S+A paper reports is now produced by one script, `SAGE_Bewley/scr
 
 **The gradient shortfall is now stated rather than hidden.** The model's group gap is 11.7 points against an observed 20, about forty percent too flat, and no pair in the searched range closes it while keeping the aggregate. Its direction favours caution: the bound is largest when rates sit at one half, so evaluating at the model's rates (0.469) is conservative relative to evaluating at the observed ones (0.458).
 
+## Stage 5: the participation level, and why it would not converge (2026-09-06 to 09-08)
+
+The Level 4 audit left one quantity unconverged: the participation rate itself moved by about two points across asset grids while every slope-based quantity was stable to under one percent. Fixing it took three steps, each of which was a real fault, and the third was structural. Scripts: `audit_theta.jl`, `audit_theta2.jl`, `wise_participation_logit.jl`; probes `naconv2.txt`, `ordtest.txt`, `pexptest.txt`.
+
+**Fault 1: next-assets off the grid.** The engine's `solve_model` golden-sections next-assets against an interpolated continuation value and builds the distribution with the Young lottery. The participation core never did either; savings sat on grid points and the wealth distribution carried a sawtooth. Ported. Cut the na-spread of the level from 0.020 to 0.0065.
+
+**Fault 2: a mis-scaled asset grid, and this one is the origin of most of the project's trouble.** `a_max` was 100 while mean labour income is 0.40 and the wealth distribution ends near 2. So 97 percent of the 200 nodes were empty and the entire distribution sat on SIX of them, 44 percent of it on node one. The participation threshold, at about three months of income, fell among those six. That is why each cell's response to the belonging payoff was a near-step with five distinct levels, why the taste quadrature needed 2000 nodes, and why the reduction layer was so fragile. The engine has the same grid and the same problem, less severely (fifteen nodes carry its distribution), which is a note for the S paper. Rescaled to a_max 4, pexp 3, with the top of the grid verified slack: 75 effective nodes.
+
+**Fault 3, structural: mass above a cutoff on an atom.** Even so, the level would not settle: 0.334, 0.315, 0.339 at na = 200, 400, 800, while the gap, slope, bound and multiplier converged to 0.6 percent or better. The participation decision is a wealth threshold, the threshold sits just above the atom at the borrowing constraint (43 percent of households in the cell, 33 in the engine, normal for beta R < 1), and the aggregate is whatever mass lies between the atom and the cutoff. No grid resolves that; concentrating the grid harder (pexp 2.5 to 4) reduced the na-error but different concentrations gave answers 0.011 apart. The consequence for per-country use was fatal: across na the country ordering changed, Germany moving 0.028 while the OECD spread is 0.03. An attempt to fix it by bisecting the cutoff and interpolating the CDF was unsound (non-monotone in the belonging payoff) and was removed.
+
+**The fix: the Brock and Durlauf (2001) form of the same model.** An i.i.d. type-1 extreme-value shock of scale theta on the participation payoff, on top of the persistent lognormal taste. The choice becomes a logit probability, the aggregate an integral of a smooth function over the wealth distribution, and theta -> 0 recovers the hard threshold, so the proposition (stated for the hard-threshold model) is its limit and is untouched. `solve_participation_logit` in `proto_participation_core.jl`, warm-started from the hard-max DiscreteDP.
+
+| theta | r* na200 | r* na400 | na-error | slope | quadrature nodes for 0.002 |
+|---|---|---|---|---|---|
+| 0.10 | 0.4606 | 0.4609 | 0.00025 | 0.488 | |
+| 0.05 | 0.4035 | 0.4038 | 0.00022 | 0.573 | |
+| 0.02 | 0.3706 | 0.3707 | 0.00012 | 0.607 | 500 |
+| **0.01** | **0.3645** | **0.3646** | **0.00009** | **0.614** | **500** |
+| 0.005 | 0.3614 | 0.3617 | 0.00031 | 0.615 | 500 |
+| 0.0025 | 0.3609 | 0.3614 | 0.00053 | 0.616 | |
+
+Reading it: the level converges in theta (increments 0.057, 0.033, 0.006, 0.003, 0.0005) to about 0.360 and the slope to 0.616, which matches the hard-threshold slope that was always stable. The na-error bottoms at theta = 0.01 and climbs back below it as the regulariser weakens. So theta = 0.01 is the working value: the smallest before the grid reasserts itself, within 0.004 of the limit on the level, and a two-hundredfold improvement in na-convergence over the hard threshold. The quadrature requirement falls from 2000 to 500.
+
+**Consequence for per-country use.** Country levels are now resolved to 0.0003 (shifts across na: FR +0.0001, DE +0.0002, IT 0.0000, US +0.0003, ZA -0.0002) and the OECD ordering ZA < FR < IT < US < DE is preserved. Germany and the US differ by 0.0007, about twice the noise, so that pair remains marginal; every other pair is clear.
+
+**The WISE Solidarity comparison, restored.** On the hard threshold this had to be retracted because the ordering was inside the noise. On the logit core: participation vs WISE Solidarity +0.94, +0.49, +0.46 (all six, 2007/2017/2018) and +0.80, +1.00, +0.95 (OECD four), beating both calibrated inputs alone in every cell. Six countries, so suggestive; but now it is a real ordering being compared.
+
+**What this changes upstream.** All S+A numbers are being recomputed on this core (stage 5, `cache_l5`). The S paper's engine shares the mis-scaled grid; its slope-based results were shown stable but its wealth-distribution statements should be rechecked on a rescaled grid before the next revision.
+
 ## Safe operating region
 
 Family spacing 0.2 or finer over the transition, at least 2000 taste quadrature nodes, na = 200 and ne = 40 for the household solve. Aggregate participation is then accurate to about 0.002. Do not quote cell-level responses from the reduction.
