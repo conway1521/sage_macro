@@ -11,7 +11,7 @@ include(joinpath(@__DIR__, "proto_participation_core.jl"))
 include(joinpath(@__DIR__, "sa_core.jl"))
 using DelimitedFiles, Printf, Statistics
 # ---- numerical footing, stage 5 (2026-09-08): same core and grid as sa_level4
-const THETA = 0.01
+const THETA = 0.005
 const GRID  = (a_max = 4.0, pexp = 3.0)
 ENV["GKSwstype"] = "100"
 using Plots

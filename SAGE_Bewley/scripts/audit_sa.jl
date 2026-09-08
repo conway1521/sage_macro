@@ -28,13 +28,13 @@ using Printf, Statistics, DelimitedFiles
 # ---- numerical footing, stage 5 (2026-09-08) --------------------------------
 # Logit participation (Brock-Durlauf), theta a small regulariser whose limit is
 # the hard-threshold model; asset grid rescaled to the wealth distribution.
-const THETA = 0.01
+const THETA = 0.005
 const GRID  = (a_max = 4.0, pexp = 3.0)
 
 
 const UGRID = vcat(collect(0.0:0.2:12.0), collect(12.5:0.5:16.0), collect(17.0:1.0:30.0))
 const NQ = 2000
-const OMEGA = 0.30; const KAPPA = 10.75; const SIGMA = 0.750
+const OMEGA = 0.30; const KAPPA = 10.00; const SIGMA = 0.495
 const Blow = CELL_LOW.B; const Bhigh = CELL_HIGH.B
 
 isdir(CACHEDIR) || mkpath(CACHEDIR)
