@@ -1,0 +1,118 @@
+==============================================================================
+AUDIT OF THE S+A CORE
+==============================================================================
+reference: r* = 0.35261, groups 0.26654 / 0.43869, slope 0.87893, mean income 0.43453
+
+------------------------------------------------------------------------------
+A1. LINEARISATION IDENTITY: amplification against 1/(1 - G')
+------------------------------------------------------------------------------
+For a small financed subsidy the equilibrium response must equal the direct
+response divided by 1 - G'(r*). Curvature makes large shocks depart from it,
+so the test is the LIMIT as the shock shrinks, not the value at tau = 0.20.
+map traced at ngrid = 1601 for this test, since at small tau the equilibrium
+moves only a few grid steps and a coarse trace would measure the grid.
+predicted multiplier 1/(1 - 0.87928) = 8.2837
+
+tau      | direct    | equilib   | measured  | predicted | error
+    [built family alpha 0.765 sub 0.01 tax 0.0043 cred 0.00 na 200 ne 80]
+    [built family alpha 0.911 sub 0.01 tax 0.0043 cred 0.00 na 200 ne 80]
+    [built family alpha 0.765 sub 0.01 tax 0.0044 cred 0.00 na 200 ne 80]
+    [built family alpha 0.911 sub 0.01 tax 0.0044 cred 0.00 na 200 ne 80]
+0.01     | -0.00423 | -0.03516 |   8.3041  |   8.2837  |   +0.2%
+    [built family alpha 0.765 sub 0.05 tax 0.0217 cred 0.00 na 200 ne 80]
+    [built family alpha 0.911 sub 0.05 tax 0.0217 cred 0.00 na 200 ne 80]
+    [built family alpha 0.765 sub 0.05 tax 0.0221 cred 0.00 na 200 ne 80]
+    [built family alpha 0.911 sub 0.05 tax 0.0221 cred 0.00 na 200 ne 80]
+    [built family alpha 0.765 sub 0.05 tax 0.0222 cred 0.00 na 200 ne 80]
+    [built family alpha 0.911 sub 0.05 tax 0.0222 cred 0.00 na 200 ne 80]
+0.05     | -0.01636 | -0.11935 |   7.2959  |   8.2837  |  -11.9%
+    [built family alpha 0.765 sub 0.20 tax 0.0926 cred 0.00 na 200 ne 80]
+    [built family alpha 0.911 sub 0.20 tax 0.0926 cred 0.00 na 200 ne 80]
+0.20     | -0.05926 | -0.23950 |   4.0418  |   8.2837  |  -51.2%
+
+------------------------------------------------------------------------------
+A2. ASSET GRID IN THE PARTICIPATION CORE (never tested before)
+------------------------------------------------------------------------------
+na     | r*         | low        | high       | slope      | mean income
+    [built family alpha 0.765 sub 0.00 tax 0.0000 cred 0.00 na 100 ne 80]
+    [built family alpha 0.911 sub 0.00 tax 0.0000 cred 0.00 na 100 ne 80]
+100    | 0.344820  | 0.258499  | 0.431140  | 0.881322  | 0.434656
+200    | 0.352614  | 0.266541  | 0.438688  | 0.878925  | 0.434531
+    [built family alpha 0.765 sub 0.00 tax 0.0000 cred 0.00 na 300 ne 80]
+    [built family alpha 0.911 sub 0.00 tax 0.0000 cred 0.00 na 300 ne 80]
+300    | 0.352630  | 0.266561  | 0.438699  | 0.878908  | 0.434559
+    [built family alpha 0.765 sub 0.00 tax 0.0000 cred 0.00 na 400 ne 80]
+    [built family alpha 0.911 sub 0.00 tax 0.0000 cred 0.00 na 400 ne 80]
+400    | 0.352502  | 0.266472  | 0.438532  | 0.878968  | 0.434555
+
+------------------------------------------------------------------------------
+A3. MAP GRID: how finely the aggregate map is traced
+------------------------------------------------------------------------------
+ngrid    | r*         | slope      | crossings  | stable
+101      | 0.352587  | 0.878490  | 1          | 1
+201      | 0.352606  | 0.879358  | 1          | 1
+401      | 0.352614  | 0.878925  | 1          | 1
+801      | 0.352615  | 0.879181  | 1          | 1
+1601     | 0.352615  | 0.879282  | 1          | 1
+The slope is a forward difference on this grid, so it is the quantity most
+exposed to ngrid, and A1 depends on it directly.
+
+------------------------------------------------------------------------------
+A2b. WHAT THE ASSET-GRID WOBBLE DOES TO THE CONCLUSIONS
+------------------------------------------------------------------------------
+A2 shows r* is not settled to better than about a point across na. The
+question that matters is whether the CONCLUSIONS move with it, so propagate
+each na row through the bound and the multiplier.
+na     | r*       | gap      | G'       | sigma-bar | ratio   | multiplier
+100    | 0.34482  | 0.17264  | 0.88132  | 0.46314   | 1.1012  | 8.4261
+200    | 0.35261  | 0.17215  | 0.87893  | 0.46258   | 1.1025  | 8.2593
+300    | 0.35263  | 0.17214  | 0.87891  | 0.46258   | 1.1025  | 8.2582
+400    | 0.35250  | 0.17206  | 0.87897  | 0.46261   | 1.1024  | 8.2623
+If the last three columns are stable while the first two are not, the model
+is imprecise about the LEVEL of participation and precise about the bound
+and the multiplier, which are what the paper actually claims.
+
+------------------------------------------------------------------------------
+A4. FISCAL FIXED POINT: convergence of the lump-sum tax loop
+------------------------------------------------------------------------------
+iter   | tax in       | rate         | tax out     
+1      | 0.086906143 | 0.125328890 | 0.092173479
+2      | 0.092173479 | 0.113725193 | 0.092586736
+3      | 0.092586736 | 0.113158612 | 0.092617297
+4      | 0.092617297 | 0.113117115 | 0.092619283
+    [built family alpha 0.765 sub 0.20 tax 0.0926 cred 0.00 na 200 ne 80]
+    [built family alpha 0.911 sub 0.20 tax 0.0926 cred 0.00 na 200 ne 80]
+5      | 0.092619283 | 0.113114839 | 0.092619399
+6      | 0.092619399 | 0.113114839 | 0.092619399
+
+------------------------------------------------------------------------------
+A5. EQUILIBRIUM SELECTION: the full crossing set at the calibrated point
+------------------------------------------------------------------------------
+  crossing at r = 0.35261, slope 0.87893, STABLE
+The selection rule (highest stable) is only binding when there is more than
+one; if the line above shows a single stable crossing the rule is inert here.
+
+------------------------------------------------------------------------------
+A7. WHY IS THE CREDIT'S EFFECT SO SIMILAR ACROSS COUNTRIES?
+------------------------------------------------------------------------------
+The cross-country run gives the credit a +30 to +34 point effect in every
+country, from baselines ranging 0.20 to 0.37. Deltas that stable across
+economies that different are more likely to be a saturation artefact than a
+finding, so decompose: how much of the move is the direct budget effect and
+how much is the feedback?
+
+cty  | base     | direct   | equilib  | d(dir)   | d(eq)    | implied mult
+FR   | 0.3526  | 0.5488  | 0.8491  | +0.1962  | +0.4965  | 2.53
+    [built family alpha 0.550 sub 0.00 tax 0.0000 cred 0.00 na 200 ne 80]
+    [built family alpha 0.880 sub 0.00 tax 0.0000 cred 0.00 na 200 ne 80]
+    [built family alpha 0.550 sub 0.00 tax 0.0000 cred 0.25 na 200 ne 80]
+    [built family alpha 0.880 sub 0.00 tax 0.0000 cred 0.25 na 200 ne 80]
+    [built family alpha 0.550 sub 0.00 tax 0.0133 cred 0.25 na 200 ne 80]
+    [built family alpha 0.880 sub 0.00 tax 0.0133 cred 0.25 na 200 ne 80]
+    [built family alpha 0.550 sub 0.00 tax 0.0125 cred 0.25 na 200 ne 80]
+    [built family alpha 0.880 sub 0.00 tax 0.0125 cred 0.25 na 200 ne 80]
+    [built family alpha 0.550 sub 0.00 tax 0.0126 cred 0.25 na 200 ne 80]
+    [built family alpha 0.880 sub 0.00 tax 0.0126 cred 0.25 na 200 ne 80]
+ZA   | 0.0919  | 0.1993  | 0.6545  | +0.1074  | +0.5627  | 5.24
+
+AUDIT DONE

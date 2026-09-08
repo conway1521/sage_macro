@@ -38,7 +38,6 @@ const NQ = 2000
 const OMEGA = 0.30; const KAPPA = 10.00; const SIGMA = 0.510
 const Blow = CELL_LOW.B; const Bhigh = CELL_HIGH.B
 
-isdir(CACHEDIR) || mkpath(CACHEDIR)
 
 const TASTE = Dict{Float64,Vector{Float64}}()
 tastes(σ) = get!(TASTE, σ) do; taste_nodes_ln(σ; n = NQ) end
