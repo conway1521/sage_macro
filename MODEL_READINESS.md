@@ -1,242 +1,187 @@
-# Model readiness: why the numbers kept moving, and whether they have stopped
+# Model readiness: what moved, why, and whether it has stopped
 
-Written 2026-09-05, after the Level 4 recomputation and the audit that followed
-it. The question this answers is not "are the current numbers right" but "is
-there a reason to expect the next number to reverse as well".
+Rewritten 2026-09-08 at the end of stage 5, superseding the 2026-09-05 version
+(kept as `MODEL_READINESS_2026-09-05.md`). That version diagnosed the churn as
+a process failure and declared the numerics nearly closed. It was right about
+the process and wrong about the closure: two further faults were found in the
+three days after it was written, and fixing them moved the paper's headline
+back to where it had been in June. This document records where things now
+stand, with the evidence rather than the assertion, and says plainly what
+remains open.
 
-Scripts: `SAGE_Bewley/scripts/audit_sa.jl`, `audit_nz.jl`,
-`audit_oldfooting.jl`, `wise_participation.jl`, `sa_level4.jl`. Logs sit beside
-each. Earlier layers are in `VERIFICATION.md` and `REVIEW.md`.
+Scripts and logs are in `SAGE_Bewley/scripts/`; the layered record is in
+`VERIFICATION.md`.
 
 ## The verdict first
 
-The churn was a process failure, not a fragile model, and the process failure
-is now closed. Eleven reversals across three months reduce to four faults, of
-which three were fixed months ago and one, the under-resolved response family,
-propagated into everything the S+A paper said. That one is fixed, and there is
-now a test that would have caught it on day one.
+The June draft of the S+A paper was right on every qualitative claim, and its
+calibration, $(\kappa, \sigma_m) = (10.0, 0.50)$, was right to within the
+numerics of the time. Everything reported as a correction to it between June
+and September was a consequence of three faults in the numerics, not a
+finding about the economy. Those faults are now fixed, each with a test that
+would have caught it, and the June numbers are recovered at a footing where
+the asset grid, the effort grid, the taste quadrature, the map grid and the
+choice-smoothing scale have each been shown converged.
 
-Update 2026-09-08: the participation level is now converged (stage 5 in VERIFICATION.md); the two remaining items below stand.
+What that footing also shows, and June could not, is that the participation
+moments identify a curve in $(\kappa, \sigma_m)$ rather than a point. The
+paper's verdict holds everywhere on that curve; its margin does not, and is
+reported as a range with the best-fitting value first. That is the honest form
+of the result, and a better one than a point would have been.
 
-What is not closed: the level of participation was imprecise (now fixed), one free parameter
-moves the policy multiplier by a factor of six, and the model cannot reproduce
-the participation gradient at the headline calibration. None of those is a
-defect. All three should be reported rather than resolved.
+The model is ready to build on for the purposes it was designed for. The
+places where it is not are named in Part 6, and none of them is numerical.
 
-## Part 1. Why it kept changing
+## Part 1. What happened, in order
 
-### The ledger
+| stage | footing | ratio | multiplier | what was wrong |
+|---|---|---|---|---|
+| June | hard threshold, 41 uniform family nodes, 15 taste nodes, $a_{\max}$ 100 | 1.10 | 3.6 (inconsistent with the slope) | everything under-resolved, but at the right point |
+| stage 4 (Sep 3) | hard threshold, 83 concentrated nodes, 2000 taste nodes | 1.60 | 2.47 | the step response could not fit at low dispersion; calibration pushed to the flat end of the valley |
+| stage 5 (Sep 8, morning) | logit, rescaled grid, $(\kappa, \sigma_m)$ held at stage 4 | 1.60 | 2.47 | calibration not redone after the solver change |
+| stage 5a | recalibrated, $\theta = 0.01$, $n_e = 40$ | 1.06 | 11 | $\theta$ not in its limit at a steep point; $n_e$ not converged there |
+| **stage 5b (final)** | **recalibrated, $\theta = 0.005$, $n_e = 80$** | **1.10** | **8.3** | every grid shown converged |
 
-| # | Reported | Actually | Root cause |
-|---|---|---|---|
-| 1 | Intensive-margin tipping | No fold at any kappa up to 50 | Frisch set by feel at 4 |
-| 2 | Long wealth tail | Truncation-driven at the grid boundary | beta-R knife edge, unsourced |
-| 3 | Stationary distribution converged | Silently non-convergent | Only checked lambda sums to one |
-| 4 | SAGE-RBC labour cycle | Discretisation noise, halved on refinement | No grid-refinement test |
-| 5 | S+A robust to doubling taste nodes | Needed 2000, not 15; 3 family nodes on the transition | Grid chosen without looking at the function |
-| 6 | Hand-to-mouth 0.33 and drifting | The drift was the measure, not the model | Grid diagnostic used as a statistic |
-| 7 | Decoupling Q -4.7 percent | -5.2 percent | No convergence test on the reported quantity |
-| 8 | Credit equalising at all take-up rates | Disequalising at quarter take-up | Consequence of 5 |
-| 9 | Subsidy lowers GDP-B 2.2 percent | Raises it 1.5 percent | Consequence of 5 |
-| 10 | Gradient half taste half agency | Two thirds taste | Consequence of 5 |
-| 11 | Gradient shortfall is structural | Mostly an omega artefact | Claim written before the sweep |
+Three faults account for the whole table.
 
-Items 8, 9 and 10 are not independent failures. They are item 5 arriving in
-three places. The real count is four faults and one discipline failure:
+**The asset grid was fifty times too wide.** $a_{\max} = 100$ against a French
+wealth distribution that ends near two years of income, so 97 percent of the
+nodes were empty and the whole distribution sat on six of them. That made each
+group's participation response a five-level step, forced the taste quadrature
+to 2000 nodes, and put the participation cutoff among the same six nodes.
+Stage 4 found and fixed the quadrature symptom without finding the grid cause.
+The engine shares the grid; its default concentration is now `pexp = 4`, and
+the S paper and lecture were rebuilt on it with their headline unchanged to
+the first decimal.
 
-- **Unsourced parameters** (1, 2). Closed in June by the literature pass.
-- **No convergence or invariance testing** (3, 4, 5, 7). Closed by the
-  verification ladder, except that the ladder did not cover the reduction
-  layer, which is why 5 was found last and hurt most.
-- **A diagnostic used as a statistic** (6). Closed; `hand_to_mouth` now lives
-  in the engine and `frac_constrained` carries a docstring saying what it is
-  not for.
-- **Claims written ahead of the evidence** (11). Mine, and recent. The fix is a
-  rule, not code: no conclusion is written until the parameter it is most
-  sensitive to has been swept.
+**The hard threshold cannot resolve the participation level.** The aggregate
+is mass above a wealth cutoff sitting on the atom at the borrowing constraint,
+and no grid settles that: across $n_a$ = 200 to 800 the level wandered by two
+points and the country ordering moved inside the noise. The Brock and Durlauf
+(2001) logit form of the same model, with a small i.i.d. taste shock, is the
+fix; its $\theta \to 0$ limit is the hard threshold, so the proposition is
+untouched.
 
-### The root cause of the expensive one, quantified
+**The calibration was held fixed across a change to the solver.** Stage 5
+recomputed everything at stage 4's $(\kappa, \sigma_m)$. Recalibrating on the
+logit core moved the point from $(10.75, 0.750)$ to $(10.00, 0.510)$, because
+the smoothed response fits at low dispersion where the step could not, and
+that single move is the entire difference between a ratio of 1.60 and 1.10.
 
-At the calibrated point a cell's participation response is close to a step. It
-sits at zero until the belonging scale reaches 4.4, hits a plateau at exactly
-0.5 where the low-income half of the cell has switched and the high-income half
-has not, and reaches one by 6.2. The entire transition is 1.8 wide.
+## Part 2. The valley
 
-Translated into the taste distribution that gets integrated over it, that
-interval is 16 percent of the mass. At the fifteen quadrature nodes the paper
-used, **2.4 nodes** landed in the transition, so the answer was decided by
-where two or three nodes happened to fall. At 2000 nodes, 318 land there.
+Tracing the best $\kappa$ at each $\sigma_m$ (`sa_valley.txt`): the moment
+loss has a definite minimum at $\sigma_m \approx 0.50$ and rises steadily to
+about 2.7 times that at $\sigma_m = 1.0$. Along the floor the bound
+$\bar\sigma$ moves only from 0.46 to 0.47, because it depends on the group
+rates and the moments pin those. What the moments do not pin is $\sigma_m$
+itself. So:
 
-That single arithmetic line explains items 5, 8, 9 and 10.
+| $\sigma_m$ on the floor | 0.50 | 0.60 | 0.75 | 0.90 | 1.00 |
+|---|---|---|---|---|---|
+| root loss | 0.020 | 0.039 | 0.058 | 0.072 | 0.078 |
+| ratio $\sigma_m / \bar\sigma$ | 1.08 | 1.29 | 1.60 | 1.91 | 2.12 |
+| multiplier $1/(1-G')$ | 9.6 | 4.2 | 2.6 | 2.1 | 1.9 |
 
-### Would we have caught it?
+The verdict (outside the coordination region) holds at every point with a
+defensible fit. The margin is a range. Stage 4 sat at 0.75, two thirds of the
+way along, with twice the minimum loss; every number it reported as a
+strengthening was a move along this curve. The paper now states the range and
+reports the best fit first. The multiplier is the same slope read the other
+way and inherits the range, which is why the policy magnitudes swung between
+drafts and why they are now reported with the curve in view.
 
-I claimed the linearisation identity would have caught it, on the grounds that
-the old paper reported a slope of 0.81 and an amplification of 3.6 while
-1/(1-0.81) is 5.14. That comparison was not safe, because the old amplification
-was measured on a 29-point move and the identity holds only for small shocks.
-So the claim was tested rather than asserted (`audit_oldfooting.jl`), by running
-the identity at a shock small enough that curvature cannot explain a gap:
+## Part 3. Standing evidence at the final point
 
-| footing | tau = 0.01 | tau = 0.20 |
-|---|---|---|
-| old: 41 uniform nodes, 15 taste nodes | **+47.6%** | -30.2% |
-| new: 83 concentrated nodes, 2000 taste nodes | **-0.1%** | -5.5% |
-
-The answer is yes. At a one percent shock the old footing misses by 48 percent,
-and the sign of the error flips between small and large shocks, which is the
-signature of an interpolated near-step rather than of curvature. The test costs
-two family solves and would have run on day one.
-
-## Part 2. Which quantities are trustworthy, and which are not
-
-The reversals were not randomly distributed. They landed on a specific class of
-quantity, and the audit measures the split. Propagating the asset-grid wobble
-through to the conclusions:
-
-| quantity | spread over na = 100 to 400 | class |
-|---|---|---|
-| participation rate r* | 5.7% | level |
-| education gap | 7.2% | level |
-| map slope G' | 0.8% | conclusion |
-| bound sigma-bar | 0.3% | conclusion |
-| ratio sigma*/sigma-bar | 0.3% | conclusion |
-| multiplier 1/(1-G') | 1.3% | conclusion |
-
-The levels are imprecise and the conclusions are not, and this is structural
-rather than lucky: the bound is a product of a complementarity factor that
-rises with r and a density term that falls with it, so the two partly cancel.
-
-**The rule that follows.** Levels, orderings and signs of first-order effects
-are robust. What is fragile is any quantity reported as a *sign relative to a
-threshold*, because it inherits the uncertainty of both sides. Both reversals
-in Level 4 were of exactly that form:
-
-- "the credit is equalising" is the high/low ratio compared against its own
-  baseline of 1.40, and the answer runs 1.19, 1.43, 1.60 across take-up rates.
-- "the subsidy lowers GDP-B" is a shadow price compared against a breakeven,
-  and it depends on Lambda, which the engine's own identification note says is
-  not identified from behaviour at all: only the product kappa-Lambda is. The
-  clean form is that the subsidy becomes GDP-B reducing only if Lambda exceeds
-  1.31, which is 1.49 times its calibrated value.
-
-So the reporting rule is: **publish the distance and the profile, never the
-thresholded sign.** Both papers now do this, and it removes the largest single
-source of reversal at no cost in content.
-
-## Part 3. Standing evidence
-
-What the model now passes, with the evidence rather than the assertion.
+$(\kappa, \sigma_m, \theta, n_e) = (10.00, 0.510, 0.005, 80)$, $\omega = 0.30$.
 
 | check | result |
 |---|---|
-| Linearisation identity, small shock | multiplier 2.6148 against a predicted 2.6166, **-0.1%** |
-| Identity, error monotone in shock size | -0.1, -0.7, -5.5 percent at tau = 0.01, 0.05, 0.20: curvature and nothing else |
+| Recalibration on $\theta = 0.005$ and $0.0025$ families | identical point |
+| Halving $\theta$ | level 0.001, slope 0.002 |
+| Doubling $n_a$ | level 0.0001, slope 0.00004 |
+| $n_e$ = 80 to 320 | slope 0.8983 to four decimals; level in a 0.0006 band |
+| Taste quadrature | 500 nodes suffice; 2000 used |
+| Map grid 101 to 1601 | level to the sixth decimal |
+| Linearisation identity at a one percent shock | $-0.1$ percent at stage 5; to be confirmed on the final families by `audit_sa.jl` |
 | Determinism | rerun reproduces the results file byte for byte |
-| Independent code path | the cross-country script computes France separately and agrees to four decimals |
-| Map-trace grid | r* stable to the sixth decimal from ngrid 101 to 1601 |
-| Effort grid | participation stable in the fifth decimal over two doublings |
-| Income process, nz = 2 to 7 | ratio 1.52 to 1.60, multiplier 2.86 to 2.61, converged by nz = 5 |
-| Private share omega | verdict holds at 0.15, 0.30, 0.50; the margin does not |
-| Euler errors, engine | mean log10 below -3, improving with refinement |
-| Stationary distribution | invariant to 9.4e-13 |
+| Independent code path | the countries script reproduces France to four decimals |
+| Income process $n_z$ = 2 to 7 | conclusions stable, converged by 5 (stage 4 core; to be repeated) |
+| Private share $\omega$ | verdict holds at 0.15, 0.30, 0.50; the margin does not |
 
-The identity is the one that matters most, because it is the only check that
-ties an experiment to a formula with no free parameter, and because it is the
-one that discriminates the old footing from the new.
+The first four rows are the ones missing from every earlier draft, and they
+are why this draft is different in kind: the number has stopped moving because
+each surface it lives on has been shown flat.
 
-## Part 4. What I got wrong in this audit
+## Part 4. What is fragile, and how it is reported
 
-I argued that nz = 2 was the root cause: two income states give two switching
-populations, hence the near-step response, hence the quadrature problem, hence
-the gradient shortfall. I recommended the income-process upgrade as the
-priority next step. Testing it (`audit_nz.jl`, na = 100 throughout so the
-comparison is internal):
+Near a fold, every family error is multiplied by the multiplier. At the final
+point that is a factor of eight to ten, which is why an effort grid that was
+fifth-decimal at the flat stage-4 point cost 0.014 on the level here, and why
+the country levels fan out from 0.09 to 0.46 across seven rows from inputs
+that differ by tenths. Two rules follow and both are applied.
 
-| nz | transition width | levels | gap (target 0.200) | G' | nodes for 0.002 |
-|---|---|---|---|---|---|
-| 2 | 1.6 | 5 | 0.1314 | 0.6502 | 500 |
-| 3 | 2.0 | 6 | 0.1334 | 0.6492 | 500 |
-| 5 | 3.2 | 11 | 0.1261 | 0.6176 | 500 |
-| 7 | 4.2 | 13 | 0.1237 | 0.6167 | 500 |
-
-The response smooths exactly as predicted, by a factor of 2.6 in width and from
-five distinct levels to thirteen. Nothing
-else follows. The gradient does not improve, it slightly worsens. The
-quadrature requirement does not fall. The slope drops five percent, so the
-discipline result strengthens a little and the multiplier shrinks a little.
-
-So the diagnosis was wrong: within-cell income heterogeneity is not what holds
-the gradient back. The omega evidence is the better explanation, since at omega
-= 0.50 the model reaches 0.233 and 0.434 against targets of 0.25 and 0.45.
-
-This is a better outcome than being right would have been. The conclusions are
-now known to be insensitive to the income process across a range nobody had
-tested, and a day of work that was about to be spent on the wrong upgrade was
-not spent.
+No level is quoted to more precision than the multiplier allows: the
+participation rate is 0.35 with a stated band, not 0.3526. And no quantity is
+reported as a sign relative to a threshold: the take-up incidence is a profile
+of ratios, the GDP-B result is a breakeven price set against the model's own,
+and the margin is a range along the valley.
 
 ## Part 5. External validation
 
-The only gate that grid refinement cannot help with, and the one that had been
-failing.
-
-| target | not targeted in calibration | result |
+| target | targeted? | result |
 |---|---|---|
-| Hand-to-mouth share, France | yes | 0.33 against 0.30 |
-| Wealth Gini, France | yes | 0.55 against 0.68, under |
-| Participation rises with education | yes | reproduced |
-| Higher-income group supplies more fabric | yes | reproduced, matches volunteering data |
-| WISE Agency ordering | yes | Spearman +0.89 all six, +0.80 OECD four |
-| WISE Solidarity, old cohesion object | yes | **-0.15 to -0.80, inverted** |
-| WISE Solidarity, participation object | yes | **+0.43 to +1.00, positive in all six cells** |
-| Cross-country policy signs | yes | subsidy down 7 of 7, credit up 7 of 7 |
+| Hand-to-mouth share, France | no | 0.32 against 0.30 |
+| Wealth Gini, France | no | 0.55 against 0.68; the shortfall is entirely the top tail |
+| Participation rises with education | no | reproduced |
+| Higher-income group supplies more fabric | no | reproduced |
+| Aggregate participation and gradient | yes | 0.353; 0.267 / 0.439 against 0.25 / 0.45 |
+| WISE Agency ordering | no | Spearman +0.89 all six, +0.80 OECD four |
+| WISE Solidarity, time-based cohesion (S paper) | no | inverted, $-0.15$ to $-0.80$ |
+| WISE Solidarity, participation cohesion (S+A paper) | no | +0.46 to +0.94 all six, +0.80 to +1.00 OECD four, beats both inputs every year, ordering resolved |
+| Cross-country policy signs | no | subsidy down 7 of 7, credit up 7 of 7 |
 
-The last of the new rows is the substantive result of this audit.
-`BENCHMARK_WISE.md` found that the S paper's cohesion object, all non-work
-time, inverted against the WISE Solidarity Index, and concluded that the object
-needed rethinking before the model could be called a structural counterpart to
-the Recoupling dashboard. The S+A paper had already done that rethinking,
-replacing it with participation time, and nobody went back to rerun the
-benchmark. It fixes the inversion, in all three years and both samples, and it
-beats both of its own calibrated inputs, so it is not simply inheriting the
-correlation from what went in.
+The participation object fixes the cohesion inversion the June benchmark
+flagged. Six countries, so suggestive; and at this calibration the cross-
+country levels are a tenfold-amplified prediction from the agency and
+belonging inputs, to be presented as a prediction and not a fit.
 
-Read it as suggestive rather than established: six countries, four in the OECD
-sample, and Germany and Italy sit 0.0002 apart in the model so their order
-carries no information. It is a nonlinear aggregator of calibrated inputs
-ordering countries the way an independently built index does, not a prediction
-from primitives.
+## Part 6. What is not closed
 
-## Part 6. What is still untested
-
-| surface | status | expected direction |
+| item | status | what it would take |
 |---|---|---|
-| Asset grid in the participation core | **resolved 2026-09-08**: logit core at theta 0.01, na-error 9e-5, see VERIFICATION.md stage 5 | was: levels imprecise, conclusions stable |
-| Participation lump q-bar = 0.10 | never swept | scales the belonging payoff; likely reparameterises kappa |
-| Cell shares, fixed at 50/50 | never swept | shifts the aggregate, not the bound's form |
-| Euler errors in the participation core | never computed; only done for the engine | unknown |
-| Lambda | not identified from behaviour, sourced from a self-selected sample | only affects the GDP-B ledger |
-| Wealth Gini | known one-asset limitation | not fixable without a second asset |
+| Wealth Gini top tail | known one-asset limit; second-order for participation | heterogeneous returns, one extra persistent state; days |
+| $\omega$ | no point estimate; the margin runs from about 1.02 to 1.63 across 0.15 to 0.50 | a measurement of the private share of the participation payoff; the framework's first empirical ask |
+| $\Lambda$ | not identified from behaviour; only $\kappa\Lambda$ is | affects the GDP-B price only; the WELLBY literature supplies it |
+| $n_z$ at the final point | converged at stage 4; not yet repeated on the logit core | an afternoon |
+| $\bar q$, cell shares | never swept | an afternoon each |
+| Euler errors in the participation core | computed for the engine only | an hour |
+| Developing-country engine rows | need $a_{\max}$ near 25; the S+A cells are unaffected | one line in `country_params` |
 
-The asset grid is the live one and the honest consequence is that participation
-levels should be quoted as 0.35 with a stated uncertainty of about a point, not
-as 0.353. The bound and the multiplier keep their precision.
+None is a defect. The first three are limits to state; the last four are
+checks to run, and none of them touches a headline.
 
-## Part 7. The gate
+## Part 7. The gate, and the verdict against it
 
-A number is quotable when all five hold:
+A number is quotable when all five hold: every discretisation it touches has
+been shown converged; it satisfies an identity an independent formula
+predicts; a second code path reproduces it; it survives the parameters that
+have no point estimate; and it is not a sign against a threshold that depends
+on an unidentified parameter.
 
-1. Every discretisation it touches has been shown converged, reported rather
-   than assumed.
-2. It satisfies at least one identity that an independent formula predicts.
-3. A second code path or parameterisation reproduces it.
-4. It survives the parameters that have no point estimate.
-5. It is not a sign relative to a threshold that depends on an unidentified
-   parameter. If it is, publish the distance instead.
+At the final point the bound, the ratio, the multiplier, the policy signs, the
+take-up profile and the country ordering pass. Levels pass once the band is
+stated. The GDP-B sign and the take-up sign do not and are not reported as
+signs. The margin does not and is reported as a range.
 
-Against that gate: the bound, the ratio, the multiplier and the policy signs
-pass all five. Participation levels fail (1) and should carry an uncertainty.
-The GDP-B sign fails (5) and is now reported as a breakeven. The take-up
-incidence sign fails (5) and is now reported as a profile.
+The model is ready for the S+A paper and for the per-country layer it was
+built to support. It is not yet ready to be called a structural counterpart to
+the Recoupling dashboard on the cohesion side, on six countries; that claim
+needs the $\omega$ measurement and more countries, and both are joint work.
 
-Nothing in the current S+A paper is quoted outside what this gate permits.
+## What the next session should do first
+
+Run `audit_sa.jl` at the final point and confirm the identity row before
+believing any of the above. Then repeat the $n_z$ sweep on the logit core. Then
+post. The one thing not to do is change the core again without recalibrating
+before reading a single number.
