@@ -124,7 +124,7 @@ homophily & $h$ & swept & bonding-bridging weight \\
 
 \section{Policy-induced decoupling}
 
-I introduce a budget-balanced make-work-pay subsidy of 20 percent to labour income under behavioural social cohesion (warm-glow, $\kappa = 1$). Table \ref{tab:policy} reports aggregates and Figure \ref{fig:dec} the incidence. The subsidy raises the return to effort, so households work more and contribute less. Aggregate consumption rises by 5.7 percent; the public good falls by 5.1 percent and social cohesion with it. These magnitudes are reported at an effort grid fine enough to support them; see the note on numerical accuracy below.
+I introduce a budget-balanced make-work-pay subsidy of 20 percent to labour income under behavioural social cohesion (warm-glow, $\kappa = 1$). Table \ref{tab:policy} reports aggregates and Figure \ref{fig:dec} the incidence. The subsidy raises the return to effort, so households work more and contribute less. Aggregate consumption rises by 5.6 percent; the public good falls by 5.1 percent and social cohesion with it. These magnitudes are reported at an effort grid fine enough to support them; see the note on numerical accuracy below.
 
 \begin{table}[t]
 \centering
@@ -134,17 +134,17 @@ I introduce a budget-balanced make-work-pay subsidy of 20 percent to labour inco
 \toprule
  & baseline & with subsidy & change \\
 \midrule
-aggregate consumption & 0.437 & 0.461 & up 5.7\% \\
+aggregate consumption & 0.436 & 0.461 & up 5.6\% \\
 public good $Q$ & 0.495 & 0.470 & down 5.1\% \\
-material gain $U^c$, lower-income group & $-3.560$ & $-3.600$ & down 1.1\% \\
-material gain $U^c$, higher-income group & $-2.477$ & $-2.421$ & up 2.3\% \\
+material gain $U^c$, lower-income group & $-3.565$ & $-3.605$ & down 1.1\% \\
+material gain $U^c$, higher-income group & $-2.477$ & $-2.422$ & up 2.3\% \\
 social cohesion $U^s$, lower-income group & 0.347 & 0.329 & down 5.1\% \\
 social cohesion $U^s$, higher-income group & 0.407 & 0.387 & down 5.1\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Numerical accuracy.} The solver recovers next-period assets continuously but takes labour effort from a discrete grid, because re-optimising effort against an interpolated continuation value collapses it to a corner once the social term is behavioural. Every quantity built on effort therefore inherits that grid's resolution, and the public good $Q = \mathbb{E}[1-e]$ is exactly such a quantity, which is why the cohesion side of the decoupling is the more delicate number. At the production effort grid the policy magnitudes oscillate by close to a percentage point; they settle once the grid is refined by a factor of eight, and the table reports the settled values. A residual sensitivity to the alignment of the asset grid remains, worth about a quarter of a percentage point on $Q$, so the fall in the public good is best read as five percent rather than as the third digit of the table. Consumption is the more robust of the two, moving by less than a tenth of a point under the same refinement. The household problem itself solves accurately, with mean Euler-equation errors below $10^{-3}$, and the stationary distribution is invariant to machine precision. The hand-to-mouth share is reported against an income threshold rather than as mass on the first grid node, since the latter measures the width of a grid cell rather than an economic set.
+\paragraph{Numerical accuracy.} The solver recovers next-period assets continuously but takes labour effort from a discrete grid, because re-optimising effort against an interpolated continuation value collapses it to a corner once the social term is behavioural. Every quantity built on effort therefore inherits that grid's resolution, and the public good $Q = \mathbb{E}[1-e]$ is exactly such a quantity, which is why the cohesion side of the decoupling is the more delicate number. At the production effort grid the policy magnitudes oscillate by close to a percentage point; they settle once the grid is refined by a factor of eight, and the table reports the settled values. The asset grid matters more than its width suggests: with the grid's range set for the most patient country rows, the French wealth distribution occupies a small part of it, and an earlier version of this table was computed on fifteen effective nodes. Concentrating the grid on the region that carries mass gives 75 to 148 effective nodes, and on that grid the entries above are converged in the grid to two decimals; the fall in the public good is 5.1 percent, where the earlier grid gave 5.2. Consumption is the more robust of the two, moving by less than a tenth of a point under the same refinement. The household problem itself solves accurately, with mean Euler-equation errors below $10^{-3}$, and the stationary distribution is invariant to machine precision. The hand-to-mouth share is reported against an income threshold rather than as mass on the first grid node, since the latter measures the width of a grid cell rather than an economic set.
 
 \begin{figure}[t]
 \centering
