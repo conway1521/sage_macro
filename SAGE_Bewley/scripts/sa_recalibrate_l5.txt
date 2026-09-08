@@ -1,0 +1,31 @@
+loss surface, sqrt of the moment loss, 2000 nodes (rows sigma, cols kappa)
+sig\kap    8.0    8.5    9.0    9.5   10.0   10.5   11.0   11.5   12.0   12.5   13.0
+  0.40  0.488  0.473  0.450  0.409  0.245  0.587  0.677  0.736  0.778  0.809  0.833
+  0.45  0.472  0.451  0.416  0.349  0.180  0.453  0.573  0.650  0.705  0.747  0.779
+  0.50  0.453  0.424  0.377  0.284  0.031  0.316  0.460  0.554  0.622  0.674  0.714
+  0.55  0.431  0.395  0.338  0.234  0.040  0.199  0.350  0.455  0.533  0.593  0.642
+  0.60  0.409  0.367  0.305  0.207  0.066  0.118  0.254  0.360  0.443  0.510  0.564
+  0.65  0.388  0.343  0.281  0.195  0.087  0.069  0.177  0.276  0.359  0.428  0.486
+  0.70  0.370  0.324  0.265  0.191  0.105  0.052  0.121  0.206  0.284  0.352  0.411
+  0.75  0.354  0.310  0.256  0.192  0.120  0.062  0.083  0.151  0.220  0.284  0.341
+  0.80  0.343  0.301  0.251  0.195  0.135  0.080  0.066  0.109  0.167  0.224  0.278
+  0.85  0.334  0.294  0.250  0.200  0.148  0.099  0.068  0.082  0.126  0.175  0.223
+  0.90  0.327  0.291  0.250  0.206  0.161  0.117  0.081  0.072  0.096  0.134  0.176
+┌ Warning: Assignment to `e` in soft scope is ambiguous because a global variable by the same name exists: `e` will be treated as a new local. Disambiguate by using `local e` to suppress this warning or `global e` to assign to the existing global variable.
+└ @ ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/sa_recalibrate_l5.jl:73
+
+fine search at 2000 nodes, 401 grid
+kappa* = 9.95  sigma* = 0.490
+rate 0.3417, groups 0.2540 / 0.4294 (targets 0.25 / 0.45), sqrt loss 0.0210
+slope 0.9090, multiplier 1/(1-G') 10.99, stable equilibria 1
+sigma-bar 0.4629, ratio sigma*/sigma-bar 1.058
+
+for comparison, the stage-4 point on this core:
+(10.75, 0.750): rate 0.3645, groups 0.3041 / 0.4248, sqrt loss 0.0597, slope 0.6136
+
+convergence of the new point in taste nodes
+  n=500   rate 0.3441 slope 0.9085
+  n=1000  rate 0.3425 slope 0.9084
+  n=2000  rate 0.3417 slope 0.9090
+  n=4000  rate 0.3413 slope 0.9089
+DONE
