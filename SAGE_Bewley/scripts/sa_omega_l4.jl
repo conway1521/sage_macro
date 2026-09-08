@@ -1,4 +1,5 @@
-# Robustness of the Level 4 verdict to the private share omega, the one
+# Robustness of the verdict to the private share omega (stage 5: reads the
+# logit-core families written by sa_figures_l4.jl), the one
 # parameter with no point estimate. The families do not depend on omega (it
 # enters only the belonging argument), so this is pure interpolation on the
 # cached Level 4 families: for each omega, recalibrate (kappa, sigma_m) to the
@@ -13,8 +14,8 @@ using DelimitedFiles, Printf, Statistics
 
 const NQ = 2000
 const Blow = CELL_LOW.B; const Bhigh = CELL_HIGH.B
-dl = readdlm(joinpath(@__DIR__, "sa_l4_fam_low.txt"), '\t'; skipstart = 1)
-dh = readdlm(joinpath(@__DIR__, "sa_l4_fam_high.txt"), '\t'; skipstart = 1)
+dl = readdlm(joinpath(@__DIR__, "sa_l5_fam_low.txt"), '\t'; skipstart = 1)
+dh = readdlm(joinpath(@__DIR__, "sa_l5_fam_high.txt"), '\t'; skipstart = 1)
 fl = (dl[:,1], dl[:,2], dl[:,3], dl[:,4]); fh = (dh[:,1], dh[:,2], dh[:,3], dh[:,4])
 const TASTE = Dict{Tuple{Float64,Int},Vector{Float64}}()
 tastes(σ, nq = NQ) = get!(TASTE, (σ, nq)) do; taste_nodes_ln(σ; n = nq) end
