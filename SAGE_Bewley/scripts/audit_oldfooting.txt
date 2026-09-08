@@ -1,0 +1,27 @@
+==============================================================================
+WOULD THE IDENTITY TEST HAVE CAUGHT IT? Old footing against new
+==============================================================================
+The identity: for a small financed subsidy the equilibrium response must
+equal the direct response divided by 1 - G'(r*). Run at tau = 0.01, where
+curvature over the move is negligible, so any gap is a numerical fault.
+
+------------------------------------------------------------------------------
+OLD  (41 uniform nodes on [0,60], 15 taste nodes)
+------------------------------------------------------------------------------
+baseline r* = 0.37072, G'(r*) = 0.80529, predicted multiplier = 5.1359
+tau      | direct     | equilib    | measured  | predicted | error
+0.01     |  -0.01499 |  -0.11366 |   7.5804  |   5.1359  |  +47.6%
+0.20     |  -0.08083 |  -0.28963 |   3.5830  |   5.1359  |  -30.2%
+
+------------------------------------------------------------------------------
+NEW  (83 concentrated nodes, 2000 taste nodes)
+------------------------------------------------------------------------------
+baseline r* = 0.35303, G'(r*) = 0.61783, predicted multiplier = 2.6166
+tau      | direct     | equilib    | measured  | predicted | error
+0.01     |  -0.00148 |  -0.00387 |   2.6148  |   2.6166  |   -0.1%
+0.20     |  -0.04268 |  -0.10558 |   2.4739  |   2.6166  |   -5.5%
+
+Read the tau = 0.01 rows. A large error there is a numerical fault, since
+curvature cannot explain a gap at a shock that small. The tau = 0.20 rows
+show how much of the published gap was curvature over a big move.
+DONE

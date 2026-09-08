@@ -16,6 +16,12 @@ using .SAGEBewley
 include(joinpath(@__DIR__, "proto_participation_core.jl"))
 include(joinpath(@__DIR__, "sa_core.jl"))
 using Printf, Statistics
+# ---- numerical footing, stage 5 (2026-09-08) --------------------------------
+# Logit participation (Brock-Durlauf), theta a small regulariser whose limit is
+# the hard-threshold model; asset grid rescaled to the wealth distribution.
+const THETA = 0.01
+const GRID  = (a_max = 4.0, pexp = 3.0)
+
 
 const UGRID = vcat(collect(0.0:0.2:12.0), collect(12.5:0.5:16.0), collect(17.0:1.0:30.0))
 const NQ = 2000
@@ -28,9 +34,9 @@ const MS = taste_nodes_ln(SIGMA; n = NQ)
 function build(α, T; subsidy = 0.0, partcredit = 0.0)
     r = Float64[]; mi = Float64[]; pb = Float64[]
     for u in UGRID
-        p = update(cell_params(α; na = 200, ne = 40, subsidy = subsidy, lumptax = T);
+        p = update(cell_params(α; na = 200, ne = 40, a_max = GRID.a_max, pexp = GRID.pexp, subsidy = subsidy, lumptax = T);
                    social_strength = u, partcredit = partcredit)
-        _, rate, m, b = solve_participation(p, 1.0)
+        _, rate, m, b = solve_participation_logit(p, 1.0; theta = THETA)
         push!(r, rate); push!(mi, m); push!(pb, b)
     end
     (copy(UGRID), r, mi, pb)

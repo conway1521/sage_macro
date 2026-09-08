@@ -58,9 +58,12 @@ end
 # B is folded into the belonging scale at interpolation time (the payoff
 # depends only on the product), so the solve-relevant cell parameter is alpha.
 "Cell parameter set: alpha constant within cell, z is income risk only."
-function cell_params(αg; na = 200, ne = 40, subsidy = 0.0, lumptax = 0.0)
+function cell_params(αg; na = 200, ne = 40, subsidy = 0.0, lumptax = 0.0,
+                     a_max = 100.0, pexp = 1.5)
+    # a_max and pexp default to the engine's values so old scripts are
+    # unchanged; the stage-5 scripts pass the rescaled grid explicitly.
     SAGEParams(na = na, ne = ne, α = fill(αg, 2), B = fill(1.0, 2),
-               subsidy = subsidy, lumptax = lumptax)
+               subsidy = subsidy, lumptax = lumptax, a_max = a_max, pexp = pexp)
 end
 
 const CELL_LOW  = (name = "low edu",  share = 0.5, α = 0.765, B = 0.80)

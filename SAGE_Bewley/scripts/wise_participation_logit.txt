@@ -1,0 +1,17 @@
+FR 0.36446
+DE 0.38366
+IT 0.37728
+US 0.38295
+CO 0.30178
+ZA 0.20840
+CN 0.28245
+
+logit core, theta=0.01: model participation vs WISE Solidarity
+year   n   | participation  | Bbar alone  alpha_l alone
+2007   6   |         +0.943 |      +0.829      +0.714   
+       4   |         +0.800 |      +0.400      +0.000   (OECD four)
+2017   6   |         +0.486 |      +0.029      +0.200   
+       4   |         +1.000 |      +0.200      +0.400   (OECD four)
+2018   6   |         +0.464 |      +0.058      +0.145   
+       4   |         +0.949 |      +0.316      +0.211   (OECD four)
+DONE

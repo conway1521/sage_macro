@@ -1,0 +1,45 @@
+==============================================================================
+IS nz = 2 THE ROOT CAUSE? Response shape, quadrature, fit and slope
+==============================================================================
+na = 100 throughout, including the nz = 2 row, so the comparison is internal.
+
+--- nz = 2 ---
+    [family alpha 0.765 nz 2 built in 1235 s]
+    [family alpha 0.911 nz 2 built in 18 s]
+  H1 shape: transition 1.6 wide in u, 5 distinct levels, longest interior plateau 5 nodes
+  H3 fit:   kappa* 10.75 sigma* 0.710 -> rate 0.3587, groups 0.2930 / 0.4244, gap 0.1314 (target 0.200)
+  H4 slope: G' 0.6502, multiplier 1/(1-G') 2.86, sigma-bar 0.4673, ratio 1.519
+  H2 quad:  nodes needed for 0.002 accuracy: 500 (reference at 8000 nodes: 0.3583)
+
+--- nz = 3 ---
+    [family alpha 0.765 nz 3 built in 2020 s]
+    [family alpha 0.911 nz 3 built in 55 s]
+  H1 shape: transition 2.0 wide in u, 6 distinct levels, longest interior plateau 4 nodes
+  H3 fit:   kappa* 10.75 sigma* 0.710 -> rate 0.3579, groups 0.2912 / 0.4246, gap 0.1334 (target 0.200)
+  H4 slope: G' 0.6492, multiplier 1/(1-G') 2.85, sigma-bar 0.4671, ratio 1.520
+  H2 quad:  nodes needed for 0.002 accuracy: 500 (reference at 8000 nodes: 0.3575)
+
+--- nz = 5 ---
+    [family alpha 0.765 nz 5 built in 955 s]
+    [family alpha 0.911 nz 5 built in 1029 s]
+  H1 shape: transition 3.2 wide in u, 11 distinct levels, longest interior plateau 3 nodes
+  H3 fit:   kappa* 10.75 sigma* 0.750 -> rate 0.3475, groups 0.2844 / 0.4105, gap 0.1261 (target 0.200)
+  H4 slope: G' 0.6176, multiplier 1/(1-G') 2.61, sigma-bar 0.4691, ratio 1.599
+  H2 quad:  nodes needed for 0.002 accuracy: 500 (reference at 8000 nodes: 0.3471)
+
+--- nz = 7 ---
+    [family alpha 0.765 nz 7 built in 3176 s]
+    [family alpha 0.911 nz 7 built in 1303 s]
+  H1 shape: transition 4.2 wide in u, 13 distinct levels, longest interior plateau 3 nodes
+  H3 fit:   kappa* 10.75 sigma* 0.750 -> rate 0.3507, groups 0.2888 / 0.4125, gap 0.1237 (target 0.200)
+  H4 slope: G' 0.6167, multiplier 1/(1-G') 2.61, sigma-bar 0.4690, ratio 1.599
+  H2 quad:  nodes needed for 0.002 accuracy: 500 (reference at 8000 nodes: 0.3503)
+
+==============================================================================
+nz   | width     | kappa*  | sigma*  | group rates   | gap     | G'      | ratio  | nodes
+2    |       1.6 |   10.75 |   0.710 | 0.293 / 0.424 |  0.1314 |  0.6502 |  1.519 | 500
+3    |       2.0 |   10.75 |   0.710 | 0.291 / 0.425 |  0.1334 |  0.6492 |  1.520 | 500
+5    |       3.2 |   10.75 |   0.750 | 0.284 / 0.411 |  0.1261 |  0.6176 |  1.599 | 500
+7    |       4.2 |   10.75 |   0.750 | 0.289 / 0.413 |  0.1237 |  0.6167 |  1.599 | 500
+
+DONE

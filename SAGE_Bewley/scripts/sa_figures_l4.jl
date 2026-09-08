@@ -10,6 +10,9 @@ using .SAGEBewley
 include(joinpath(@__DIR__, "proto_participation_core.jl"))
 include(joinpath(@__DIR__, "sa_core.jl"))
 using DelimitedFiles, Printf, Statistics
+# ---- numerical footing, stage 5 (2026-09-08): same core and grid as sa_level4
+const THETA = 0.01
+const GRID  = (a_max = 4.0, pexp = 3.0)
 ENV["GKSwstype"] = "100"
 using Plots
 gr()
@@ -41,7 +44,7 @@ const TASTE = Dict{Float64,Vector{Float64}}()
 tastes(σ) = get!(TASTE, σ) do; taste_nodes_ln(σ; n = NQ) end
 
 function build_family(name, α; subsidy = 0.0, lumptax = 0.0, partcredit = 0.0)
-    f = joinpath(@__DIR__, "sa_l4_fam_$(name).txt")
+    f = joinpath(@__DIR__, "sa_l5_fam_$(name).txt")
     if isfile(f)
         d = readdlm(f, '\t'; skipstart = 1)
         return (d[:, 1], d[:, 2], d[:, 3], d[:, 4])
@@ -49,10 +52,10 @@ function build_family(name, α; subsidy = 0.0, lumptax = 0.0, partcredit = 0.0)
     print("  building family $name ... "); flush(stdout)
     r = Float64[]; mi = Float64[]; pb = Float64[]
     for u in UGRID
-        p = update(cell_params(α; na = 200, ne = 40,
+        p = update(cell_params(α; na = 200, ne = 40, a_max = GRID.a_max, pexp = GRID.pexp,
                                subsidy = subsidy, lumptax = lumptax);
                    social_strength = u, partcredit = partcredit)
-        _, rate, m, b = solve_participation(p, 1.0)
+        _, rate, m, b = solve_participation_logit(p, 1.0; theta = THETA)
         push!(r, rate); push!(mi, m); push!(pb, b)
     end
     open(f, "w") do io

@@ -25,6 +25,12 @@ using .SAGEBewley
 include(joinpath(@__DIR__, "proto_participation_core.jl"))
 include(joinpath(@__DIR__, "sa_core.jl"))
 using Printf, Statistics, DelimitedFiles
+# ---- numerical footing, stage 5 (2026-09-08) --------------------------------
+# Logit participation (Brock-Durlauf), theta a small regulariser whose limit is
+# the hard-threshold model; asset grid rescaled to the wealth distribution.
+const THETA = 0.01
+const GRID  = (a_max = 4.0, pexp = 3.0)
+
 
 # ---------------------------------------------------------------- settings --
 const UGRID  = vcat(collect(0.0:0.2:12.0), collect(12.5:0.5:16.0),
@@ -58,7 +64,7 @@ end
 const FAMS = Dict{NTuple{4,Float64},NTuple{4,Vector{Float64}}}()
 nfam = Ref(0)
 
-const CACHEDIR = joinpath(@__DIR__, "cache_l4")
+const CACHEDIR = joinpath(@__DIR__, "cache_l5")
 isdir(CACHEDIR) || mkpath(CACHEDIR)
 cachefile(key) = joinpath(CACHEDIR,
     "fam_" * join([replace(@sprintf("%.6f", k), "." => "p") for k in key], "_") * ".txt")
@@ -78,10 +84,10 @@ function family(α; subsidy = 0.0, lumptax = 0.0, partcredit = 0.0)
     end
     r = Float64[]; mi = Float64[]; pb = Float64[]
     for u in UGRID
-        p = update(cell_params(α; na = NA, ne = NE,
+        p = update(cell_params(α; na = NA, ne = NE, a_max = GRID.a_max, pexp = GRID.pexp,
                                subsidy = subsidy, lumptax = lumptax);
                    social_strength = u, partcredit = partcredit)
-        _, rate, m, b = solve_participation(p, 1.0)
+        _, rate, m, b = solve_participation_logit(p, 1.0; theta = THETA)
         push!(r, rate); push!(mi, m); push!(pb, b)
     end
     nfam[] += 1
@@ -371,10 +377,10 @@ println("the quantity that inherits the effort grid, so the GDP ledger is checke
 function refam(α, ne; subsidy = 0.0, lumptax = 0.0, partcredit = 0.0)
     r = Float64[]; mi = Float64[]
     for u in UGRID
-        p = update(cell_params(α; na = NA, ne = ne,
+        p = update(cell_params(α; na = NA, ne = ne, a_max = GRID.a_max, pexp = GRID.pexp,
                                subsidy = subsidy, lumptax = lumptax);
                    social_strength = u, partcredit = partcredit)
-        _, rate, m, _ = solve_participation(p, 1.0)
+        _, rate, m, _ = solve_participation_logit(p, 1.0; theta = THETA)
         push!(r, rate); push!(mi, m)
     end
     (copy(UGRID), r, mi, mi)

@@ -1,0 +1,15 @@
+na=200 done
+na=800 done
+
+country participation at two asset grids
+cty  | na=200    na=800    | shift
+FR   | 0.33394   0.33915   | +0.00520
+DE   | 0.36005   0.33169   | -0.02836
+IT   | 0.35785   0.35137   | -0.00648
+US   | 0.35083   0.34671   | -0.00412
+ZA   | 0.18772   0.19025   | +0.00254
+
+ordering at na=200: ZA < FR < US < IT < DE
+ordering at na=800: ZA < DE < FR < US < IT
+ORDERING CHANGES
+common shift (mean) -0.00624, spread of shifts 0.03356
