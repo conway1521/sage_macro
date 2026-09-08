@@ -59,9 +59,9 @@ end
 # depends only on the product), so the solve-relevant cell parameter is alpha.
 "Cell parameter set: alpha constant within cell, z is income risk only."
 function cell_params(αg; na = 200, ne = 40, subsidy = 0.0, lumptax = 0.0,
-                     a_max = 100.0, pexp = 1.5)
-    # a_max and pexp default to the engine's values so old scripts are
-    # unchanged; the stage-5 scripts pass the rescaled grid explicitly.
+                     a_max = 100.0, pexp = 4.0)
+    # a_max and pexp default to the engine's values (pexp 4 since 2026-09-08);
+    # the stage-5 S+A scripts pass their France-scaled grid explicitly.
     SAGEParams(na = na, ne = ne, α = fill(αg, 2), B = fill(1.0, 2),
                subsidy = subsidy, lumptax = lumptax, a_max = a_max, pexp = pexp)
 end

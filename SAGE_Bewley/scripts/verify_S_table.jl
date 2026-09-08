@@ -17,7 +17,7 @@ function financed(p; subsidy = 0.0, tol = 1e-5, maxit = 40)
 end
 agg(s, M) = sum(s.λ .* M)
 avg(s, M, z) = sum((s.λ[:,z] ./ sum(s.λ[:,z])) .* M[:,z])
-for (amax, pe, lbl) in ((100.0, 1.5, "OLD grid (as published)"), (5.0, 3.0, "NEW grid"))
+for (amax, pe, lbl) in ((100.0, 1.5, "OLD grid (as published)"), (100.0, 4.0, "ENGINE DEFAULT grid"))
     p  = update(country_params("FR"); a_max = amax, pexp = pe)
     pw = update(p; ne = 320, social_mode = :warmglow, social_strength = 1.0)
     s0 = financed(pw); s1 = financed(pw; subsidy = 0.20)
