@@ -11,7 +11,8 @@ include(joinpath(@__DIR__, "..", "src", "SAGEBewley.jl"))
 using .SAGEBewley
 include(joinpath(@__DIR__, "sa_core.jl"))
 using DelimitedFiles, Printf
-const THETA = 0.005, Statistics
+const THETA = 0.005
+const NE_FIG = 80, Statistics
 
 const NQ = 2000
 const Blow = CELL_LOW.B; const Bhigh = CELL_HIGH.B
