@@ -30,6 +30,7 @@ using Printf, Statistics, DelimitedFiles
 # the hard-threshold model; asset grid rescaled to the wealth distribution.
 const THETA = 0.005
 const GRID  = (a_max = 4.0, pexp = 3.0)
+const NE_DEFAULT = 40
 
 
 const UGRID = vcat(collect(0.0:0.2:12.0), collect(12.5:0.5:16.0), collect(17.0:1.0:30.0))
@@ -42,19 +43,19 @@ isdir(CACHEDIR) || mkpath(CACHEDIR)
 const TASTE = Dict{Float64,Vector{Float64}}()
 tastes(σ) = get!(TASTE, σ) do; taste_nodes_ln(σ; n = NQ) end
 
-const CACHEDIR = joinpath(@__DIR__, @sprintf("cache_l5_theta%.4f_amax%.1f_pexp%.1f", THETA, GRID.a_max, GRID.pexp))
+const CACHEDIR = joinpath(@__DIR__, @sprintf("cache_l5_theta%.4f_amax%.1f_pexp%.1f_ne%d", THETA, GRID.a_max, GRID.pexp, NE_DEFAULT))
 isdir(CACHEDIR) || mkpath(CACHEDIR)
 cachefile(key) = joinpath(CACHEDIR,
     "fam_" * join([replace(@sprintf("%.6f", k), "." => "p") for k in key], "_") * ".txt")
 
 const FAMS = Dict{Any,Any}()
 "Response family. `na`/`ne` off the defaults get their own cache namespace."
-function family(α; subsidy = 0.0, lumptax = 0.0, partcredit = 0.0, na = 200, ne = 40)
+function family(α; subsidy = 0.0, lumptax = 0.0, partcredit = 0.0, na = 200, ne = NE_DEFAULT)
     key = (round(α, digits = 8), round(subsidy, digits = 8),
            round(lumptax, digits = 8), round(partcredit, digits = 8))
     ck = (key, na, ne)
     haskey(FAMS, ck) && return FAMS[ck]
-    f = (na == 200 && ne == 40) ? cachefile(key) :
+    f = (na == 200 && ne == NE_DEFAULT) ? cachefile(key) :
         joinpath(CACHEDIR, "fam_na$(na)_ne$(ne)_" *
                  join([replace(@sprintf("%.6f", k), "." => "p") for k in key], "_") * ".txt")
     if isfile(f)

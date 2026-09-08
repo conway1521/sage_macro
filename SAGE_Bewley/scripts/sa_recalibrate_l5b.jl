@@ -11,12 +11,13 @@ using DelimitedFiles, Printf, Statistics
 const UG = vcat(collect(0.0:0.2:12.0), collect(12.5:0.5:16.0), collect(17.0:1.0:30.0))
 const OMEGA = 0.30; const NQ = 2000; const Bl = CELL_LOW.B; const Bh = CELL_HIGH.B
 const GRID = (a_max = 4.0, pexp = 3.0)
+const NE = 40
 function fam(α, th)
-    f = joinpath(@__DIR__, "cache_l5_theta0.0100_amax4.0_pexp3.0", @sprintf("fam_theta%.4f_%.6f.txt", th, α))
+    f = joinpath(@__DIR__, "cache_recal", @sprintf("fam_theta%.4f_ne%d_%.6f.txt", th, NE, α)); isdir(dirname(f)) || mkpath(dirname(f))
     isfile(f) && (d = readdlm(f, '\t'; skipstart = 1); return (d[:,1], d[:,2], d[:,3], d[:,4]))
     r=Float64[]; mi=Float64[]; pb=Float64[]
     for u in UG
-        _,rate,m,b = solve_participation_logit(update(cell_params(α; na=200, ne=40, a_max=GRID.a_max, pexp=GRID.pexp); social_strength=u), 1.0; theta=th)
+        _,rate,m,b = solve_participation_logit(update(cell_params(α; na=200, ne=NE, a_max=GRID.a_max, pexp=GRID.pexp); social_strength=u), 1.0; theta=th)
         push!(r,rate); push!(mi,m); push!(pb,b)
     end
     open(f,"w") do io; println(io,"u\tr\tminc\tpbase"); for i in eachindex(UG); println(io,join([UG[i],r[i],mi[i],pb[i]],'\t')); end; end
@@ -68,8 +69,8 @@ b2=search(fl2,fh2,max(1,c.κ-0.5):0.05:c.κ+0.5,max(0.05,c.σ-0.03):0.005:c.σ+0
 verdict(b2)
 println("na check at the theta = 0.005 point (baseline families at na = 400)")
 fl5b=let f=joinpath(@__DIR__,"cache_l5","fam_theta0.0050_na400_0.765.txt"); r=Float64[]
-    for u in UG; _,rate,_,_=solve_participation_logit(update(cell_params(CELL_LOW.α; na=400, ne=40, a_max=GRID.a_max, pexp=GRID.pexp); social_strength=u),1.0; theta=0.005); push!(r,rate); end; (UG,r) end
+    for u in UG; _,rate,_,_=solve_participation_logit(update(cell_params(CELL_LOW.α; na=400, ne=NE, a_max=GRID.a_max, pexp=GRID.pexp); social_strength=u),1.0; theta=0.005); push!(r,rate); end; (UG,r) end
 fh5b=let r=Float64[]
-    for u in UG; _,rate,_,_=solve_participation_logit(update(cell_params(CELL_HIGH.α; na=400, ne=40, a_max=GRID.a_max, pexp=GRID.pexp); social_strength=u),1.0; theta=0.005); push!(r,rate); end; (UG,r) end
+    for u in UG; _,rate,_,_=solve_participation_logit(update(cell_params(CELL_HIGH.α; na=400, ne=NE, a_max=GRID.a_max, pexp=GRID.pexp); social_strength=u),1.0; theta=0.005); push!(r,rate); end; (UG,r) end
 e4=equil(fl5b,fh5b,b5.κ,b5.σ); @printf("  na=400: rate %.5f slope %.5f  (na=200: rate %.5f slope %.5f)\n", e4.r, e4.slope, b5.e.r, b5.e.slope)
 println("DONE")
