@@ -1,10 +1,10 @@
-FR 0.35407
-DE 0.46181
-IT 0.43079
-US 0.45163
-CO 0.15268
-ZA 0.08568
-CN 0.12944
+FR 0.35261
+DE 0.43506
+IT 0.40724
+US 0.42387
+CO 0.16375
+ZA 0.09186
+CN 0.14024
 
 logit core, theta=0.005: model participation vs WISE Solidarity
 year   n   | participation  | Bbar alone  alpha_l alone

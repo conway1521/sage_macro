@@ -1,36 +1,36 @@
 ============================================================================
 A. BASELINE at the recalibrated point
 ============================================================================
-kappa = 10.00, sigma_m = 0.495, omega = 0.30, 2000 taste nodes, 83 family nodes
+kappa = 10.00, sigma_m = 0.510, omega = 0.30, 2000 taste nodes, 83 family nodes
   [family  1] alpha 0.765  sub 0.00  tax 0.0000  credit 0.00
   [family  2] alpha 0.911  sub 0.00  tax 0.0000  credit 0.00
 
-equilibrium rate       0.3541   (targets: aggregate about 0.35)
-group rates            0.2668 / 0.4414   (targets 0.25 / 0.45)
-gradient               0.1746          (target 0.200)
-map slope at r*        0.9026
+equilibrium rate       0.3526   (targets: aggregate about 0.35)
+group rates            0.2665 / 0.4387   (targets 0.25 / 0.45)
+gradient               0.1721          (target 0.200)
+map slope at r*        0.8789
 stable equilibria      1
-mean labour income     0.4332
+mean labour income     0.4345
 
 ============================================================================
 B. GRADIENT DECOMPOSITION: taste or agency?
 ============================================================================
   [family  3] alpha 0.838  sub 0.00  tax 0.0000  credit 0.00
-full model         gap 0.1746  (rate 0.3541, 0.2668 / 0.4414)
-tastes equalised   gap 0.0585  (rate 0.3390, 0.3097 / 0.3682)  <- agency alone
-agency equalised   gap 0.1175  (rate 0.3614, 0.3026 / 0.4201)  <- taste alone
-shares of the full gap: agency 34%, taste 67%, sum 101%
+full model         gap 0.1721  (rate 0.3526, 0.2665 / 0.4387)
+tastes equalised   gap 0.0595  (rate 0.3409, 0.3112 / 0.3707)  <- agency alone
+agency equalised   gap 0.1133  (rate 0.3525, 0.2958 / 0.4091)  <- taste alone
+shares of the full gap: agency 35%, taste 66%, sum 100%
 
 ============================================================================
 C. THE PROPOSITION AT THE RECALIBRATED POINT
 ============================================================================
-complementarity factor (1-w)/(w+(1-w)r)   1.2777
-density term  sum s_g phi(Phi^-1(1-p_g))  0.3616
-sigma-bar (multiplicity needs sigma below) 0.4621
-sigma* (fits the gradient as well as it can) 0.4950
-ratio sigma*/sigma-bar                     1.071  -> OUTSIDE the coordination region
-proposition slope G'(r*)                   0.9335
-numerical slope at r*                      0.9026  (proposition is the upper one: yes)
+complementarity factor (1-w)/(w+(1-w)r)   1.2801
+density term  sum s_g phi(Phi^-1(1-p_g))  0.3614
+sigma-bar (multiplicity needs sigma below) 0.4626
+sigma* (fits the gradient as well as it can) 0.5100
+ratio sigma*/sigma-bar                     1.103  -> OUTSIDE the coordination region
+proposition slope G'(r*)                   0.9070
+numerical slope at r*                      0.8789  (proposition is the upper one: yes)
 
 ============================================================================
 D. THE NUMERICAL MULTIPLICITY FRONTIER
@@ -44,117 +44,120 @@ stable equilibria as sigma_m falls, at the calibrated kappa
   sigma 0.55 : 1 stable
   sigma 0.50 : 1 stable
   sigma 0.45 : 1 stable
-  sigma 0.41 : 2 stable   <- multiplicity appears here
-  sigma 0.40 : 2 stable
+  sigma 0.40 : 2 stable   <- multiplicity appears here
   sigma 0.39 : 2 stable
   sigma 0.38 : 2 stable
-numerical frontier: multiplicity for sigma_m <= 0.41
-analytical bound sigma-bar = 0.4621, so the numerical frontier sits inside it, as it must
+  sigma 0.37 : 2 stable
+numerical frontier: multiplicity for sigma_m <= 0.40
+analytical bound sigma-bar = 0.4626, so the numerical frontier sits inside it, as it must
 
 ============================================================================
 E. FINANCED MAKE-WORK-PAY SUBSIDY (20 percent)
 ============================================================================
-  [family  4] alpha 0.765  sub 0.20  tax 0.0866  credit 0.00
-  [family  5] alpha 0.911  sub 0.20  tax 0.0866  credit 0.00
-  iteration 1: rate 0.1152, lump tax 0.0866 -> 0.0920
-  [family  6] alpha 0.765  sub 0.20  tax 0.0920  credit 0.00
-  [family  7] alpha 0.911  sub 0.20  tax 0.0920  credit 0.00
-  iteration 2: rate 0.1033, lump tax 0.0920 -> 0.0927
-  [family  8] alpha 0.765  sub 0.20  tax 0.0927  credit 0.00
-  [family  9] alpha 0.911  sub 0.20  tax 0.0927  credit 0.00
-  iteration 3: rate 0.1025, lump tax 0.0927 -> 0.0927
+  [family  4] alpha 0.765  sub 0.20  tax 0.0869  credit 0.00
+  [family  5] alpha 0.911  sub 0.20  tax 0.0869  credit 0.00
+  iteration 1: rate 0.1253, lump tax 0.0869 -> 0.0922
+  [family  6] alpha 0.765  sub 0.20  tax 0.0922  credit 0.00
+  [family  7] alpha 0.911  sub 0.20  tax 0.0922  credit 0.00
+  iteration 2: rate 0.1137, lump tax 0.0922 -> 0.0926
+  [family  8] alpha 0.765  sub 0.20  tax 0.0926  credit 0.00
+  [family  9] alpha 0.911  sub 0.20  tax 0.0926  credit 0.00
+  iteration 3: rate 0.1132, lump tax 0.0926 -> 0.0926
 
-lump-sum tax             0.0927  (21.4% of baseline mean income)
-direct effect            0.3541 -> 0.2936  (-6.0 points)
-equilibrium effect       0.3541 -> 0.1025  (-25.2 points)
-amplification            4.16
-group rates              0.0589 / 0.1460
-mean labour income       0.4332 -> 0.4636 (+7.0%)
+lump-sum tax             0.0926  (21.3% of baseline mean income)
+direct effect            0.3526 -> 0.2934  (-5.9 points)
+equilibrium effect       0.3526 -> 0.1132  (-23.9 points)
+amplification            4.04
+group rates              0.0670 / 0.1593
+mean labour income       0.4345 -> 0.4631 (+6.6%)
 
 ============================================================================
 F. EMPOWERMENT: low-education agency raised to the population mean
 ============================================================================
 alpha_low 0.765 -> 0.838, no fiscal instrument
-equilibrium              0.3541 -> 0.4832  (+12.9 points)
-group rates              0.4065 / 0.5599
-mean labour income       0.4332 -> 0.4418 (+2.0%)
+equilibrium              0.3526 -> 0.4647  (+11.2 points)
+group rates              0.3893 / 0.5401
+mean labour income       0.4345 -> 0.4443 (+2.2%)
 
 ============================================================================
 G. PARTICIPATION TAX CREDIT AT REAL REBATE RATES
 ============================================================================
   [family 10] alpha 0.765  sub 0.00  tax 0.0000  credit 0.25
   [family 11] alpha 0.911  sub 0.00  tax 0.0000  credit 0.25
-  rho 0.25 tau 1.00 iteration 1: rate 0.8854, tax 0.0000 -> 0.0188
-  [family 12] alpha 0.765  sub 0.00  tax 0.0188  credit 0.25
-  [family 13] alpha 0.911  sub 0.00  tax 0.0188  credit 0.25
-  rho 0.25 tau 1.00 iteration 2: rate 0.8626, tax 0.0188 -> 0.0183
-  [family 14] alpha 0.765  sub 0.00  tax 0.0183  credit 0.25
-  [family 15] alpha 0.911  sub 0.00  tax 0.0183  credit 0.25
-  rho 0.25 tau 1.00 iteration 3: rate 0.8633, tax 0.0183 -> 0.0183
+  rho 0.25 tau 1.00 iteration 1: rate 0.8745, tax 0.0000 -> 0.0185
+  [family 12] alpha 0.765  sub 0.00  tax 0.0185  credit 0.25
+  [family 13] alpha 0.911  sub 0.00  tax 0.0185  credit 0.25
+  rho 0.25 tau 1.00 iteration 2: rate 0.8488, tax 0.0185 -> 0.0181
+  [family 14] alpha 0.765  sub 0.00  tax 0.0181  credit 0.25
+  [family 15] alpha 0.911  sub 0.00  tax 0.0181  credit 0.25
+  rho 0.25 tau 1.00 iteration 3: rate 0.8491, tax 0.0181 -> 0.0181
   [family 16] alpha 0.765  sub 0.00  tax 0.0000  credit 0.12
-  rho 0.25 tau 0.50 iteration 1: rate 0.8142, tax 0.0000 -> 0.0139
-  [family 17] alpha 0.765  sub 0.00  tax 0.0139  credit 0.12
-  [family 18] alpha 0.911  sub 0.00  tax 0.0139  credit 0.25
-  rho 0.25 tau 0.50 iteration 2: rate 0.7874, tax 0.0139 -> 0.0136
-  [family 19] alpha 0.765  sub 0.00  tax 0.0136  credit 0.12
-  [family 20] alpha 0.911  sub 0.00  tax 0.0136  credit 0.25
-  rho 0.25 tau 0.50 iteration 3: rate 0.7880, tax 0.0136 -> 0.0136
+  rho 0.25 tau 0.50 iteration 1: rate 0.8006, tax 0.0000 -> 0.0137
+  [family 17] alpha 0.765  sub 0.00  tax 0.0137  credit 0.12
+  [family 18] alpha 0.911  sub 0.00  tax 0.0137  credit 0.25
+  rho 0.25 tau 0.50 iteration 2: rate 0.7709, tax 0.0137 -> 0.0134
+  [family 19] alpha 0.765  sub 0.00  tax 0.0134  credit 0.12
+  [family 20] alpha 0.911  sub 0.00  tax 0.0134  credit 0.25
+  rho 0.25 tau 0.50 iteration 3: rate 0.7717, tax 0.0134 -> 0.0134
   [family 21] alpha 0.765  sub 0.00  tax 0.0000  credit 0.06
-  rho 0.25 tau 0.25 iteration 1: rate 0.7690, tax 0.0000 -> 0.0119
-  [family 22] alpha 0.765  sub 0.00  tax 0.0119  credit 0.06
-  [family 23] alpha 0.911  sub 0.00  tax 0.0119  credit 0.25
-  rho 0.25 tau 0.25 iteration 2: rate 0.7408, tax 0.0119 -> 0.0116
-  [family 24] alpha 0.765  sub 0.00  tax 0.0116  credit 0.06
-  [family 25] alpha 0.911  sub 0.00  tax 0.0116  credit 0.25
-  rho 0.25 tau 0.25 iteration 3: rate 0.7414, tax 0.0116 -> 0.0116
+  rho 0.25 tau 0.25 iteration 1: rate 0.7541, tax 0.0000 -> 0.0117
+  [family 22] alpha 0.765  sub 0.00  tax 0.0117  credit 0.06
+  [family 23] alpha 0.911  sub 0.00  tax 0.0117  credit 0.25
+  rho 0.25 tau 0.25 iteration 2: rate 0.7241, tax 0.0117 -> 0.0114
+  [family 24] alpha 0.765  sub 0.00  tax 0.0114  credit 0.06
+  [family 25] alpha 0.911  sub 0.00  tax 0.0114  credit 0.25
+  rho 0.25 tau 0.25 iteration 3: rate 0.7248, tax 0.0114 -> 0.0114
   [family 26] alpha 0.765  sub 0.00  tax 0.0000  credit 0.66
   [family 27] alpha 0.911  sub 0.00  tax 0.0000  credit 0.66
-  rho 0.66 tau 1.00 iteration 1: rate 0.9983, tax 0.0000 -> 0.0552
+  rho 0.66 tau 1.00 iteration 1: rate 0.9978, tax 0.0000 -> 0.0552
   [family 28] alpha 0.765  sub 0.00  tax 0.0552  credit 0.66
   [family 29] alpha 0.911  sub 0.00  tax 0.0552  credit 0.66
-  rho 0.66 tau 1.00 iteration 2: rate 0.9962, tax 0.0552 -> 0.0551
-  [family 30] alpha 0.765  sub 0.00  tax 0.0000  credit 0.33
-  rho 0.66 tau 0.50 iteration 1: rate 0.9537, tax 0.0000 -> 0.0416
-  [family 31] alpha 0.765  sub 0.00  tax 0.0416  credit 0.33
-  [family 32] alpha 0.911  sub 0.00  tax 0.0416  credit 0.66
-  rho 0.66 tau 0.50 iteration 2: rate 0.9328, tax 0.0416 -> 0.0411
-  [family 33] alpha 0.765  sub 0.00  tax 0.0411  credit 0.33
-  [family 34] alpha 0.911  sub 0.00  tax 0.0411  credit 0.66
-  rho 0.66 tau 0.50 iteration 3: rate 0.9330, tax 0.0411 -> 0.0411
-  [family 35] alpha 0.765  sub 0.00  tax 0.0000  credit 0.17
-  rho 0.66 tau 0.25 iteration 1: rate 0.8908, tax 0.0000 -> 0.0350
-  [family 36] alpha 0.765  sub 0.00  tax 0.0350  credit 0.17
-  [family 37] alpha 0.911  sub 0.00  tax 0.0350  credit 0.66
-  rho 0.66 tau 0.25 iteration 2: rate 0.8547, tax 0.0350 -> 0.0346
-  [family 38] alpha 0.765  sub 0.00  tax 0.0346  credit 0.17
-  [family 39] alpha 0.911  sub 0.00  tax 0.0346  credit 0.66
-  rho 0.66 tau 0.25 iteration 3: rate 0.8552, tax 0.0346 -> 0.0346
+  rho 0.66 tau 1.00 iteration 2: rate 0.9952, tax 0.0552 -> 0.0551
+  [family 30] alpha 0.765  sub 0.00  tax 0.0551  credit 0.66
+  [family 31] alpha 0.911  sub 0.00  tax 0.0551  credit 0.66
+  rho 0.66 tau 1.00 iteration 3: rate 0.9952, tax 0.0551 -> 0.0551
+  [family 32] alpha 0.765  sub 0.00  tax 0.0000  credit 0.33
+  rho 0.66 tau 0.50 iteration 1: rate 0.9490, tax 0.0000 -> 0.0415
+  [family 33] alpha 0.765  sub 0.00  tax 0.0415  credit 0.33
+  [family 34] alpha 0.911  sub 0.00  tax 0.0415  credit 0.66
+  rho 0.66 tau 0.50 iteration 2: rate 0.9262, tax 0.0415 -> 0.0409
+  [family 35] alpha 0.765  sub 0.00  tax 0.0409  credit 0.33
+  [family 36] alpha 0.911  sub 0.00  tax 0.0409  credit 0.66
+  rho 0.66 tau 0.50 iteration 3: rate 0.9264, tax 0.0409 -> 0.0409
+  [family 37] alpha 0.765  sub 0.00  tax 0.0000  credit 0.17
+  rho 0.66 tau 0.25 iteration 1: rate 0.8837, tax 0.0000 -> 0.0349
+  [family 38] alpha 0.765  sub 0.00  tax 0.0349  credit 0.17
+  [family 39] alpha 0.911  sub 0.00  tax 0.0349  credit 0.66
+  rho 0.66 tau 0.25 iteration 2: rate 0.8491, tax 0.0349 -> 0.0345
+  [family 40] alpha 0.765  sub 0.00  tax 0.0345  credit 0.17
+  [family 41] alpha 0.911  sub 0.00  tax 0.0345  credit 0.66
+  rho 0.66 tau 0.25 iteration 3: rate 0.8495, tax 0.0345 -> 0.0345
 
 scenario                   | rate    | low     | high    | hi/lo  | cost (% mean income)
-baseline                   |  0.3541 |  0.2668 |  0.4414 |  1.65  |  ---
-Gift Aid 25%, take-up 100% |  0.8633 |  0.8109 |  0.9156 |  1.13  |  4.23
-Gift Aid 25%, take-up 50%  |  0.7880 |  0.6770 |  0.8991 |  1.33  |  3.14
-Gift Aid 25%, take-up 25%  |  0.7414 |  0.5964 |  0.8865 |  1.49  |  2.69
-France 66%, take-up 100%   |  0.9962 |  0.9937 |  0.9987 |  1.01  |  12.73
-France 66%, take-up 50%    |  0.9330 |  0.8675 |  0.9986 |  1.15  |  9.48
-France 66%, take-up 25%    |  0.8552 |  0.7122 |  0.9981 |  1.40  |  7.99
+baseline                   |  0.3526 |  0.2665 |  0.4387 |  1.65  |  ---
+Gift Aid 25%, take-up 100% |  0.8491 |  0.7947 |  0.9036 |  1.14  |  4.16
+Gift Aid 25%, take-up 50%  |  0.7717 |  0.6587 |  0.8848 |  1.34  |  3.08
+Gift Aid 25%, take-up 25%  |  0.7248 |  0.5788 |  0.8709 |  1.50  |  2.63
+France 66%, take-up 100%   |  0.9952 |  0.9923 |  0.9982 |  1.01  |  12.68
+France 66%, take-up 50%    |  0.9264 |  0.8547 |  0.9980 |  1.17  |  9.42
+France 66%, take-up 25%    |  0.8495 |  0.7015 |  0.9975 |  1.42  |  7.94
 
 ============================================================================
 H. THE TWO LEDGERS: GDP AND GDP-B
 ============================================================================
-model shadow price of the fabric  pi = 0.1430 income units per unit of P
+model shadow price of the fabric  pi = 0.1439 income units per unit of P
   a fully participating society's cohesion is worth 33% of baseline GDP
 
 state                        | P      | GDP      | dGDP%    | GDP-B    | dGDP-B%
-baseline                     | 0.354  | 0.4332  |   +0.0  | 0.4839  |   +0.0
-work subsidy (20%)           | 0.102  | 0.4636  |   +7.0  | 0.4782  |   -1.2
-empowerment                  | 0.483  | 0.4418  |   +2.0  | 0.5109  |   +5.6
-participation credit (25%)   | 0.863  | 0.4124  |   -4.8  | 0.5358  |  +10.7
-participation credit (66%)   | 0.996  | 0.4069  |   -6.1  | 0.5494  |  +13.5
+baseline                     | 0.353  | 0.4345  |   +0.0  | 0.4853  |   +0.0
+work subsidy (20%)           | 0.113  | 0.4631  |   +6.6  | 0.4794  |   -1.2
+empowerment                  | 0.465  | 0.4443  |   +2.2  | 0.5111  |   +5.3
+participation credit (25%)   | 0.849  | 0.4140  |   -4.7  | 0.5361  |  +10.5
+participation credit (66%)   | 0.995  | 0.4076  |   -6.2  | 0.5508  |  +13.5
 
-breakeven price for the work subsidy  pi* = 0.1206  (28% of GDP per unit P)
-the model price is 1.19 times the breakeven, so at its own price the subsidy
-LOWERS GDP-B; it raises it only if the fabric is priced above 28% of GDP per unit P
+breakeven price for the work subsidy  pi* = 0.1193  (27% of GDP per unit P)
+the model price is 1.21 times the breakeven, so at its own price the subsidy
+LOWERS GDP-B; it raises it only if the fabric is priced above 27% of GDP per unit P
 
 ============================================================================
 I. EFFORT-GRID ROBUSTNESS OF THE LEVEL 4 NUMBERS
@@ -164,10 +167,10 @@ sensitive than the companion paper's Q = E[1-e]. Mean labour income is
 the quantity that inherits the effort grid, so the GDP ledger is checked.
 
 ne    | rate      | low       | high      | mean income
-40    | 0.35407  | 0.26678  | 0.44136  | 0.43324
-80    | 0.36815  | 0.27832  | 0.45799  | 0.43387
-160   | 0.36815  | 0.27782  | 0.45848  | 0.43316
+40    | 0.34143  | 0.25765  | 0.42521  | 0.43378
+80    | 0.35261  | 0.26654  | 0.43869  | 0.43453
+160   | 0.35259  | 0.26605  | 0.43914  | 0.43382
 
-39 families solved and cached
+41 families solved and cached
 saved sa_level4_results.txt
 DONE
