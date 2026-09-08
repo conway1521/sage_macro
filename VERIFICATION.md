@@ -112,6 +112,16 @@ Reading it: the level converges in theta (increments 0.057, 0.033, 0.006, 0.003,
 
 **What this changes upstream.** All S+A numbers are being recomputed on this core (stage 5, `cache_l5`). The S paper's engine shares the mis-scaled grid; its slope-based results were shown stable but its wealth-distribution statements should be rechecked on a rescaled grid before the next revision.
 
+## Stage 5 results: what the corrected core changed (2026-09-08)
+
+Every S+A scalar recomputed on the logit core (theta 0.01, a_max 4, pexp 3, `cache_l5`), against the hard-threshold stage 4 snapshot. Full table in `scripts/compare_stage4_stage5.txt`.
+
+The participation levels all rise by about one point (baseline 0.353 to 0.364, groups 0.295/0.411 to 0.304/0.425) as the level moves to its converged value. Every conclusion is unchanged to within a percent: ratio 1.598 to 1.604, multiplier 2.474 to 2.465, slope 0.618 to 0.614, bound 0.470 to 0.468, gap 0.117 to 0.121, take-up ratios 1.19/1.43/1.60 to 1.19/1.42/1.56. The largest relative move is GDP-B under the work subsidy, +1.5 to +2.0 percent, a half-point in absolute terms with the sign and the ranking intact; the breakeven price moves from 50 to 54 percent of GDP against a model price of 33. Countries: subsidy down 7 of 7, credit up 7 of 7, levels up about 0.01 uniformly.
+
+This is the end of the reversal record. A change to the solver's core structure, made for a structural reason, moved levels by one point and flipped nothing.
+
+**The S paper survives the grid finding** (`scripts/verify_S_grid.jl`). On the rescaled grid the engine's effective resolution goes from 15 nodes to 155 (na 200) and 307 (na 400), and: Q 0.475 to 0.470, wealth Gini 0.549 to 0.544 to 0.549, hand-to-mouth 0.329 to 0.314 to 0.316, consumption response +5.61 to +5.58 to +5.64, public-good response -5.15 to -5.06 to -5.07. The decoupling result is now converged to two decimals at -5.1 rather than the -5.2 the paper quotes with a stated quarter-point band; that quarter point was the old grid. The paper's text needs 5.2 to become 5.1 and the engine default a_max/pexp should move to the rescaled values, which also corrects the live lecture at rebuild.
+
 ## Safe operating region
 
 Family spacing 0.2 or finer over the transition, at least 2000 taste quadrature nodes, na = 200 and ne = 40 for the household solve. Aggregate participation is then accurate to about 0.002. Do not quote cell-level responses from the reduction.
