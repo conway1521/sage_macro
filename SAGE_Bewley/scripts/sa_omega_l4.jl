@@ -10,12 +10,13 @@
 include(joinpath(@__DIR__, "..", "src", "SAGEBewley.jl"))
 using .SAGEBewley
 include(joinpath(@__DIR__, "sa_core.jl"))
-using DelimitedFiles, Printf, Statistics
+using DelimitedFiles, Printf
+const THETA = 0.01, Statistics
 
 const NQ = 2000
 const Blow = CELL_LOW.B; const Bhigh = CELL_HIGH.B
-dl = readdlm(joinpath(@__DIR__, "sa_l5_fam_low.txt"), '\t'; skipstart = 1)
-dh = readdlm(joinpath(@__DIR__, "sa_l5_fam_high.txt"), '\t'; skipstart = 1)
+dl = readdlm(joinpath(@__DIR__, @sprintf("sa_l5_theta%.4f_fam_low.txt", THETA)), '\t'; skipstart = 1)
+dh = readdlm(joinpath(@__DIR__, @sprintf("sa_l5_theta%.4f_fam_high.txt", THETA)), '\t'; skipstart = 1)
 fl = (dl[:,1], dl[:,2], dl[:,3], dl[:,4]); fh = (dh[:,1], dh[:,2], dh[:,3], dh[:,4])
 const TASTE = Dict{Tuple{Float64,Int},Vector{Float64}}()
 tastes(σ, nq = NQ) = get!(TASTE, (σ, nq)) do; taste_nodes_ln(σ; n = nq) end

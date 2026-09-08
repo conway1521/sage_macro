@@ -44,7 +44,7 @@ const TASTE = Dict{Float64,Vector{Float64}}()
 tastes(σ) = get!(TASTE, σ) do; taste_nodes_ln(σ; n = NQ) end
 
 function build_family(name, α; subsidy = 0.0, lumptax = 0.0, partcredit = 0.0)
-    f = joinpath(@__DIR__, "sa_l5_fam_$(name).txt")
+    f = joinpath(@__DIR__, @sprintf("sa_l5_theta%.4f_fam_%s.txt", THETA, name))
     if isfile(f)
         d = readdlm(f, '\t'; skipstart = 1)
         return (d[:, 1], d[:, 2], d[:, 3], d[:, 4])

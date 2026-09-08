@@ -10,8 +10,8 @@ using DelimitedFiles, Printf, Statistics
 const OMEGA = 0.30; const NQ = 2000
 const Bl = CELL_LOW.B; const Bh = CELL_HIGH.B
 rd(f) = (d = readdlm(f, '\t'; skipstart = 1); (d[:,1], d[:,2], d[:,3], d[:,4]))
-fl = rd(joinpath(@__DIR__, "cache_l5", "fam_0p765000_0p000000_0p000000_0p000000.txt"))
-fh = rd(joinpath(@__DIR__, "cache_l5", "fam_0p911000_0p000000_0p000000_0p000000.txt"))
+fl = rd(joinpath(@__DIR__, "cache_l5_theta0.0100_amax4.0_pexp3.0", "fam_0p765000_0p000000_0p000000_0p000000.txt"))
+fh = rd(joinpath(@__DIR__, "cache_l5_theta0.0100_amax4.0_pexp3.0", "fam_0p911000_0p000000_0p000000_0p000000.txt"))
 const TASTE = Dict{Tuple{Float64,Int},Vector{Float64}}()
 tastes(σ, n) = get!(TASTE, (σ, n)) do; taste_nodes_ln(σ; n = n) end
 phi(z) = exp(-z^2/2)/sqrt(2pi)

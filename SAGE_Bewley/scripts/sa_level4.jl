@@ -64,7 +64,8 @@ end
 const FAMS = Dict{NTuple{4,Float64},NTuple{4,Vector{Float64}}}()
 nfam = Ref(0)
 
-const CACHEDIR = joinpath(@__DIR__, "cache_l5")
+
+const CACHEDIR = joinpath(@__DIR__, @sprintf("cache_l5_theta%.4f_amax%.1f_pexp%.1f", THETA, GRID.a_max, GRID.pexp))
 isdir(CACHEDIR) || mkpath(CACHEDIR)
 cachefile(key) = joinpath(CACHEDIR,
     "fam_" * join([replace(@sprintf("%.6f", k), "." => "p") for k in key], "_") * ".txt")

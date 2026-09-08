@@ -36,12 +36,14 @@ const UGRID = vcat(collect(0.0:0.2:12.0), collect(12.5:0.5:16.0), collect(17.0:1
 const NQ = 2000
 const OMEGA = 0.30; const KAPPA = 10.75; const SIGMA = 0.750
 const Blow = CELL_LOW.B; const Bhigh = CELL_HIGH.B
-const CACHEDIR = joinpath(@__DIR__, "cache_l5")
+
 isdir(CACHEDIR) || mkpath(CACHEDIR)
 
 const TASTE = Dict{Float64,Vector{Float64}}()
 tastes(σ) = get!(TASTE, σ) do; taste_nodes_ln(σ; n = NQ) end
 
+const CACHEDIR = joinpath(@__DIR__, @sprintf("cache_l5_theta%.4f_amax%.1f_pexp%.1f", THETA, GRID.a_max, GRID.pexp))
+isdir(CACHEDIR) || mkpath(CACHEDIR)
 cachefile(key) = joinpath(CACHEDIR,
     "fam_" * join([replace(@sprintf("%.6f", k), "." => "p") for k in key], "_") * ".txt")
 
@@ -183,7 +185,7 @@ for na in (100, 200, 300, 400)
     dens = 0.5*phi(quantile_normal(1 - E.lo)) + 0.5*phi(quantile_normal(1 - E.hi))
     sb = comp * dens
     @printf("%-6d | %.5f  | %.5f  | %.5f  | %.5f   | %.4f  | %.4f\n",
-            na, E.r, E.hi - E.lo, E.slope, sb, SIGMA/sb, 1/(1 - E.slope))
+            na, E.r, E.hi - E.lo, E.slope, sb, SIGMA/sb, 1/(1 - E.slope)); flush(stdout)
 end
 println("If the last three columns are stable while the first two are not, the model")
 println("is imprecise about the LEVEL of participation and precise about the bound")
@@ -252,4 +254,4 @@ for code in ("FR", "ZA")
     flush(stdout)
 end
 
-println("\nAUDIT DONE")
+println("\nAUDIT DONE"); flush(stdout)
