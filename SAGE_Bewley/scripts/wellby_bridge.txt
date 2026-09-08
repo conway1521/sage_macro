@@ -1,0 +1,61 @@
+============================================================================================
+THE WELLBY BRIDGE: policy effects in life-satisfaction points and money
+============================================================================================
+baseline participation 0.3526, baseline mean labour income 0.4345 (model units)
+coefficients: log income 0.588, social support 2.510, freedom 0.947 (WHR 2025 T10 col 1)
+WELLBY 13000 GBP (range 10000 to 16000), beta_Y 1.96105 (Green Book 2021)
+
+(1) LIFE-SATISFACTION DECOMPOSITION, at the maximal mapping s = 1
+    dLS_G = 0.588 * dln(income);  dLS_S = 2.510 * d(participation rate)
+
+policy                       | d ln inc  | dLS_G     | d partic  | dLS_S     | dLS total
+work subsidy (20%)           |   +0.0636 |   +0.0374 |   -0.2395 |   -0.6010 |   -0.5636
+empowerment                  |   +0.0222 |   +0.0130 |   +0.1121 |   +0.2813 |   +0.2943
+participation credit (25%)   |   -0.0485 |   -0.0285 |   +0.4965 |   +1.2462 |   +1.2177
+participation credit (66%)   |   -0.0639 |   -0.0376 |   +0.6426 |   +1.6130 |   +1.5754
+
+(2) MONEY, GBP per person per year, at s = 1
+    linear: dLS * 13,000 (Green Book default). ES: M[exp(dLS/1.96)-1], M = 30,000.
+
+policy                       | linear (GBP) | low 10k      | high 16k     | ES formula  
+work subsidy (20%)           |        -7327 |        -5636 |        -9018 |        -7494
+empowerment                  |        +3826 |        +2943 |        +4709 |        +4858
+participation credit (25%)   |       +15830 |       +12177 |       +19483 |       +25821
+participation credit (66%)   |       +20480 |       +15754 |       +25206 |       +36989
+
+(3) SENSITIVITY TO THE MAPPING ASSUMPTION s
+    s is how much measured social support moves per point of participation.
+    Every social term scales by s; the material term does not.
+
+policy (linear GBP)          | s=1.00      s=0.50      s=0.25      s=0.10      sign flips at s =
+work subsidy (20%)           |       -7327       -3420       -1467        -295  0.062
+empowerment                  |       +3826       +1998       +1084        +535  no flip
+participation credit (25%)   |      +15830       +7730       +3680       +1250  0.023
+participation credit (66%)   |      +20480       +9996       +4753       +1608  0.023
+
+(4) THE PRICE OF THE FABRIC: model-internal against external
+  model's own shadow price            33.1 % of GDP per unit of participation
+  breakeven for the work subsidy      27.4 % of GDP (subsidy is GDP-B neutral here)
+  external, linear WELLBY method     108.8 % of income  (2.510 * 13,000 / 30,000)
+  external, ES method                259.6 % of income  (exp(2.510/1.96) - 1)
+  external at s = 0.25, linear        27.2 % of income
+
+  The external price equals the breakeven at a mapping strength of s = 0.25.
+  Above that the work subsidy is GDP-B reducing; below it, GDP-B improving.
+  The model's own price sat only a few points above its own breakeven, which is
+  why the paper hedges the sign; the external anchor clears it by a factor of
+  4.0 at s = 1 and still clears it at any s above 0.25.
+
+(5) COEFFICIENT UNCERTAINTY on the social term (WHR standard error)
+    social support 2.510 (SE 0.319), so a 95% interval is 1.885 to 3.135,
+    which moves the s = 1 linear value of the work subsidy between -5381 and -9273 GBP.
+
+(6) THE AGENCY SLOT, not yet filled
+    freedom to make life choices carries 0.947 (SE 0.239), about 1.61 times the
+    log-income coefficient, so the A dimension has a published price waiting for
+it. It cannot be used until the model produces an agency object on a 0-1
+population-share scale, which it does not yet: agency is currently a wage
+multiplier in the budget constraint and does not enter experienced wellbeing.
+This is the next build step, and the coefficient above is what will price it.
+
+DONE
