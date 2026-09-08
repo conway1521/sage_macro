@@ -14,7 +14,7 @@ const FAMS = Dict{Any,Any}()
 fam(α) = get!(FAMS,α) do
     r=Float64[]
     for u in UG
-        _,rate,_,_ = solve_participation_logit(update(cell_params(α; na=200, ne=40);
+        _,rate,_,_ = solve_participation_logit(update(cell_params(α; na=200, ne = 80);
                         social_strength=u, a_max=AMAX, pexp=PEXP), 1.0; theta=TH)
         push!(r,rate)
     end

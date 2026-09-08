@@ -43,7 +43,7 @@ const Blow   = CELL_LOW.B
 const Bhigh  = CELL_HIGH.B
 const Bbar   = CELL_LOW.share * Blow + CELL_HIGH.share * Bhigh
 const ALPHA_MID = 0.838
-const NA, NE = 200, 40
+const NA, NE = 200, 80
 
 # experienced-wellbeing constants, as in the shared engine
 const GAMMA = 2.0; const LAMBDA = 0.8757834; const GAM_GAIN = 1.0

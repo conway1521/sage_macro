@@ -11,7 +11,7 @@ using DelimitedFiles, Printf, Statistics
 const UG = vcat(collect(0.0:0.2:12.0), collect(12.5:0.5:16.0), collect(17.0:1.0:30.0))
 const OMEGA = 0.30; const NQ = 2000; const Bl = CELL_LOW.B; const Bh = CELL_HIGH.B
 const GRID = (a_max = 4.0, pexp = 3.0)
-const NE = 40
+const NE = 80
 function fam(α, th)
     f = joinpath(@__DIR__, "cache_recal", @sprintf("fam_theta%.4f_ne%d_%.6f.txt", th, NE, α)); isdir(dirname(f)) || mkpath(dirname(f))
     isfile(f) && (d = readdlm(f, '\t'; skipstart = 1); return (d[:,1], d[:,2], d[:,3], d[:,4]))

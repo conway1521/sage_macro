@@ -30,7 +30,7 @@ using Printf, Statistics, DelimitedFiles
 # the hard-threshold model; asset grid rescaled to the wealth distribution.
 const THETA = 0.005
 const GRID  = (a_max = 4.0, pexp = 3.0)
-const NE_DEFAULT = 40
+const NE_DEFAULT = 80
 
 
 const UGRID = vcat(collect(0.0:0.2:12.0), collect(12.5:0.5:16.0), collect(17.0:1.0:30.0))

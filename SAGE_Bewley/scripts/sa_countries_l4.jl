@@ -34,7 +34,7 @@ const MS = taste_nodes_ln(SIGMA; n = NQ)
 function build(α, T; subsidy = 0.0, partcredit = 0.0)
     r = Float64[]; mi = Float64[]; pb = Float64[]
     for u in UGRID
-        p = update(cell_params(α; na = 200, ne = 40, a_max = GRID.a_max, pexp = GRID.pexp, subsidy = subsidy, lumptax = T);
+        p = update(cell_params(α; na = 200, ne = 80, a_max = GRID.a_max, pexp = GRID.pexp, subsidy = subsidy, lumptax = T);
                    social_strength = u, partcredit = partcredit)
         _, rate, m, b = solve_participation_logit(p, 1.0; theta = THETA)
         push!(r, rate); push!(mi, m); push!(pb, b)

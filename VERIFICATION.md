@@ -142,6 +142,8 @@ Every one of these is the June paper's qualitative claim. Every stage-4 "reversa
 
 **Not written up yet, because section I caught one more thing.** At this steep point the effort grid matters: the level is 0.354 at ne = 40 and 0.368 at ne = 80 and 160. At the flat stage-4 point ne moved the fifth decimal; here the multiplier of ten turns a 0.0014 family error into 0.014. The production ne for the participation core must rise, the calibration redone on the converged families, and the run repeated. `audit_ne_l5.jl` sweeps ne = 40 to 320 with the slope first, since two finer values agreeing to five decimals wants confirming before an hour of compute is spent on it.
 
+**Effort grid at the final point: ne = 80** (`scripts/audit_ne_l5.txt`). Sweeping ne = 40, 60, 80, 120, 160, 240, 320 at (10.00, 0.495, theta 0.005): the level is 0.354, 0.366, 0.368, 0.369, 0.368, 0.369, 0.368 and the slope 0.9026, 0.8991, 0.8983, 0.8982, 0.8983, 0.8983, 0.8983. From 80 onward the slope is converged to four decimals and the level sits in a band of 0.0006, which at a multiplier near ten is a family error of 6e-5, the floor set by the taste quadrature and the asset grid. Production ne for the participation core is therefore 80; the value of 40 that was fifth-decimal at the flat stage-4 point is off by 0.014 here. The calibration is being redone on ne = 80 families and the full chain rerun.
+
 ## Safe operating region
 
 Family spacing 0.2 or finer over the transition, at least 2000 taste quadrature nodes, na = 200 and ne = 40 for the household solve. Aggregate participation is then accurate to about 0.002. Do not quote cell-level responses from the reduction.

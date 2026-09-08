@@ -1,0 +1,23 @@
+ne    | r*        low       high      | slope     mult    | mean inc 
+  built alpha 0.765 ne 40
+  built alpha 0.911 ne 40
+40    | 0.35407   0.26678   0.44136   | 0.90262   10.27   | 0.43324  
+  built alpha 0.765 ne 60
+  built alpha 0.911 ne 60
+60    | 0.36572   0.27594   0.45550   | 0.89907   9.91    | 0.43272  
+  built alpha 0.765 ne 80
+  built alpha 0.911 ne 80
+80    | 0.36815   0.27832   0.45799   | 0.89826   9.83    | 0.43387  
+  built alpha 0.765 ne 120
+  built alpha 0.911 ne 120
+120   | 0.36854   0.27874   0.45835   | 0.89817   9.82    | 0.43248  
+  built alpha 0.765 ne 160
+  built alpha 0.911 ne 160
+160   | 0.36815   0.27782   0.45848   | 0.89827   9.83    | 0.43316  
+  built alpha 0.765 ne 240
+  built alpha 0.911 ne 240
+240   | 0.36944   0.27918   0.45969   | 0.89827   9.83    | 0.43280  
+  built alpha 0.765 ne 320
+  built alpha 0.911 ne 320
+320   | 0.36846   0.27817   0.45874   | 0.89832   9.84    | 0.43287  
+DONE
