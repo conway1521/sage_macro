@@ -1,0 +1,10 @@
+Is a_max = 5, pexp = 3 slack for every country row, baseline and under a 20% subsidy?
+cty  | top mass   top (sub)  | eff.nodes maxwealth | Gini
+FR   | 0.00e+00   0.00e+00   | 144      1.86     | 0.550
+DE   | 0.00e+00   0.00e+00   | 156      2.36     | 0.538
+IT   | 0.00e+00   8.42e-255  | 181      3.76     | 0.524
+US   | 1.69e-271  4.67e-318  | 184      3.89     | 0.522
+CO   | 2.85e-01   3.00e-01   | 200      5.00     | 0.393
+ZA   | 2.77e-01   2.91e-01   | 200      5.00     | 0.363
+CN   | 2.71e-01   2.91e-01   | 200      5.00     | 0.404
+DONE
