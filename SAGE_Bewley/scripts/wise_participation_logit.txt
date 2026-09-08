@@ -1,12 +1,12 @@
-FR 0.36446
-DE 0.38366
-IT 0.37728
-US 0.38295
-CO 0.30178
-ZA 0.20840
-CN 0.28245
+FR 0.35407
+DE 0.46181
+IT 0.43079
+US 0.45163
+CO 0.15268
+ZA 0.08568
+CN 0.12944
 
-logit core, theta=0.01: model participation vs WISE Solidarity
+logit core, theta=0.005: model participation vs WISE Solidarity
 year   n   | participation  | Bbar alone  alpha_l alone
 2007   6   |         +0.943 |      +0.829      +0.714   
        4   |         +0.800 |      +0.400      +0.000   (OECD four)
