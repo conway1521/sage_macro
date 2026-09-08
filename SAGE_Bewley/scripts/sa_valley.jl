@@ -8,8 +8,8 @@ include(joinpath(@__DIR__, "sa_core.jl"))
 using DelimitedFiles, Printf, Statistics
 const OMEGA = 0.30; const NQ = 2000; const Bl = CELL_LOW.B; const Bh = CELL_HIGH.B
 rd(f) = (d = readdlm(f, '\t'; skipstart = 1); (d[:,1], d[:,2], d[:,3], d[:,4]))
-fl = rd(joinpath(@__DIR__, "cache_l5_theta0.0100_amax4.0_pexp3.0", "fam_theta0.0050_0.765000.txt"))
-fh = rd(joinpath(@__DIR__, "cache_l5_theta0.0100_amax4.0_pexp3.0", "fam_theta0.0050_0.911000.txt"))
+fl = rd(joinpath(@__DIR__, "cache_recal", "fam_theta0.0050_ne80_0.765000.txt"))
+fh = rd(joinpath(@__DIR__, "cache_recal", "fam_theta0.0050_ne80_0.911000.txt"))
 const MS = taste_nodes_ln
 const TASTE = Dict{Float64,Vector{Float64}}()
 tastes(σ) = get!(TASTE, σ) do; taste_nodes_ln(σ; n = NQ) end
