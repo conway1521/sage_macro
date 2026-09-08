@@ -105,6 +105,8 @@ function equil(fl, fh; ngrid = 401, kw...)
     (r = e.r, lo = lo, hi = hi, slope = e.slope, n = length(st), nall = length(c))
 end
 
+phi(z) = exp(-z^2 / 2) / sqrt(2pi)
+
 println("="^78); println("AUDIT OF THE S+A CORE"); println("="^78)
 fl0 = family(CELL_LOW.α); fh0 = family(CELL_HIGH.α)
 E0 = equil(fl0, fh0); mi0 = popcol(fl0, fh0, E0.r, 3)[1]
