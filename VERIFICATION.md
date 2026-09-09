@@ -146,6 +146,16 @@ Every one of these is the June paper's qualitative claim. Every stage-4 "reversa
 
 **Final calibration, every grid converged: (kappa, sigma_m, theta, ne) = (10.00, 0.510, 0.005, 80)** (`scripts/sa_recalibrate_l5b_ne80.txt`, 2026-09-08). The point is identical on theta = 0.005 and 0.0025 families. Rate 0.353, groups 0.267 / 0.439 against 0.25 / 0.45, root loss 0.020, slope 0.879, multiplier 8.3, sigma-bar 0.463, ratio 1.103, one stable equilibrium. Doubling na: level 0.35261 to 0.35250, slope 0.87893 to 0.87897. Halving theta: level 0.001, slope 0.002. This is the June paper's (10.0, 0.50) and its ratio of 1.10, now with the asset grid, effort grid, taste quadrature, map grid and logit scale each shown converged at it. The full S+A chain is being rerun at this point in ne-keyed caches; nothing in the paper has been edited since stage 4.
 
+**The calibrated point was not the best fit, and the search is why (2026-09-08, late)**. Repeating the income-process sweep at na = 200 produced, at nz = 2 on identical footing, a recalibration to (9.95, 0.470) with root moment loss 0.0137, against the headline (10.00, 0.510) at 0.0200. A dense scan with kappa free at each sigma and no local windowing (`scripts/calibration_dense_scan.txt`) confirms 0.470 is the better fit, and that its high-education group rate lands on 0.450 against a target of 0.45.
+
+The cause is the search, not the numerics. `sa_recalibrate_l5b.jl` runs a coarse pass at nq = 500 and ngrid = 201, then refines only in a local window around the coarse winner. The coarse pass landed in a neighbouring basin and the fine window, roughly sigma 0.51 to 0.57, excluded the true optimum. Every downstream run inherited the point.
+
+What it changes. sigma* 0.510 to 0.470; slope 0.879 to 0.944; multiplier 8.3 to 17.8; ratio 1.103 to 1.022. The verdict is unchanged in sign, since 1.022 still exceeds one, but "about ten percent outside the coordination region" becomes "about two percent outside", which reads very differently.
+
+What it does not change, and this is the important part. The paper already states that the two moments identify a curve rather than a point and that the margin should be read as a range. This finding is that statement at finer resolution than the valley scan could see, since that scan stepped sigma by 0.05. Across the well-fitting region, sigma from 0.47 to 0.52, every point fits both moments to within about two percentage points and the ratio runs from 1.02 to 1.12. The honest headline is therefore that France sits just outside the coordination region by a margin the participation moments cannot pin down more precisely than that range, with the best fit at the low end.
+
+Not yet actioned in either paper. The dense scan replaces the two-stage search for any future recalibration.
+
 ## Safe operating region
 
 Family spacing 0.2 or finer over the transition, at least 2000 taste quadrature nodes, na = 200 and ne = 40 for the household solve. Aggregate participation is then accurate to about 0.002. Do not quote cell-level responses from the reduction.
