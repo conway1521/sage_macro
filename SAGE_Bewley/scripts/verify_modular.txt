@@ -1,0 +1,54 @@
+================================================================================================
+THE GATE, ON THE CORRECTED FOOTING
+================================================================================================
+G+S+A  alpha 0.765/0.911  B 0.80/0.94, kappa 9.90 sigma 0.385 omega 0.30 | unemployment, beta spread 0.037
+
+reference economy: participation 0.357355, agency 0.494665, hardship 0.394904
+                   poverty line 0.182514, asset threshold 0.045628, hand-to-mouth 0.299820
+
+1. STATIONARITY IDENTITY: mean forward hardship against the contemporaneous rate
+cell      u       beta   | E[p]         E[h]         difference
+------------------------------------------------------------------
+low edu   3.0     0.927  | 0.304955296  0.304955296  +3.32e-13
+low edu   3.0     0.941  | 0.168399622  0.168399622  +3.99e-12
+low edu   3.0     0.956  | 0.088585544  0.088585544  +6.02e-12
+low edu   5.0     0.927  | 0.317052010  0.317052010  -2.81e-12
+low edu   5.0     0.941  | 0.174149199  0.174149199  +3.00e-13
+low edu   5.0     0.956  | 0.090310853  0.090310853  +5.32e-12
+low edu   8.0     0.927  | 0.580198124  0.580198124  +4.21e-12
+low edu   8.0     0.941  | 0.367937917  0.367937917  +7.37e-12
+low edu   8.0     0.956  | 0.171390285  0.171390285  +5.61e-12
+high edu  3.0     0.927  | 0.712508284  0.712508284  +8.17e-12
+high edu  3.0     0.941  | 0.485359120  0.485359120  +1.44e-11
+high edu  3.0     0.956  | 0.234062850  0.234062850  +1.39e-11
+high edu  5.0     0.927  | 0.786928946  0.786928946  +2.79e-12
+high edu  5.0     0.941  | 0.578754637  0.578754637  +1.23e-11
+high edu  5.0     0.956  | 0.254785110  0.254785110  +1.48e-11
+high edu  8.0     0.927  | 0.856035550  0.856035550  +2.20e-12
+high edu  8.0     0.941  | 0.662474156  0.662474156  +4.46e-12
+high edu  8.0     0.956  | 0.377537972  0.377537972  +1.56e-11
+------------------------------------------------------------------
+largest departure 1.56e-11   identity holds
+
+2. INDEPENDENT PATH: every taste node solved directly, no response family
+  low edu   rate 0.272467  asset 0.218324  U^a 0.592766
+  high edu  rate 0.444435  asset 0.565123  U^a 0.396167
+
+quantity               | modular      direct       difference
+----------------------------------------------------------
+participation          | 0.357355     0.358451     +0.001096
+income-poor            | 0.008134     0.008135     +0.000000
+asset-poor             | 0.391493     0.391724     +0.000231
+hardship               | 0.394904     0.395136     +0.000232
+agency                 | 0.494665     0.494467     -0.000198
+hand-to-mouth          | 0.299820     0.300163     +0.000343
+
+asset poverty by quintile, modular 0.5331 0.4410 0.4364 0.3194 0.1482
+                          direct  0.5333 0.4406 0.4364 0.3200 0.1491
+
+The asset grid and the choice-smoothing scale are checked by test_modular.jl,
+which moved agency by 0.0017 and 0.0014 on those rows. Repeating them here at
+the calibrated footing costs more than everything above put together, because
+four hundred asset nodes against twenty-two states is the most expensive
+configuration in the project, and it answers a question already answered.
+DONE

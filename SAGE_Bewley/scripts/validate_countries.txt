@@ -1,0 +1,41 @@
+country        | alpha   spread  | htm tgt htm     asset   | agency  A_inc   WISE    | line
+--------------------------------------------------------------------------------------------------------
+France         | 0.838   0.045   | 0.300   0.307   0.400   | 0.489   0.831   0.75    | 0.1879
+Germany        | 0.845   0.045   | 0.320   0.309   0.403   | 0.490   0.838   0.91    | 0.1890
+Italy          | 0.800   0.070   | 0.410   0.424   0.529   | 0.358   0.794   0.64    | 0.1810
+United States  | 0.825   0.045   | 0.310   0.302   0.401   | 0.474   0.819   0.78    | 0.1856
+China          | 0.785   0.090   | 0.500   0.509   0.606   | 0.287   0.778   0.51    | 0.1781
+South Africa   | 0.715   0.120   | 0.600   0.589   0.678   | 0.205   0.705   0.61    | 0.1656
+--------------------------------------------------------------------------------------------------------
+
+rank agreement with the WISE Recoupling Agency Index, six countries
+  2007 : alpha alone +0.886 | agency, union hardship +0.886 | agency, income hardship +0.886
+  2017 : alpha alone +0.886 | agency, union hardship +0.886 | agency, income hardship +0.886
+  2018 : alpha alone +0.886 | agency, union hardship +0.886 | agency, income hardship +0.886
+  OECD four only, 2018:
+    alpha alone +0.800 | agency +0.800
+
+the model's asset poverty against what the OECD publishes
+  Balestra and Tonkin (2018) Fig 6.1, OECD average: 14 percent income-poor
+  plus a further 36 percent asset-poor but not income-poor
+  OECD (2025) regional paper, financial fragility: Austria and Denmark below 30,
+  France, Italy, Japan and Finland below 40, Canada and Germany 42 to 44, Slovenia 61
+    France         model 0.400
+    Germany        model 0.403
+    Italy          model 0.529
+    United States  model 0.401
+    China          model 0.606
+    South Africa   model 0.678
+
+asset poverty by income quintile, model against the OECD average
+country        | Q1       Q2       Q3       Q4       Q5
+--------------------------------------------------------------
+France         | 0.496   0.395   0.471   0.403   0.202   
+Germany        | 0.494   0.397   0.478   0.417   0.184   
+Italy          | 0.596   0.529   0.551   0.480   0.410   
+United States  | 0.478   0.418   0.472   0.397   0.235   
+China          | 0.625   0.597   0.613   0.630   0.522   
+South Africa   | 0.663   0.651   0.603   0.792   0.651   
+OECD average   | 0.68     n/a      n/a      0.43     0.27
+  (Balestra and Tonkin 2018, Figure 6.2 and paragraph 73)
+DONE

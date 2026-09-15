@@ -1,0 +1,5 @@
+# written by calibrate_ratio.jl; read by test_modular.jl
+kappa = 10.76
+sigma_m = 0.45
+unemployed_ratio = 0.485714285714
+beta_spread = 0.037

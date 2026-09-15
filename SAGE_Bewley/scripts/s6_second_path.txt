@@ -1,0 +1,14 @@
+61 taste nodes per cell solved directly; kappa 9.80 sigma 0.395 r 0.3517
+
+low edu   rate 0.2695 (E 0.1937, U 1.0000)  inc 0.0362 asset 0.0854 union 0.1114  U^a 0.6798
+high edu  rate 0.4362 (E 0.4065, U 1.0000)  inc 0.0000 asset 0.3419 union 0.3419  U^a 0.5995
+
+quantity         | family   direct   difference
+--------------------------------------------------
+participation    | 0.3517   0.3528   +0.0011
+income-poor      | 0.0181   0.0181   +0.0000
+asset-poor       | 0.2132   0.2136   +0.0005
+union            | 0.2262   0.2266   +0.0005
+agency A         | 0.6401   0.6397   -0.0004
+hand-to-mouth    | 0.1158   0.1157   -0.0002
+DONE

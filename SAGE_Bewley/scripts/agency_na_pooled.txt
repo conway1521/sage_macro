@@ -1,0 +1,15 @@
+anchored threshold 0.051495, equilibrium rate held at 0.3526
+
+na    | h_low    h_high   | A_low    A_high   | A        rate    
+----------------------------------------------------------------------
+  built alpha 0.765 at na 200  (0.6 min)
+  built alpha 0.911 at na 200  (0.6 min)
+200   | 0.4315   0.4246   | 0.4349   0.5242   | 0.4795   0.3526
+  built alpha 0.765 at na 400  (2.4 min)
+  built alpha 0.911 at na 400  (2.5 min)
+400   | 0.4273   0.4238   | 0.4381   0.5250   | 0.4815   0.3526
+----------------------------------------------------------------------
+pooled A moves +0.0020 when na doubles from 200 to 400
+for comparison, the changes the dashboard reports:
+  work subsidy +0.0326, empowerment +0.0221, participation credit +0.0077
+DONE

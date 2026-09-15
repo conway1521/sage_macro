@@ -144,6 +144,41 @@ Base.@kwdef struct SAGEParams
     # the social complementarity, unlike the work subsidy which fights it.
     # Financed by the same lump-sum tax channel (lumptax) for budget balance.
     partcredit::Float64 = 0.0        # rebate rate on the participation time lump
+    # --- state-contingent transfer (stage 6, unemployment) ------------------
+    # Income received in state i_z regardless of effort: the unemployment
+    # benefit in the unemployed states of the four-state (z, s) process. Empty
+    # means zero everywhere. Read by the participation core only; solve_model
+    # below refuses a non-empty vector rather than ignore it silently.
+    transfer::Vector{Float64} = Float64[]
+    # --- monetary cost of participation (stage 7) ---------------------------
+    # Goods cost paid when the household participates (d = 1), on top of the
+    # time lump QBAR. A FIXED amount, not a proportion of income: a
+    # proportional cost cannot make poorer households participate less, which
+    # is the fact it exists to match. Read by the participation core only.
+    pcost::Float64 = 0.0
+    # --- state-contingent value of belonging (stage 7) ----------------------
+    # Multiplies the belonging payoff in state i_z. Empty means one everywhere.
+    # The reduced form of Snower and Lima de Miranda's own agency-solidarity
+    # complementarity (IZA DP 12998, footnote 28), in which the benefit drawn
+    # from others' solidarity is scaled by one's own agency alpha(1 - p): a
+    # household cut off from work draws less from social connection, which is
+    # what the Marienthal study and the unemployment-and-civic-life literature
+    # report. Read by the participation core only.
+    belong_scale::Vector{Float64} = Float64[]
+    # --- floor on committed time, by state (stage 8) ------------------------
+    # Time the household is committed to before it chooses anything: job
+    # search under benefit conditionality, and the home production that
+    # replaces market work when it is lost. Empty means zero everywhere.
+    #
+    # It exists because of an asymmetry with real consequences. The time cost
+    # of participating is convex, so the same lump costs a household at the
+    # calibrated work share a hundred times what it costs one at zero hours,
+    # and participation is therefore nearly free to anyone not working. That
+    # is why the model has the unemployed participating at a rate of one when
+    # the data say half the employed rate. A floor keeps them on the steep
+    # part of the curve. Aguiar, Hurst and Karabarbounis (2013) measure the
+    # reallocation; the OECD documents the search requirements.
+    time_floor::Vector{Float64} = Float64[]
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."
@@ -372,6 +407,14 @@ and the model is solved in one pass.
 """
 function solve_model(p::SAGEParams; method = PFI, A0 = nothing,
                      damp = 0.5, tol = 1e-4, maxit = 80)
+    isempty(p.transfer) || error("SAGEParams.transfer is set: the engine's solve_model does not " *
+        "implement state-contingent transfers; use the participation core (stage 6)")
+    p.pcost == 0 || error("SAGEParams.pcost is set: the engine's solve_model has no participation " *
+        "choice for a monetary cost to attach to; use the participation core (stage 7)")
+    isempty(p.belong_scale) || error("SAGEParams.belong_scale is set: the engine's solve_model has " *
+        "no participation choice to scale; use the participation core (stage 7)")
+    isempty(p.time_floor) || error("SAGEParams.time_floor is set: the engine's solve_model does not " *
+        "implement a committed-time floor; use the participation core (stage 8)")
     p.social_mode === :multiplier || return _solve_once(p, 0.0; method = method)
     if p.homophily > 0
         # Per-group fixed point: the belonging aggregate of group g mixes the

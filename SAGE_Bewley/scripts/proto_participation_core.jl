@@ -25,6 +25,21 @@ using QuantEcon, SparseArrays, LinearAlgebra
 
 const QBAR = 0.10
 
+# State-contingent transfer (stage 6): zero unless SAGEParams.transfer is set.
+transfer_at(p::SAGEParams, i_z::Int) = isempty(p.transfer) ? 0.0 : p.transfer[i_z]
+
+# Net budget effect of participating (stage 7): the tax credit rebated on the
+# foregone earnings of the time lump, LESS the monetary cost of taking part.
+# Both are paid only when d = 1, so every budget line below multiplies this by
+# the participation indicator. With pcost = 0 it is the stage-6 credit exactly.
+net_participation(p::SAGEParams, α, z) = p.partcredit * α * z * p.Z * QBAR - p.pcost
+
+# State-contingent value of belonging (stage 7): one unless belong_scale is set.
+belong_at(p::SAGEParams, i_z::Int) = isempty(p.belong_scale) ? 1.0 : p.belong_scale[i_z]
+
+# Committed time before any choice (stage 8): zero unless time_floor is set.
+floor_at(p::SAGEParams, i_z::Int) = isempty(p.time_floor) ? 0.0 : p.time_floor[i_z]
+
 function solve_participation(p::SAGEParams, Q_agg::Float64; continuous::Bool = true,
                              full::Bool = false)
     a = SAGEBewley.exponential_grid(p.a_min, p.a_max, p.na, p.pexp)
@@ -41,22 +56,23 @@ function solve_participation(p::SAGEParams, Q_agg::Float64; continuous::Bool = t
     pair = 0
     for i_z in 1:nz
         z = z_vals[i_z]; α = p.α[i_z]; Bz = p.B[i_z]
-        belong = p.social_strength * p.Λ * Bz * Q_agg * QBAR
+        belong = p.social_strength * p.Λ * Bz * Q_agg * QBAR * belong_at(p, i_z)
+        tr = transfer_at(p, i_z)
         for i_a in 1:na
             res = p.R * a[i_a]; s = sidx(i_a, i_z)
             for k in 1:na
                 anext = a[k]
                 best = -Inf; bestd = 0; beste = 0.0
-                # participation tax credit: rebate on the opportunity cost of
-                # the time lump, paid only when the household participates (d=1)
-                credit = p.partcredit * α * z * p.Z * QBAR
+                # net payoff of participating: the tax credit on the foregone
+                # earnings of the time lump, less the monetary cost (stage 7)
+                credit = net_participation(p, α, z); tfl = floor_at(p, i_z)
                 for d in (0, 1)
-                    tmax = 1.0 - QBAR * d
+                    tmax = 1.0 - tfl - QBAR * d
                     for e in e_grid
                         e > tmax && break
-                        c = res + (1 + p.subsidy) * α * e * z * p.Z - p.lumptax - anext + credit * d
+                        c = res + (1 + p.subsidy) * α * e * z * p.Z - p.lumptax - anext + credit * d + tr
                         c <= 0 && continue
-                        T = e + QBAR * d
+                        T = tfl + e + QBAR * d
                         ut = p.Γ * (c^(1 - p.γ) / (1 - p.γ) -
                                     p.ϕ * T^(1 + p.ψ) / (1 + p.ψ)) + belong * d
                         ut > best && (best = ut; bestd = d; beste = e)
@@ -88,14 +104,15 @@ function solve_participation(p::SAGEParams, Q_agg::Float64; continuous::Bool = t
         EV = Vmat * Π'                                  # EV[k, z] = E[V(a_k, z')|z]
         for i_z in 1:nz
             z = z_vals[i_z]; α = p.α[i_z]; Bz = p.B[i_z]
-            belong = p.social_strength * p.Λ * Bz * Q_agg * QBAR
+            belong = p.social_strength * p.Λ * Bz * Q_agg * QBAR * belong_at(p, i_z)
+            tr = transfer_at(p, i_z)
             evz = view(EV, :, i_z)
             for i_a in 1:na
                 d = dpol[i_a, i_z]; e = epol[i_a, i_z]
-                credit = p.partcredit * α * z * p.Z * QBAR
+                credit = net_participation(p, α, z); tfl = floor_at(p, i_z)
                 resources = p.R * a[i_a] + (1 + p.subsidy) * α * e * z * p.Z -
-                            p.lumptax + credit * d
-                Tt = e + QBAR * d
+                            p.lumptax + credit * d + tr
+                Tt = tfl + e + QBAR * d
                 disut = p.Γ * p.ϕ * Tt^(1 + p.ψ) / (1 + p.ψ)
                 hi = min(resources - 1e-10, a[end])
                 if hi <= a[1]
@@ -231,18 +248,19 @@ function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64
     Ed = (zeros(n_s, na), zeros(n_s, na))
     for i_z in 1:nz
         z = z_vals[i_z]; α = p.α[i_z]; Bz = p.B[i_z]
-        belong = p.social_strength * p.Λ * Bz * Q_agg * QBAR
-        credit = p.partcredit * α * z * p.Z * QBAR
+        belong = p.social_strength * p.Λ * Bz * Q_agg * QBAR * belong_at(p, i_z)
+        credit = net_participation(p, α, z); tfl = floor_at(p, i_z)
+        tr = transfer_at(p, i_z)
         for i_a in 1:na
             res = p.R * a[i_a]; s = sidx(i_a, i_z)
             for k in 1:na, d in (0, 1)
                 best = -Inf; beste = 0.0
-                tmax = 1.0 - QBAR * d
+                tmax = 1.0 - tfl - QBAR * d
                 for e in e_grid
                     e > tmax && break
-                    c = res + (1 + p.subsidy) * α * e * z * p.Z - p.lumptax - a[k] + credit * d
+                    c = res + (1 + p.subsidy) * α * e * z * p.Z - p.lumptax - a[k] + credit * d + tr
                     c <= 0 && continue
-                    T = e + QBAR * d
+                    T = tfl + e + QBAR * d
                     ut = p.Γ * (c^(1 - p.γ) / (1 - p.γ) - p.ϕ * T^(1 + p.ψ) / (1 + p.ψ)) +
                          belong * d
                     ut > best && (best = ut; beste = e)
@@ -312,16 +330,17 @@ function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64
     a_d = (zeros(na, nz), zeros(na, nz))
     for i_z in 1:nz
         z = z_vals[i_z]; α = p.α[i_z]; Bz = p.B[i_z]
-        belong = p.social_strength * p.Λ * Bz * Q_agg * QBAR
-        credit = p.partcredit * α * z * p.Z * QBAR
+        belong = p.social_strength * p.Λ * Bz * Q_agg * QBAR * belong_at(p, i_z)
+        credit = net_participation(p, α, z); tfl = floor_at(p, i_z)
+        tr = transfer_at(p, i_z)
         evz = view(EV, :, i_z)
         for i_a in 1:na, d in (0, 1)
             s = sidx(i_a, i_z)
             kb = d == 0 ? k0[i_a, i_z] : k1[i_a, i_z]
             ee = Ed[d+1][s, kb]
             e_d[d+1][i_a, i_z] = ee
-            resources = p.R * a[i_a] + (1 + p.subsidy) * α * ee * z * p.Z - p.lumptax + credit * d
-            Tt = ee + QBAR * d
+            resources = p.R * a[i_a] + (1 + p.subsidy) * α * ee * z * p.Z - p.lumptax + credit * d + tr
+            Tt = tfl + ee + QBAR * d
             disut = p.Γ * p.ϕ * Tt^(1 + p.ψ) / (1 + p.ψ)
             hi = min(resources - 1e-10, a[end])
             if hi <= a[1] || Rd[d+1][s, kb] == -Inf

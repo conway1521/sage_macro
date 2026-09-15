@@ -1,0 +1,18 @@
+omega  kappa  sigma  mult    | rate   htm    asset  A      | dA sub   dA emp   dA cred  dA ui+   dA ui-  
+--------------------------------------------------------------------------------------------------------------------
+0.15   12.08  0.595  49.0    | 0.3647 0.2971 0.4026 0.4837 | +0.3002  +0.0078  +0.0268  -0.1296  +0.1436
+0.30   9.92   0.380  52.8    | 0.3518 0.2944 0.4013 0.4833 | +0.3004  -0.0029  +0.0267  -0.1365  +0.1381
+0.50   8.05   0.330  2.7     | 0.3493 0.2939 0.4017 0.4825 | +0.3002  +0.0237  +0.0302  -0.1479  +0.1526
+--------------------------------------------------------------------------------------------------------------------
+work subsidy               range +0.3002 to +0.3004   sign holds
+empowerment                range -0.0029 to +0.0237   sign CHANGES
+participation credit       range +0.0267 to +0.0302   sign holds
+UI rr +0.10, union         range -0.1479 to -0.1296   sign holds
+UI rr +0.10, income only   range +0.0164 to +0.0166   sign holds
+UI rr floor                range +0.1381 to +0.1526   sign holds
+baseline A                 range 0.4825 to 0.4837
+asset poverty              range 0.4013 to 0.4026
+income poverty             range 0.0215 to 0.0217
+hand-to-mouth              range 0.2939 to 0.2971
+participation              range 0.3493 to 0.3647
+DONE

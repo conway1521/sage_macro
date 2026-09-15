@@ -1,0 +1,229 @@
+stage 7 | omega 0.30 | workers 13 | theta 0.0050 | grid a_max 4.0 pexp 3.0 na 200 ne 80
+discount factors: nabla 0.036, 5 equal-mass points [0.9276, 0.9348, 0.942, 0.9492, 0.9564], max beta*R 0.9755
+labour market: f 0.7670, delta low 0.0796 high 0.0404, u low 0.0940 high 0.0500, rr 0.68
+
+==============================================================================
+A. BASELINE FAMILIES AND THE STAGE-5B POINT (P3)
+==============================================================================
+closed-form UI tax  0.02117
+at (kappa, sigma) = (10.00, 0.510): rate 0.3846 (stage 6: 0.4136), groups 0.3168 / 0.4524
+P3 holds: participation rises before recalibration
+
+==============================================================================
+B. RECALIBRATION: dense scan, kappa free at each sigma
+==============================================================================
+coarse global minimum: kappa 9.90 sigma 0.400 root loss 0.0278
+PINNED instead of calibrated: kappa 9.90 sigma 0.405, root loss 0.0275
+refined:               kappa 9.90 sigma 0.405 root loss 0.0198
+equilibrium rate 0.3507, groups 0.2701 / 0.4312 (targets 0.25 / 0.45), slope 0.9313, stable equilibria 1
+valley written; loss along the floor at selected sigma:
+  sigma 0.30  kappa 10.15  root loss 0.2405  rate 0.1878  groups 0.139/0.237
+  sigma 0.40  kappa 9.90  root loss 0.0278  rate 0.3463  groups 0.266/0.427
+  sigma 0.50  kappa 9.90  root loss 0.0503  rate 0.3590  groups 0.293/0.425
+  sigma 0.60  kappa 9.95  root loss 0.0674  rate 0.3548  groups 0.302/0.407
+  sigma 0.70  kappa 10.15  root loss 0.0803  rate 0.3592  groups 0.315/0.403
+  sigma 0.80  kappa 10.40  root loss 0.0902  rate 0.3575  groups 0.321/0.394
+  sigma 0.90  kappa 10.75  root loss 0.0980  rate 0.3558  groups 0.325/0.387
+  sigma 1.00  kappa 11.25  root loss 0.1043  rate 0.3561  groups 0.330/0.383
+bound sigma-bar 0.4644, ratio sigma/sigma-bar 0.872 (stage 5b: 0.4626, 1.103)
+
+calibration robustness: the slope, and so the policy multiplier, across the
+region the moments fit almost as well. Every discretisation has been ruled
+out as the cause of the roughness (s7_diag_ugrid, s7_diag_nbeta, s7_diag_quad).
+sigma    kappa    rootloss   rate     slope    mult     ratio
+--------------------------------------------------------------
+0.340    10.00    0.1479     0.6762   0.8036   5.1      1.100
+0.345    9.95     0.1872     0.6323   0.8629   7.3      1.019
+0.350    9.95     0.1617     0.6128   0.8776   8.2      0.997
+0.355    9.95     0.1263     0.5921   0.8969   9.7      0.976
+0.360    9.90     0.1684     0.2380   0.9026   10.3     0.790
+0.365    9.90     0.1470     0.2526   0.9205   12.6     0.794
+0.370    9.90     0.1236     0.2688   0.9340   15.2     0.799
+0.375    9.90     0.0987     0.2862   0.9461   18.5     0.806
+0.380    9.90     0.0743     0.3036   0.9534   21.5     0.815
+0.385    9.90     0.0536     0.3192   0.9549   22.2     0.826
+0.390    9.90     0.0390     0.3313   0.9524   21.0     0.837 <- acceptable fit
+0.395    9.90     0.0309     0.3401   0.9470   18.9     0.849 <- acceptable fit
+0.400    9.90     0.0278     0.3463   0.9393   16.5     0.861 <- acceptable fit
+0.405    9.90     0.0275     0.3507   0.9313   14.6     0.872 <- acceptable fit
+0.410    9.90     0.0286     0.3538   0.9227   12.9     0.883 <- acceptable fit
+0.415    9.90     0.0302     0.3561   0.9141   11.6     0.894 <- acceptable fit
+0.420    9.90     0.0318     0.3578   0.9055   10.6     0.905 <- acceptable fit
+0.425    9.90     0.0335     0.3591   0.8968   9.7      0.916 <- acceptable fit
+0.430    9.90     0.0350     0.3600   0.8881   8.9      0.926 <- acceptable fit
+0.435    9.90     0.0364     0.3606   0.8798   8.3      0.937 <- acceptable fit
+0.440    9.90     0.0378     0.3610   0.8713   7.8      0.947 <- acceptable fit
+0.445    9.90     0.0390     0.3613   0.8631   7.3      0.958 <- acceptable fit
+0.450    9.90     0.0402     0.3615   0.8549   6.9      0.968 <- acceptable fit
+0.455    9.90     0.0413     0.3615   0.8469   6.5      0.978
+0.460    9.90     0.0424     0.3614   0.8390   6.2      0.988
+0.465    9.90     0.0435     0.3613   0.8311   5.9      0.999
+0.470    9.90     0.0445     0.3611   0.8235   5.7      1.009
+0.475    9.90     0.0455     0.3608   0.8159   5.4      1.019
+0.480    9.90     0.0465     0.3605   0.8084   5.2      1.029
+0.485    9.90     0.0475     0.3602   0.8011   5.0      1.040
+0.490    9.90     0.0484     0.3598   0.7940   4.9      1.050
+0.495    9.90     0.0493     0.3594   0.7869   4.7      1.060
+0.500    9.90     0.0503     0.3590   0.7798   4.5      1.070
+
+over the acceptable-fit region, root loss within half again of the minimum:
+  sigma 0.390 to 0.450, slope 0.8549 to 0.9524, multiplier 6.9 to 21.0, ratio 0.837 to 0.968
+  the moments do not identify the multiplier; policy magnitudes inherit this range
+
+==============================================================================
+C. THE POVERTY LINE, ANCHORED AT THIS BASELINE
+==============================================================================
+median disposable income 0.3905 (mean 0.4205, ratio 0.929)
+poverty line 0.1952, asset threshold 0.0488
+lowest employed disposable income 0.2217 / 0.2516  (must exceed the line: yes)
+benefit net of tax, low cell z1/z2: 0.1924 / 0.3167 ; high cell: 0.2331 / 0.3812
+net benefit relative to the line, percent: low z1 -1.5, low z2 +62.2, high z1 +19.4, high z2 +95.2
+  [family] alpha 0.765 delta 0.0796 rr 0.68 sub 0.00 tax 0.02117 credit 0.00 nabla 0.036 thr set na 200  (0.6 min)
+  [family] alpha 0.911 delta 0.0404 rr 0.68 sub 0.00 tax 0.02117 credit 0.00 nabla 0.036 thr set na 200  (0.5 min)
+rate column identical after rebuild: yes
+
+==============================================================================
+D. BASELINE: S, A AND THE OECD CATEGORIES
+==============================================================================
+participation            0.3507   (by cell 0.2701 / 0.4312)
+  employed / unemployed  0.3003 / 1.0000   INSEE membership 0.35 / 0.17
+  by cell, employed      0.1944 / 0.4013 ; unemployed 1.0000 / 1.0000
+P4 holds: the unemployed participate MORE in the model, against the data
+unemployment rate        0.0720   (INSEE 0.074; model cells 0.094 / 0.050)
+mean effort, employed    0.5457   (phi was set for a population mean of 0.53)
+hand-to-mouth (4 weeks)  0.2945   (0.30 in the data, 0.32 at stage 5b)
+wealth p50 / p90 / p99   0.0646 / 0.3028 / 0.6173
+
+OECD categories, population and by employment status:
+  income-poor            0.0216   (INSEE 2024 at 50 percent: 0.088)
+    among unemployed     0.2999   (INSEE: 0.243)
+    among employed       0.0000   (INSEE, salaried: 0.034)
+  asset-poor             0.4010   (OECD 2025, France: below 0.40; stage 5b model 0.428)
+    among unemployed     0.4233
+    among employed       0.3993
+  both                   0.0111
+  vulnerable             0.3899   (OECD average 0.36)
+  union (hardship)       0.4115
+agency A                 0.4838   (by cell 0.5481 / 0.4194; stage 5b 0.4795)
+
+
+STAGE 7 CHECKS on the baseline
+  hand-to-mouth 0.2945 against the 0.30 target: on target
+  asset poverty 0.4010 against stage 6's 0.2132 and stage 5b's 0.428
+  unemployed participation 1.0000 against employed 0.3003: the stage-6 artefact REMAINS, as expected and flagged
+
+==============================================================================
+E. POLICIES at the recalibrated point
+==============================================================================
+  [family] alpha 0.765 delta 0.0796 rr 0.68 sub 0.20 tax 0.10480 credit 0.00 nabla 0.036 thr set na 200  (0.5 min)
+  [family] alpha 0.911 delta 0.0404 rr 0.68 sub 0.20 tax 0.10480 credit 0.00 nabla 0.036 thr set na 200  (0.5 min)
+  subsidy iteration 1: rate 0.1667, T 0.08363 -> 0.08823
+  [family] alpha 0.765 delta 0.0796 rr 0.68 sub 0.20 tax 0.10940 credit 0.00 nabla 0.036 thr set na 200  (0.5 min)
+  [family] alpha 0.911 delta 0.0404 rr 0.68 sub 0.20 tax 0.10940 credit 0.00 nabla 0.036 thr set na 200  (0.5 min)
+  subsidy iteration 2: rate 0.1595, T 0.08823 -> 0.08871
+  [family] alpha 0.765 delta 0.0796 rr 0.68 sub 0.20 tax 0.10987 credit 0.00 nabla 0.036 thr set na 200  (0.6 min)
+  [family] alpha 0.911 delta 0.0404 rr 0.68 sub 0.20 tax 0.10987 credit 0.00 nabla 0.036 thr set na 200  (0.6 min)
+  subsidy iteration 3: rate 0.1588, T 0.08871 -> 0.08876
+  [family] alpha 0.838 delta 0.0796 rr 0.68 sub 0.00 tax 0.02240 credit 0.00 nabla 0.036 thr set na 200  (0.6 min)
+  [family] alpha 0.911 delta 0.0404 rr 0.68 sub 0.00 tax 0.02240 credit 0.00 nabla 0.036 thr set na 200  (0.6 min)
+  [family] alpha 0.765 delta 0.0796 rr 0.68 sub 0.00 tax 0.02117 credit 0.25 nabla 0.036 thr set na 200  (0.6 min)
+  [family] alpha 0.911 delta 0.0404 rr 0.68 sub 0.00 tax 0.02117 credit 0.25 nabla 0.036 thr set na 200  (0.6 min)
+  credit iteration 1: rate 0.9286, T 0.00000 -> 0.01819
+  [family] alpha 0.765 delta 0.0796 rr 0.68 sub 0.00 tax 0.03936 credit 0.25 nabla 0.036 thr set na 200  (0.5 min)
+  [family] alpha 0.911 delta 0.0404 rr 0.68 sub 0.00 tax 0.03936 credit 0.25 nabla 0.036 thr set na 200  (0.6 min)
+  credit iteration 2: rate 0.9082, T 0.01819 -> 0.01782
+  [family] alpha 0.765 delta 0.0796 rr 0.68 sub 0.00 tax 0.03898 credit 0.25 nabla 0.036 thr set na 200  (0.6 min)
+  [family] alpha 0.911 delta 0.0404 rr 0.68 sub 0.00 tax 0.03898 credit 0.25 nabla 0.036 thr set na 200  (0.6 min)
+  credit iteration 3: rate 0.9086, T 0.01782 -> 0.01783
+  [family] alpha 0.765 delta 0.0796 rr 0.78 sub 0.00 tax 0.02428 credit 0.00 nabla 0.036 thr set na 200  (0.6 min)
+  [family] alpha 0.911 delta 0.0404 rr 0.78 sub 0.00 tax 0.02428 credit 0.00 nabla 0.036 thr set na 200  (0.6 min)
+  [family] alpha 0.765 delta 0.0796 rr 0.57 sub 0.00 tax 0.01774 credit 0.00 nabla 0.036 thr set na 200  (0.6 min)
+  [family] alpha 0.911 delta 0.0404 rr 0.57 sub 0.00 tax 0.01774 credit 0.00 nabla 0.036 thr set na 200  (0.6 min)
+
+lump taxes: UI 0.02117, subsidy 0.08871, credit 0.01782; UI at rr 0.78: 0.02428, at rr 0.57: 0.01774
+
+policy                 | r (S)  | r_E    r_U    | inc    asset  vuln   union  | A      dA     
+------------------------------------------------------------------------------------------------
+baseline               | 0.3507 | 0.3003 1.0000 | 0.0216 0.4010 0.3899 0.4115 | 0.4838 +0.0000
+work subsidy           | 0.1588 | 0.0935 1.0000 | 0.0360 0.0348 0.0297 0.0657 | 0.7835 +0.2997
+empowerment            | 0.5393 | 0.5036 1.0000 | 0.0000 0.4349 0.4349 0.4349 | 0.4899 +0.0061
+participation credit   | 0.9086 | 0.9016 1.0000 | 0.0235 0.3662 0.3561 0.3796 | 0.5111 +0.0273
+UI rr 0.78             | 0.3031 | 0.2491 1.0000 | 0.0000 0.5853 0.5853 0.5853 | 0.3422 -0.1416
+UI rr 0.57             | 0.4168 | 0.3715 1.0000 | 0.0235 0.2205 0.2148 0.2383 | 0.6299 +0.1461
+
+by employment status: hardship (union) and asset poverty, employed / unemployed
+  baseline               union 0.3993 / 0.5694   asset 0.3993 / 0.4233   income 0.0000 / 0.2999
+  work subsidy           union 0.0296 / 0.5299   asset 0.0296 / 0.1010   income 0.0000 / 0.5000
+  empowerment            union 0.4330 / 0.4591   asset 0.4330 / 0.4591   income 0.0000 / 0.0000
+  participation credit   union 0.3642 / 0.5779   asset 0.3642 / 0.3920   income 0.0000 / 0.3264
+  UI rr 0.78             union 0.5842 / 0.5994   asset 0.5842 / 0.5994   income 0.0000 / 0.0000
+  UI rr 0.57             union 0.2173 / 0.5102   asset 0.2173 / 0.2630   income 0.0000 / 0.3264
+
+decomposition of the change in A: alpha channel, hardship channel, interaction
+  work subsidy           dA +0.2997 = alpha +0.0000 + hardship +0.2997 + interaction +0.0000
+  empowerment            dA +0.0061 = alpha +0.0262 + hardship -0.0188 + interaction -0.0012
+  participation credit   dA +0.0273 = alpha +0.0000 + hardship +0.0273 + interaction +0.0000
+  UI rr 0.78             dA -0.1416 = alpha +0.0000 + hardship -0.1416 + interaction +0.0000
+  UI rr 0.57             dA +0.1461 = alpha +0.0000 + hardship +0.1461 + interaction +0.0000
+
+two hardship concepts side by side: A on the OECD union (headline) and A on income only (the source's p)
+policy                 | A union  dA       | A income dA      
+--------------------------------------------------------------
+baseline               | 0.4838   +0.0000 | 0.8215   +0.0000
+work subsidy           | 0.7835   +0.2997 | 0.8086   -0.0128
+empowerment            | 0.4899   +0.0061 | 0.8745   +0.0530
+participation credit   | 0.5111   +0.0273 | 0.8200   -0.0015
+UI rr 0.78             | 0.3422   -0.1416 | 0.8380   +0.0165
+UI rr 0.57             | 0.6299   +0.1461 | 0.8200   -0.0015
+
+STAGE 7 PREDICTIONS, scored against STAGE7.md Part 5
+P4  sigma_m below stage 6's 0.395: 0.405, FAILS
+P5  map slope within 0.03 of stage 6's 0.947: 0.9313, holds
+P6  asset poverty in [0.35, 0.45]: 0.4010, holds; hand-to-mouth 0.2945
+P7  agency A in [0.48, 0.58]: 0.4838, holds
+P8  subsidy raises A and lowers participation: holds (dA +0.2997, dr -0.1919)
+P9  higher replacement rate still lowers A, by at least a third less than 0.0944: -0.1416, FAILS on magnitude
+P10 the two hardship concepts still disagree in sign on the replacement rate: holds, the stage-6 finding survives
+    union -0.1416 against income-only +0.0165
+
+carried over from stage 6, for continuity:
+    empowerment mostly mechanical: yes
+    credit small positive on A: no (+0.0273)
+    low-cell hardship change under the subsidy -0.2102 (stage 6: -0.0538)
+
+==============================================================================
+F. SENSITIVITY
+==============================================================================
+stored threshold pairs, exact: union hardship / A
+policy                 |           1 month          3 months          6 months         12 months
+baseline               |   0.2313 / 0.6341   0.4115 / 0.4838   0.6226 / 0.3109   0.7980 / 0.1664
+work subsidy           |   0.0531 / 0.7941   0.0657 / 0.7835   0.1759 / 0.6853   0.4112 / 0.4857
+empowerment            |   0.2253 / 0.6718   0.4349 / 0.4899   0.6492 / 0.3043   0.8167 / 0.1590
+participation credit   |   0.2223 / 0.6422   0.3796 / 0.5111   0.5960 / 0.3342   0.8060 / 0.1602
+UI rr 0.78             |   0.3516 / 0.5308   0.5853 / 0.3422   0.7247 / 0.2268   0.8579 / 0.1174
+UI rr 0.57             |   0.0923 / 0.7602   0.2383 / 0.6299   0.4726 / 0.4362   0.6944 / 0.2519
+
+poverty line and asset threshold moved together, exact: union / A
+policy                 | line -10%          anchored           line +10%
+baseline               | 0.3639 / 0.5217    0.4115 / 0.4838    0.4455 / 0.4562    
+work subsidy           | 0.0631 / 0.7857    0.0657 / 0.7835    0.0690 / 0.7807    
+empowerment            | 0.3960 / 0.5233    0.4349 / 0.4899    0.4762 / 0.4542    
+participation credit   | 0.3396 / 0.5425    0.3796 / 0.5111    0.4096 / 0.4871    
+UI rr 0.78             | 0.5634 / 0.3604    0.5853 / 0.3422    0.6030 / 0.3274    
+UI rr 0.57             | 0.2143 / 0.6512    0.2383 / 0.6299    0.2628 / 0.6084    
+
+anchored versus floating line, three months: A (floating is exact only where no employed household is income-poor at the floating line)
+  baseline               median 0.3905  anchored A 0.4838  floating A 0.4846
+  work subsidy           median 0.4078  anchored A 0.7835  floating A (employed poor)
+  empowerment            median 0.3894  anchored A 0.4899  floating A 0.4909
+  participation credit   median 0.3558  anchored A 0.5111  floating A 0.5340
+  UI rr 0.78             median 0.3878  anchored A 0.3422  floating A 0.3434
+  UI rr 0.57             median 0.3939  anchored A 0.6299  floating A 0.6269
+
+==============================================================================
+G. LINEARISATION IDENTITY at a one percent shock to kappa
+==============================================================================
+map shift at fixed r +0.00726, slope 0.9313, predicted dr +0.10576, measured +0.11201, ratio 1.059
+
+saved sa_stage7_results_pin405.txt
+DONE

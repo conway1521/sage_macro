@@ -1,0 +1,20 @@
+anchored threshold 0.051495
+
+  baseline              na 200  A 0.4795   (1.2 min)
+  work subsidy          na 200  A 0.5121   (1.2 min)
+  empowerment           na 200  A 0.5016   (1.2 min)
+  participation credit  na 200  A 0.4872   (1.0 min)
+  baseline              na 400  A 0.4815   (3.1 min)
+  work subsidy          na 400  A 0.5134   (3.1 min)
+  empowerment           na 400  A 0.5038   (3.2 min)
+  participation credit  na 400  A 0.4874   (3.1 min)
+
+policy                | A(200)   A(400)   level    | dA(200)   dA(400)   move
+--------------------------------------------------------------------------------
+baseline              | 0.4795   0.4815   +0.0020 | +0.0000   +0.0000   +0.0000
+work subsidy          | 0.5121   0.5134   +0.0013 | +0.0326   +0.0319   -0.0007
+empowerment           | 0.5016   0.5038   +0.0021 | +0.0221   +0.0222   +0.0002
+participation credit  | 0.4872   0.4874   +0.0001 | +0.0077   +0.0058   -0.0019
+--------------------------------------------------------------------------------
+largest movement in a reported difference: 0.0019
+DONE

@@ -1,0 +1,15 @@
+=== s6_check_identity.jl
+    exit 0 at 11:38
+=== s6_check_theta.jl
+    exit 0 at 11:38
+=== s6_second_path.jl
+    exit 0 at 11:39
+=== s6_check_na.jl
+    exit 0 at 11:42
+=== sa_stage6.jl 0.15
+    exit 0 at 11:45
+=== sa_stage6.jl 0.50
+    exit 0 at 11:48
+=== s6_omega_table.jl
+    exit 0 at 11:48
+ALL DONE

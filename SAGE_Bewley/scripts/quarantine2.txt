@@ -1,0 +1,59 @@
+quarantine, second design | G+S+A  alpha 0.765/0.911  B 0.80/0.94, kappa 9.90 sigma 0.385 omega 0.30 | unemployment, beta spread 0.037
+anchored thresholds from the suite: poverty line 0.182514, asset threshold 0.045629
+building the two response families, about sixteen minutes ...
+  built and saved in 15.2 min
+V0 node rate against summed participating mass, worst gap 1.44e-15: HELD
+
+VALIDATION
+unemployed participation     | rate   E      U      | A      hard   htm    | slope  mult   | all crossings, (u) unstable
+------------------------------------------------------------------------------------------------------------------------
+native (as it stands)        | 0.3574 0.3075 1.0000 | 0.4947 0.3949 0.2998 | 0.9706   34.0 | 0.3574
+V1 native reproduces the suite (0.357355 0.494664 0.299820): HELD
+level 0.0091 (U0 check)      | 0.0413 0.0438 0.0091 | 0.5321 0.3517 0.2668 | 0.4301    1.8 | 0.0413
+V2 imposed level reproduces the full U0 re-solve (rate 0.0413 against 0.0413, employed 0.0438 against 0.0438): HELD
+
+Q1, Q2: THE CALIBRATED TECHNOLOGY, UNEMPLOYED AT A GIVEN RATIO OF THE EMPLOYED RATE
+unemployed participation     | rate   E      U      | A      hard   htm    | slope  mult   | all crossings, (u) unstable
+------------------------------------------------------------------------------------------------------------------------
+ratio 1.000                  | 0.0448 0.0454 0.0365 | 0.5319 0.3520 0.2670 | 0.4652    1.9 | 0.0448
+ratio 0.750                  | 0.0435 0.0448 0.0270 | 0.5320 0.3519 0.2669 | 0.4581    1.8 | 0.0435
+ratio 0.486 (INSEE)          | 0.0423 0.0442 0.0173 | 0.5320 0.3518 0.2669 | 0.4435    1.8 | 0.0423
+ratio 0.250                  | 0.0412 0.0437 0.0088 | 0.5321 0.3517 0.2668 | 0.4370    1.8 | 0.0412
+ratio 0.000                  | 0.0401 0.0432 0.0000 | 0.5322 0.3517 0.2667 | 0.4301    1.8 | 0.0401
+
+Q1 at the INSEE ratio the equilibrium rate is 0.0423 against 0.3574 as it stands: the high equilibrium DOES NOT SURVIVE
+Q2 agency +0.0374, hardship -0.0431, hand-to-mouth -0.0329, employed rate -0.2633 relative to as it stands
+
+Q3: RECALIBRATED UNDER THE INSEE RATIO (group targets 0.25 and 0.45, quadrature 500)
+sigma    kappa    rootloss   rate     slope    mult      
+--------------------------------------------------------------
+0.300    11.35    0.3772     0.0869   0.8625   7.3       
+0.320    11.20    0.3624     0.0971   0.8734   7.9       
+0.340    11.10    0.3077     0.1342   0.9799   49.7      
+0.360    10.95    0.3232     0.1242   0.9047   10.5      
+0.380    10.60    0.2186     0.5021   0.9748   39.7      
+0.400    10.70    0.2290     0.5104   0.9239   13.1      
+0.420    10.75    0.1627     0.4638   0.9363   15.7      
+0.440    10.75    0.0254     0.3668   0.9660   29.4      
+0.460    10.75    0.0304     0.3286   0.9406   16.8      
+0.480    10.80    0.0044     0.3496   0.9025   10.3      <- acceptable fit
+0.500    10.85    0.0127     0.3570   0.8687   7.6       
+0.520    10.90    0.0183     0.3596   0.8383   6.2       
+0.540    10.90    0.0200     0.3446   0.8147   5.4       
+0.560    10.95    0.0228     0.3461   0.7877   4.7       
+0.580    11.00    0.0262     0.3463   0.7633   4.2       
+0.600    11.10    0.0290     0.3555   0.7377   3.8       
+0.620    11.15    0.0318     0.3530   0.7165   3.5       
+0.640    11.20    0.0349     0.3503   0.6962   3.3       
+0.660    11.30    0.0379     0.3547   0.6767   3.1       
+0.680    11.35    0.0405     0.3511   0.6586   2.9       
+0.700    11.45    0.0430     0.3535   0.6405   2.8       
+
+over the acceptable-fit region: sigma 0.480 to 0.480, slope 0.9025 to 0.9025, multiplier 10.3 to 10.3
+
+the best fit, as a full economy on the same families:
+unemployed participation     | rate   E      U      | A      hard   htm    | slope  mult   | all crossings, (u) unstable
+------------------------------------------------------------------------------------------------------------------------
+INSEE, kappa 10.80 sigma 0.48 | 0.3475 0.3620 0.1604 | 0.4871 0.4042 0.3070 | 0.9032   10.3 | 0.3475
+against the footing in use: kappa 9.90, sigma 0.385, multiplier 8.8 to 43.1 over the acceptable-fit region
+DONE

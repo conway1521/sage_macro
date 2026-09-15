@@ -1,0 +1,15 @@
+11 productivity states, unemployment on, replacement rate 0.68, UI tax 0.02175
+
+spread   | kappa   sigma   rootloss  rate     slope   | hand-to-m median    verdict
+------------------------------------------------------------------------------------------------
+0.036    | 9.90    0.380   0.0220    0.3469   0.9772  | 0.2930    0.4150    ON TARGET  (14.9 min)
+0.037    | 9.90    0.385   0.0227    0.3574   0.9705  | 0.2998    0.4149    ON TARGET  (13.8 min)
+0.038    | 9.90    0.385   0.0221    0.3553   0.9705  | 0.3049    0.4150    ON TARGET  (12.8 min)
+------------------------------------------------------------------------------------------------
+target hand-to-mouth 0.30, group participation 0.25 / 0.45
+
+closest on hand-to-mouth: spread 0.037, kappa 9.90, sigma_m 0.385
+  rate 0.3574, groups 0.2716 / 0.4431, root loss 0.0227, slope 0.9705, multiplier 33.9
+  hand-to-mouth spans 0.2930 to 0.3049 over spreads 0.036 to 0.038, so the spread is
+  identified to about a thousandth by this moment
+DONE

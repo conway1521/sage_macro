@@ -1,0 +1,17 @@
+direct path: 61 taste nodes solved individually, no family, no interpolation
+anchored threshold 0.051495, belonging scales from the equilibrium rate 0.3526
+
+  low edu   alpha 0.765  hardship 0.4316  rate 0.2695  U^a 0.4349   (0.5 min)
+  high edu  alpha 0.911  hardship 0.4250  rate 0.4408  U^a 0.5239   (0.5 min)
+
+quantity                   | family    direct    difference
+--------------------------------------------------------------
+participation rate         | 0.3526    0.3552    +0.0026
+asset poverty              | 0.4281    0.4283    +0.0002
+agency A                   | 0.4795    0.4794    -0.0002
+U^a, low education         | 0.4349    0.4349    -0.0001
+U^a, high education        | 0.5242    0.5239    -0.0003
+--------------------------------------------------------------
+for scale: the asset-grid band on A is 0.0020, and the smallest
+difference the dashboard reports is the credit's 0.0077.
+DONE

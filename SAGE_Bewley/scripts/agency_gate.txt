@@ -1,0 +1,31 @@
+========================================================================
+IDENTITY: mean forward hardship probability against asset poverty
+========================================================================
+p(a,z) built explicitly from the participation mixture and the Young
+lottery, then averaged under the same stationary distribution.
+
+cell      u      | E[p]       asset pov  difference
+----------------------------------------------------------
+low edu     3.0 | 0.425448   0.425448   +0.000000
+low edu     4.5 | 0.416861   0.416861   +0.000000
+low edu     5.5 | 0.454641   0.454641   +0.000000
+low edu     7.0 | 0.437461   0.437461   +0.000000
+low edu    10.0 | 0.437461   0.437461   +0.000000
+high edu    3.0 | 0.406723   0.406723   +0.000000
+high edu    4.5 | 0.439314   0.439314   -0.000000
+high edu    5.5 | 0.439787   0.439787   +0.000000
+high edu    7.0 | 0.434921   0.434921   +0.000000
+high edu   10.0 | 0.434921   0.434921   +0.000000
+----------------------------------------------------------
+largest departure from the identity: 0.000000
+identity holds; the aggregate construction is sound
+
+========================================================================
+OMEGA: the parameter with no point estimate
+========================================================================
+omega  | r        A base   | dA sub   dA emp   dA cred  sign check
+------------------------------------------------------------------------
+0.15   | 0.0031   0.4894   | +0.0274  +0.0271  -0.0023  SIGN CHANGES
+0.30   | 0.3526   0.4795   | +0.0326  +0.0221  +0.0077  all up
+0.50   | 0.6484   0.4747   | +0.0308  +0.0226  +0.0127  all up
+DONE

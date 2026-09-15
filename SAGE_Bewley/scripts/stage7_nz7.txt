@@ -1,0 +1,87 @@
+stage 7 on seven productivity states | kappa 9.90 sigma_m 0.385 spread 0.037 | 13 workers
+G+S+A  alpha 0.765/0.911  B 0.80/0.94, kappa 9.90 sigma 0.385 omega 0.30 | unemployment, beta spread 0.037
+
+baseline: rate 0.3574 (E 0.3075, U 1.0000), median 0.3650, line 0.1825, asset threshold 0.0456
+          hand-to-mouth 0.2998, unemployment 0.0720, effort 0.5055, slope 0.9706, multiplier 34.0
+
+calibration robustness at this state space
+sigma    kappa    rootloss   rate     slope    mult      
+--------------------------------------------------------------
+0.300    10.16    0.1993     0.2147   0.9677   31.0      
+0.310    10.10    0.2050     0.2114   0.9376   16.0      
+0.320    10.06    0.1781     0.2295   0.9632   27.2      
+0.330    10.02    0.1536     0.2463   0.9799   49.7      
+0.340    9.98     0.1450     0.2527   0.9704   33.8      
+0.350    9.94     0.1443     0.2537   0.9494   19.7      
+0.360    9.92     0.1077     0.2791   0.9663   29.7      
+0.370    9.90     0.0843     0.2960   0.9649   28.5      
+0.380    9.90     0.0233     0.3448   0.9768   43.1      <- acceptable fit
+0.390    9.90     0.0279     0.3637   0.9619   26.2      <- acceptable fit
+0.400    9.88     0.0296     0.3440   0.9365   15.7      <- acceptable fit
+0.410    9.88     0.0292     0.3519   0.9203   12.5      <- acceptable fit
+0.420    9.88     0.0319     0.3562   0.9036   10.4      <- acceptable fit
+0.430    9.88     0.0350     0.3585   0.8864   8.8       <- acceptable fit
+0.440    9.86     0.0377     0.3493   0.8668   7.5       
+0.450    9.86     0.0397     0.3512   0.8513   6.7       
+0.460    9.86     0.0419     0.3523   0.8357   6.1       
+0.470    9.86     0.0441     0.3529   0.8205   5.6       
+0.480    9.86     0.0463     0.3531   0.8057   5.1       
+0.490    9.86     0.0484     0.3530   0.7913   4.8       
+0.500    9.88     0.0505     0.3582   0.7785   4.5       
+0.510    9.88     0.0524     0.3573   0.7650   4.3       
+0.520    9.88     0.0543     0.3564   0.7517   4.0       
+0.530    9.88     0.0561     0.3553   0.7388   3.8       
+0.540    9.88     0.0580     0.3542   0.7265   3.7       
+0.550    9.90     0.0597     0.3570   0.7153   3.5       
+0.560    9.90     0.0614     0.3556   0.7034   3.4       
+0.570    9.92     0.0630     0.3577   0.6925   3.3       
+0.580    9.92     0.0646     0.3561   0.6815   3.1       
+0.590    9.94     0.0662     0.3577   0.6712   3.0       
+0.600    9.94     0.0676     0.3559   0.6609   2.9       
+
+over the acceptable-fit region: sigma 0.380 to 0.430, slope 0.8864 to 0.9768, multiplier 8.8 to 43.1
+
+policies
+  work subsidy
+    iteration 1: rate 0.7797, lump tax 0.00000 -> 0.07621
+    iteration 2: rate 0.1685, lump tax 0.07621 -> 0.08753
+    iteration 3: rate 0.1501, lump tax 0.08753 -> 0.08867
+    iteration 4: rate 0.1486, lump tax 0.08867 -> 0.08878
+    iteration 5: rate 0.1485, lump tax 0.08878 -> 0.08879
+  participation credit
+    iteration 1: rate 0.9410, lump tax 0.00000 -> 0.01843
+    iteration 2: rate 0.9227, lump tax 0.01843 -> 0.01810
+    iteration 3: rate 0.9231, lump tax 0.01810 -> 0.01811
+
+========================================================================================================
+policy                 | r      r_E    r_U    | inc    asset  hard   | A       dA       | A_inc   dA_inc
+--------------------------------------------------------------------------------------------------------
+baseline               | 0.3574 0.3075 1.0000 | 0.0081 0.3915 0.3949 | 0.4947 +0.0000 | 0.8317 +0.0000
+work subsidy           | 0.1485 0.0824 1.0000 | 0.0385 0.0319 0.0662 | 0.7837 +0.2890 | 0.8072 -0.0246
+empowerment            | 0.6073 0.5768 1.0000 | 0.0028 0.4460 0.4466 | 0.4782 -0.0164 | 0.8721 +0.0404
+participation credit   | 0.9231 0.9171 1.0000 | 0.0094 0.3708 0.3748 | 0.5114 +0.0167 | 0.8306 -0.0012
+UI rr 0.78             | 0.2829 0.2273 1.0000 | 0.0028 0.5966 0.5967 | 0.3297 -0.1650 | 0.8358 +0.0041
+UI rr 0.57             | 0.4819 0.4417 1.0000 | 0.0187 0.2000 0.2132 | 0.6519 +0.1573 | 0.8235 -0.0082
+--------------------------------------------------------------------------------------------------------
+
+asset poverty by income quintile, against the OECD average (Balestra and Tonkin 2018, Figure 6.2)
+policy                 | Q1       Q2       Q3       Q4       Q5
+----------------------------------------------------------------------
+baseline               | 0.5331  0.4410  0.4364  0.3194  0.1482  
+work subsidy           | 0.0477  0.0277  0.0328  0.0246  0.0179  
+empowerment            | 0.6143  0.5352  0.5211  0.3399  0.1368  
+participation credit   | 0.4022  0.3854  0.4324  0.3674  0.1761  
+UI rr 0.78             | 0.7411  0.6894  0.6844  0.5183  0.2823  
+UI rr 0.57             | 0.2662  0.2933  0.1527  0.1542  0.0769  
+OECD average           | 0.68     n/a      n/a      0.43     0.27
+
+the two hardship concepts: they disagreed in sign on the replacement rate at two
+productivity states, and that finding is what this rerun most has to confirm or retract
+  work subsidy           union +0.2890, income only -0.0246  OPPOSITE SIGNS
+  empowerment            union -0.0164, income only +0.0404  OPPOSITE SIGNS
+  participation credit   union +0.0167, income only -0.0012  OPPOSITE SIGNS
+  UI rr 0.78             union -0.1650, income only +0.0041  OPPOSITE SIGNS
+  UI rr 0.57             union +0.1573, income only -0.0082  OPPOSITE SIGNS
+
+saved stage7_nz7_results.txt
+DONE

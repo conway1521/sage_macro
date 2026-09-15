@@ -21,3 +21,10 @@ paper/*.synctex.gz
 
 # Julia (keep Project.toml and Manifest.toml for reproducibility)
 SAGE_Bewley/.ipynb_checkpoints/
+
+# model caches and run artefacts, rebuilt on any machine
+SAGE_Bewley/scripts/cache_*/
+*.jls
+*.tmp
+SAGE_Bewley/scripts/run_countries.log
+SAGE_Bewley/scripts/MEMORY_GUARD_TRIPPED

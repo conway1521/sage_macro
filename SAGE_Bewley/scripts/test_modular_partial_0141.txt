@@ -1,0 +1,107 @@
+====================================================================================================
+MODULARITY SUITE: does switching a dimension off give back the economy without it?
+====================================================================================================
+tolerance 1e-06; production grid na 200 ne 80, theta 0.0050, nz 11; 13 workers
+poverty line anchored on mean income times the empirical median-to-mean ratio
+
+reduction                                                  largest   on                   
+----------------------------------------------------------------------------------------------------
+G+A with agency equalised  ->  G                           0.0e+00   none                 pass
+G+S with the interaction strength at zero  ->  G           0.0e+00   none                 pass
+G+S+A with the interaction strength at zero  ->  G+A       0.0e+00   none                 pass
+G+S+A with agency equalised  ->  G+S                       0.0e+00   none                 pass
+G+S+A with both switched off  ->  G                        0.0e+00   none                 pass
+G+S+A with unemployment at zero separation  ->  G+S+A      0.0e+00   none                 pass
+G+S+A with the discount spread at zero  ->  G+S+A          0.0e+00   none                 pass
+G+S+A, unemployment and discount spread both off  ->  G+S+A 0.0e+00   none                 pass
+G+S+A with the monetary participation cost at zero  ->  G+S+A 0.0e+00   none                 pass
+G+S+A with every policy instrument at zero  ->  G+S+A      0.0e+00   none                 pass
+G+S+A solved twice  ->  itself                             0.0e+00   none                 pass
+G solved twice  ->  itself                                 0.0e+00   none                 pass
+G+S+A with the two cells listed in the other order  ->  G+S+A 0.0e+00   none                 pass
+G+A, unemployment: the rule moves only participation       0.0e+00   none                 pass
+the rule refused where it is wrong (five cases)            -         all refused          pass
+G+S+A, rule, old technology  ->  quarantine2.jl            4.9e-05   A                    pass
+----------------------------------------------------------------------------------------------------
+16 of 16 reductions pass
+
+====================================================================================================
+THE FOUR ECONOMIES
+====================================================================================================
+G      baseline Bewley
+  G      alpha 0.838  B (no social payoff)
+  participation 0.000000 | agency 0.379199 | hardship 0.547495 (income 0.000001, asset 0.547495)
+  hand-to-mouth 0.517755 | mean labour income 0.449321 | median disposable 0.394243 | effort 0.541175
+
+G+A    agency
+  G+A    alpha 0.765/0.911  B (no social payoff)
+  participation 0.000000 | agency 0.377412 | hardship 0.549812 (income 0.000001, asset 0.549810)
+  hand-to-mouth 0.520401 | mean labour income 0.448817 | median disposable 0.393793 | effort 0.541563
+
+G+S    social cohesion
+  G+S    alpha 0.838  B 0.80/0.94, kappa 10.00 sigma 0.400 omega 0.30
+  participation 0.665145 | agency 0.368964 | hardship 0.559709 (income 0.000005, asset 0.559704)
+  hand-to-mouth 0.520102 | mean labour income 0.421653 | median disposable 0.370028 | effort 0.508573
+
+G+S+A  both
+  G+S+A  alpha 0.765/0.911  B 0.80/0.94, kappa 10.00 sigma 0.400 omega 0.30
+  participation 0.645009 | agency 0.367874 | hardship 0.561476 (income 0.000012, asset 0.561464)
+  hand-to-mouth 0.523827 | mean labour income 0.421628 | median disposable 0.370008 | effort 0.509967
+
+====================================================================================================
+THE FOUR ECONOMIES AT THE CALIBRATED FOOTING
+====================================================================================================
+unemployment on, discount spread 0.037, kappa 10.76, sigma_m 0.45, unemployed at 0.486 of the
+employed participation rate (calibration_ratio.txt). These are the numbers to read.
+
+G      baseline Bewley
+  G      alpha 0.838  B (no social payoff) | unemployment, unemployed participate at 0.486 of the employed rate, beta spread 0.037
+  participation 0.000000 | agency 0.548372 | hardship 0.345618 (income 0.003937, asset 0.344975)
+  hand-to-mouth 0.251030 | mean labour income 0.429764 | median disposable 0.376029 | effort 0.518826
+  participation employed 0.0000, unemployed 0.0000
+  asset poverty by income quintile: 0.635  0.468  0.277  0.238  0.083
+  OECD average for comparison:      0.680  n/a    n/a    0.430  0.270
+
+G+A    agency
+  G+A    alpha 0.765/0.911  B (no social payoff) | unemployment, unemployed participate at 0.486 of the employed rate, beta spread 0.037
+  participation 0.000000 | agency 0.530965 | hardship 0.353641 (income 0.009401, asset 0.350224)
+  hand-to-mouth 0.261599 | mean labour income 0.429763 | median disposable 0.376010 | effort 0.518873
+  participation employed 0.0000, unemployed 0.0000
+  asset poverty by income quintile: 0.454  0.354  0.432  0.328  0.156
+  OECD average for comparison:      0.680  n/a    n/a    0.430  0.270
+
+G+S    social cohesion
+  G+S    alpha 0.838  B 0.80/0.94, kappa 10.76 sigma 0.450 omega 0.30 | unemployment, unemployed participate at 0.486 of the employed rate, beta spread 0.037
+  participation 0.253125 | agency 0.514927 | hardship 0.385529 (income 0.003937, asset 0.384814)
+  hand-to-mouth 0.285162 | mean labour income 0.419472 | median disposable 0.366882 | effort 0.507277
+  participation employed 0.2636, unemployed 0.1187
+  asset poverty by income quintile: 0.589  0.538  0.351  0.244  0.116
+  OECD average for comparison:      0.680  n/a    n/a    0.430  0.270
+
+G+S+A  both
+  G+S+A  alpha 0.765/0.911  B 0.80/0.94, kappa 10.76 sigma 0.450 omega 0.30 | unemployment, unemployed participate at 0.486 of the employed rate, beta spread 0.037
+  participation 0.352383 | agency 0.487919 | hardship 0.403098 (income 0.007870, asset 0.400091)
+  hand-to-mouth 0.307563 | mean labour income 0.415276 | median disposable 0.363149 | effort 0.502879
+  participation employed 0.3672, unemployed 0.1620
+  asset poverty by income quintile: 0.553  0.478  0.397  0.340  0.160
+  OECD average for comparison:      0.680  n/a    n/a    0.430  0.270
+
+G+S+A against its targets: cell participation 0.2496 and 0.4551 (0.25, 0.45), hand-to-mouth 0.3076 (0.30)
+slope 0.9532, multiplier 21.4. The old footing, held up by the unemployed at one:
+participation 0.3574, agency 0.4947, hand-to-mouth 0.2998, multiplier 34.0
+
+calibrated G+S+A, families from disk  ->  itself           0.0e+00   none                 pass
+
+====================================================================================================
+CONVERGENCE AT THE CALIBRATED FOOTING: has the agency column settled?
+====================================================================================================
+discretisation                               agency      asset pov   median      move      median move
+----------------------------------------------------------------------------------------------------
+G+S+A at the calibrated footing              0.487919    0.400091    0.363149     (reference)
+taste quadrature, 8000 nodes against 2000    0.488079    0.399900    0.363187    +0.00016  +0.00004
+productivity states, nz 9 against 11         0.487486    0.400876    0.363102    -0.00043  -0.00005
+productivity states, nz 13 against 11        0.489029    0.400463    0.363199    +0.00111  +0.00005
+choice smoothing, theta halved               0.488966    0.398723    0.363594    +0.00105  +0.00044
+asset grid top, a_max 8 against 4            0.487920    0.400067    0.363144    +0.00000  -0.00001
+belonging grid at spacing 0.1 against 0.2    0.488267    0.399674    0.363226    +0.00035  +0.00008
+effort grid, ne 160 against 80               0.486935    0.401196    0.363171    -0.00098  +0.00002

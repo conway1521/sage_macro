@@ -1,0 +1,107 @@
+==============================================================================
+A: THE AGENCY COLUMN
+==============================================================================
+hardship = OECD asset poverty: wealth below 3 months of the income
+poverty line (50 percent of median disposable income).
+Balestra and Tonkin (2018), OECD Statistics Working Paper 2018/01, para 68.
+
+omega 0.15, kappa 13.00, sigma_m 0.760
+baseline rate      0.3502   (sa_level4 at omega 0.30: 0.3526)
+  [rate family built] alpha 0.765 sub 0.20 tax 0.086972 credit 0.00
+  [rate family built] alpha 0.911 sub 0.20 tax 0.086972 credit 0.00
+  [rate family built] alpha 0.765 sub 0.20 tax 0.092542 credit 0.00
+  [rate family built] alpha 0.911 sub 0.20 tax 0.092542 credit 0.00
+  [rate family built] alpha 0.765 sub 0.20 tax 0.092932 credit 0.00
+  [rate family built] alpha 0.911 sub 0.20 tax 0.092932 credit 0.00
+subsidy rate       0.0738   (sa_level4: 0.1132), lump tax 0.092932
+empowerment rate   0.4323   (sa_level4: 0.4647)
+  [rate family built] alpha 0.765 sub 0.00 tax 0.016636 credit 0.25
+  [rate family built] alpha 0.911 sub 0.00 tax 0.016636 credit 0.25
+  [rate family built] alpha 0.765 sub 0.00 tax 0.016134 credit 0.25
+  [rate family built] alpha 0.911 sub 0.00 tax 0.016134 credit 0.25
+credit rate        0.7589   (sa_level4: 0.8491), lump tax 0.016134
+
+building agency families (each is 83 household solves)
+  [agency family] alpha 0.765 sub 0.20 tax 0.092932 credit 0.00 na 200  (0.6 min)
+  [agency family] alpha 0.911 sub 0.20 tax 0.092932 credit 0.00 na 200  (0.6 min)
+  [agency family] alpha 0.765 sub 0.00 tax 0.016134 credit 0.25 na 200  (0.6 min)
+  [agency family] alpha 0.911 sub 0.00 tax 0.016134 credit 0.25 na 200  (0.6 min)
+
+check baseline     pooled rate 0.3502 vs map 0.3502  (diff 0.00000)
+check subsidy      pooled rate 0.0738 vs map 0.0738  (diff -0.00000)
+check empowerment  pooled rate 0.4323 vs map 0.4323  (diff 0.00000)
+check credit       pooled rate 0.7589 vs map 0.7589  (diff 0.00000)
+
+baseline median disposable income  0.4120   (mean 0.4391, ratio 0.938)
+income poverty line (half median)  0.2060
+ANCHORED wealth threshold          0.0515  (3.0 months of the line)
+
+==============================================================================
+THE DASHBOARD: participation (S) and agency (A)
+==============================================================================
+policy        | r (S)  | alpha  | hard   | A      | dA     | dA/A  
+------------------------------------------------------------------------------
+baseline      | 0.3502 | 0.8380 | 0.4266 | 0.4808 | +0.0000 |  +0.0%
+work subsidy  | 0.0738 | 0.8380 | 0.3859 | 0.5147 | +0.0339 |  +7.1%
+empowerment   | 0.4323 | 0.8745 | 0.4239 | 0.5038 | +0.0229 |  +4.8%
+participation credit | 0.7589 | 0.8380 | 0.4184 | 0.4879 | +0.0071 |  +1.5%
+
+by education cell (low / high)
+policy                | mean income     | hardship        | agency U^a      | gap in A
+----------------------------------------------------------------------------------------------
+baseline              | 0.4131 / 0.4651 | 0.4311 / 0.4221 | 0.4352 / 0.5265 | +0.0913
+work subsidy          | 0.4392 / 0.5039 | 0.3883 / 0.3836 | 0.4679 / 0.5616 | +0.0936
+empowerment           | 0.4385 / 0.4618 | 0.4236 / 0.4242 | 0.4830 / 0.5246 | +0.0416
+participation credit  | 0.3963 / 0.4481 | 0.4255 / 0.4113 | 0.4395 / 0.5363 | +0.0968
+
+discretisation band: A read as a step function of the asset grid
+  baseline              A 0.4808   step reading 0.4815   band -0.0006
+  work subsidy          A 0.5147   step reading 0.5155   band -0.0008
+  empowerment           A 0.5038   step reading 0.5052   band -0.0015
+  participation credit  A 0.4879   step reading 0.4907   band -0.0028
+
+==============================================================================
+THE TEST: does A move under policies that leave alpha unchanged?
+==============================================================================
+work subsidy          d(A) +0.0339  =  alpha -0.0000  +  hardship +0.0339  +  interaction -0.0000
+empowerment           d(A) +0.0229  =  alpha +0.0208  +  hardship +0.0019  +  interaction +0.0003
+participation credit  d(A) +0.0071  =  alpha -0.0000  +  hardship +0.0071  +  interaction -0.0000
+
+==============================================================================
+SENSITIVITY
+==============================================================================
+threshold horizon (months of the poverty line), anchored line.
+asset poverty h, then agency A, at each horizon:
+policy                |                1 months                3 months                6 months               12 months
+baseline              |   0.3897 / 0.5115   0.4266 / 0.4808   0.4723 / 0.4424   0.5589 / 0.3703
+work subsidy          |   0.3662 / 0.5312   0.3859 / 0.5147   0.4240 / 0.4829   0.4888 / 0.4285
+empowerment           |   0.3890 / 0.5343   0.4239 / 0.5038   0.4718 / 0.4619   0.5555 / 0.3888
+participation credit  |   0.3889 / 0.5122   0.4184 / 0.4879   0.4676 / 0.4463   0.5481 / 0.3795
+
+threshold moved plus and minus ten percent, three-month horizon.
+this is the band the model's compressed income distribution implies:
+its median-to-mean income ratio is above the French one, so the
+poverty line it generates is on the high side.
+policy                | abar -10%         abar              abar +10%
+baseline              | 0.4221 / 0.4848  0.4266 / 0.4808  0.4318 / 0.4763  
+work subsidy          | 0.3840 / 0.5164  0.3859 / 0.5147  0.3881 / 0.5129  
+empowerment           | 0.4156 / 0.5110  0.4239 / 0.5038  0.4318 / 0.4969  
+participation credit  | 0.4110 / 0.4938  0.4184 / 0.4879  0.4273 / 0.4801  
+
+anchored versus floating poverty line (A at three months):
+baseline       median 0.4120  anchored A 0.4808   floating A 0.4808
+work subsidy   median 0.4338  anchored A 0.5147   floating A 0.5138
+empowerment    median 0.4280  anchored A 0.5038   floating A 0.5016
+participation credit  median 0.3960  anchored A 0.4879   floating A 0.4906
+
+==============================================================================
+EXTERNAL COMPARISON (untargeted)
+==============================================================================
+model asset-poverty rate, three months, France cells   0.4266
+OECD, Balestra and Tonkin (2018) Figure 6.1: 14 percent of people are
+income poor and a further 36 percent are asset poor but not income poor.
+OECD (2025) regional paper puts France below 40 percent on the same test,
+with Austria and Denmark below 30 and Slovenia at 61.
+
+saved sa_agency_results_om015.txt
+DONE

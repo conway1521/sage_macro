@@ -1,0 +1,19 @@
+calibrating DE | effort target 0.491784 | hand-to-mouth target 0.32 | participation targets (0.252077, 0.349) | national ratio 0.573626
+preflight, France G+A through the parallel path: worst gap 3.4e-07 against the suite: HELD
+
+1. effort scale and discount spread, cohesion off (G+A), S-off target 0.274
+
+signal (15): Terminated: 15
+in expression starting at /Users/ali/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/calibrate_country.jl:77
+kevent at /usr/lib/system/libsystem_kernel.dylib (unknown line)
+uv__io_poll at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+uv_run at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+jl_task_get_next at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+poptask at ./task.jl:827
+wait at ./task.jl:836
+task_done_hook at ./task.jl:544
+jl_apply_generic at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+jl_finish_task at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+start_task at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+unknown function (ip: 0x0)
+Allocations: 63150171 (Pool: 63126587; Big: 23584); GC: 52

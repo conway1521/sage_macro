@@ -1,0 +1,20 @@
+  baseline         na 200: union 0.2262  A 0.6401  inc 0.0181  asset 0.2132
+  work subsidy     na 200: union 0.0490  A 0.7976  inc 0.0360  asset 0.0160
+  UI rr 0.78       na 200: union 0.3452  A 0.5457  inc 0.0000  asset 0.3452
+  [family] alpha 0.765 delta 0.0796 rr 0.68 sub 0.00 tax 0.02117 credit 0.00 thr set na 400  (0.6 min)
+  [family] alpha 0.911 delta 0.0404 rr 0.68 sub 0.00 tax 0.02117 credit 0.00 thr set na 400  (0.5 min)
+  baseline         na 400: union 0.2252  A 0.6410  inc 0.0181  asset 0.2121
+  [family] alpha 0.765 delta 0.0796 rr 0.68 sub 0.20 tax 0.10963 credit 0.00 thr set na 400  (0.5 min)
+  [family] alpha 0.911 delta 0.0404 rr 0.68 sub 0.20 tax 0.10963 credit 0.00 thr set na 400  (0.5 min)
+  work subsidy     na 400: union 0.0488  A 0.7978  inc 0.0360  asset 0.0158
+  [family] alpha 0.765 delta 0.0796 rr 0.78 sub 0.00 tax 0.02428 credit 0.00 thr set na 400  (0.5 min)
+  [family] alpha 0.911 delta 0.0404 rr 0.78 sub 0.00 tax 0.02428 credit 0.00 thr set na 400  (0.5 min)
+  UI rr 0.78       na 400: union 0.3399  A 0.5499  inc 0.0000  asset 0.3399
+
+state            | A(200)   A(400)   level    | dA(200)   dA(400)   move    
+----------------------------------------------------------------------------
+baseline         | 0.6401   0.6410   +0.0009 | +0.0000    +0.0000    +0.0000
+work subsidy     | 0.7976   0.7978   +0.0002 | +0.1575    +0.1568    -0.0007
+UI rr 0.78       | 0.5457   0.5499   +0.0042 | -0.0944    -0.0911    +0.0033
+largest movement in a reported difference 0.0033; baseline union moves -0.0010, income-poor +0.0000, asset-poor -0.0011
+DONE

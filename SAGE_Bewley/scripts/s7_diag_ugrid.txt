@@ -1,0 +1,35 @@
+coarse grid 83 nodes, fine grid 227 nodes
+
+fine families built in 3.4 min
+
+the valley on each grid: best kappa at each sigma, and the slope there
+sigma   | coarse, spacing 0.2      | fine, spacing 0.05      
+        | kappa   rootloss slope   | kappa   rootloss slope  
+--------------------------------------------------------------
+0.330   | 10.02   0.1899   0.9280  | 10.04   0.1657   0.9650 
+0.340   | 10.00   0.1278   0.9901  | 10.00   0.1530   0.9622 
+0.350   | 9.96    0.1371   0.9606  | 9.96    0.1491   0.9460 
+0.360   | 9.94    0.0899   0.9827  | 9.94    0.1115   0.9663 
+0.370   | 9.92    0.0667   0.9782  | 9.92    0.0856   0.9658 
+0.380   | 9.92    0.0335   0.9854  | 9.92    0.0201   0.9812 
+0.390   | 9.90    0.0316   0.9551  | 9.92    0.0314   0.9653 
+0.400   | 9.90    0.0257   0.9410  | 9.90    0.0280   0.9400 
+0.410   | 9.90    0.0290   0.9233  | 9.90    0.0285   0.9232 
+0.420   | 9.90    0.0327   0.9059  | 9.90    0.0317   0.9055 
+0.430   | 9.88    0.0343   0.8853  | 9.90    0.0348   0.8890 
+0.440   | 9.88    0.0364   0.8697  | 9.88    0.0369   0.8688 
+0.450   | 9.88    0.0387   0.8532  | 9.88    0.0391   0.8529 
+0.460   | 9.88    0.0411   0.8375  | 9.88    0.0413   0.8374 
+0.470   | 9.88    0.0434   0.8222  | 9.88    0.0436   0.8221 
+0.480   | 9.88    0.0456   0.8073  | 9.88    0.0458   0.8073 
+0.490   | 9.88    0.0477   0.7928  | 9.88    0.0480   0.7928 
+0.500   | 9.88    0.0498   0.7788  | 9.88    0.0501   0.7788 
+┌ Warning: Assignment to `bb` in soft scope is ambiguous because a global variable by the same name exists: `bb` will be treated as a new local. Disambiguate by using `local bb` to suppress this warning or `global bb` to assign to the existing global variable.
+└ @ ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/s7_diag_ugrid.jl:84
+ERROR: LoadError: UndefVarError: bb not defined
+Stacktrace:
+ [1] top-level scope
+   @ ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/s7_diag_ugrid.jl:84
+in expression starting at /Users/ali/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/s7_diag_ugrid.jl:82
+
+linearisation identity on the FINE grid at the best fine point

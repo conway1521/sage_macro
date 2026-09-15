@@ -1,0 +1,53 @@
+seeding the family cache with the families quarantine2.jl built at exactly these inputs
+switch against quarantine2.jl at the old technology, worst gap 4.9e-05: HELD
+families() through the cache against direct imposition, worst gap 0.0e+00: HELD
+
+scan: sigma 0.36 to 0.70 by 0.01, kappa 2.00 to 20.00 by 0.02, quadrature 2000, targets 0.25 and 0.45
+(scan 0.1 min)
+
+sigma    kappa    rootloss   rate     slope    mult      
+--------------------------------------------------------------
+0.360    10.52    0.2819     0.5467   0.9580   23.8      
+0.370    10.56    0.2419     0.5183   0.9742   38.7      
+0.380    10.60    0.2090     0.4952   0.9808   52.2      
+0.390    10.64    0.1934     0.4844   0.9742   38.7      
+0.400    10.68    0.1856     0.4793   0.9597   24.8      
+0.410    10.70    0.1174     0.4310   0.9839   62.0      
+0.420    10.72    0.0521     0.3847   0.9960   248.3     
+0.430    10.74    0.0488     0.3830   0.9766   42.8      
+0.440    10.74    0.0201     0.3361   0.9755   40.8      
+0.450    10.76    0.0052     0.3524   0.9532   21.4      <- acceptable fit
+0.460    10.78    0.0111     0.3577   0.9328   14.9      
+0.470    10.78    0.0093     0.3437   0.9204   12.6      
+0.480    10.80    0.0059     0.3475   0.9032   10.3      <- acceptable fit
+0.490    10.82    0.0068     0.3495   0.8865   8.8       <- acceptable fit
+0.500    10.84    0.0090     0.3505   0.8700   7.7       
+0.510    10.86    0.0113     0.3508   0.8551   6.9       
+0.520    10.88    0.0134     0.3506   0.8404   6.3       
+0.530    10.90    0.0156     0.3501   0.8263   5.8       
+0.540    10.92    0.0178     0.3494   0.8135   5.4       
+0.550    10.94    0.0200     0.3485   0.8002   5.0       
+0.560    10.98    0.0216     0.3527   0.7859   4.7       
+0.570    11.00    0.0233     0.3512   0.7742   4.4       
+0.580    11.02    0.0253     0.3496   0.7629   4.2       
+0.590    11.06    0.0269     0.3522   0.7506   4.0       
+0.600    11.08    0.0286     0.3503   0.7388   3.8       
+0.610    11.12    0.0302     0.3522   0.7281   3.7       
+0.620    11.16    0.0319     0.3537   0.7165   3.5       
+0.630    11.18    0.0333     0.3514   0.7068   3.4       
+0.640    11.22    0.0348     0.3524   0.6968   3.3       
+0.650    11.26    0.0363     0.3531   0.6860   3.2       
+0.660    11.28    0.0378     0.3507   0.6768   3.1       
+0.670    11.32    0.0391     0.3511   0.6675   3.0       
+0.680    11.36    0.0405     0.3513   0.6585   2.9       
+0.690    11.40    0.0418     0.3513   0.6496   2.9       
+0.700    11.44    0.0430     0.3512   0.6409   2.8       
+
+over the acceptable-fit region: sigma 0.450 to 0.490, slope 0.8865 to 0.9532, multiplier 8.8 to 21.4
+on the absolute standard used at stage 7, root loss up to 0.035: sigma 0.44 to 0.64, multiplier 3.3 to 40.8
+
+best point kappa 10.76 sigma 0.45: participation 0.3524 (cells 0.2496, 0.4551; employed 0.3672, unemployed 0.1620)
+  agency 0.4864, hardship 0.4049, hand-to-mouth 0.3076 (on its 0.30 target), slope 0.9532, multiplier 21.4
+  (levels anchored to the old poverty line here; the suite solves this economy on its own)
+wrote calibration_ratio.txt
+DONE

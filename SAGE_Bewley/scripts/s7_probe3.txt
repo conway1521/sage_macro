@@ -1,0 +1,31 @@
+the time arithmetic behind the asymmetry, phi = 14, psi = 2, Qbar = 0.10:
+  at a time commitment of 0.00, the participation lump costs 0.0047 in utility
+  at a time commitment of 0.10, the participation lump costs 0.0327 in utility
+  at a time commitment of 0.16, the participation lump costs 0.0629 in utility
+  at a time commitment of 0.30, the participation lump costs 0.1727 in utility
+  at a time commitment of 0.54, the participation lump costs 0.4885 in utility
+  the belonging payoff at u = 5 is 0.4379
+
+belonging scaling when unemployed, at the discount spread that fixes wealth (nabla = 0.04):
+zeta    | rate E   rate U   ratio    | htm      aggregate
+--------------------------------------------------------------
+1.00    | 0.2921   1.0000    3.423 | 0.3473   0.3431
+0.30    | 0.2921   1.0000    3.423 | 0.3473   0.3431
+0.15    | 0.2921   1.0000    3.423 | 0.3473   0.3431
+0.10    | 0.2921   0.9996    3.422 | 0.3473   0.3431
+0.07    | 0.2921   0.9945    3.404 | 0.3473   0.3427
+0.05    | 0.2921   0.9691    3.318 | 0.3473   0.3409
+0.03    | 0.2921   0.8448    2.892 | 0.3473   0.3319
+0.01    | 0.2921   0.4856    1.662 | 0.3473   0.3060
+
+target ratio 0.486; target hand-to-mouth 0.30
+
+discount spread against hand-to-mouth, fine, no belonging scaling:
+nabla   | beta range  | htm      aggregate rate
+--------------------------------------------------
+0.030   | 0.933-0.957 | 0.2976   0.3395
+0.035   | 0.928-0.956 | 0.3206   0.3407
+0.040   | 0.924-0.956 | 0.3473   0.3431
+0.045   | 0.919-0.955 | 0.3736   0.3456
+0.050   | 0.915-0.955 | 0.3990   0.3487
+DONE

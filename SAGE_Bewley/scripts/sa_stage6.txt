@@ -1,0 +1,156 @@
+stage 6 | omega 0.30 | workers 13 | theta 0.0050 | grid a_max 4.0 pexp 3.0 na 200 ne 80
+labour market: f 0.7670, delta low 0.0796 high 0.0404, u low 0.0940 high 0.0500, rr 0.68
+
+==============================================================================
+A. BASELINE FAMILIES AND THE STAGE-5B POINT (P3)
+==============================================================================
+closed-form UI tax  0.02117
+at (kappa, sigma) = (10.00, 0.510): rate 0.4136 (stage 5b: 0.3526), groups 0.3419 / 0.4853
+P3 holds: participation rises before recalibration
+
+==============================================================================
+B. RECALIBRATION: dense scan, kappa free at each sigma
+==============================================================================
+coarse global minimum: kappa 9.80 sigma 0.390 root loss 0.0250
+refined:               kappa 9.80 sigma 0.395 root loss 0.0240
+equilibrium rate 0.3517, groups 0.2686 / 0.4349 (targets 0.25 / 0.45), slope 0.9466, stable equilibria 1
+valley written; loss along the floor at selected sigma:
+  sigma 0.30  kappa 10.05  root loss 0.2138  rate 0.2051  groups 0.148/0.262
+  sigma 0.40  kappa 9.80  root loss 0.0256  rate 0.3560  groups 0.273/0.439
+  sigma 0.50  kappa 9.80  root loss 0.0501  rate 0.3608  groups 0.295/0.427
+  sigma 0.60  kappa 9.85  root loss 0.0669  rate 0.3559  groups 0.303/0.409
+  sigma 0.70  kappa 10.00  root loss 0.0798  rate 0.3548  groups 0.311/0.399
+  sigma 0.80  kappa 10.30  root loss 0.0898  rate 0.3583  groups 0.321/0.395
+  sigma 0.90  kappa 10.65  root loss 0.0976  rate 0.3566  groups 0.325/0.388
+  sigma 1.00  kappa 11.15  root loss 0.1039  rate 0.3570  groups 0.330/0.384
+bound sigma-bar 0.4635, ratio sigma/sigma-bar 0.852 (stage 5b: 0.4626, 1.103)
+
+==============================================================================
+C. THE POVERTY LINE, ANCHORED AT THIS BASELINE
+==============================================================================
+median disposable income 0.3916 (mean 0.4240, ratio 0.923)
+poverty line 0.1958, asset threshold 0.0489
+lowest employed disposable income 0.2217 / 0.2516  (must exceed the line: yes)
+benefit net of tax, low cell z1/z2: 0.1924 / 0.3167 ; high cell: 0.2331 / 0.3812
+net benefit relative to the line, percent: low z1 -1.7, low z2 +61.8, high z1 +19.1, high z2 +94.7
+rate column identical after rebuild: yes
+
+==============================================================================
+D. BASELINE: S, A AND THE OECD CATEGORIES
+==============================================================================
+participation            0.3517   (by cell 0.2686 / 0.4349)
+  employed / unemployed  0.3014 / 1.0000   INSEE membership 0.35 / 0.17
+  by cell, employed      0.1927 / 0.4051 ; unemployed 1.0000 / 1.0000
+P4 holds: the unemployed participate MORE in the model, against the data
+unemployment rate        0.0720   (INSEE 0.074; model cells 0.094 / 0.050)
+mean effort, employed    0.5429   (phi was set for a population mean of 0.53)
+hand-to-mouth (4 weeks)  0.1158   (0.30 in the data, 0.32 at stage 5b)
+wealth p50 / p90 / p99   0.2392 / 0.7271 / 0.9835
+
+OECD categories, population and by employment status:
+  income-poor            0.0181   (INSEE 2024 at 50 percent: 0.088)
+    among unemployed     0.2513   (INSEE: 0.243)
+    among employed       0.0000   (INSEE, salaried: 0.034)
+  asset-poor             0.2132   (OECD 2025, France: below 0.40; stage 5b model 0.428)
+    among unemployed     0.2173
+    among employed       0.2129
+  both                   0.0051
+  vulnerable             0.2081   (OECD average 0.36)
+  union (hardship)       0.2262
+agency A                 0.6401   (by cell 0.6796 / 0.6006; stage 5b 0.4795)
+
+P5: asset poverty among the employed vs stage 5b 0.428, and unemployed vs employed:
+    employed 0.2129 (fell), unemployed 0.2173 (higher)
+P6: income poverty confined to the unemployed and in [0.02, 0.05]:
+    employed income-poor 0.0000 (none), population 0.0181 (OUT of range)
+
+==============================================================================
+E. POLICIES at the recalibrated point
+==============================================================================
+  subsidy iteration 1: rate 0.1647, T 0.08352 -> 0.08800
+  subsidy iteration 2: rate 0.1565, T 0.08800 -> 0.08847
+  subsidy iteration 3: rate 0.1557, T 0.08847 -> 0.08850
+  credit iteration 1: rate 0.9344, T 0.00000 -> 0.01827
+  credit iteration 2: rate 0.9156, T 0.01827 -> 0.01792
+  credit iteration 3: rate 0.9160, T 0.01792 -> 0.01793
+
+lump taxes: UI 0.02117, subsidy 0.08847, credit 0.01792; UI at rr 0.78: 0.02428, at rr 0.57: 0.01774
+
+policy                 | r (S)  | r_E    r_U    | inc    asset  vuln   union  | A      dA     
+------------------------------------------------------------------------------------------------
+baseline               | 0.3517 | 0.3014 1.0000 | 0.0181 0.2132 0.2081 0.2262 | 0.6401 +0.0000
+work subsidy           | 0.1557 | 0.0902 1.0000 | 0.0360 0.0160 0.0130 0.0490 | 0.7976 +0.1575
+empowerment            | 0.5696 | 0.5362 1.0000 | 0.0000 0.2199 0.2199 0.2199 | 0.6774 +0.0373
+participation credit   | 0.9160 | 0.9095 1.0000 | 0.0235 0.2033 0.1985 0.2220 | 0.6437 +0.0036
+UI rr 0.78             | 0.3055 | 0.2516 1.0000 | 0.0000 0.3452 0.3452 0.3452 | 0.5457 -0.0944
+UI rr 0.57             | 0.4227 | 0.3779 1.0000 | 0.0256 0.0646 0.0585 0.0841 | 0.7677 +0.1276
+
+by employment status: hardship (union) and asset poverty, employed / unemployed
+  baseline               union 0.2129 / 0.3978   asset 0.2129 / 0.2173   income 0.0000 / 0.2513
+  work subsidy           union 0.0132 / 0.5092   asset 0.0132 / 0.0515   income 0.0000 / 0.5000
+  empowerment            union 0.2197 / 0.2230   asset 0.2197 / 0.2230   income 0.0000 / 0.0000
+  participation credit   union 0.2031 / 0.4665   asset 0.2031 / 0.2065   income 0.0000 / 0.3264
+  UI rr 0.78             union 0.3447 / 0.3517   asset 0.3447 / 0.3517   income 0.0000 / 0.0000
+  UI rr 0.57             union 0.0602 / 0.3913   asset 0.0602 / 0.1204   income 0.0000 / 0.3554
+
+decomposition of the change in A: alpha channel, hardship channel, interaction
+  work subsidy           dA +0.1575 = alpha +0.0000 + hardship +0.1575 + interaction +0.0000
+  empowerment            dA +0.0373 = alpha +0.0324 + hardship +0.0041 + interaction +0.0008
+  participation credit   dA +0.0036 = alpha +0.0000 + hardship +0.0036 + interaction +0.0000
+  UI rr 0.78             dA -0.0944 = alpha +0.0000 + hardship -0.0944 + interaction +0.0000
+  UI rr 0.57             dA +0.1276 = alpha +0.0000 + hardship +0.1276 + interaction +0.0000
+
+two hardship concepts side by side: A on the OECD union (headline) and A on income only (the source's p)
+policy                 | A union  dA       | A income dA      
+--------------------------------------------------------------
+baseline               | 0.6401   +0.0000 | 0.8242   +0.0000
+work subsidy           | 0.7976   +0.1575 | 0.8086   -0.0155
+empowerment            | 0.6774   +0.0373 | 0.8745   +0.0503
+participation credit   | 0.6437   +0.0036 | 0.8200   -0.0041
+UI rr 0.78             | 0.5457   -0.0944 | 0.8380   +0.0138
+UI rr 0.57             | 0.7677   +0.1276 | 0.8181   -0.0060
+
+P7  subsidy raises A and lowers S: holds
+    low-cell hardship change under the subsidy -0.0538 (AGENCY.md: asset poverty fell 0.042)
+P8  higher replacement rate lowers income poverty and raises A: FAILS
+    employed asset poverty 0.2129 -> 0.3447 (rose as predicted), participation -0.0462
+P9  empowerment mostly mechanical: holds
+P10 credit small positive on A: holds
+    credit reaching the unemployed: their income change -0.01783
+
+==============================================================================
+F. SENSITIVITY
+==============================================================================
+stored threshold pairs, exact: union hardship / A
+policy                 |           1 month          3 months          6 months         12 months
+baseline               |   0.0870 / 0.7635   0.2262 / 0.6401   0.3825 / 0.5158   0.4678 / 0.4450
+work subsidy           |   0.0431 / 0.8027   0.0490 / 0.7976   0.0714 / 0.7785   0.2377 / 0.6312
+empowerment            |   0.0995 / 0.7852   0.2199 / 0.6774   0.3905 / 0.5322   0.4752 / 0.4584
+participation credit   |   0.0548 / 0.7935   0.2220 / 0.6437   0.3783 / 0.5194   0.4626 / 0.4498
+UI rr 0.78             |   0.1894 / 0.6685   0.3452 / 0.5457   0.4149 / 0.4890   0.4937 / 0.4236
+UI rr 0.57             |   0.0433 / 0.8034   0.0841 / 0.7677   0.2616 / 0.6117   0.4335 / 0.4737
+
+poverty line and asset threshold moved together, exact: union / A
+policy                 | line -10%          anchored           line +10%
+baseline               | 0.2000 / 0.6607    0.2262 / 0.6401    0.2426 / 0.6268    
+work subsidy           | 0.0483 / 0.7982    0.0490 / 0.7976    0.0501 / 0.7966    
+empowerment            | 0.2077 / 0.6880    0.2199 / 0.6774    0.2633 / 0.6408    
+participation credit   | 0.2005 / 0.6611    0.2220 / 0.6437    0.2313 / 0.6360    
+UI rr 0.78             | 0.2795 / 0.5963    0.3452 / 0.5457    0.3617 / 0.5326    
+UI rr 0.57             | 0.0704 / 0.7796    0.0841 / 0.7677    0.1262 / 0.7295    
+
+anchored versus floating line, three months: A (floating is exact only where no employed household is income-poor at the floating line)
+  baseline               median 0.3916  anchored A 0.6401  floating A 0.6405
+  work subsidy           median 0.4096  anchored A 0.7976  floating A (employed poor)
+  empowerment            median 0.3895  anchored A 0.6774  floating A 0.6781
+  participation credit   median 0.3622  anchored A 0.6437  floating A 0.6539
+  UI rr 0.78             median 0.3877  anchored A 0.5457  floating A 0.5485
+  UI rr 0.57             median 0.3951  anchored A 0.7677  floating A 0.7618
+
+==============================================================================
+G. LINEARISATION IDENTITY at a one percent shock to kappa
+==============================================================================
+map shift at fixed r +0.00739, slope 0.9466, predicted dr +0.13855, measured +0.13704, ratio 0.989
+
+saved sa_stage6_results.txt
+DONE
