@@ -16,8 +16,19 @@ SWAP_LIMIT_MB=${SWAP_LIMIT_MB:-8000}
 say() { echo "$(date '+%d %b %H:%M') $*" | tee -a "$LOG"; }
 rm -f "$FLAG"
 
-say "setting up the Julia environment ($(julia --version))"
-julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.precompile()' >> "$LOG" 2>&1 || { say "environment setup failed"; exit 1; }
+say "Julia: $(julia --version 2>&1)"
+PROJECT="."
+if julia --project=. -e 'using Pkg; Pkg.instantiate()' >> "$LOG" 2>&1; then
+  say "full project environment ready"
+else
+  say "the full project did not instantiate (it carries Plots, GR, IJulia and Pluto, which the run does not need); trying the runtime-only environment"
+  PROJECT="scripts/run_env"
+  julia --project="$PROJECT" -e 'using Pkg; Pkg.instantiate()' >> "$LOG" 2>&1 || { say "environment setup failed; see $LOG"; exit 1; }
+fi
+# Prove the model code loads before spending hours on it.
+julia --project="$PROJECT" -e 'include("scripts/modular_stack.jl"); println("the model stack loads")' >> "$LOG" 2>&1 \
+  || { say "the model code does not load in this environment; see $LOG"; exit 1; }
+say "environment ready, using $PROJECT"
 
 ( while true; do
     used=$(sysctl -n vm.swapusage | awk '{gsub("M","",$6); print int($6)}')
@@ -31,7 +42,7 @@ GUARD=$!
 trap 'kill $GUARD 2>/dev/null' EXIT
 caffeinate -dimsu -w $$ &
 
-probe() { SAGE_WORKERS=2 julia --project=. scripts/probe_memory.jl "$1" 16 2>&1 | tee -a "$LOG" | grep '^WORKERS=' | cut -d= -f2; }
+probe() { SAGE_WORKERS=2 julia --project="$PROJECT" scripts/probe_memory.jl "$1" 16 2>&1 | tee -a "$LOG" | grep '^WORKERS=' | cut -d= -f2; }
 W200=${SAGE_WORKERS:-$(probe 200)}
 W400=${SAGE_WORKERS_NA400:-$(probe 400)}
 if [ -z "$W200" ] || [ -z "$W400" ]; then say "memory probe failed"; exit 1; fi
@@ -43,7 +54,7 @@ step() {  # step <log name> <workers> <script and arguments>
   for attempt in 1 2; do
     if [ -f "$FLAG" ]; then say "memory guard tripped earlier; stopping"; exit 5; fi
     say "$name, attempt $attempt, $w workers"
-    SAGE_WORKERS=$w julia --project=. "$@" > "scripts/$name.txt" 2>&1
+    SAGE_WORKERS=$w julia --project="$PROJECT" "$@" > "scripts/$name.txt" 2>&1
     rc=$?
     say "$name exit $rc"
     clean

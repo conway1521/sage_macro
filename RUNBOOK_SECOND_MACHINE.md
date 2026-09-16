@@ -32,6 +32,20 @@ bash SAGE_Bewley/scripts/run_all.sh
 That is the whole job. It installs the exact package versions pinned in
 `SAGE_Bewley/Manifest.toml`, then:
 
+**If the environment does not install.** The full project also carries Plots,
+GR, IJulia and Pluto for the notebook and the lecture site, and those are the
+parts most likely to fail to build on a fresh machine. The run does not need
+any of them. It therefore falls back on its own to
+`SAGE_Bewley/scripts/run_env`, which holds QuantEcon alone at the identical
+version, and then proves the model code loads before going any further. If you
+want to skip the full project from the start:
+
+```
+cd SAGE_Bewley && julia --project=scripts/run_env -e 'using Pkg; Pkg.instantiate()'
+```
+
+Whatever environment the run ends up using, the worker processes inherit it.
+
 | step | what | rough time |
 |---|---|---|
 | memory probe | measures one worker's memory, picks the worker count for a 16 GB budget | 5 min |

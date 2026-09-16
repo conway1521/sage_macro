@@ -10,7 +10,9 @@ const MOD_DIR = @__DIR__
 # workers cannot fit in 24 GB (2026-09-15).
 const MOD_NW = parse(Int, get(ENV, "SAGE_WORKERS", "13"))
 if nworkers() == 1 && nprocs() == 1
-    addprocs(MOD_NW; exeflags = ["--project=" * abspath(joinpath(MOD_DIR, "..")), "-t", "1"])
+    # Workers inherit whichever environment the master is using, so a fallback
+    # runtime environment works the same as the full project.
+    addprocs(MOD_NW; exeflags = ["--project=" * Base.active_project(), "-t", "1"])
 end
 @everywhere include(joinpath($MOD_DIR, "modular_stack.jl"))
 @everywhere begin
