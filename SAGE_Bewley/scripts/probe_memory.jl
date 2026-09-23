@@ -12,9 +12,14 @@ const BUDGET = (length(ARGS) >= 2 ? parse(Float64, ARGS[2]) : 16.0) * 1024^3
 c = SAGEConfig(S = true, A = true, unemployment = true, beta_spread = 0.037, unemployed_ratio = 0.17 / 0.35, na = NA)
 cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
 jobs = [(p, u) for p in params_of(cT, cells_of(c)[1]) for u in (4.0, 8.0)]
+# GC_AFTER=1 forces a garbage collection after each household problem, to see
+# how much of the peak is live data and how much is garbage not yet collected.
+const GC_AFTER = get(ENV, "GC_AFTER", "0") == "1"
 pmap(jobs) do j
     s = solve_participation_logit(update(j[1]; social_strength = j[2]), 1.0; theta = c.theta, full = true)
     cell_summary(j[1], s)
+    s = nothing
+    GC_AFTER && GC.gc()
     nothing
 end
 peak = maximum(Float64(remotecall_fetch(Sys.maxrss, w)) for w in workers())

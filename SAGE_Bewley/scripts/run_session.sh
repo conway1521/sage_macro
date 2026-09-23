@@ -9,8 +9,10 @@
 # Stop early at any time with Ctrl-C. At most the family build in progress is
 # lost, about ten minutes: families, each country's fitted effort scale and
 # discount spread, and every finished step are kept on disk, and a finished step
-# is never run again. It runs at low priority on 10 workers so the laptop stays
-# usable; SAGE_WORKERS=13 when you are away from it.
+# is never run again. It runs at low priority on 4 workers. That number is set by
+# memory, not cores: one household problem at the production grid peaks at 2.2 to
+# 2.7 GB per worker (probe_memory.jl, 2026-09-23), and with everyday apps open
+# about 12 GB is free. Ten workers pushed swap up 4 GB in two minutes.
 #
 # The steps, most valuable first: France, Germany, the US and Italy at G+S+A;
 # then each country's G+A and G; then each country's G+S; then the modularity
@@ -22,7 +24,7 @@
 # guards against took swap from 1.5 GB to 28 GB.
 cd "$(dirname "$0")/.." || exit 1
 SESSION_HOURS=${SESSION_HOURS:-2.5}
-W=${SAGE_WORKERS:-10}
+W=${SAGE_WORKERS:-4}
 W400=${SAGE_WORKERS_NA400:-3}
 INCLUDE_NA400=${INCLUDE_NA400:-0}
 SWAP_GROWTH_MB=${SWAP_GROWTH_MB:-4000}
