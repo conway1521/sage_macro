@@ -42,7 +42,7 @@
 # reported as not calibrated and no file is written: exit 2. A failed preflight
 # exits 3. Nothing is tuned by hand.
 include(joinpath(@__DIR__, "modular_workers.jl"))
-using Printf, Statistics
+using Printf, Statistics, SHA
 say(args...) = (println(args...); flush(stdout))
 
 const CODE = ARGS[1]
@@ -64,6 +64,36 @@ const GAP = CFG == "GSA" ? 0.307563 - 0.261599 : CFG == "GS" ? 0.285162 - 0.2510
 const SKIP_GS = get(ENV, "SKIP_GS", "0") == "1"
 const OUTFILE = joinpath(@__DIR__, CFG == "GSA" ? "calibration_country_$(CODE).txt" :
                                                   "calibration_country_$(CODE)_$(CFG).txt")
+const NOTCAL = replace(OUTFILE, r"\.txt$" => ".not_calibrated.txt")
+mark_not_calibrated() = open(io -> println(io, "# not calibrated; the reason is in the run log"), NOTCAL, "w")
+
+# CHECKPOINTS, so a run stopped part-way loses at most the family build in
+# progress. Response families are cached by build_families already; what is
+# not is the fitted effort scale and discount spread (step 1, about ten
+# minutes) and the corrected spread (step 5). A checkpoint is reused only for
+# exactly the same inputs: the country's data row, the configuration, the
+# hand-to-mouth aim and the solver's source code.
+const CKDIR = joinpath(@__DIR__, "checkpoints"); isdir(CKDIR) || mkpath(CKDIR)
+const CKKEY = bytes2hex(sha1(string(sort(collect(ROW)), "|", CFG, "|", GAP, "|", SOLVER_DIGEST)))[1:16]
+ckfile(stage) = joinpath(CKDIR, "$(CODE)_$(CFG)_$(stage)_$(CKKEY).txt")
+function ck_read(stage)
+    f = ckfile(stage); isfile(f) || return nothing
+    d = Dict{String,Float64}()
+    for ln in eachline(f)
+        k, v = split(ln, "="); d[strip(k)] = parse(Float64, v)
+    end
+    d
+end
+function ck_write(stage, d)
+    f = ckfile(stage)
+    open(f * ".tmp", "w") do io
+        for (k, v) in d
+            println(io, k, " = ", v)
+        end
+    end
+    mv(f * ".tmp", f; force = true)
+end
+
 say("calibrating ", CODE, " ", CFG, " | effort target ", E_TARGET, " | hand-to-mouth target ", HTM_TARGET,
     S_ON ? " | participation targets $(PART) | national ratio $(RATIO)" : "", " | workers ", nworkers())
 t_start = time()
@@ -74,6 +104,7 @@ function write_cal(phi, spread; kappa = nothing, sigma = nothing)
         @printf(io, "phi = %.2f\nbeta_spread = %.3f\n", phi, spread)
         kappa === nothing || @printf(io, "kappa = %.2f\nsigma_m = %.2f\n", kappa, sigma)
     end
+    isfile(NOTCAL) && rm(NOTCAL)
     say("wrote ", basename(OUTFILE))
 end
 
@@ -106,15 +137,25 @@ function fit_spread(phi, target; grid = 0.0:0.005:0.10)
     (sp = round(grid[k-1] + t * (grid[k] - grid[k-1]); digits = 3), htm = target, edge = false)
 end
 say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", round(HTM_TARGET - GAP; digits = 4))
-phi = fit_phi(0.037)
-fs = fit_spread(phi, HTM_TARGET - GAP)
-phi = fit_phi(fs.sp; lo = max(3.0, phi - 4), hi = phi + 4, steps = 8)
-fs = fit_spread(phi, HTM_TARGET - GAP; grid = max(0.0, fs.sp - 0.015):0.005:(fs.sp + 0.015))
-spread = fs.sp
-chk = soff(phi, spread)
+ck1 = ck_read("stage1")
+if ck1 === nothing
+    phi = fit_phi(0.037)
+    fs = fit_spread(phi, HTM_TARGET - GAP)
+    phi = fit_phi(fs.sp; lo = max(3.0, phi - 4), hi = phi + 4, steps = 8)
+    fs = fit_spread(phi, HTM_TARGET - GAP; grid = max(0.0, fs.sp - 0.015):0.005:(fs.sp + 0.015))
+    spread = fs.sp; edge = fs.edge
+    chk = soff(phi, spread)
+    chk_e, chk_h = chk.mean_effort_employed, chk.hand_to_mouth
+    ck_write("stage1", Dict("phi" => phi, "spread" => spread, "edge" => Float64(edge),
+                            "effort" => chk_e, "htm" => chk_h))
+else
+    phi, spread, edge = ck1["phi"], ck1["spread"], ck1["edge"] == 1.0
+    chk_e, chk_h = ck1["effort"], ck1["htm"]
+    say("  from checkpoint ", basename(ckfile("stage1")))
+end
 @printf("  phi %.2f, spread %.3f%s: effort %.4f (target %.4f), hand-to-mouth %.4f (aim %.4f)  [%.1f min]\n",
-        phi, spread, fs.edge ? " (ON THE GRID EDGE)" : "", chk.mean_effort_employed, E_TARGET,
-        chk.hand_to_mouth, HTM_TARGET - GAP, (time() - t_start) / 60)
+        phi, spread, edge ? " (ON THE GRID EDGE)" : "", chk_e, E_TARGET,
+        chk_h, HTM_TARGET - GAP, (time() - t_start) / 60)
 flush(stdout)
 
 if !S_ON
@@ -160,7 +201,7 @@ S = scans(phi, spread)
 if S[RATIO] === nothing || S[RATIO].best.loss > 0.035
     say("\nNOT CALIBRATED: at the national ratio the best fit is ", S[RATIO] === nothing ? "absent" :
         @sprintf("%.4f, above the 0.035 standard", S[RATIO].best.loss), ". No calibration file written.")
-    exit(2)
+    mark_not_calibrated(); exit(2)
 end
 
 # ------------------------------------------------------ 4 and 5. solve --
@@ -179,16 +220,23 @@ say("\n4. the calibrated ", CFG, " economy on its own thresholds")
 best = S[RATIO].best
 r = solve_at(phi, spread, best)
 if abs(r.hand_to_mouth - HTM_TARGET) > 0.02
-    gap_c = r.hand_to_mouth - chk.hand_to_mouth
+    gap_c = r.hand_to_mouth - chk_h
     say(@sprintf("\n5. hand-to-mouth off by %+.4f; this economy's own cohesion gap is %+.4f against France's %+.4f. One correction.",
                  r.hand_to_mouth - HTM_TARGET, gap_c, GAP))
-    fs2 = fit_spread(phi, HTM_TARGET - gap_c)
-    spread = fs2.sp
-    @printf("  new spread %.3f%s\n", spread, fs2.edge ? " (ON THE GRID EDGE)" : ""); flush(stdout)
+    ck5 = ck_read("stage5")
+    if ck5 === nothing
+        fs2 = fit_spread(phi, HTM_TARGET - gap_c)
+        spread = fs2.sp; edge2 = fs2.edge
+        ck_write("stage5", Dict("spread" => spread, "edge" => Float64(edge2)))
+    else
+        spread, edge2 = ck5["spread"], ck5["edge"] == 1.0
+        say("  from checkpoint ", basename(ckfile("stage5")))
+    end
+    @printf("  new spread %.3f%s\n", spread, edge2 ? " (ON THE GRID EDGE)" : ""); flush(stdout)
     S = scans(phi, spread)
     if S[RATIO] === nothing || S[RATIO].best.loss > 0.035
         say("\nNOT CALIBRATED after the correction. No calibration file written.")
-        exit(2)
+        mark_not_calibrated(); exit(2)
     end
     best = S[RATIO].best
     r = solve_at(phi, spread, best)

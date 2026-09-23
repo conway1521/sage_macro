@@ -28,3 +28,6 @@ SAGE_Bewley/scripts/cache_*/
 *.tmp
 SAGE_Bewley/scripts/run_countries.log
 SAGE_Bewley/scripts/MEMORY_GUARD_TRIPPED
+
+# per-machine progress, rebuilt on restart
+SAGE_Bewley/scripts/checkpoints/

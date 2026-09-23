@@ -67,17 +67,20 @@ France's no-cohesion economy and comparing it with the reference numbers to
 
 ## 3. Watch
 
-- `SAGE_Bewley/scripts/run_all.log`: one line per step, with times and exit codes.
+- `SAGE_Bewley/scripts/run_session.log`: one line per step, with times and exit codes.
+- `bash SAGE_Bewley/scripts/run_session.sh status`: what is done and what is left.
 - `SAGE_Bewley/scripts/calibrate_country_<CODE>.txt` and `..._<CODE>_<CFG>.txt`: each calibration.
 - `SAGE_Bewley/scripts/test_modular.txt` and `conv_na400.txt`: the suite.
 
-To stop: `pkill -f run_all.sh; pkill julia`.
+To stop: Ctrl-C in the terminal running it. Running it again resumes: finished steps are skipped, and each country's fitted effort scale and discount spread are kept in `scripts/checkpoints/`.
+
+**On the main laptop, in pieces.** `bash SAGE_Bewley/scripts/run_session.sh` runs the same steps for 2.5 hours (`SESSION_HOURS=2` for another length) on 10 workers at low priority, then stops by itself. It leaves out the doubled asset grid row, which needs more memory than the laptop can spare alongside daily use. The two machines share progress through git: a step whose calibration file is on the branch is skipped on either.
 
 ## 4. Bring the results back
 
 ```
 git add SAGE_Bewley/scripts/calibration_country_*.txt SAGE_Bewley/scripts/calibrate_country_*.txt \
-        SAGE_Bewley/scripts/test_modular.txt SAGE_Bewley/scripts/conv_na400.txt SAGE_Bewley/scripts/run_all.log
+        SAGE_Bewley/scripts/test_modular.txt SAGE_Bewley/scripts/conv_na400.txt SAGE_Bewley/scripts/run_session.log
 git commit -m "country calibrations from the second machine"
 git push
 ```
