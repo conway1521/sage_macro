@@ -55,7 +55,7 @@ Whatever environment the run ends up using, the worker processes inherit it.
 | doubled asset grid row | the eighth convergence row, on fewer workers | several hours |
 
 The run keeps the machine awake while it works. A memory guard stops Julia if
-swap passes 8 GB and the run then ends with exit 5, rather than letting the
+swap grows 4 GB over its lowest level in the session and the run then ends with exit 5, rather than letting the
 machine restart. Each step is retried once; a second crash ends the run.
 Families are cached on disk, so running `run_all.sh` again after any stop
 resumes from the builds already finished.

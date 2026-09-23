@@ -15,13 +15,17 @@
 # The steps, most valuable first: France, Germany, the US and Italy at G+S+A;
 # then each country's G+A and G; then each country's G+S; then the modularity
 # suite. The doubled asset grid row needs 4 to 5 GB a worker and is left out
-# unless INCLUDE_NA400=1. A memory guard stops Julia if swap passes 8 GB.
+# unless INCLUDE_NA400=1. A memory guard stops Julia if swap GROWS by 4 GB over
+# its lowest level this session. Not the absolute level: macOS leaves old pages
+# in swap long after the pressure has gone (8.3 GB used with 72 percent of memory
+# free, 2026-09-23), so an absolute threshold trips on nothing. The runaway it
+# guards against took swap from 1.5 GB to 28 GB.
 cd "$(dirname "$0")/.." || exit 1
 SESSION_HOURS=${SESSION_HOURS:-2.5}
 W=${SAGE_WORKERS:-10}
 W400=${SAGE_WORKERS_NA400:-3}
 INCLUDE_NA400=${INCLUDE_NA400:-0}
-SWAP_LIMIT_MB=${SWAP_LIMIT_MB:-8000}
+SWAP_GROWTH_MB=${SWAP_GROWTH_MB:-4000}
 MIN_START_MIN=${MIN_START_MIN:-15}
 LOG=scripts/run_session.log
 say() { echo "$(date '+%d %b %H:%M') $*" | tee -a "$LOG"; }
@@ -104,6 +108,9 @@ DEADLINE=0
 if [ "$(echo "$SESSION_HOURS > 0" | bc -l)" = "1" ]; then
   DEADLINE=$(( $(date +%s) + $(echo "$SESSION_HOURS * 3600 / 1" | bc) ))
 fi
+swap_used() { sysctl -n vm.swapusage | awk '{gsub("M","",$6); print int($6)}'; }
+SWAP_BASE=$(swap_used)
+say "swap in use at the start: ${SWAP_BASE} MB; the guard trips at ${SWAP_GROWTH_MB} MB above its lowest level"
 CUR=""
 stop_julia() {
   local jp=$1; [ -z "$jp" ] && return
@@ -121,8 +128,9 @@ run_step() {  # run_step <name> <workers> <script and arguments>; sets RESULT
   while kill -0 "$CUR" 2>/dev/null; do
     sleep 15
     if [ "$DEADLINE" -gt 0 ] && [ "$(date +%s)" -ge "$DEADLINE" ]; then why=deadline; break; fi
-    local used; used=$(sysctl -n vm.swapusage | awk '{gsub("M","",$6); print int($6)}')
-    if [ "$used" -gt "$SWAP_LIMIT_MB" ]; then why=memory; break; fi
+    local used; used=$(swap_used)
+    [ "$used" -lt "$SWAP_BASE" ] && SWAP_BASE=$used
+    if [ $(( used - SWAP_BASE )) -gt "$SWAP_GROWTH_MB" ]; then why=memory; break; fi
   done
   if [ -n "$why" ]; then stop_julia "$CUR"; wait "$CUR" 2>/dev/null; RESULT=$why; CUR=""; return; fi
   wait "$CUR"; RESULT="exit $?"; CUR=""
@@ -143,7 +151,7 @@ while IFS='|' read -r name mins check cmd; do
     run_step "$name" "$w" $cmd
     case $RESULT in
       deadline) say "$name: time is up; stopped part-way, resumes here next session"; status | tail -3; exit 0 ;;
-      memory)   say "$name: MEMORY GUARD, swap passed ${SWAP_LIMIT_MB} MB; Julia stopped"; exit 5 ;;
+      memory)   say "$name: MEMORY GUARD, swap grew more than ${SWAP_GROWTH_MB} MB (lowest ${SWAP_BASE} MB); Julia stopped"; exit 5 ;;
       "exit 0") say "$name: done"; ok=1; break ;;
       "exit 2") say "$name: finished, NOT calibrated (recorded)"; ok=1; break ;;
       "exit 3") say "$name: preflight failed, this machine does not reproduce the reference numbers"; exit 3 ;;
