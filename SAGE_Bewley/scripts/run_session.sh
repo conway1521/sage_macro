@@ -48,9 +48,12 @@ is_done() {  # prints the outcome and succeeds if the step needs no more work
   set -- $1
   case $1 in
     cal)
-      local f="scripts/calibration_country_$2"
-      [ "$3" != "GSA" ] && f="${f}_$3"
-      if [ -f "$f.txt" ]; then echo "calibrated"; return 0; fi
+      # Done means the run reached its last line. The calibration file alone is
+      # not enough: G+S+A writes it before the four comparison economies, which
+      # read it, so a session stopped between the two would otherwise skip them.
+      local f="scripts/calibration_country_$2" lg="scripts/calibrate_country_$2"
+      [ "$3" != "GSA" ] && { f="${f}_$3"; lg="${lg}_$3"; }
+      if [ -f "$f.txt" ] && grep -q "^DONE $2 $3" "$lg.txt" 2>/dev/null; then echo "calibrated"; return 0; fi
       if [ -f "$f.not_calibrated.txt" ]; then echo "NOT calibrated (see its log)"; return 0; fi
       return 1 ;;
     suite)
