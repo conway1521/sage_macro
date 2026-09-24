@@ -1,0 +1,4 @@
+# not calibrated, recorded by hand 2026-09-24: the US G+S+A cohesion-off fit reached
+# hand-to-mouth 0.019 at the largest discount spread (0.115) against an aim of 0.281, and
+# this configuration shares that unemployment block, with a higher aim (0.31 with
+# cohesion off). Delete this file to run it, e.g. after changing the US benefit.

@@ -1,0 +1,5 @@
+# written by calibrate_country.jl FR GSA; read by country_config
+phi = 14.38
+beta_spread = 0.026
+kappa = 10.95
+sigma_m = 0.92

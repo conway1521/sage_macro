@@ -165,6 +165,18 @@ end
         chk_h, HTM_TARGET - GAP, (time() - t_start) / 60)
 flush(stdout)
 
+# If no discount spread on the grid brings hand-to-mouth near its aim, nothing
+# downstream can: families, scans and the one correction all take the spread as
+# given. So record the configuration as not calibrated here rather than spend
+# hours on it. First seen for the US, whose benefit runs out after five months
+# (twelve-month replacement 0.13): hand-to-mouth 0.019 at spread 0.115 against
+# an aim of 0.281.
+if edge && abs(chk_h - (HTM_TARGET - GAP)) > 0.05
+    say(@sprintf("\nNOT CALIBRATED: hand-to-mouth reaches only %.4f at the largest spread tried (%.3f), against an aim of %.4f. No calibration file written.",
+                 chk_h, spread, HTM_TARGET - GAP))
+    mark_not_calibrated(); exit(2)
+end
+
 if !S_ON
     say("\n2. the ", CFG, " economy on its own thresholds")
     r = solve_economy(country_config(CODE; config = CFG, S = false, A = A_ON, phi = phi, beta_spread = spread))

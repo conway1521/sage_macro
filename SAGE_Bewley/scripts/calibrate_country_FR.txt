@@ -1,0 +1,26 @@
+calibrating FR GSA | effort target 0.518873 | hand-to-mouth target 0.3 | participation targets (0.202862, 0.291) | national ratio 0.485714 | workers 4
+preflight, France G+A through the parallel path: worst gap 3.4e-07 against the suite: HELD
+
+1. effort scale and discount spread, cohesion off, hand-to-mouth aim 0.2708
+  from checkpoint FR_GSA_stage1_349ca307cf28c7c3.txt
+  phi 14.38, spread 0.026: effort 0.5188 (target 0.5189), hand-to-mouth 0.2685 (aim 0.2708)  [0.6 min]
+
+2-3. GSA families and technology scans, participation targets (0.202862, 0.291)
+  families built or loaded in 10.5 min
+  ratio 0.486 (national): best kappa 10.95 sigma 0.92, root loss 0.0013, rate 0.2461, multiplier 2.0 | within 0.035: sigma 0.58 to 1.50, multiplier 1.4 to 4.1
+  ratio 0.574: best kappa 11.00 sigma 0.94, root loss 0.0017, rate 0.2480, multiplier 1.9 | within 0.035: sigma 0.58 to 1.50, multiplier 1.4 to 4.1
+  ratio 0.857: best kappa 10.80 sigma 0.92, root loss 0.0013, rate 0.2478, multiplier 2.0 | within 0.035: sigma 0.58 to 1.50, multiplier 1.4 to 4.2
+  ratio 0.937: best kappa 10.70 sigma 0.90, root loss 0.0003, rate 0.2470, multiplier 2.0 | within 0.035: sigma 0.58 to 1.50, multiplier 1.4 to 4.2
+
+4. the calibrated GSA economy on its own thresholds
+  GSA: participation 0.2461 (cells 0.2016, 0.2906 against 0.203, 0.291; employed 0.2544, unemployed 0.1176)
+         agency 0.5012, hardship 0.3912, hand-to-mouth 0.3011 (target 0.30), effort 0.5076, multiplier 2.0  [19.4 min]
+wrote calibration_country_FR.txt
+
+6. the four economies at FR's G+S+A parameters (the fixed-parameter view)
+G      participation 0.0000 (E 0.0000, U 0.0000) | agency 0.5375 | hardship 0.3586 | htm 0.2635 | effort 0.5184 | median 0.3763
+G+A    participation 0.0000 (E 0.0000, U 0.0000) | agency 0.5283 | hardship 0.3596 | htm 0.2685 | effort 0.5188 | median 0.3763
+G+S    participation 0.2445 (E 0.2527, U 0.1188) | agency 0.5083 | hardship 0.3934 | htm 0.2984 | effort 0.5073 | median 0.3677
+G+S+A  participation 0.2461 (E 0.2544, U 0.1176) | agency 0.5012 | hardship 0.3912 | htm 0.3011 | effort 0.5076 | median 0.3675
+
+DONE FR GSA in 69.2 min

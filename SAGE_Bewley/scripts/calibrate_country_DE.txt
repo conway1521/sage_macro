@@ -1,19 +1,26 @@
-calibrating DE | effort target 0.491784 | hand-to-mouth target 0.32 | participation targets (0.252077, 0.349) | national ratio 0.573626
+calibrating DE GSA | effort target 0.491784 | hand-to-mouth target 0.32 | participation targets (0.252077, 0.349) | national ratio 0.573626 | workers 4
 preflight, France G+A through the parallel path: worst gap 3.4e-07 against the suite: HELD
 
-1. effort scale and discount spread, cohesion off (G+A), S-off target 0.274
+1. effort scale and discount spread, cohesion off, hand-to-mouth aim 0.2908
+  from checkpoint DE_GSA_stage1_825b1bc8343646b7.txt
+  phi 19.00, spread 0.005: effort 0.4917 (target 0.4918), hand-to-mouth 0.2871 (aim 0.2908)  [0.4 min]
 
-signal (15): Terminated: 15
-in expression starting at /Users/ali/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/calibrate_country.jl:77
-kevent at /usr/lib/system/libsystem_kernel.dylib (unknown line)
-uv__io_poll at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
-uv_run at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
-jl_task_get_next at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
-poptask at ./task.jl:827
-wait at ./task.jl:836
-task_done_hook at ./task.jl:544
-jl_apply_generic at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
-jl_finish_task at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
-start_task at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
-unknown function (ip: 0x0)
-Allocations: 63150171 (Pool: 63126587; Big: 23584); GC: 52
+2-3. GSA families and technology scans, participation targets (0.252077, 0.349)
+  families built or loaded in 0.0 min
+  ratio 0.574 (national): best kappa 12.20 sigma 0.78, root loss 0.0012, rate 0.3009, multiplier 2.5 | within 0.035: sigma 0.52 to 1.50, multiplier 1.5 to 7.2
+  ratio 0.486: best kappa 12.30 sigma 0.80, root loss 0.0017, rate 0.3017, multiplier 2.4 | within 0.035: sigma 0.54 to 1.50, multiplier 1.5 to 6.0
+  ratio 0.857: best kappa 12.20 sigma 0.80, root loss 0.0010, rate 0.3003, multiplier 2.4 | within 0.035: sigma 0.54 to 1.50, multiplier 1.5 to 6.2
+  ratio 0.937: best kappa 12.20 sigma 0.80, root loss 0.0019, rate 0.3017, multiplier 2.4 | within 0.035: sigma 0.52 to 1.50, multiplier 1.5 to 7.5
+
+4. the calibrated GSA economy on its own thresholds
+  GSA: participation 0.3009 (cells 0.2516, 0.3501 against 0.252, 0.349; employed 0.3044, unemployed 0.1687)
+         agency 0.5252, hardship 0.3733, hand-to-mouth 0.3109 (target 0.32), effort 0.4776, multiplier 2.5  [0.0 min]
+wrote calibration_country_DE.txt
+
+6. the four economies at DE's G+S+A parameters (the fixed-parameter view)
+G      participation 0.0000 (E 0.0000, U 0.0000) | agency 0.5491 | hardship 0.3502 | htm 0.2907 | effort 0.4912 | median 0.3616
+G+A    participation 0.0000 (E 0.0000, U 0.0000) | agency 0.5454 | hardship 0.3495 | htm 0.2871 | effort 0.4917 | median 0.3614
+G+S    participation 0.3001 (E 0.3036, U 0.1705) | agency 0.5285 | hardship 0.3746 | htm 0.3151 | effort 0.4772 | median 0.3508
+G+S+A  participation 0.3009 (E 0.3044, U 0.1687) | agency 0.5252 | hardship 0.3733 | htm 0.3109 | effort 0.4776 | median 0.3505
+
+DONE DE GSA in 10.4 min
