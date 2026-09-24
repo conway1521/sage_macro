@@ -59,8 +59,15 @@ const RATIO = num("ratio")
 # The national ratio exactly, and for the headline configuration the other
 # national figures in the data as a sensitivity.
 const RATIOS = CFG == "GSA" ? vcat(RATIO, [x for x in (0.486, 0.574, 0.857, 0.937) if abs(x - RATIO) > 0.002]) : [RATIO]
-# France's cohesion gap in hand-to-mouth at its calibrated point (test_modular.txt).
-const GAP = CFG == "GSA" ? 0.307563 - 0.261599 : CFG == "GS" ? 0.285162 - 0.251030 : 0.0
+# How much switching cohesion on raises hand-to-mouth, used to aim the
+# cohesion-off fit. G+S+A: France on EU-SILC, 0.2804 with cohesion against 0.2512
+# without (calibrate_country_FR.txt, 2026-09-23). The INSEE footing's gap, 0.046,
+# came from a multiplier of 21 and overshot by 0.02 at the EU-SILC multiplier of 2.
+# G+S: still the INSEE-footing value; the correction step covers any miss.
+const GAP = CFG == "GSA" ? 0.2804 - 0.2512 : CFG == "GS" ? 0.285162 - 0.251030 : 0.0
+# Switching S on must still hit the G targets, so hand-to-mouth gets one
+# correction when it misses by more than this.
+const HTM_TOL = 0.01
 const SKIP_GS = get(ENV, "SKIP_GS", "0") == "1"
 const OUTFILE = joinpath(@__DIR__, CFG == "GSA" ? "calibration_country_$(CODE).txt" :
                                                   "calibration_country_$(CODE)_$(CFG).txt")
@@ -163,13 +170,15 @@ if !S_ON
     r = solve_economy(country_config(CODE; config = CFG, S = false, A = A_ON, phi = phi, beta_spread = spread))
     @printf("  participation %.4f | agency %.4f | hardship %.4f | hand-to-mouth %.4f (target %.2f) | effort %.4f (target %.4f) | median %.4f\n",
             r.rate, r.A, r.hardship, r.hand_to_mouth, HTM_TARGET, r.mean_effort_employed, E_TARGET, r.median_income)
-    abs(r.hand_to_mouth - HTM_TARGET) > 0.02 && say("  hand-to-mouth off target by more than 0.02; recorded, not tuned")
+    abs(r.hand_to_mouth - HTM_TARGET) > HTM_TOL && say("  hand-to-mouth off target by more than ", HTM_TOL, "; recorded, not tuned")
     write_cal(phi, spread)
     @printf("\nDONE %s %s in %.1f min\n", CODE, CFG, (time() - t_start) / 60)
     exit(0)
 end
 
 # ------------------------------------------- 2 and 3. families and scans --
+const SIGMAS = 0.30:0.02:1.50
+const KAPPAS = 2.0:0.05:25.0
 function scans(phi, spread)
     c = country_config(CODE; config = CFG, S = true, A = A_ON, phi = phi, beta_spread = spread)
     t0 = time()
@@ -180,14 +189,18 @@ function scans(phi, spread)
     for ρ in RATIOS
         cr = SAGEConfig(c; unemployed_ratio = ρ)
         fi = [impose_unemployed_ratio(f, emp, ρ) for f in raw]
-        rows = scan_technology(cr, fi, collect(0.30:0.02:0.80), collect(2.0:0.05:25.0); targets = PART)
+        # Wide on purpose: France on EU-SILC put its first best sigma on the old
+        # 0.80 bound, and a best value on an edge only says the search stopped there.
+        rows = scan_technology(cr, fi, collect(SIGMAS), collect(KAPPAS); targets = PART)
         if isempty(rows)
             @printf("  ratio %.3f: no stable equilibrium anywhere on the grid\n", ρ); out[ρ] = nothing; continue
         end
         best = rows[argmin([x.loss for x in rows])]
         ok = [x for x in rows if x.loss <= 0.035]
-        @printf("  ratio %.3f%s: best kappa %.2f sigma %.2f, root loss %.4f, rate %.4f, multiplier %.1f",
-                ρ, ρ == RATIO ? " (national)" : "", best.κ, best.σ, best.loss, best.r, best.mult)
+        edge = (best.σ <= first(SIGMAS) || best.σ >= last(SIGMAS) ? " SIGMA ON THE GRID EDGE" : "") *
+               (best.κ <= first(KAPPAS) || best.κ >= last(KAPPAS) ? " KAPPA ON THE GRID EDGE" : "")
+        @printf("  ratio %.3f%s: best kappa %.2f sigma %.2f, root loss %.4f, rate %.4f, multiplier %.1f%s",
+                ρ, ρ == RATIO ? " (national)" : "", best.κ, best.σ, best.loss, best.r, best.mult, edge)
         isempty(ok) ? println(" | nothing within 0.035") :
             @printf(" | within 0.035: sigma %.2f to %.2f, multiplier %.1f to %.1f\n",
                     minimum(x.σ for x in ok), maximum(x.σ for x in ok), minimum(x.mult for x in ok), maximum(x.mult for x in ok))
@@ -219,10 +232,10 @@ end
 say("\n4. the calibrated ", CFG, " economy on its own thresholds")
 best = S[RATIO].best
 r = solve_at(phi, spread, best)
-if abs(r.hand_to_mouth - HTM_TARGET) > 0.02
+if abs(r.hand_to_mouth - HTM_TARGET) > HTM_TOL
     gap_c = r.hand_to_mouth - chk_h
-    say(@sprintf("\n5. hand-to-mouth off by %+.4f; this economy's own cohesion gap is %+.4f against France's %+.4f. One correction.",
-                 r.hand_to_mouth - HTM_TARGET, gap_c, GAP))
+    say(@sprintf("\n5. hand-to-mouth off by %+.4f, more than the %.2f tolerance; this economy's own cohesion gap is %+.4f against France's %+.4f. One correction.",
+                 r.hand_to_mouth - HTM_TARGET, HTM_TOL, gap_c, GAP))
     ck5 = ck_read("stage5")
     if ck5 === nothing
         fs2 = fit_spread(phi, HTM_TARGET - gap_c)
@@ -240,7 +253,7 @@ if abs(r.hand_to_mouth - HTM_TARGET) > 0.02
     end
     best = S[RATIO].best
     r = solve_at(phi, spread, best)
-    abs(r.hand_to_mouth - HTM_TARGET) > 0.02 &&
+    abs(r.hand_to_mouth - HTM_TARGET) > HTM_TOL &&
         say("  hand-to-mouth still off target after the one allowed correction; recorded, not tuned further")
 end
 write_cal(phi, spread; kappa = best.κ, sigma = best.σ)

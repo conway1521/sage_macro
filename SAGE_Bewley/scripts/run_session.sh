@@ -32,12 +32,15 @@ MIN_START_MIN=${MIN_START_MIN:-15}
 LOG=scripts/run_session.log
 say() { echo "$(date '+%d %b %H:%M') $*" | tee -a "$LOG"; }
 
-# name | minutes on 13 workers | how to tell it is done | script and arguments
+# name | minutes on 4 workers | how to tell it is done | script and arguments
+# Minutes measured on the laptop, 2026-09-23: the effort and spread fit 19 to 39
+# minutes, a family pair 28, a solve on its own thresholds another 28. Busy
+# laptop time is at the slow end.
 steps() {
-  for c in FR DE US IT; do echo "calibrate_country_${c}|85|cal ${c} GSA|scripts/calibrate_country.jl ${c} GSA"; done
-  for c in FR DE US IT; do for g in GA G; do echo "calibrate_country_${c}_${g}|10|cal ${c} ${g}|scripts/calibrate_country.jl ${c} ${g}"; done; done
-  for c in FR DE US IT; do echo "calibrate_country_${c}_GS|55|cal ${c} GS|scripts/calibrate_country.jl ${c} GS"; done
-  echo "test_modular|150|suite|scripts/test_modular.jl"
+  for c in FR DE US IT; do echo "calibrate_country_${c}|170|cal ${c} GSA|scripts/calibrate_country.jl ${c} GSA"; done
+  for c in FR DE US IT; do for g in GA G; do echo "calibrate_country_${c}_${g}|30|cal ${c} ${g}|scripts/calibrate_country.jl ${c} ${g}"; done; done
+  for c in FR DE US IT; do echo "calibrate_country_${c}_GS|100|cal ${c} GS|scripts/calibrate_country.jl ${c} GS"; done
+  echo "test_modular|300|suite|scripts/test_modular.jl"
   if [ "$INCLUDE_NA400" = "1" ]; then echo "conv_na400|150|na400|scripts/conv_na400.jl"; fi
 }
 
@@ -71,7 +74,7 @@ status() {
     if out=$(is_done "$check"); then
       printf "%-34s %s\n" "$name" "$out"
     else
-      [ "$name" = "conv_na400" ] && m=$mins || m=$(( mins * 13 / W ))
+      [ "$name" = "conv_na400" ] && m=$mins || m=$(( mins * 4 / W ))
       printf "%-34s pending, about %d min\n" "$name" "$m"
       left=$(( left + m ))
     fi
