@@ -153,17 +153,27 @@ while IFS='|' read -r name mins check cmd; do
   fi
   w=$W; [ "$name" = "conv_na400" ] && w=$W400
   [ "$name" = "test_modular" ] && export SUITE_SKIP_NA400=1
-  ok=0
-  for attempt in 1 2; do
+  ok=0; attempt=1
+  while [ $attempt -le 2 ]; do
     say "$name: starting (attempt $attempt, $w workers)"
     run_step "$name" "$w" $cmd
     case $RESULT in
       deadline) say "$name: time is up; stopped part-way, resumes here next session"; status | tail -3; exit 0 ;;
-      memory)   say "$name: MEMORY GUARD, swap grew more than ${SWAP_GROWTH_MB} MB (lowest ${SWAP_BASE} MB); Julia stopped"; exit 5 ;;
+      memory)
+        # A long unattended run should slow down rather than stop: drop two
+        # workers and try the same step again (finished pieces are on disk).
+        # Only at two workers does a memory stop end the session.
+        if [ "$w" -gt 2 ]; then
+          w=$(( w - 2 )); [ "$w" -lt 2 ] && w=2; W=$w
+          sleep 20; SWAP_BASE=$(swap_used)
+          say "$name: MEMORY GUARD tripped; continuing with $w workers (swap now ${SWAP_BASE} MB is the new base)"
+          continue
+        fi
+        say "$name: MEMORY GUARD at 2 workers; stopping"; exit 5 ;;
       "exit 0") say "$name: done"; ok=1; break ;;
       "exit 2") say "$name: finished, NOT calibrated (recorded)"; ok=1; break ;;
       "exit 3") say "$name: preflight failed, this machine does not reproduce the reference numbers"; exit 3 ;;
-      *)        say "$name: crashed ($RESULT); see scripts/$name.txt" ;;
+      *)        say "$name: crashed ($RESULT); see scripts/$name.txt"; attempt=$(( attempt + 1 )) ;;
     esac
   done
   unset SUITE_SKIP_NA400
