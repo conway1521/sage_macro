@@ -424,7 +424,7 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
         best === nothing && error("no stable participation equilibrium for: " * describe(c))
         rate = best.r; slope = best.slope
         arg = c.omega + (1 - c.omega) * rate
-        pooled = [collapse(fams[g], node_weights(c, cs[g].B, arg)) for g in 1:2]
+        pooled = [collapse_all(fams[g], node_weights(c, cs[g].B, arg)) for g in 1:2]
     else
         # One household problem per (cell, discount type), over the workers
         # when there are any. Same problems, same order, same mixing as the
