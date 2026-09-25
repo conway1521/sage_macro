@@ -1,0 +1,14 @@
+25 Sep 16:19 session starts: 2.5 h, 4 workers, julia version 1.7.2
+the model stack loads
+25 Sep 16:19 swap in use at the start: 1862 MB; the guard trips at 4000 MB above its lowest level
+25 Sep 16:19 calibrate_country_FR: starting (attempt 1, 4 workers)
+25 Sep 16:52 calibrate_country_FR: crashed (exit 1); see scripts/calibrate_country_FR.txt
+25 Sep 16:52 calibrate_country_FR: starting (attempt 2, 4 workers)
+25 Sep 16:53 stopped by hand; resumes here next session
+25 Sep 16:53 session starts: 1.85 h, 4 workers, julia version 1.7.2
+the model stack loads
+25 Sep 16:53 swap in use at the start: 3588 MB; the guard trips at 4000 MB above its lowest level
+25 Sep 16:53 calibrate_country_FR: starting (attempt 1, 4 workers)
+25 Sep 17:33 calibrate_country_FR: done
+25 Sep 17:33 calibrate_country_DE: starting (attempt 1, 4 workers)
+25 Sep 18:44 calibrate_country_DE: time is up; stopped part-way, resumes here next session

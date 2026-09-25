@@ -272,7 +272,7 @@ best = S[RATIO].best
 r = solve_at(phi, spread, best)
 if abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL
     gap_c = r.hand_to_mouth_kvw - chk_h
-    say(@sprintf("\n5. hand-to-mouth off by %+.4f, more than the %.2f tolerance; this economy's own cohesion gap is %+.4f against France's %+.4f. One correction.",
+    say(@sprintf("\n5. hand-to-mouth off by %+.4f, more than the %.3f tolerance; this economy's own cohesion gap is %+.4f against France's %+.4f. One correction.",
                  r.hand_to_mouth_kvw - HTM_TARGET, HTM_TOL, gap_c, GAP))
     ck5 = ck_read("stage5")
     if ck5 === nothing
