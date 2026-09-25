@@ -1,0 +1,32 @@
+23 Sep 19:29 session starts: 2.5 h, 4 workers, julia version 1.7.2
+the model stack loads
+23 Sep 19:29 swap in use at the start: 7579 MB; the guard trips at 4000 MB above its lowest level
+23 Sep 19:29 calibrate_country_FR: starting (attempt 1, 4 workers)
+23 Sep 20:19 calibrate_country_FR: crashed (exit 143); see scripts/calibrate_country_FR.txt
+23 Sep 20:19 calibrate_country_FR: starting (attempt 2, 4 workers)
+23 Sep 20:49 calibrate_country_FR: crashed (exit 137); see scripts/calibrate_country_FR.txt
+23 Sep 20:49 calibrate_country_FR crashed twice; stopping
+23 Sep 20:49 session starts: 1.15 h, 4 workers, julia version 1.7.2
+the model stack loads
+23 Sep 20:49 swap in use at the start: 3991 MB; the guard trips at 4000 MB above its lowest level
+23 Sep 20:49 calibrate_country_FR: starting (attempt 1, 4 workers)
+23 Sep 21:58 calibrate_country_FR: time is up; stopped part-way, resumes here next session
+24 Sep 16:52 session starts: 2.5 h, 4 workers, julia version 1.7.2
+the model stack loads
+24 Sep 16:52 swap in use at the start: 1986 MB; the guard trips at 4000 MB above its lowest level
+24 Sep 16:52 calibrate_country_FR: starting (attempt 1, 4 workers)
+24 Sep 18:02 calibrate_country_FR: done
+24 Sep 18:02 calibrate_country_DE: starting (attempt 1, 4 workers)
+24 Sep 19:23 calibrate_country_DE: time is up; stopped part-way, resumes here next session
+24 Sep 19:23 chain: previous session ended cleanly, starting the next
+24 Sep 19:23 session starts: 2.5 h, 4 workers, julia version 1.7.2
+the model stack loads
+24 Sep 19:23 swap in use at the start: 3597 MB; the guard trips at 4000 MB above its lowest level
+24 Sep 19:23 calibrate_country_DE: starting (attempt 1, 4 workers)
+24 Sep 19:34 calibrate_country_DE: done
+24 Sep 19:34 calibrate_country_US: starting (attempt 1, 4 workers)
+24 Sep 19:55 calibrate_country_US: crashed (exit 137); see scripts/calibrate_country_US.txt
+24 Sep 19:55 calibrate_country_US: starting (attempt 2, 4 workers)
+24 Sep 19:55 calibrate_country_US: finished, NOT calibrated (recorded)
+24 Sep 19:55 calibrate_country_IT: starting (attempt 1, 4 workers)
+24 Sep 21:53 calibrate_country_IT: time is up; stopped part-way, resumes here next session
