@@ -201,3 +201,28 @@ INSEE ratio the same technology has a single equilibrium at 0.042. Recalibrated
 under the ratio it lands at kappa 10.80, sigma 0.48, participation 0.3475,
 agency 0.4871. See STAGE7.md, the quarantine section, before quoting any number
 from the four-economy table.
+
+## 2026-09-24, countries: the United States is not calibrated (decision)
+
+The US G+S+A cohesion-off fit reached a hand-to-mouth share of 0.019 at the
+largest discount spread tried, 0.115, against an aim of 0.281 (target 0.31). The
+cause is the benefit: the OECD Tax-Benefit net replacement rate averages 0.13
+over the first twelve months of unemployment, because US benefits run out after
+about five, and with that little insurance even the most impatient type builds a
+buffer. A one-asset model cannot deliver a large hand-to-mouth share without
+either insurance or implausible impatience.
+
+Decision (the author, 2026-09-24): the United States is reported as not
+calibrated, in all four configurations. It is not tuned. Two routes remain open
+and neither is taken: defining the US benefit over a typical spell (33 to 38
+percent for about five months) or including food stamps and social assistance,
+which would change the benefit concept for one country only; and a wider
+discount spread, which the literature would not support. The first is the
+natural sensitivity if the US is ever needed. The data row stays in
+`data/country_labour_participation.csv`; the markers
+`SAGE_Bewley/scripts/calibration_country_US*.not_calibrated.txt` keep the runner
+from retrying, and deleting them re-enables it.
+
+`calibrate_country.jl` now stops any configuration whose cohesion-off fit ends on
+the spread grid's edge more than 0.05 from its hand-to-mouth aim, so a case like
+this costs a minute rather than an hour.

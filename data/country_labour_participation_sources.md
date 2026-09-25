@@ -37,3 +37,11 @@ this pass and are listed at the end as open items.
 - htm_target: the old engine's `COUNTRY_TARGETS` (Kaplan, Violante and Weidner 2014). Not re-checked against the paper's table.
 - The German ratio needs checking in the Freiwilligensurvey 2019 report itself.
 - The old table's work shares (DE 0.55, IT 0.55, US 0.60 against FR 0.53) are NOT used; HETUS puts Germany below France and Italy well above it.
+
+## Status of each country (2026-09-24)
+
+France and Germany are calibrated. The United States is NOT calibrated, by
+decision: with a twelve-month replacement rate of 0.13 the model cannot reach the
+US hand-to-mouth target (0.019 against 0.31). Its row is kept for a possible
+sensitivity with the benefit defined over a typical spell. See MODULAR.md. Italy
+is in progress.
