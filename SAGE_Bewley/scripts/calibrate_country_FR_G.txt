@@ -1,0 +1,11 @@
+calibrating FR G | effort target 0.518873 | hand-to-mouth target 0.3 | workers 5
+preflight, France G+A through the parallel path: worst gap 3.4e-07 against the suite: HELD
+
+1. effort scale and discount spread, cohesion off, hand-to-mouth aim 0.3
+  phi 14.34, spread 0.032: effort 0.5189 (target 0.5189), hand-to-mouth 0.3045 (aim 0.3000)  [10.2 min]
+
+2. the G economy on its own thresholds
+  participation 0.0000 | agency 0.5014 | hardship 0.4017 | hand-to-mouth 0.3045 (target 0.30) | effort 0.5189 (target 0.5189) | median 0.3762
+wrote calibration_country_FR_G.txt
+
+DONE FR G in 10.6 min

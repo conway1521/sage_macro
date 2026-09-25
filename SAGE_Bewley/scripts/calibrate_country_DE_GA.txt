@@ -1,0 +1,11 @@
+calibrating DE GA | effort target 0.491784 | hand-to-mouth target 0.32 | workers 5
+preflight, France G+A through the parallel path: worst gap 3.4e-07 against the suite: HELD
+
+1. effort scale and discount spread, cohesion off, hand-to-mouth aim 0.32
+  phi 19.03, spread 0.009: effort 0.4920 (target 0.4918), hand-to-mouth 0.3223 (aim 0.3200)  [8.7 min]
+
+2. the GA economy on its own thresholds
+  participation 0.0000 | agency 0.5149 | hardship 0.3856 | hand-to-mouth 0.3223 (target 0.32) | effort 0.4920 (target 0.4918) | median 0.3609
+wrote calibration_country_DE_GA.txt
+
+DONE DE GA in 9.1 min

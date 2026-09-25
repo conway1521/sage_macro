@@ -1,0 +1,3 @@
+# written by calibrate_country.jl DE GA; read by country_config
+phi = 19.03
+beta_spread = 0.009

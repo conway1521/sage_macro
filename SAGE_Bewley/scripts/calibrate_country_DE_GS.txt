@@ -1,0 +1,16 @@
+calibrating DE GS | effort target 0.491784 | hand-to-mouth target 0.32 | participation targets (0.252077, 0.349) | national ratio 0.573626 | workers 5
+preflight, France G+A through the parallel path: worst gap 3.4e-07 against the suite: HELD
+
+1. effort scale and discount spread, cohesion off, hand-to-mouth aim 0.2859
+  phi 18.91, spread 0.005: effort 0.4919 (target 0.4918), hand-to-mouth 0.2881 (aim 0.2859)  [8.4 min]
+
+2-3. GS families and technology scans, participation targets (0.252077, 0.349)
+  families built or loaded in 13.9 min
+  ratio 0.574 (national): best kappa 11.70 sigma 0.50, root loss 0.0092, rate 0.2946, multiplier 10.6 | within 0.035: sigma 0.48 to 1.02, multiplier 1.9 to 16.5
+
+4. the calibrated GS economy on its own thresholds
+  GS: participation 0.2946 (cells 0.2488, 0.3404 against 0.252, 0.349; employed 0.2981, unemployed 0.1655)
+         agency 0.5293, hardship 0.3736, hand-to-mouth 0.3117 (target 0.32), effort 0.4780, multiplier 10.6  [14.5 min]
+wrote calibration_country_DE_GS.txt
+
+DONE DE GS in 36.9 min

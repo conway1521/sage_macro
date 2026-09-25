@@ -30,3 +30,31 @@ the model stack loads
 24 Sep 19:55 calibrate_country_US: finished, NOT calibrated (recorded)
 24 Sep 19:55 calibrate_country_IT: starting (attempt 1, 4 workers)
 24 Sep 21:53 calibrate_country_IT: time is up; stopped part-way, resumes here next session
+24 Sep 22:00 session starts: 11 h, 5 workers, julia version 1.7.2
+the model stack loads
+24 Sep 22:00 swap in use at the start: 4176 MB; the guard trips at 4000 MB above its lowest level
+24 Sep 22:00 calibrate_country_IT: starting (attempt 1, 5 workers)
+24 Sep 22:10 calibrate_country_IT: done
+24 Sep 22:10 calibrate_country_FR_GA: starting (attempt 1, 5 workers)
+24 Sep 22:21 calibrate_country_FR_GA: done
+24 Sep 22:21 calibrate_country_FR_G: starting (attempt 1, 5 workers)
+24 Sep 22:32 calibrate_country_FR_G: done
+24 Sep 22:32 calibrate_country_DE_GA: starting (attempt 1, 5 workers)
+24 Sep 22:41 calibrate_country_DE_GA: done
+24 Sep 22:41 calibrate_country_DE_G: starting (attempt 1, 5 workers)
+24 Sep 22:51 calibrate_country_DE_G: done
+24 Sep 22:51 calibrate_country_IT_GA: starting (attempt 1, 5 workers)
+24 Sep 23:01 calibrate_country_IT_GA: done
+24 Sep 23:01 calibrate_country_IT_G: starting (attempt 1, 5 workers)
+24 Sep 23:11 calibrate_country_IT_G: done
+24 Sep 23:11 calibrate_country_FR_GS: starting (attempt 1, 5 workers)
+24 Sep 23:48 calibrate_country_FR_GS: done
+24 Sep 23:48 calibrate_country_DE_GS: starting (attempt 1, 5 workers)
+25 Sep 00:25 calibrate_country_DE_GS: done
+25 Sep 00:25 calibrate_country_IT_GS: starting (attempt 1, 5 workers)
+25 Sep 01:35 calibrate_country_IT_GS: done
+25 Sep 01:35 test_modular: starting (attempt 1, 5 workers)
+25 Sep 01:55 test_modular: MEMORY GUARD tripped; continuing with 3 workers (swap now 6228 MB is the new base)
+25 Sep 01:55 test_modular: starting (attempt 1, 3 workers)
+25 Sep 04:33 test_modular: done
+25 Sep 04:33 ALL DONE

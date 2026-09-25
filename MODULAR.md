@@ -226,3 +226,104 @@ from retrying, and deleting them re-enables it.
 `calibrate_country.jl` now stops any configuration whose cohesion-off fit ends on
 the spread grid's edge more than 0.05 from its hand-to-mouth aim, so a case like
 this costs a minute rather than an hour.
+
+## 2026-09-25, three countries calibrated in every configuration; the suite passes at France's new footing
+
+**Basis.** One data basis for every country: EU-SILC 2015 formal volunteering by
+education (the targets for participation), OECD 2023 unemployment by education,
+long-term unemployment share and twelve-month net replacement rate (the labour
+market and the benefit), HETUS 2010 paid share of committed time (effort), and
+the hand-to-mouth targets carried over from the country table. The unemployed
+participate at the national ratio of the employed rate. Sources:
+`data/country_labour_participation_sources.md`. France moved onto this basis
+from its INSEE targets. The United States is not calibrated (section above).
+
+**Each configuration calibrated to its own targets.** Effort to the country's
+target, hand-to-mouth within 0.01 of its target, and for G+S and G+S+A
+participation in both education cells within the root-loss standard.
+
+| | phi | spread | kappa | sigma | participation | hand-to-mouth | agency | multiplier |
+|---|---|---|---|---|---|---|---|---|
+| France G | 14.34 | 0.032 | | | 0 | 0.3045 | 0.5014 | |
+| France G+A | 14.38 | 0.031 | | | 0 | 0.2997 | 0.4948 | |
+| France G+S | 14.34 | 0.027 | 10.60 | 0.58 | 0.2472 | 0.3018 | 0.5031 | 4.3 |
+| France G+S+A | 14.38 | 0.026 | 10.95 | 0.92 | 0.2461 | 0.3011 | 0.5012 | 2.0 |
+| Germany G | 18.98 | 0.009 | | | 0 | 0.3238 | 0.5195 | |
+| Germany G+A | 19.03 | 0.009 | | | 0 | 0.3223 | 0.5149 | |
+| Germany G+S | 18.91 | 0.005 | 11.70 | 0.50 | 0.2946 | 0.3117 | 0.5293 | 10.6 |
+| Germany G+S+A | 19.00 | 0.005 | 12.20 | 0.78 | 0.3009 | 0.3109 | 0.5252 | 2.5 |
+| Italy G | 9.23 | 0.040 | | | 0 | 0.4106 | 0.4192 | |
+| Italy G+A | 9.26 | 0.041 | | | 0 | 0.4083 | 0.4002 | |
+| Italy G+S | 9.19 | 0.038 | 7.85 | 0.52 | 0.1404 | 0.4057 | 0.4204 | 3.7 |
+| Italy G+S+A | 9.22 | 0.040 | 6.80 | 1.10 | 0.1413 | 0.4139 | 0.3974 | 1.5 |
+
+Targets: participation France 0.203/0.291, Germany 0.252/0.349, Italy
+0.116/0.165; hand-to-mouth 0.30, 0.32, 0.41. Germany's two cohesion
+configurations sit at the edge of the tolerance (0.311 and 0.312 against 0.32),
+and Germany's G+S fits its tertiary cell 0.009 short.
+
+**The same four economies at each country's G+S+A parameters** (the fixed-parameter view: what switching a mechanism does, holding everything else):
+
+| agency (hand-to-mouth) | France | Germany | Italy |
+|---|---|---|---|
+| G | 0.5375 (0.2635) | 0.5491 (0.2907) | 0.4196 (0.4111) |
+| G+A | 0.5283 (0.2685) | 0.5454 (0.2871) | 0.4072 (0.4007) |
+| G+S | 0.5083 (0.2984) | 0.5285 (0.3151) | 0.4083 (0.4241) |
+| G+S+A | 0.5012 (0.3011) | 0.5252 (0.3109) | 0.3974 (0.4139) |
+
+**What the two views say.**
+
+1. At fixed parameters, cohesion lowers agency by 0.030 in France, 0.021 in
+   Germany and 0.011 in Italy, in proportion to how much each country
+   participates. The channel is time: participation comes out of paid work,
+   saving falls, hand-to-mouth rises and more households fall under the asset
+   threshold. Agency heterogeneity lowers agency by 0.009, 0.004 and 0.012,
+   in proportion to the gap between the education cells. The two effects add up
+   to within 0.003.
+2. Recalibrated, the cohesion effect on agency disappears: with every economy
+   fitted to the same hand-to-mouth target, the G+S and G+S+A agency figures sit
+   within about 0.003 of their no-cohesion counterparts once the residual
+   hand-to-mouth differences are allowed for. The agency effect survives:
+   0.007 in France, 0.005 in Germany, 0.019 in Italy.
+3. Agency moves almost one for one with hand-to-mouth (France's correction took
+   hand-to-mouth up 0.021 and agency down 0.019; Italy's, 0.021 and 0.017). It
+   is largely an asset-poverty measure, so cross-country agency comparisons are
+   mostly hand-to-mouth comparisons and have to be presented as such.
+4. Agency heterogeneity roughly halves the social multiplier or more: 4.3
+   against 2.0 in France, 10.6 against 2.5 in Germany, 3.7 against 1.5 in
+   Italy. Without A, the social mechanism has to produce the whole education
+   gradient in participation on its own, which puts it nearer its fold. Any
+   policy experiment on participation therefore has to report results with A on
+   and off.
+5. The multiplier rises with the level of participation across countries (G+S+A:
+   Italy 1.5, France 2.0, Germany 2.5), with the relative education gradient
+   almost the same in all three (about 0.7).
+6. The source of the participation targets moves the multiplier by an order of
+   magnitude: France's G+S+A multiplier is 2.0 on EU-SILC volunteering and 21 on
+   the INSEE membership targets. The education gradient is what does it.
+7. The unemployed participation ratio barely moves any calibration: across the
+   four national ratios, sigma moves by at most 0.08 and the multiplier by 0.1.
+
+**The suite at France's new footing: 24 of 24 checks pass.** The 16 reductions
+are exact, the replication from the disk cache matches to zero, and seven
+convergence rows settle, the largest move in agency 0.0019 (nine productivity
+states). A memory stop at five workers restarted the suite on three without loss.
+
+| convergence row | move in agency |
+|---|---|
+| taste quadrature, 8000 against 2000 | +0.00006 |
+| productivity states, 9 against 11 | -0.00186 |
+| productivity states, 13 against 11 | -0.00096 |
+| choice smoothing halved | -0.00028 |
+| asset grid top, 8 against 4 | -0.00020 |
+| belonging grid, 0.1 against 0.2 | -0.00001 |
+| effort grid, 160 against 80 | -0.00139 |
+
+**Open.** The doubled asset grid row has not run at any footing since the INSEE
+one; it needs four to five GB a worker and a machine that can spare three
+workers for several hours. The United States is not calibrated. The agency and
+belonging gradients and the hand-to-mouth targets are carried over from the old
+country table and have not been re-derived; the German unemployed ratio is not
+checked in its source document. The G+S hand-to-mouth aim still uses France's
+INSEE-footing gap and relied on its one correction for Italy. The acceptable-fit
+multiplier ranges without A are wide (Italy 1.4 to 15.6).

@@ -1,0 +1,36 @@
+calibrating FR GSA | effort target 0.518873 | hand-to-mouth target 0.3 | participation targets (0.202862, 0.291) | national ratio 0.485714 | workers 4
+preflight, France G+A through the parallel path: worst gap 3.4e-07 against the suite: HELD
+
+1. effort scale and discount spread, cohesion off, hand-to-mouth aim 0.254
+  from checkpoint FR_GSA_stage1_01c65169e4b59f16.txt
+  phi 14.35, spread 0.023: effort 0.5190 (target 0.5189), hand-to-mouth 0.2512 (aim 0.2540)  [0.7 min]
+
+2-3. GSA families and technology scans, participation targets (0.202862, 0.291)
+  families built or loaded in 0.0 min
+  ratio 0.486 (national): best kappa 11.00 sigma 0.94, root loss 0.0008, rate 0.2465, multiplier 1.9 | within 0.035: sigma 0.58 to 1.50, multiplier 1.4 to 4.1
+  ratio 0.574: best kappa 10.90 sigma 0.92, root loss 0.0005, rate 0.2467, multiplier 2.0 | within 0.035: sigma 0.58 to 1.50, multiplier 1.4 to 4.1
+  ratio 0.857: best kappa 10.70 sigma 0.90, root loss 0.0016, rate 0.2458, multiplier 2.0 | within 0.035: sigma 0.58 to 1.50, multiplier 1.4 to 4.2
+  ratio 0.937: best kappa 10.75 sigma 0.92, root loss 0.0018, rate 0.2481, multiplier 2.0 | within 0.035: sigma 0.58 to 1.50, multiplier 1.4 to 4.2
+
+4. the calibrated GSA economy on its own thresholds
+  GSA: participation 0.2465 (cells 0.2028, 0.2902 against 0.203, 0.291; employed 0.2548, unemployed 0.1179)
+         agency 0.5197, hardship 0.3693, hand-to-mouth 0.2804 (target 0.30), effort 0.5077, multiplier 1.9  [27.4 min]
+wrote calibration_country_FR.txt
+
+6. the four economies at FR's G+S+A parameters (the fixed-parameter view)
+G      participation 0.0000 (E 0.0000, U 0.0000) | agency 0.5567 | hardship 0.3357 | htm 0.2434 | effort 0.5186 | median 0.3767
+
+signal (15): Terminated: 15
+in expression starting at /Users/ali/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/calibrate_country.jl:255
+kevent at /usr/lib/system/libsystem_kernel.dylib (unknown line)
+uv__io_poll at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+uv_run at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+jl_task_get_next at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+poptask at ./task.jl:827
+wait at ./task.jl:836
+task_done_hook at ./task.jl:544
+jl_apply_generic at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+jl_finish_task at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+start_task at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+unknown function (ip: 0x0)
+Allocations: 102295322 (Pool: 102137307; Big: 158015); GC: 109
