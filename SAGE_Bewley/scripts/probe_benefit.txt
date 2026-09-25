@@ -1,0 +1,52 @@
+
+IT  rr 0.374 (was 0.596667)  phi 8.98  [10.4 min]
+  hand-to-mouth by spread: 0.00:0.015  0.01:0.023  0.02:0.032  0.03:0.048  0.04:0.067  0.05:0.092  0.06:0.122  0.07:0.158  0.08:0.194  0.09:0.229  0.10:0.257  0.11:0.286  0.12:0.319  0.13:0.346  0.14:0.376  0.15:0.405
+  G and G+A aim 0.41: UNREACHABLE  |  G+S+A aim 0.381: spread 0.142
+
+US  rr 0.221 (was 0.131667)  phi 21.19  [9.7 min]
+  hand-to-mouth by spread: 0.00:0.007  0.01:0.010  0.02:0.012  0.03:0.014  0.04:0.016  0.05:0.019  0.06:0.021  0.07:0.022  0.08:0.024  0.09:0.025  0.10:0.026  0.11:0.028  0.12:0.032  0.13:0.035  0.14:0.039  0.15:0.049
+  G and G+A aim 0.31: UNREACHABLE  |  G+S+A aim 0.281: UNREACHABLE
+
+DE  rr 0.456 (was 0.590000)  phi 19.12  [9.9 min]
+  hand-to-mouth by spread: 0.00:0.093  0.01:0.133  0.02:0.184  0.03:0.244  0.04:0.313  0.05:0.380  0.06:0.448  0.07:0.512  0.08:0.564  0.09:0.612  0.10:0.652  0.11:0.683  0.12:0.708  0.13:0.730  0.14:0.750  0.15:0.767
+  G and G+A aim 0.32: spread 0.041  |  G+S+A aim 0.291: spread 0.037
+
+signal (15): Terminated: 15
+in expression starting at /Users/ali/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/probe_benefit.jl:20
+kevent at /usr/lib/system/libsystem_kernel.dylib (unknown line)
+uv__io_poll at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+uv_run at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+jl_task_get_next at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+poptask at ./task.jl:827
+wait at ./task.jl:836
+wait at ./condition.jl:123
+take_buffered at ./channels.jl:389
+take! at ./channels.jl:383
+jl_apply_generic at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+take! at /private/tmp/julia-20220303-89238-1g572jh/julia-1.7.2/usr/share/julia/stdlib/v1.7/Distributed/src/remotecall.jl:730
+#remotecall_fetch#155 at /private/tmp/julia-20220303-89238-1g572jh/julia-1.7.2/usr/share/julia/stdlib/v1.7/Distributed/src/remotecall.jl:465
+remotecall_fetch at /private/tmp/julia-20220303-89238-1g572jh/julia-1.7.2/usr/share/julia/stdlib/v1.7/Distributed/src/remotecall.jl:461
+unknown function (ip: 0x112f2a0cf)
+jl_apply_generic at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+#remotecall_fetch#158 at /private/tmp/julia-20220303-89238-1g572jh/julia-1.7.2/usr/share/julia/stdlib/v1.7/Distributed/src/remotecall.jl:496
+remotecall_fetch at /private/tmp/julia-20220303-89238-1g572jh/julia-1.7.2/usr/share/julia/stdlib/v1.7/Distributed/src/remotecall.jl:496
+unknown function (ip: 0x112f29932)
+jl_apply_generic at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+#remotecall_pool#177 at /private/tmp/julia-20220303-89238-1g572jh/julia-1.7.2/usr/share/julia/stdlib/v1.7/Distributed/src/workerpool.jl:123
+unknown function (ip: 0x112f292f4)
+remotecall_pool at /private/tmp/julia-20220303-89238-1g572jh/julia-1.7.2/usr/share/julia/stdlib/v1.7/Distributed/src/workerpool.jl:121 [inlined]
+#remotecall_fetch#194 at /private/tmp/julia-20220303-89238-1g572jh/julia-1.7.2/usr/share/julia/stdlib/v1.7/Distributed/src/workerpool.jl:229 [inlined]
+remotecall_fetch at /private/tmp/julia-20220303-89238-1g572jh/julia-1.7.2/usr/share/julia/stdlib/v1.7/Distributed/src/workerpool.jl:229 [inlined]
+#202#203 at /private/tmp/julia-20220303-89238-1g572jh/julia-1.7.2/usr/share/julia/stdlib/v1.7/Distributed/src/workerpool.jl:274 [inlined]
+#202 at /private/tmp/julia-20220303-89238-1g572jh/julia-1.7.2/usr/share/julia/stdlib/v1.7/Distributed/src/workerpool.jl:274 [inlined]
+#882 at ./asyncmap.jl:100
+unknown function (ip: 0x112f28053)
+jl_apply_generic at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+do_apply at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+macro expansion at ./asyncmap.jl:234 [inlined]
+#898 at ./task.jl:423
+unknown function (ip: 0x112f24eaf)
+jl_apply_generic at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+start_task at /usr/local/Cellar/julia/1.7.2/lib/julia/libjulia-internal.1.7.dylib (unknown line)
+unknown function (ip: 0x0)
+Allocations: 65161316 (Pool: 65130210; Big: 31106); GC: 66

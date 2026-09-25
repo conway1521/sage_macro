@@ -31,3 +31,8 @@ SAGE_Bewley/scripts/MEMORY_GUARD_TRIPPED
 
 # per-machine progress, rebuilt on restart
 SAGE_Bewley/scripts/checkpoints/
+
+# raw survey microdata: SCF re-downloadable from the Federal Reserve; HFCS confidential, never commit
+data/scf/*.zip
+data/scf/*.csv
+data/hfcs/

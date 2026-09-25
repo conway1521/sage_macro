@@ -64,10 +64,13 @@ const RATIOS = CFG == "GSA" ? vcat(RATIO, [x for x in (0.486, 0.574, 0.857, 0.93
 # without (calibrate_country_FR.txt, 2026-09-23). The INSEE footing's gap, 0.046,
 # came from a multiplier of 21 and overshot by 0.02 at the EU-SILC multiplier of 2.
 # G+S: still the INSEE-footing value; the correction step covers any miss.
-const GAP = CFG == "GSA" ? 0.2804 - 0.2512 : CFG == "GS" ? 0.285162 - 0.251030 : 0.0
+# 2026-09-25: the target is now poor hand-to-mouth on the Kaplan, Violante and
+# Weidner definition (hand_to_mouth_kvw), and how much cohesion adds to it is not
+# yet known, so the aim starts at the target and the one correction measures it.
+const GAP = 0.0
 # Switching S on must still hit the G targets, so hand-to-mouth gets one
 # correction when it misses by more than this.
-const HTM_TOL = 0.01
+const HTM_TOL = 0.005        # the poor hand-to-mouth targets are 0.03 to 0.14
 const SKIP_GS = get(ENV, "SKIP_GS", "0") == "1"
 const OUTFILE = joinpath(@__DIR__, CFG == "GSA" ? "calibration_country_$(CODE).txt" :
                                                   "calibration_country_$(CODE)_$(CFG).txt")
@@ -108,7 +111,7 @@ t_start = time()
 function write_cal(phi, spread; kappa = nothing, sigma = nothing)
     open(OUTFILE, "w") do io
         println(io, "# written by calibrate_country.jl $(CODE) $(CFG); read by country_config")
-        @printf(io, "phi = %.2f\nbeta_spread = %.3f\n", phi, spread)
+        @printf(io, "phi = %.2f\nbeta_spread = %.3f\nbeta_bar = %.4f\n", phi, spread, BB[])
         kappa === nothing || @printf(io, "kappa = %.2f\nsigma_m = %.2f\n", kappa, sigma)
     end
     isfile(NOTCAL) && rm(NOTCAL)
@@ -126,8 +129,13 @@ let fr = SAGEConfig(A = true, unemployment = true, beta_spread = 0.037, unemploy
 end
 
 # --------------------------------------------------- 1. effort and spread --
-soff(phi, sp) = _solve(country_config(CODE; config = CFG, S = false, A = A_ON, phi = phi, beta_spread = sp),
-                       nothing; disk = true)
+# Average patience. The spread lowers patience below 0.96 for part of the
+# population and so raises hand-to-mouth. A target below what equal patience
+# delivers is reached instead by raising average patience, with no spread,
+# up to the model's stationarity limit (beta times R below 0.995).
+const BB = Ref(0.96)
+soff(phi, sp) = _solve(country_config(CODE; config = CFG, S = false, A = A_ON, phi = phi, beta_spread = sp,
+                                      beta_bar = BB[]), nothing; disk = true)
 function fit_phi(sp; lo = 3.0, hi = 40.0, steps = 12)
     for _ in 1:steps
         mid = 0.5 * (lo + hi)
@@ -136,32 +144,45 @@ function fit_phi(sp; lo = 3.0, hi = 40.0, steps = 12)
     round(0.5 * (lo + hi); digits = 2)
 end
 function fit_spread(phi, target; grid = 0.0:0.005:0.10)
-    hs = [soff(phi, sp).hand_to_mouth for sp in grid]
+    BB[] = 0.96
+    hs = [soff(phi, sp).hand_to_mouth_kvw for sp in grid]
     k = findfirst(>=(target), hs)
-    k === nothing && return (sp = grid[end], htm = hs[end], edge = true)
-    k == 1 && return (sp = grid[1], htm = hs[1], edge = true)
-    t = (target - hs[k-1]) / (hs[k] - hs[k-1])
-    (sp = round(grid[k-1] + t * (grid[k] - grid[k-1]); digits = 3), htm = target, edge = false)
+    k === nothing && return (sp = grid[end], bb = 0.96, edge = true)
+    if k > 1 || grid[1] > 0
+        k == 1 && return fit_spread(phi, target)          # refined grid started too high
+        t = (target - hs[k-1]) / (hs[k] - hs[k-1])
+        return (sp = round(grid[k-1] + t * (grid[k] - grid[k-1]); digits = 3), bb = 0.96, edge = false)
+    end
+    lo, hi = 0.96, 0.975
+    BB[] = hi; top = soff(phi, 0.0).hand_to_mouth_kvw
+    top > target && return (sp = 0.0, bb = hi, edge = true)
+    for _ in 1:10
+        BB[] = 0.5 * (lo + hi)
+        soff(phi, 0.0).hand_to_mouth_kvw > target ? (lo = BB[]) : (hi = BB[])
+    end
+    (sp = 0.0, bb = round(0.5 * (lo + hi); digits = 4), edge = false)
 end
 say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", round(HTM_TARGET - GAP; digits = 4))
 ck1 = ck_read("stage1")
 if ck1 === nothing
     phi = fit_phi(0.037)
     fs = fit_spread(phi, HTM_TARGET - GAP)
+    BB[] = fs.bb
     phi = fit_phi(fs.sp; lo = max(3.0, phi - 4), hi = phi + 4, steps = 8)
-    fs = fit_spread(phi, HTM_TARGET - GAP; grid = max(0.0, fs.sp - 0.015):0.005:(fs.sp + 0.015))
-    spread = fs.sp; edge = fs.edge
+    fs = fit_spread(phi, HTM_TARGET - GAP;
+                    grid = fs.bb == 0.96 && fs.sp > 0 ? (max(0.0, fs.sp - 0.015):0.005:(fs.sp + 0.015)) : (0.0:0.005:0.10))
+    spread = fs.sp; edge = fs.edge; BB[] = fs.bb
     chk = soff(phi, spread)
-    chk_e, chk_h = chk.mean_effort_employed, chk.hand_to_mouth
+    chk_e, chk_h = chk.mean_effort_employed, chk.hand_to_mouth_kvw
     ck_write("stage1", Dict("phi" => phi, "spread" => spread, "edge" => Float64(edge),
-                            "effort" => chk_e, "htm" => chk_h))
+                            "effort" => chk_e, "htm" => chk_h, "bb" => BB[]))
 else
     phi, spread, edge = ck1["phi"], ck1["spread"], ck1["edge"] == 1.0
-    chk_e, chk_h = ck1["effort"], ck1["htm"]
+    chk_e, chk_h = ck1["effort"], ck1["htm"]; BB[] = get(ck1, "bb", 0.96)
     say("  from checkpoint ", basename(ckfile("stage1")))
 end
-@printf("  phi %.2f, spread %.3f%s: effort %.4f (target %.4f), hand-to-mouth %.4f (aim %.4f)  [%.1f min]\n",
-        phi, spread, edge ? " (ON THE GRID EDGE)" : "", chk_e, E_TARGET,
+@printf("  phi %.2f, spread %.3f, mean patience %.4f%s: effort %.4f (target %.4f), poor hand-to-mouth %.4f (aim %.4f)  [%.1f min]\n",
+        phi, spread, BB[], edge ? " (ON THE GRID EDGE)" : "", chk_e, E_TARGET,
         chk_h, HTM_TARGET - GAP, (time() - t_start) / 60)
 flush(stdout)
 
@@ -171,7 +192,7 @@ flush(stdout)
 # hours on it. First seen for the US, whose benefit runs out after five months
 # (twelve-month replacement 0.13): hand-to-mouth 0.019 at spread 0.115 against
 # an aim of 0.281.
-if edge && abs(chk_h - (HTM_TARGET - GAP)) > 0.05
+if edge && abs(chk_h - (HTM_TARGET - GAP)) > max(0.01, 0.25 * (HTM_TARGET - GAP))
     say(@sprintf("\nNOT CALIBRATED: hand-to-mouth reaches only %.4f at the largest spread tried (%.3f), against an aim of %.4f. No calibration file written.",
                  chk_h, spread, HTM_TARGET - GAP))
     mark_not_calibrated(); exit(2)
@@ -179,10 +200,13 @@ end
 
 if !S_ON
     say("\n2. the ", CFG, " economy on its own thresholds")
-    r = solve_economy(country_config(CODE; config = CFG, S = false, A = A_ON, phi = phi, beta_spread = spread))
+    r = solve_economy(country_config(CODE; config = CFG, S = false, A = A_ON, phi = phi, beta_spread = spread,
+                                     beta_bar = BB[]))
     @printf("  participation %.4f | agency %.4f | hardship %.4f | hand-to-mouth %.4f (target %.2f) | effort %.4f (target %.4f) | median %.4f\n",
-            r.rate, r.A, r.hardship, r.hand_to_mouth, HTM_TARGET, r.mean_effort_employed, E_TARGET, r.median_income)
-    abs(r.hand_to_mouth - HTM_TARGET) > HTM_TOL && say("  hand-to-mouth off target by more than ", HTM_TOL, "; recorded, not tuned")
+            r.rate, r.A, r.hardship, r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET, r.median_income)
+    @printf("  expected loss to unemployment %.4f (income alone %.4f) | drop on job loss %.4f | agency on the old hardship reading %.4f\n",
+            r.shock_loss, r.shock_loss_income, r.consumption_drop, r.A_hardship)
+    abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL && say("  hand-to-mouth off target by more than ", HTM_TOL, ", recorded, not tuned")
     write_cal(phi, spread)
     @printf("\nDONE %s %s in %.1f min\n", CODE, CFG, (time() - t_start) / 60)
     exit(0)
@@ -192,7 +216,7 @@ end
 const SIGMAS = 0.30:0.02:1.50
 const KAPPAS = 2.0:0.05:25.0
 function scans(phi, spread)
-    c = country_config(CODE; config = CFG, S = true, A = A_ON, phi = phi, beta_spread = spread)
+    c = country_config(CODE; config = CFG, S = true, A = A_ON, phi = phi, beta_spread = spread, beta_bar = BB[])
     t0 = time()
     raw = collect(build_families(c, nothing; disk = true))
     @printf("  families built or loaded in %.1f min\n", (time() - t0) / 60); flush(stdout)
@@ -232,32 +256,34 @@ end
 # ------------------------------------------------------ 4 and 5. solve --
 function solve_at(phi, spread, best)
     c = country_config(CODE; config = CFG, S = true, A = A_ON, phi = phi, beta_spread = spread,
-                       kappa = best.κ, sigma_m = best.σ)
+                       beta_bar = BB[], kappa = best.κ, sigma_m = best.σ)
     t0 = time(); r = solve_economy(c)
     @printf("  %s: participation %.4f (cells %.4f, %.4f against %.3f, %.3f; employed %.4f, unemployed %.4f)\n",
             CFG, r.rate, r.pooled[1].rate, r.pooled[2].rate, PART..., r.rate_E, r.rate_U)
     @printf("         agency %.4f, hardship %.4f, hand-to-mouth %.4f (target %.2f), effort %.4f, multiplier %.1f  [%.1f min]\n",
-            r.A, r.hardship, r.hand_to_mouth, HTM_TARGET, r.mean_effort_employed, 1 / (1 - r.slope), (time() - t0) / 60)
+            r.A, r.hardship, r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, 1 / (1 - r.slope), (time() - t0) / 60)
+    @printf("         expected loss to unemployment %.4f (income alone %.4f), drop on job loss %.4f, agency on the old hardship reading %.4f\n",
+            r.shock_loss, r.shock_loss_income, r.consumption_drop, r.A_hardship)
     flush(stdout)
     r
 end
 say("\n4. the calibrated ", CFG, " economy on its own thresholds")
 best = S[RATIO].best
 r = solve_at(phi, spread, best)
-if abs(r.hand_to_mouth - HTM_TARGET) > HTM_TOL
-    gap_c = r.hand_to_mouth - chk_h
+if abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL
+    gap_c = r.hand_to_mouth_kvw - chk_h
     say(@sprintf("\n5. hand-to-mouth off by %+.4f, more than the %.2f tolerance; this economy's own cohesion gap is %+.4f against France's %+.4f. One correction.",
-                 r.hand_to_mouth - HTM_TARGET, HTM_TOL, gap_c, GAP))
+                 r.hand_to_mouth_kvw - HTM_TARGET, HTM_TOL, gap_c, GAP))
     ck5 = ck_read("stage5")
     if ck5 === nothing
         fs2 = fit_spread(phi, HTM_TARGET - gap_c)
-        spread = fs2.sp; edge2 = fs2.edge
-        ck_write("stage5", Dict("spread" => spread, "edge" => Float64(edge2)))
+        spread = fs2.sp; edge2 = fs2.edge; BB[] = fs2.bb
+        ck_write("stage5", Dict("spread" => spread, "edge" => Float64(edge2), "bb" => BB[]))
     else
-        spread, edge2 = ck5["spread"], ck5["edge"] == 1.0
+        spread, edge2 = ck5["spread"], ck5["edge"] == 1.0; BB[] = get(ck5, "bb", 0.96)
         say("  from checkpoint ", basename(ckfile("stage5")))
     end
-    @printf("  new spread %.3f%s\n", spread, edge2 ? " (ON THE GRID EDGE)" : ""); flush(stdout)
+    @printf("  new spread %.3f, mean patience %.4f%s\n", spread, BB[], edge2 ? " (ON THE GRID EDGE)" : ""); flush(stdout)
     S = scans(phi, spread)
     if S[RATIO] === nothing || S[RATIO].best.loss > 0.035
         say("\nNOT CALIBRATED after the correction. No calibration file written.")
@@ -265,7 +291,7 @@ if abs(r.hand_to_mouth - HTM_TARGET) > HTM_TOL
     end
     best = S[RATIO].best
     r = solve_at(phi, spread, best)
-    abs(r.hand_to_mouth - HTM_TARGET) > HTM_TOL &&
+    abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL &&
         say("  hand-to-mouth still off target after the one allowed correction; recorded, not tuned further")
 end
 write_cal(phi, spread; kappa = best.κ, sigma = best.σ)
@@ -276,8 +302,8 @@ if CFG == "GSA"
     for (nm, S_, A_) in (("G     ", false, false), ("G+A   ", false, true), ("G+S   ", true, false), ("G+S+A ", true, true))
         (SKIP_GS && S_ && !A_) && (say(nm, " skipped (SKIP_GS)"); continue)
         rr_ = solve_economy(country_config(CODE; S = S_, A = A_))
-        @printf("%s participation %.4f (E %.4f, U %.4f) | agency %.4f | hardship %.4f | htm %.4f | effort %.4f | median %.4f\n",
-                nm, rr_.rate, rr_.rate_E, rr_.rate_U, rr_.A, rr_.hardship, rr_.hand_to_mouth,
+        @printf("%s participation %.4f (E %.4f, U %.4f) | agency %.4f | loss %.4f | hardship %.4f | poor htm %.4f | effort %.4f | median %.4f\n",
+                nm, rr_.rate, rr_.rate_E, rr_.rate_U, rr_.A, rr_.shock_loss, rr_.hardship, rr_.hand_to_mouth_kvw,
                 rr_.mean_effort_employed, rr_.median_income)
         flush(stdout)
     end

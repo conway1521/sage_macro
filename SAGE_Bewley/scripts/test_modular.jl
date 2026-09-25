@@ -166,7 +166,7 @@ end
 let old = SAGEConfig(S = true, A = true, unemployment = true, beta_spread = 0.037,
                      kappa = 9.90, sigma_m = 0.385, unemployed_ratio = 0.17 / 0.35),
     thr = [(0.5 * 0.365028, hardship_threshold(0.365028; months = 3.0))],
-    q2 = (rate = 0.0423, rate_E = 0.0442, rate_U = 0.0173, A = 0.5320, hardship = 0.3518,
+    q2 = (rate = 0.0423, rate_E = 0.0442, rate_U = 0.0173, A_hardship = 0.5320, hardship = 0.3518,
           hand_to_mouth = 0.2669)
     reduce_to("G+S+A, rule, old technology  ->  quarantine2.jl",
               solve_economy(old; thresholds = thr), q2; fields = keys(q2), tol = 1e-4)

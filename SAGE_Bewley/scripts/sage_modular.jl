@@ -274,7 +274,8 @@ const SOLVER_FILES = [joinpath(@__DIR__, "..", "src", "SAGEBewley.jl"),
                       joinpath(@__DIR__, "proto_participation_core.jl"),
                       joinpath(@__DIR__, "sa_core.jl"),
                       joinpath(@__DIR__, "agency_core.jl"),
-                      joinpath(@__DIR__, "unemployment_core.jl")]
+                      joinpath(@__DIR__, "unemployment_core.jl"),
+                 joinpath(@__DIR__, "agency_shock.jl")]
 const SOLVER_DIGEST = bytes2hex(sha1(join(read(f, String) for f in SOLVER_FILES)))
 
 "The household part and the threshold part of a family's cache key."
@@ -309,7 +310,7 @@ function build_families(c::SAGEConfig, thr; disk = true, any_thresholds = false)
                 isempty(other) || return deserialize(joinpath(FAMILY_CACHE_DIR, first(other)))
             end
         end
-        f = build_family_u(params_of(cT, cell), c.ugrid, c.theta; weights = bw, thresholds = thr)
+        f = build_family_ag(params_of(cT, cell), c.ugrid, c.theta; weights = bw, thresholds = thr)
         if disk
             mkpath(FAMILY_CACHE_DIR); tmp = file * ".tmp"
             serialize(tmp, f); mv(tmp, file; force = true)
@@ -432,11 +433,11 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
         solve0 = job -> begin
             s = solve_participation_logit(update(job[2]; social_strength = 0.0), 1.0;
                                           theta = c.theta, full = true)
-            cell_summary(job[2], s; thresholds = thr)
+            merge(cell_summary(job[2], s; thresholds = thr), agency_summary(job[2], s))
         end
         out = nworkers() > 1 ? pmap(solve0, jobs) : map(solve0, jobs)
         nb = length(bw)
-        pooled = [collapse(out[(g-1)*nb+1:g*nb], bw) for g in 1:2]
+        pooled = [collapse_all(out[(g-1)*nb+1:g*nb], bw) for g in 1:2]
         if c.unemployed_ratio !== nothing
             emp0 = employment_mask(c)
             pooled = map(P -> impose_unemployed_ratio([P], emp0, c.unemployed_ratio)[1], pooled)
@@ -452,6 +453,14 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
     minc = sum(cs[g].share * pooled[g].minc for g in 1:2)
     Wtot = sum(cs[g].share .* vec(sum(pooled[g].W, dims = 1)) for g in 1:2)
     emp  = params_of(cfgT, cs[1])[1].transfer .== 0
+    # Agency: alpha times one minus the expected share of next year's
+    # consumption lost to unemployment (agency_shock.jl). The same with income
+    # alone leaves out households' own savings; the drop is at the moment of
+    # job loss, for the employed.
+    pbar = [sum(pooled[g].pmass) / sum(pooled[g].mass) for g in 1:2]
+    pyb  = [sum(pooled[g].pinc) / sum(pooled[g].mass) for g in 1:2]
+    Acell = Tuple(cs[g].α * (1 - pbar[g]) for g in 1:2)
+    mE = sum(cs[g].share * sum(pooled[g].mass[emp]) for g in 1:2)
     base = (config = c, rate = rate, slope = slope, median_income = med,
             median_model = med_model, mean_income = ymean,
             mean_labour_income = minc,
@@ -465,13 +474,20 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
                      sum(cs[g].share * sum(pooled[g].mass[emp]) for g in 1:2),
             rate_U = (m = sum(cs[g].share * sum(pooled[g].mass[.!emp]) for g in 1:2);
                       m <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].part[.!emp]) for g in 1:2) / m),
+            A = sum(cs[g].share * Acell[g] for g in 1:2), A_cell = Acell,
+            shock_loss = sum(cs[g].share * pbar[g] for g in 1:2),
+            shock_loss_income = sum(cs[g].share * pyb[g] for g in 1:2),
+            A_institutions = sum(cs[g].share * cs[g].α * (1 - pyb[g]) for g in 1:2),
+            consumption_drop = mE <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].dmass[emp]) for g in 1:2) / mE,
+            hand_to_mouth_kvw = sum(cs[g].share * sum(pooled[g].hmass) for g in 1:2) /
+                                sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
             agrid = agrid, Wtot = Wtot, pooled = pooled, employed = emp, lumptax = T)
     thr === nothing && return merge(base, (asset_poor_by_quintile = Float64[],
                                            quintile_mass = Float64[],
                                            A_income_only = NaN, hardship_cell = (),
-                                           A = NaN, hardship = NaN, income_poor = NaN,
+                                           A_hardship = NaN, hardship = NaN, income_poor = NaN,
                                            asset_poor = NaN, both = NaN, vulnerable = NaN,
-                                           A_cell = (NaN, NaN), alphabar = NaN,
+                                           A_hardship_cell = (NaN, NaN), alphabar = NaN,
                                            ypov = NaN, abar = NaN))
 
     # Hardship from the indicators accumulated during the solve: exact in every
@@ -499,7 +515,7 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
     Ainc = sum(cs[g].share * cs[g].α * (1 - hs[g].inc) for g in 1:2)
     merge(base, (asset_poor_by_quintile = q5.rate, quintile_mass = q5.mass,
                  A_income_only = Ainc, hardship_cell = Tuple(hs),
-                 A = sum(cs[g].share * Ag[g] for g in 1:2), A_cell = Tuple(Ag),
+                 A_hardship = sum(cs[g].share * Ag[g] for g in 1:2), A_hardship_cell = Tuple(Ag),
                  alphabar = sum(cs[g].share * cs[g].α for g in 1:2),
                  income_poor = mix(:inc), asset_poor = mix(:asset), both = mix(:both),
                  vulnerable = mix(:vulnerable), hardship = mix(:union),
@@ -673,8 +689,10 @@ SAGEConfig(c::SAGEConfig; kwargs...) = SAGEConfig(;
 function report(r; label = "")
     isempty(label) || println(label)
     println("  ", describe(r.config))
-    @printf("  participation %.6f | agency %.6f | hardship %.6f (income %.6f, asset %.6f)\n",
-            r.rate, r.A, r.hardship, r.income_poor, r.asset_poor)
+    @printf("  participation %.6f | agency %.6f (from income alone %.6f) | expected loss %.6f | drop on job loss %.6f\n",
+            r.rate, r.A, r.A_institutions, r.shock_loss, r.consumption_drop)
+    @printf("  hardship %.6f (income %.6f, asset %.6f) | agency on the old hardship reading %.6f\n",
+            r.hardship, r.income_poor, r.asset_poor, r.A_hardship)
     @printf("  hand-to-mouth %.6f | mean labour income %.6f | median disposable %.6f | effort %.6f\n",
             r.hand_to_mouth, r.mean_labour_income, r.median_income, r.mean_effort_employed)
 end

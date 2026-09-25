@@ -1,0 +1,24 @@
+1. no unemployment risk: nobody can lose a job, so p is zero and agency is alpha
+   agency 0.8380000000, alpha mean 0.8380000000, expected loss 9.04e-164
+  PASS agency equals mean alpha
+  FAIL expected loss is zero
+
+2. the old statistics are untouched (France G+A, INSEE footing, against the suite)
+   effort 0.518873 (0.518873), hand-to-mouth, old measure 0.261599 (0.261599), poor hand-to-mouth 0.1259
+  PASS effort and old hand-to-mouth reproduce the suite
+  PASS the one-week measure is below the four-week one
+
+3. direction: a more generous benefit protects more (France, new data, spread 0.02)
+   rr 0.300: agency 0.8250, expected loss 0.0158 (income alone 0.0436), drop on job loss 0.2241, poor htm 0.0075
+   rr 0.653: agency 0.8280, expected loss 0.0122 (income alone 0.0231), drop on job loss 0.1836, poor htm 0.0730
+   rr 0.900: agency 0.8325, expected loss 0.0068 (income alone 0.0088), drop on job loss 0.1052, poor htm 0.4526
+  PASS agency rises with the benefit
+  PASS savings make the consumption loss smaller than the income loss
+
+4. reachability of the poor hand-to-mouth targets (new benefit, effort scale from the last calibration)
+   FR target 0.032 | by spread: 0.00:0.034  0.02:0.073  0.04:0.145  0.06:0.231  0.08:0.325 | spread 0, mean patience: 0.965:0.021  0.970:0.013
+   DE target 0.074 | by spread: 0.00:0.025  0.02:0.061  0.04:0.132  0.06:0.231  0.08:0.357
+   IT target 0.083 | by spread: 0.00:0.008  0.02:0.012  0.04:0.018  0.06:0.033  0.08:0.079
+   US target 0.138 | by spread: 0.00:0.004  0.02:0.006  0.04:0.009  0.06:0.012  0.08:0.015
+
+SOME CHECKS FAIL

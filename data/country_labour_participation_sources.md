@@ -45,3 +45,47 @@ decision: with a twelve-month replacement rate of 0.13 the model cannot reach th
 US hand-to-mouth target (0.019 against 0.31). Its row is kept for a possible
 sensitivity with the benefit defined over a typical spell. See MODULAR.md. Italy
 is in progress.
+
+## 2026-09-25: the benefit and hand-to-mouth columns redefined
+
+**rr, now the replacement rate averaged over an unemployment spell.** Source:
+OECD Tax-Benefit Data Portal, `DSD_TAXBEN_NRR@DF_NRR`, 2023, single person
+without children previously earning 100 percent of the average wage, social
+assistance included, housing benefit excluded (the model has no housing). Raw
+file: `data/taxben_nrr_2023_single_aw100.csv`. The model has one unemployed state
+with a constant benefit, so the right single number is the average over a spell.
+With a constant monthly exit hazard h, set so that (1 - h)^12 equals the
+long-term unemployment share, this is also the average across everyone
+unemployed at a given moment:
+
+    rr = sum over months m of NRR_m (1 - h)^(m - 1), divided by 1 / h
+
+using months 1 to 60 and holding month 60 thereafter. Result: France 0.653,
+Germany 0.456, Italy 0.374, United States 0.221. The previous column, the mean
+of months 1 to 12, is kept as `rr_12m` (0.680, 0.590, 0.597, 0.132). It hid
+benefit exhaustion: German replacement falls from 59 to 16 percent after twelve
+months, Italian from 63 to 0 after twenty-four, and in both countries many of
+the unemployed are long-term (31 and 56 percent).
+
+**htm_target, now poor hand-to-mouth.** Source: Kaplan, Violante and Weidner
+(2014), Brookings Papers on Economic Activity, Table 5, baseline row: France
+0.032, Germany 0.074, Italy 0.083, United States 0.138. A one-asset model has no
+illiquid wealth, so its hand-to-mouth households are the poor kind by
+construction. The model measures them on the paper's definition, wealth at most
+one week of the household's own labour and benefit income (half a two-week pay
+period). The previous column is kept as `htm_total_old` (0.30, 0.32, 0.41,
+0.31). Those values came from the old engine's country table and, except for
+Germany, do not match the paper's totals (France 0.205, Germany 0.322, Italy
+0.238, United States 0.340).
+
+**Vintage.** The European figures come from the first HFCS wave, 2008 to 2010,
+taken soon after the financial crisis. The US figure pools the SCF from 1989 to
+2010. My replication with the SCF public summary extracts
+(`SAGE_Bewley/scripts/scf_htm.py`, data in `data/scf/`, not committed) gives a
+1989 to 2010 mean of 0.114 poor and 0.192 wealthy, against the paper's 0.138 and
+0.202, so the replication runs about 0.02 low on the poor share. The updated
+series shows the poor share at 0.134 in 2010 and 2013 and then falling to 0.094
+(2016), 0.086 (2019) and 0.082 (2022). The post-crisis figures overstate normal
+times, which probably also holds for the European 2010 snapshot. An application
+for HFCS microdata access (waves 2010 to 2023) is being prepared, after which the
+European targets become pooled averages computed on the same definition.
