@@ -1,0 +1,6 @@
+# written by calibrate_country.jl DE GSA; read by country_config
+phi = 19.02
+beta_spread = 0.018
+beta_bar = 0.9600
+kappa = 12.20
+sigma_m = 0.78

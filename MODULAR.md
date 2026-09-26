@@ -327,3 +327,80 @@ country table and have not been re-derived; the German unemployed ratio is not
 checked in its source document. The G+S hand-to-mouth aim still uses France's
 INSEE-footing gap and relied on its one correction for Italy. The acceptable-fit
 multiplier ranges without A are wide (Italy 1.4 to 15.6).
+
+## 2026-09-26, the three countries recalibrated on the corrected basis; the suite passes
+
+**What changed on 2026-09-25**, and why (details in the sources note and in
+`agency_shock.jl`). Agency's (1 - p) is now protection against job loss: p is
+the expected share of next year's consumption lost to unemployment. The
+hand-to-mouth targets are the poor shares of Kaplan, Violante and Weidner (2014),
+measured on their definition, wealth at most one week of own income. The
+replacement rate is averaged over an unemployment spell. Every calibration made
+before is in `SAGE_Bewley/scripts/archive_2026-09-25_before_kvw/`.
+
+**Every configuration calibrated to its own targets.** Effort to the country's
+target, poor hand-to-mouth within 0.005, participation within the root-loss
+standard. France reaches its low target with average patience above 0.96 and no
+spread (the new fallback), Germany and Italy with a spread.
+
+| | phi | spread | patience | kappa | sigma | participation | poor htm (target) | agency | expected loss (income alone) | drop on job loss | multiplier |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| France G | 14.13 | 0.003 | 0.9600 | | | 0 | 0.0320 (0.032) | 0.8300 | 0.95% (2.29%) | 14.1% | |
+| France G+A | 14.10 | 0.001 | 0.9600 | | | 0 | 0.0325 | 0.8304 | 0.92% (2.31%) | 13.5% | |
+| France G+S | 14.13 | 0 | 0.9608 | 10.35 | 0.62 | 0.2455 | 0.0303 | 0.8308 | 0.86% (2.19%) | 12.6% | 3.5 |
+| France G+S+A | 14.10 | 0 | 0.9640 | 10.70 | 0.94 | 0.2472 | 0.0276 | 0.8319 | 0.74% (2.21%) | 10.8% | 1.9 |
+| Germany G | 18.97 | 0.027 | 0.9600 | | | 0 | 0.0726 (0.074) | 0.8369 | 0.96% (1.44%) | 33.3% | |
+| Germany G+A | 19.02 | 0.025 | 0.9600 | | | 0 | 0.0750 | 0.8371 | 0.95% (1.44%) | 32.6% | |
+| Germany G+S | 18.97 | 0.021 | 0.9600 | 11.75 | 0.48 | 0.2999 | 0.0703 | 0.8373 | 0.91% (1.40%) | 31.1% | 17.9 |
+| Germany G+S+A | 19.02 | 0.018 | 0.9600 | 12.20 | 0.78 | 0.2997 | 0.0706 | 0.8376 | 0.88% (1.41%) | 30.0% | 2.5 |
+| Italy G | 9.00 | 0.090 | 0.9600 | | | 0 | 0.0805 (0.083) | 0.7773 | 2.83% (3.72%) | 44.4% | |
+| Italy G+A | 9.05 | 0.083 | 0.9600 | | | 0 | 0.0835 | 0.7785 | 2.79% (3.75%) | 43.3% | |
+| Italy G+S | 9.00 | 0.088 | 0.9600 | 7.60 | 0.54 | 0.1406 | 0.0826 | 0.7775 | 2.81% (3.71%) | 44.1% | 3.4 |
+| Italy G+S+A | 9.05 | 0.079 | 0.9600 | 6.65 | 1.10 | 0.1410 | 0.0814 | 0.7788 | 2.75% (3.73%) | 42.7% | 1.5 |
+
+Participation targets: France 0.203/0.291, Germany 0.252/0.349, Italy
+0.116/0.165. The United States is not calibrated: its poor hand-to-mouth
+reaches 0.021 at the largest spread tried, against 0.138.
+
+**What the corrected basis shows.**
+
+1. Agency ranks Germany (0.838), France (0.832), Italy (0.779). It is alpha times
+   one minus a small expected loss, so its level is mostly alpha. The endogenous
+   part separates the countries clearly: the expected loss is 0.7 to 0.95
+   percent of consumption in France, about 0.9 in Germany and 2.8 in Italy.
+   Losing a job costs a French household 11 to 14 percent of consumption, a
+   German one 30 to 33 and an Italian one 43 to 44, and savings cover about two
+   thirds of the income loss in France, a third in Germany and a quarter in
+   Italy. France and Germany reach similar expected losses by different routes,
+   frequent but cushioned job loss against rare but harsh.
+2. Neither switch moves average agency, in either view. At each country's G+S+A
+   parameters the four economies differ by at most 0.0008. Calibrated to their
+   own targets, they differ by at most 0.0019. On the old asset-poverty reading
+   the two views disagreed even in sign, so the new measure no longer depends on
+   how the comparison is set up. Switching A on spreads alpha across the
+   education cells while keeping its mean, so its effect shows in the gap
+   between cells, not in the average. Switching S on takes time from paid work,
+   which moved asset poverty but barely moves the consumption cost of losing a
+   job.
+3. Agency heterogeneity keeps the social multiplier small and stable: 1.5 to
+   2.5 with A on, 3.4 to 17.9 with it off. Without A the social mechanism has to
+   produce the whole education gradient in participation. Germany's G+S sits
+   near its fold (5.5 before its hand-to-mouth correction, 17.9 after), so the
+   no-agency multipliers are ranges, not points.
+4. The social calibration survived the correction of the savings side: kappa and
+   sigma for G+S+A moved by at most 0.15 and 0.02 from the previous basis, and
+   the multipliers by at most 0.1.
+5. The suite at France's corrected footing passes 24 of 24. The seven
+   convergence rows move agency by at most 0.00001, against 0.002 on the old
+   measure, because the shock measure is not a threshold statistic. Asset
+   poverty, now a secondary column, moves by up to 0.002.
+
+**Caveats.** Italy needs a spread of 0.08 to 0.09, high by the standard of the
+patience literature. France has no discount heterogeneity at all, since its
+low target needs more patience rather than less. The drop on job loss is not
+comparable with the 6 to 7 percent measured at the onset of unemployment (Gruber
+1997; Ganong and Noel 2019), because a model period is a year. The European
+hand-to-mouth targets are a 2008 to 2010 snapshot, pending the HFCS application.
+Still open: the doubled asset grid convergence row, the agency and belonging
+gradients carried over from the old country table, the German unemployed ratio
+unchecked in its source, and informal insurance (S feeding A), deferred.

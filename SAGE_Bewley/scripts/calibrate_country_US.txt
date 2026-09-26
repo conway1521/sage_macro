@@ -1,0 +1,7 @@
+calibrating US GSA | effort target 0.478675 | hand-to-mouth target 0.138 | participation targets (0.173951, 0.360156) | national ratio 0.856618 | workers 4
+preflight, France G+A through the parallel path: worst gap 3.4e-07 against the suite: HELD
+
+1. effort scale and discount spread, cohesion off, hand-to-mouth aim 0.138
+  phi 21.32, spread 0.115, mean patience 0.9600 (ON THE GRID EDGE): effort 0.4787 (target 0.4787), poor hand-to-mouth 0.0206 (aim 0.1380)  [12.1 min]
+
+NOT CALIBRATED: hand-to-mouth reaches only 0.0206 at the largest spread tried (0.115), against an aim of 0.1380. No calibration file written.

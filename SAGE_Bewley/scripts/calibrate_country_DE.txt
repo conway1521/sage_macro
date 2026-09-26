@@ -1,0 +1,39 @@
+calibrating DE GSA | effort target 0.491784 | hand-to-mouth target 0.074 | participation targets (0.252077, 0.349) | national ratio 0.573626 | workers 4
+preflight, France G+A through the parallel path: worst gap 3.4e-07 against the suite: HELD
+
+1. effort scale and discount spread, cohesion off, hand-to-mouth aim 0.074
+  from checkpoint DE_GSA_stage1_3ed3f7a70e2f5e9a.txt
+  phi 19.02, spread 0.025, mean patience 0.9600: effort 0.4919 (target 0.4918), poor hand-to-mouth 0.0750 (aim 0.0740)  [0.5 min]
+
+2-3. GSA families and technology scans, participation targets (0.252077, 0.349)
+  families built or loaded in 0.0 min
+  ratio 0.574 (national): best kappa 12.30 sigma 0.80, root loss 0.0007, rate 0.3002, multiplier 2.4 | within 0.035: sigma 0.52 to 1.50, multiplier 1.5 to 7.4
+  ratio 0.486: best kappa 12.25 sigma 0.78, root loss 0.0013, rate 0.3002, multiplier 2.5 | within 0.035: sigma 0.52 to 1.50, multiplier 1.5 to 7.3
+  ratio 0.857: best kappa 12.25 sigma 0.80, root loss 0.0013, rate 0.3012, multiplier 2.4 | within 0.035: sigma 0.52 to 1.50, multiplier 1.5 to 7.6
+  ratio 0.937: best kappa 12.15 sigma 0.78, root loss 0.0010, rate 0.3000, multiplier 2.5 | within 0.035: sigma 0.52 to 1.50, multiplier 1.5 to 7.7
+
+4. the calibrated GSA economy on its own thresholds
+  GSA: participation 0.3002 (cells 0.2521, 0.3483 against 0.252, 0.349; employed 0.3037, unemployed 0.1684)
+         agency 0.8372, hardship 0.3279, hand-to-mouth 0.0921 (target 0.07), effort 0.4779, multiplier 2.4  [0.0 min]
+         expected loss to unemployment 0.0094 (income alone 0.0141), drop on job loss 0.3234, agency on the old hardship reading 0.5613
+
+5. hand-to-mouth off by +0.0181, more than the 0.005 tolerance; this economy's own cohesion gap is +0.0170 against France's +0.0000. One correction.
+  from checkpoint DE_GSA_stage5_3ed3f7a70e2f5e9a.txt
+  new spread 0.018, mean patience 0.9600
+  families built or loaded in 0.0 min
+  ratio 0.574 (national): best kappa 12.20 sigma 0.78, root loss 0.0016, rate 0.2997, multiplier 2.5 | within 0.035: sigma 0.54 to 1.50, multiplier 1.5 to 6.1
+  ratio 0.486: best kappa 12.30 sigma 0.80, root loss 0.0004, rate 0.3006, multiplier 2.4 | within 0.035: sigma 0.52 to 1.50, multiplier 1.5 to 7.4
+  ratio 0.857: best kappa 12.15 sigma 0.78, root loss 0.0008, rate 0.3006, multiplier 2.5 | within 0.035: sigma 0.52 to 1.50, multiplier 1.5 to 7.6
+  ratio 0.937: best kappa 12.20 sigma 0.80, root loss 0.0010, rate 0.3006, multiplier 2.4 | within 0.035: sigma 0.54 to 1.50, multiplier 1.5 to 6.3
+  GSA: participation 0.2997 (cells 0.2505, 0.3489 against 0.252, 0.349; employed 0.3032, unemployed 0.1680)
+         agency 0.8376, hardship 0.2763, hand-to-mouth 0.0706 (target 0.07), effort 0.4775, multiplier 2.5  [16.3 min]
+         expected loss to unemployment 0.0088 (income alone 0.0141), drop on job loss 0.3003, agency on the old hardship reading 0.6056
+wrote calibration_country_DE.txt
+
+6. the four economies at DE's G+S+A parameters (the fixed-parameter view)
+G      participation 0.0000 (E 0.0000, U 0.0000) | agency 0.8375 | loss 0.0089 | hardship 0.2480 | poor htm 0.0502 | effort 0.4909 | median 0.3608
+G+A    participation 0.0000 (E 0.0000, U 0.0000) | agency 0.8376 | loss 0.0089 | hardship 0.2517 | poor htm 0.0568 | effort 0.4915 | median 0.3606
+G+S    participation 0.2987 (E 0.3022, U 0.1697) | agency 0.8375 | loss 0.0088 | hardship 0.2728 | poor htm 0.0627 | effort 0.4770 | median 0.3500
+G+S+A  participation 0.2997 (E 0.3032, U 0.1680) | agency 0.8376 | loss 0.0088 | hardship 0.2763 | poor htm 0.0706 | effort 0.4775 | median 0.3496
+
+DONE DE GSA in 51.8 min

@@ -1,0 +1,25 @@
+calibrating DE GS | effort target 0.491784 | hand-to-mouth target 0.074 | participation targets (0.252077, 0.349) | national ratio 0.573626 | workers 5
+preflight, France G+A through the parallel path: worst gap 3.4e-07 against the suite: HELD
+
+1. effort scale and discount spread, cohesion off, hand-to-mouth aim 0.074
+  phi 18.97, spread 0.027, mean patience 0.9600: effort 0.4918 (target 0.4918), poor hand-to-mouth 0.0726 (aim 0.0740)  [9.1 min]
+
+2-3. GS families and technology scans, participation targets (0.252077, 0.349)
+  families built or loaded in 13.4 min
+  ratio 0.574 (national): best kappa 11.80 sigma 0.56, root loss 0.0098, rate 0.3030, multiplier 5.5 | within 0.035: sigma 0.48 to 1.02, multiplier 1.9 to 17.0
+
+4. the calibrated GS economy on its own thresholds
+  GS: participation 0.3030 (cells 0.2610, 0.3450 against 0.252, 0.349; employed 0.3065, unemployed 0.1708)
+         agency 0.8369, hardship 0.3390, hand-to-mouth 0.0900 (target 0.07), effort 0.4776, multiplier 5.5  [13.8 min]
+         expected loss to unemployment 0.0095 (income alone 0.0140), drop on job loss 0.3307, agency on the old hardship reading 0.5586
+
+5. hand-to-mouth off by +0.0160, more than the 0.005 tolerance; this economy's own cohesion gap is +0.0174 against France's +0.0000. One correction.
+  new spread 0.021, mean patience 0.9600
+  families built or loaded in 13.8 min
+  ratio 0.574 (national): best kappa 11.75 sigma 0.48, root loss 0.0010, rate 0.2999, multiplier 17.9 | within 0.035: sigma 0.46 to 1.02, multiplier 1.9 to 45.9
+  GS: participation 0.2999 (cells 0.2518, 0.3481 against 0.252, 0.349; employed 0.3035, unemployed 0.1683)
+         agency 0.8373, hardship 0.2937, hand-to-mouth 0.0703 (target 0.07), effort 0.4774, multiplier 17.9  [13.9 min]
+         expected loss to unemployment 0.0091 (income alone 0.0140), drop on job loss 0.3114, agency on the old hardship reading 0.5968
+wrote calibration_country_DE_GS.txt
+
+DONE DE GS in 68.0 min

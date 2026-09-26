@@ -205,8 +205,8 @@ for (nm, key, cfg) in (("G      baseline Bewley", "G", CAL),
     flush(stdout)
 end
 let r = CALR["GSA"]
-    @printf("G+S+A against its targets: cell participation %.4f and %.4f (%.3f, %.3f), hand-to-mouth %.4f (%.2f)\n",
-            r.pooled[1].rate, r.pooled[2].rate, FF.part..., r.hand_to_mouth, FF.htm)
+    @printf("G+S+A against its targets: cell participation %.4f and %.4f (%.3f, %.3f), poor hand-to-mouth %.4f (%.3f)\n",
+            r.pooled[1].rate, r.pooled[2].rate, FF.part..., r.hand_to_mouth_kvw, FF.htm)
     @printf("slope %.4f, multiplier %.1f. The old footing, held up by the unemployed at one:\n", r.slope, 1 / (1 - r.slope))
     println("participation 0.3574, agency 0.4947, hand-to-mouth 0.2998, multiplier 34.0\n")
 end
