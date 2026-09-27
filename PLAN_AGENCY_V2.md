@@ -164,3 +164,17 @@ Background research, reports to be filed on return:
   - The cost is concave in the probability of job loss, and about 70 percent of the gradient is fear unrelated to the expected loss (Green 2011, Geishecker 2012), so a linear theta X overstates the cost at high exposure.
   - Long-term replacement rates moderate the cost: 10 points more removes about 44 percent of it (Carr and Chung 2014). This supports exposure net of benefits.
 - **Gate 2 status: marginal.** Only one source gives a usable level, below the two the gate requires. **Decision on return:** either accept the 3 percent (1.5 to 6) as an order of magnitude, with the full range as a sensitivity, or fall back to version 1. A concave exposure, for example X to the power one half, or a fixed fear component should also be considered before implementation.
+
+**Report 3 filed (earnings process).** Some sources were read in working-paper form, as flagged in the report.
+
+- **The one harmonised estimate in the model's form** (AR(1) plus transitory plus fixed effect) is Bayer and Juessen (2012, Economics Letters). It gives rho about 0.92 in Germany, the US and the UK, with an innovation variance of about 0.010 in Germany against 0.025 in the US.
+- **Other European estimates agree:** Floden and Linde (2001, RED) for Sweden net of unemployment (0.855, 0.023), and Cappellari (2004, JHR) for Italy (0.69 to 0.89, small permanent variance).
+- **There is no published parametric AR(1) for France.** Bonhomme and Robin (2009) and the French administrative studies report moments only.
+- **The evidence cannot separate FR, DE and IT reliably.**
+- **Recommendation:**
+  - one common European process, rho = 0.92 and eta = 0.10 (Bayer and Juessen 2012, cross-checked against Floden and Linde 2001 and Cappellari 2004);
+  - France borrows the pooled value, which is to be stated;
+  - the transitory component is treated as measurement error and dropped, as Floden and Linde do, with one robustness run at eta squared = 0.02;
+  - sensitivity at rho 0.85 and 0.95, eta 0.08 and 0.14;
+  - US reference: HSV (2010) rho = 0.973, eta squared about 0.014.
+- **Decision for Phase 1:** rho moves from 0.90 to 0.92 and eta stays at 0.10. This is a small change, but the income process is now anchored to a named estimate rather than a range. Rouwenhorst is right for rho of 0.9 or more (Kopecky and Suen 2010).
