@@ -404,3 +404,118 @@ hand-to-mouth targets are a 2008 to 2010 snapshot, pending the HFCS application.
 Still open: the doubled asset grid convergence row, the agency and belonging
 gradients carried over from the old country table, the German unemployed ratio
 unchecked in its source, and informal insurance (S feeding A), deferred.
+
+## 2026-09-27, policy tests in the three countries
+
+**Protocol** (`SAGE_Bewley/scripts/policy_tests.jl`, results in
+`policy_results_<CODE>.csv`, summary from `policy_summary.py`). There are four
+policies, each against its own configuration's baseline with the baseline's
+thresholds, in partial equilibrium:
+
+- a 20 percent labour subsidy,
+- empowerment, which raises the low cell's alpha halfway to the high cell's
+  (A on only),
+- the replacement rate up by 0.10,
+- the replacement rate down by 0.10.
+
+With S on, each policy is solved at three social technologies that fit the
+participation data (root loss up to 0.035): the best fit, and the acceptable
+fits with the smallest and the largest multiplier.
+
+Three details of the protocol changed during the runs.
+
+1. **The subsidy is financed by a lump-sum levy on the employed**
+   (`levy_employed`, a negative transfer in the employed states). A levy on
+   everyone of 20 percent of mean labour income exceeds the lowest benefit in
+   Germany and Italy, which leaves those unemployed households no feasible
+   choice. The budget closes in two solves.
+2. **The band uses the equilibrium the solver selects.** Where the technology
+   allows several stable equilibria, `solve_economy` takes the highest. The
+   first run's scan fitted any stable equilibrium, and at Italy's G+S
+   high-multiplier point it fitted a low equilibrium while the solver selected
+   one at 0.78. The scan for the band now considers only the selected
+   equilibrium (`selected_only`), and each technology point is checked against
+   its full solve.
+3. **Every policy economy has a single stable equilibrium**
+   (`policy_equilibria.txt`, 81 of 81). No reported effect is a jump across a
+   fold.
+
+**Participation, percentage points: best fit [smallest-multiplier fit, largest-multiplier fit]**
+
+| policy | | Germany | France | Italy |
+|---|---|---|---|---|
+| subsidy | G+S+A | -8.6 [-3.0, -18.0] | -5.0 [-2.6, -11.1] | -2.6 [-1.8, -6.5] |
+| | G+S | -22.1 [-5.6, -21.6] | -10.8 [-2.6, -18.7] | -7.0 [-1.8, -9.0] |
+| empowerment | G+S+A | +2.2 [+0.7, +7.9] | +1.2 [+0.6, +3.9] | +0.9 [+0.6, +4.3] |
+| insurance up | G+S+A | -0.4 [-0.1, -1.5] | -0.3 [-0.1, -0.8] | -0.2 [-0.1, -0.9] |
+| | G+S | -4.3 [-0.2, -6.7] | -0.7 [-0.1, -5.8] | -0.9 [-0.1, -1.7] |
+| insurance down | G+S+A | +0.5 [+0.2, +1.7] | +0.3 [+0.1, +0.9] | +0.3 [+0.2, +1.1] |
+| | G+S | +5.7 [+0.3, +13.0] | +0.8 [+0.1, +19.3] | +1.2 [+0.2, +2.9] |
+
+The multipliers at the three technologies are:
+
+| | best fit | smallest | largest |
+|---|---|---|---|
+| Germany G+S+A | 2.5 | 1.5 | 6.1 |
+| Germany G+S | 17.9 | 1.9 | 45.9 |
+| France G+S+A | 1.9 | 1.4 | 3.9 |
+| France G+S | 3.5 | 1.4 | 51.0 |
+| Italy G+S+A | 1.5 | 1.4 | 3.3 |
+| Italy G+S | 3.4 | 1.4 | 5.8 |
+
+Germany's G+S best fit lies outside its bracket because the largest-multiplier
+point starts from a lower rate (0.284 against 0.300).
+
+**Other effects at the best fit, G+S+A** (agency and the high-minus-low agency
+gap in levels, the rest in percentage points). They vary little across the band
+and between configurations.
+
+| policy | | agency | gap | expected loss | drop on job loss | asset hardship | poor htm | effort |
+|---|---|---|---|---|---|---|---|---|
+| subsidy | DE | +0.0002 | -0.0001 | -0.03 | -1.2 | -5.5 | -1.4 | +2.8 |
+| | FR | +0.0003 | -0.0002 | -0.03 | -0.5 | -2.8 | -0.5 | +2.7 |
+| | IT | +0.0001 | -0.0003 | -0.02 | -0.6 | -4.1 | -2.6 | +3.1 |
+| empowerment | DE | +0.037 | -0.074 | -0.01 | -0.1 | +0.1 | +0.2 | -0.7 |
+| | FR | +0.036 | -0.073 | -0.01 | -0.1 | -0.2 | 0.0 | -0.6 |
+| | IT | +0.048 | -0.097 | -0.01 | -0.1 | -0.3 | -0.1 | -1.0 |
+| insurance up | DE | +0.0009 | +0.0002 | -0.10 | -2.7 | +16.9 | +13.7 | +0.1 |
+| | FR | +0.0010 | +0.0001 | -0.12 | -1.4 | +10.3 | +5.1 | +0.1 |
+| | IT | +0.0017 | +0.0004 | -0.21 | -2.3 | +19.1 | +17.2 | +0.2 |
+| insurance down | DE | -0.0006 | -0.0001 | +0.07 | +1.6 | -15.7 | -5.9 | -0.1 |
+| | FR | -0.0008 | 0.0000 | +0.10 | +1.1 | -6.4 | -1.5 | -0.1 |
+| | IT | -0.0011 | -0.0002 | +0.14 | +1.1 | -16.5 | -6.6 | -0.2 |
+
+**What the tests show.**
+
+1. Every participation sign agrees across the three countries, the two
+   configurations and the three technologies. The subsidy draws time into paid work and lowers
+   participation. Empowerment raises it. More insurance lowers it slightly and
+   less insurance raises it. These qualitative results do not depend on the
+   social technology.
+2. With A on, magnitudes rank Germany, France, Italy, in the order of the
+   multipliers (2.5, 1.9, 1.5). The largest-multiplier fit gives effects 4 to
+   12 times those of the smallest, and the best fit sits in the lower third of
+   that band. With A off the band reaches multipliers of 46 to 51 in Germany and
+   France, and at the best fit the participation effects of the subsidy and of
+   insurance are 2 to 12 times their A-on values. The quantitative policy results are therefore those of G+S+A, which
+   is also the configuration whose multiplier the data pin down.
+3. Only empowerment moves agency, by 0.036 to 0.048, and it halves the gap
+   between the cells. Insurance cuts the drop on job loss by 1.4 to 2.7 points
+   but moves agency by at most 0.002. The expected loss is 0.7 to 2.8 percent of
+   consumption, so the institutional part of A = alpha(1 - p) is small next to
+   alpha. In this model agency is mostly capability, and insurance acts on its
+   small protective part.
+4. More insurance raises poor hand-to-mouth by 5 to 17 points and asset hardship
+   by 10 to 19, because households hold smaller buffers when they are insured,
+   as in Hubbard, Skinner and Zeldes (1995). The old asset-poverty agency read
+   this as a loss of agency. The shock measure reads it as a small gain, which
+   is the Snower and Lima de Miranda (2020) concept.
+5. Financing matters for the distributional effects. France's subsidy under the
+   first design, a levy on everyone (commit 1d42021), lowered participation by
+   4.5 points and asset hardship by 8.8. Under the levy on the employed the
+   figures are 5.0 and 2.8.
+
+**Caveats.** All results are partial equilibrium, with the wage and the interest
+rate fixed. The subsidy and insurance effects on participation run through time
+and income in the household problem only. There is no search response and no
+firm side.

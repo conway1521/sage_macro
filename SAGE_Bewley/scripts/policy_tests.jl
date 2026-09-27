@@ -4,7 +4,9 @@
 #
 # POLICIES (stage 7's set on the corrected basis):
 #   subsidy      a 20 percent subsidy on labour income, financed by a lump-sum
-#                tax closed so the budget balances
+#                levy on the employed, closed so the budget balances. A levy on
+#                everyone exceeds the lowest benefit in Germany and Italy, which
+#                leaves those unemployed households no feasible choice.
 #   empowerment  the lower-education cell's alpha raised halfway to the upper
 #                cell's; A on only (with A off both cells share one alpha)
 #   ui_up        replacement rate +0.10, the insurance tax adjusting
@@ -18,8 +20,10 @@
 # social technology is held fixed at three points that all fit the data: the
 # best fit, and the acceptable fits (root loss up to 0.035) with the smallest
 # and the largest multiplier. Participation effects are reported as that band.
+# Where the social technology allows several stable equilibria the solver takes
+# the highest, so the scan for the band considers only that one.
 # A policy's response families do not depend on the technology, so the band
-# costs no household solves. The lump-sum tax for the subsidy is closed at the
+# costs no household solves. The levy for the subsidy is closed at the
 # best fit and reused at the other two points. Prices (the interest rate and the
 # wage) are fixed: this is partial equilibrium.
 #
@@ -42,12 +46,13 @@ function technology_points(c, thr)
     fi = families(c; thresholds = thr)
     rows = scan_technology(c, fi, collect(0.30:0.02:1.50), collect(2.0:0.05:25.0);
                            targets = (parse(Float64, country_rows()[CODE]["part_low"]),
-                                      parse(Float64, country_rows()[CODE]["part_high"])))
+                                      parse(Float64, country_rows()[CODE]["part_high"])),
+                           selected_only = true)
     ok = [x for x in rows if x.loss <= 0.035]
     lo = ok[argmin([x.mult for x in ok])]; hi = ok[argmax([x.mult for x in ok])]
-    [(tag = "best", κ = c.kappa, σ = c.sigma_m),
-     (tag = "low multiplier", κ = lo.κ, σ = lo.σ),
-     (tag = "high multiplier", κ = hi.κ, σ = hi.σ)]
+    [(tag = "best", κ = c.kappa, σ = c.sigma_m, r = NaN),
+     (tag = "low multiplier", κ = lo.κ, σ = lo.σ, r = lo.r),
+     (tag = "high multiplier", κ = hi.κ, σ = hi.σ, r = hi.r)]
 end
 
 for cfg in CFGS
@@ -57,26 +62,35 @@ for cfg in CFGS
     b0 = solve_economy(base)
     thr = [(b0.ypov, b0.abar)]
     say("\n", "="^100, "\n", CODE, " ", cfg, " | ", describe(base), "\n", "="^100)
-    pts = S_ ? technology_points(base, thr) : [(tag = "no cohesion", κ = base.kappa, σ = base.sigma_m)]
+    pts = S_ ? technology_points(base, thr) : [(tag = "no cohesion", κ = base.kappa, σ = base.sigma_m, r = NaN)]
     at(c, pt) = SAGEConfig(c; kappa = pt.κ, sigma_m = pt.σ)
     bases = [solve_economy(at(base, pt); thresholds = thr) for pt in pts]
     for (pt, b) in zip(pts, bases)
         @printf("  technology %-16s kappa %5.2f sigma %4.2f | participation %.4f, multiplier %.1f\n",
                 pt.tag, pt.κ, pt.σ, b.rate, b.slope < 1 ? 1 / (1 - b.slope) : 1.0)
+        # the scan's equilibrium must be the one the full solve selects
+        isnan(pt.r) || abs(b.rate - pt.r) < 0.005 ||
+            @printf("  MISMATCH technology %s: scan rate %.4f but the full solve selects %.4f\n", pt.tag, pt.r, b.rate)
     end
     flush(stdout)
 
     pols = Pair{String,Any}[]
     # subsidy with the budget closed at the best fit
-    T = TAU * b0.mean_labour_income; rs = nothing
-    for it in 1:4
-        rs = solve_economy(at(SAGEConfig(base; subsidy = TAU, lumptax = base.lumptax + T), pts[1]); thresholds = thr)
-        Tn = TAU * rs.mean_labour_income
-        @printf("  subsidy budget iteration %d: tax %.5f -> %.5f\n", it, T, Tn); flush(stdout)
+    # revenue L * (1 - u) pays for TAU * mean labour income
+    # The required levy g(T) rises with T at a slope near 0.1 (France: 0.0841,
+    # 0.0874, 0.0877), so the first step extrapolates with that slope and later
+    # steps use the secant through the last two points.
+    T = TAU * b0.mean_labour_income / (1 - b0.unemployment); rs = nothing; prev = nothing
+    for it in 1:5
+        rs = solve_economy(at(SAGEConfig(base; subsidy = TAU, levy_employed = T), pts[1]); thresholds = thr)
+        Tn = TAU * rs.mean_labour_income / (1 - rs.unemployment)
+        @printf("  subsidy budget iteration %d: levy %.5f -> %.5f\n", it, T, Tn); flush(stdout)
         abs(Tn - T) < 1e-4 && break
-        T = Tn
+        slope = prev === nothing ? 0.1 : clamp(((Tn - T) - prev[2]) / (T - prev[1]) + 1, 0.0, 0.5)
+        prev = (T, Tn - T)
+        T = T + (Tn - T) / (1 - slope)
     end
-    push!(pols, "subsidy" => SAGEConfig(base; subsidy = TAU, lumptax = base.lumptax + T))
+    push!(pols, "subsidy" => SAGEConfig(base; subsidy = TAU, levy_employed = T))
     A_ && push!(pols, "empowerment" => SAGEConfig(base; alpha = ((base.alpha[1] + base.alpha[2]) / 2, base.alpha[2])))
     push!(pols, "ui_up" => SAGEConfig(base; rr = base.rr + DRR))
     push!(pols, "ui_down" => SAGEConfig(base; rr = base.rr - DRR))

@@ -88,6 +88,10 @@ Base.@kwdef struct SAGEConfig
     # policy instruments
     subsidy::Float64    = 0.0
     lumptax::Float64    = 0.0
+    # A lump-sum levy on employed households only, the unemployed exempt. It
+    # enters as a negative transfer in the employed states, so the income
+    # measures that include transfers are net of it.
+    levy_employed::Float64 = 0.0
     partcredit::Float64 = 0.0
     pcost::Float64      = 0.0
     # Committed time in the UNEMPLOYED states before any choice: job search
@@ -177,6 +181,7 @@ function describe(c::SAGEConfig)
     c.subsidy > 0 && push!(ext, @sprintf("subsidy %.2f", c.subsidy))
     c.partcredit > 0 && push!(ext, @sprintf("credit %.2f", c.partcredit))
     c.lumptax > 0 && push!(ext, @sprintf("lump tax %.5f", c.lumptax))
+    c.levy_employed > 0 && push!(ext, @sprintf("levy on the employed %.5f", c.levy_employed))
     s = @sprintf("%-6s alpha %s  B %s", dims,
                  c.A ? @sprintf("%.3f/%.3f", c.alpha...) : @sprintf("%.3f", c.alpha_off),
                  c.S ? @sprintf("%.2f/%.2f, kappa %.2f sigma %.3f omega %.2f",
@@ -208,8 +213,12 @@ function params_of(c::SAGEConfig, cell)
     if c.phi != 14.0 || c.e_ref != E_REF
         ps = [update(p; ϕ = c.phi, transfer = p.transfer .* (c.e_ref / E_REF)) for p in ps]
     end
-    (c.search_time == 0 && c.belong_u == 1) && return ps
     emp = ps[1].transfer .== 0
+    if c.levy_employed != 0
+        ps = isempty(ps[1].transfer) ? [update(p; lumptax = p.lumptax + c.levy_employed) for p in ps] :
+             [update(p; transfer = [e ? -c.levy_employed : t for (e, t) in zip(emp, p.transfer)]) for p in ps]
+    end
+    (c.search_time == 0 && c.belong_u == 1) && return ps
     tf = c.search_time == 0 ? Float64[] : [e ? 0.0 : c.search_time for e in emp]
     bsc = c.belong_u == 1 ? Float64[] : [e ? 1.0 : c.belong_u for e in emp]
     [update(p; time_floor = tf, belong_scale = bsc) for p in ps]
@@ -228,7 +237,7 @@ taste_nodes_of(c::SAGEConfig) = taste_nodes_ln(c.sigma_m; n = c.nq)
 "The employed states of a config's state space, true where employed."
 function employment_mask(c::SAGEConfig)
     cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
-    params_of(cT, cells_of(c)[1])[1].transfer .== 0
+    params_of(cT, cells_of(c)[1])[1].transfer .<= 0
 end
 
 """
@@ -452,7 +461,7 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
     med_model = cdf_quantile(YGRID, Ypop, 0.5)
     minc = sum(cs[g].share * pooled[g].minc for g in 1:2)
     Wtot = sum(cs[g].share .* vec(sum(pooled[g].W, dims = 1)) for g in 1:2)
-    emp  = params_of(cfgT, cs[1])[1].transfer .== 0
+    emp  = params_of(cfgT, cs[1])[1].transfer .<= 0
     # Agency: alpha times one minus the expected share of next year's
     # consumption lost to unemployment (agency_shock.jl). The same with income
     # alone leaves out households' own savings; the drop is at the moment of
@@ -553,7 +562,8 @@ kappa search is global at every sigma, never a window around a coarse winner,
 because a window is what produced a headline this project had to retract.
 """
 function scan_technology(c::SAGEConfig, fams, sigmas, kappas;
-                         targets = (0.25, 0.45), nq = c.nq, xgrid = 0.0:0.02:60.0)
+                         targets = (0.25, 0.45), nq = c.nq, xgrid = 0.0:0.02:60.0,
+                         selected_only = false)
     cs = cells_of(c); XG = collect(xgrid)
     rl = [n.rate for n in fams[1]]; rh = [n.rate for n in fams[2]]
     tab(col, σ) = (ms = taste_nodes_ln(σ; n = nq);
@@ -567,11 +577,18 @@ function scan_technology(c::SAGEConfig, fams, sigmas, kappas;
                     lo = interp(XG, Rl, κ * cs[1].B * arg); hi = interp(XG, Rh, κ * cs[2].B * arg);
                     (cs[1].share * lo + cs[2].share * hi, lo, hi))
             o = [f(r)[1] for r in g]
+            # every stable crossing, from the lowest rate up; with
+            # `selected_only` just the highest, the one `solve_economy` selects
+            cross = Tuple{Float64,Float64}[]
             for i in 1:400
                 d1 = o[i] - g[i]; d2 = o[i+1] - g[i+1]
                 (d1 == 0 || sign(d1) != sign(d2)) || continue
                 sl = (o[i+1] - o[i]) / (g[i+1] - g[i]); sl < 1 || continue
-                rs = g[i] + d1 / (d1 - d2) * (g[i+1] - g[i]); _, lo, hi = f(rs)
+                push!(cross, (g[i] + d1 / (d1 - d2) * (g[i+1] - g[i]), sl))
+            end
+            selected_only && length(cross) > 1 && (cross = cross[end:end])
+            for (rs, sl) in cross
+                _, lo, hi = f(rs)
                 L = (lo - targets[1])^2 + (hi - targets[2])^2
                 (best === nothing || L < best.L) &&
                     (best = (L = L, κ = κ, r = rs, lo = lo, hi = hi, slope = sl))
