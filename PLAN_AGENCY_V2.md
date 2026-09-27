@@ -143,3 +143,14 @@ Background research, reports to be filed on return:
 1. Literature for theta: the life-satisfaction cost of job insecurity among the employed.
 2. Verification of the hand-entered inputs: the KVW Table 5 values, the participation ratios, BLS 2015 and ATUS.
 3. Published annual earnings-process estimates for FR, DE and IT.
+
+**Report 2 filed (hand-entered inputs):**
+
+- **KVW poor hand-to-mouth, Table 5 baseline (p. 119):** 0.032, 0.074, 0.083 and 0.138, all verified. The US figure comes from SCF 2010 alone. Europe comes from HFCS 2008 to 2010, with income years 2009 (France, Germany) and 2010 (Italy).
+- **France's ratio of 17/35 is association membership, not volunteering** (INSEE Première 1327, SRCV 2008). Within members, 67 percent of the unemployed volunteer against 58 percent of the employed, which implies a volunteering ratio of about 0.56. That is derived, not an INSEE figure. There is no newer official ratio by activity status.
+- **Italy's 5.9/6.3 is verified**, but its reference window is 4 weeks (ISTAT 2023, time-use survey) against 12 months elsewhere.
+- **The US 23.3/27.2 is verified** (BLS 2015, Table 1).
+- **Germany's 26.1, 46.7, 51.1 and weights 37.1, 12.3 are verified** (Freiwilligensurvey 2014, BMFSFJ long version, Abb. 16-3 p. 441, Tab. 16-3 p. 436), giving a ratio of 0.546.
+- **US volunteering by education, 25 and over (BLS 2015 Table 1):** 8.1, 15.6, 26.5 and 38.8.
+- **ATUS 2025 Table 8B has no all-employed column.** It splits employed people by whether a child lives in the household, so the US work share needs re-deriving with population weights. The US is not calibrated, so this is low priority.
+- **Decision for Phase 1:** France's ratio should use the volunteering-based 0.56, the same concept as the targets, with 0.486 kept as a sensitivity. Italy's window mismatch is to be documented.
