@@ -123,3 +123,23 @@ The social multiplier needs a moment beyond national levels. The candidate is re
 | 5 results | one session | about an hour |
 
 Deferred until after this plan: informal insurance (S feeding A), the E dimension, the HFCS targets (when access is granted), general equilibrium for the best fit.
+
+## Progress (paused 2026-09-27, Phase 1 in progress)
+
+Found so far in the audit, all to be fixed in Phase 1:
+
+- **Education shares are 50/50 for every country.** SAGEConfig's default `share = (0.5, 0.5)` is never overridden by `country_config`. The actual tertiary shares (ages 25 to 64, 2015) are about 36 percent in France, 27 in Germany and 17 in Italy. This affects aggregate participation, the social feedback, the insurance tax and mean earnings. `alpha_off` is also a simple mean rather than a share-weighted one.
+- **`median_to_mean = 0.8693` is France's** (ilc_di03) and applies to every country. It is to be made per country (ilc_di03, 2015).
+- **The effort target mixes definitions.** The level is anchored to France's INSEE 0.53, which appears to cover all adults, while the ratios come from HETUS 2010 figures for the employed (FR 0.644, DE 0.610, IT 0.727). The target should be the HETUS share for the employed directly, with e_ref equal to it. The HETUS computation is replicated from raw `tus_00selfstat` (France: 0.673 full-time, 0.502 part-time, 17.6 percent part-time, giving 0.643).
+- **alpha and B** as in MODULAR.md 2026-09-27 (gradients). alpha is to come from SES 2014 (`earn_ses14_16`, `earn_ses14_04`, matching the 2015 participation module), with SES 2022 as a check.
+- **The German ratio** is 0.546.
+
+Not yet inventoried: SAGEParams defaults in full (being checked: rho, eta, R, QBAR, omega, Lambda), test_modular preflight constants, policy_tests constants.
+
+Helper for the build script: `data/eurostat_api.py` (Eurostat JSON API reader). The OECD EAG flows `DF_LSO_NEAC_UNEMP`, `DF_LSO_NEAC_DISTR_EA` and `DF_LSO_NEAC_LF` download with the key `FRA+DEU+ITA+USA................` (17 dimensions). There is no build script yet: `data/build_country_table.py` is the next task.
+
+Background research, reports to be filed on return:
+
+1. Literature for theta: the life-satisfaction cost of job insecurity among the employed.
+2. Verification of the hand-entered inputs: the KVW Table 5 values, the participation ratios, BLS 2015 and ATUS.
+3. Published annual earnings-process estimates for FR, DE and IT.
