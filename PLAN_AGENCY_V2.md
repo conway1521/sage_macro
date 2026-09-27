@@ -1,0 +1,125 @@
+# Plan: audited inputs, then agency in preferences (version 2, with version 1 as the fallback)
+
+Written 2026-09-27. This plan replaces ad hoc checking with a fixed sequence of phases, each ending in a gate that must pass before the next phase uses compute. The state before it is in MODULAR.md (last two sections), and the reasons for it are the two limits found in the policy tests: the social multiplier is identified only through the carried-over education gradients, and agency barely responds to institutions and has no place in preferences.
+
+## Decisions taken (2026-09-27)
+
+1. **alpha is the return to one's own effort.** Its gradient comes from hourly pay by education (Eurostat SES), normalised so that its population mean is 1 in each country. The 0 to 1 band is dropped. Levels of pay across countries belong to productivity, not to agency.
+2. **The headline agency measure is protection if the shock hits**, A_cond = alpha (1 - drop on job loss). The expected loss (A, the OECD labour-market insecurity concept) and the risk of job loss are reported beside it.
+3. **Agency enters preferences (version 2).** Employed households bear a disutility from their exposure to job loss, so agency acts on choices. If version 2 fails a gate, the fallback is version 1: agency enters measured wellbeing only, with the same weight, and choices are unchanged.
+4. **The German unemployed participation ratio becomes 0.546** (Freiwilligensurvey 2014), at the next recalibration.
+
+## The design of the agency term (version 2)
+
+**The object.** An employed household in latent productivity state z that chooses assets a' for next year faces a separation probability delta_g. If it loses its job, its resources fall from R a' + y_ref(z) to R a' + b(z), where y_ref(z) = alpha_g e_ref z Z is labour income at the reference effort and b(z) the benefit. Its exposure is
+
+\[ X(a', z) = \delta_g \, \max\left(0,\; 1 - \frac{R a' + b(z)}{R a' + y_{ref}(z)}\right). \]
+
+Savings reduce exposure, and so does a more generous benefit. Exposure depends only on the state and the chosen a', not on the household's own future policy, so the household problem stays a standard discrete dynamic programme with no inner fixed point.
+
+**The preference.** The employed household values consumption as if it were c (1 - theta X(a', z)):
+
+\[ u = \Gamma\left(\frac{[c(1-\theta X)]^{1-\gamma}}{1-\gamma} - \phi\frac{e^{1+\psi}}{1+\psi}\right) + \text{belonging} \cdot d. \]
+
+theta X is then the share of consumption the household would give up to be rid of the insecurity, which is how the wellbeing literature reports it, so theta can be calibrated directly. theta = 0 gives back today's model exactly. The unemployed have no exposure term: their loss has already happened.
+
+**Grounding.** Anticipatory utility, where people derive utility now from what they expect (Caplin and Leahy 2001). Job insecurity lowers life satisfaction among people who stay employed (Knabe and Ratzel 2011; Green 2011; the meta-analysis of Sverke, Hellgren and Naswall 2002). Institutions moderate that cost (Carr and Chung 2014). The exposure measure is close to the financial-resilience notion, being able to cope with a loss of income, which the OECD How's Life framework tracks. That link is to be checked in Phase 2.
+
+**What it changes.** Households save partly for peace of mind, so the patience calibration moves. Insurance now reduces anxiety among the employed as well as the drop for the unemployed. Agency gets a utility component beside consumption, effort and belonging, which gives a four-part wellbeing decomposition.
+
+**The A switch.** A on means education-specific alpha plus theta > 0. A off means common alpha (mean 1) and theta = 0. The four configurations (G, G+A, G+S, G+S+A) stay as they are.
+
+## Phase 1: input audit (no compute beyond downloads)
+
+**Tasks.**
+
+1.1 **Inventory** every number that enters a solve: the country table (21 columns × 4 countries), SAGEParams defaults (gamma, psi, beta, R, Gamma, Lambda, the income process, grids, E_REF, phi's default, omega, QBAR, nz, na, ne), SAGEConfig defaults, calibration targets and tolerances, and constants hard-coded in scripts. For each: the value, every file and line that reads it, and the source.
+
+1.2 **Classify** each as verified (checked against the primary source, table or page recorded), derived (formula checked), assumption (declared, with the reference that justifies it) or unverified.
+
+1.3 **Rebuild the country table with a script**, `data/build_country_table.py`. It downloads each series from the Eurostat, OECD and TaxBEN APIs, applies the documented computations and writes `data/country_labour_participation.csv`. No hand-typed numbers. Where a value cannot be downloaded (Freiwilligensurvey, INSEE, ISTAT, BLS, KVW 2014 Table 5), it is entered once in `data/manual_inputs.csv` with its citation and page, and the script reads it from there.
+
+1.4 **Adopt the decisions** in the table: alpha from SES 2022 hourly earnings (mean 1), B from EU-SILC 2015 ilc_scp15, and the German ratio 0.546. B also needs a mean decision. I propose keeping the current population mean, since B's level is absorbed by kappa.
+
+1.5 **Single source of truth.** Check that no script reads an old value: calibration_ratio.txt (the INSEE footing), the archive folder, the old engine's COUNTRIES and COUNTRY_TARGETS tables, and constants duplicated across files. Anything obsolete is moved to the archive or deleted from the load path.
+
+1.6 **Widen the sigma scan to 3.0**, since the multiplier range's lower end currently sits at the grid edge.
+
+**Gate 1.** No input classed unverified. The table is regenerated from the script and differs from the committed CSV only where a decision or a correction says so, and every difference is listed. The inputs are tagged `inputs-v2`.
+
+## Phase 2: the literature for theta (reading, no compute)
+
+**Tasks.**
+
+2.1 Collect peer-reviewed estimates of the life-satisfaction effect of perceived job insecurity or unemployment risk among the employed, and the income coefficient from the same studies. Candidates: Knabe and Ratzel 2011 (SOEP, Germany), Green 2011 (HILDA), Carr and Chung 2014 (European Social Survey, across countries), Sverke et al. 2002 (meta-analysis). Country-specific estimates are preferred where they exist.
+
+2.2 Convert each to a consumption-equivalent share, with the ratio-of-coefficients method standard in the happiness literature (Clark, Frijters and Shields 2008). Record the mean share among the employed and, if available, the gradient by education.
+
+2.3 Write the target in `data/manual_inputs.csv`: the mean consumption-equivalent cost of insecurity among the employed, per country if the evidence allows it, otherwise one value, with a range.
+
+**Gate 2.** A documented target with a range from at least two independent peer-reviewed sources. If the estimates disagree by more than a factor of three, the range goes into the calibration as a sensitivity rather than a single number.
+
+## Phase 3: implementation and tests (small compute)
+
+**Tasks.**
+
+3.1 Add `theta_A` to SAGEParams (default 0) and the exposure term to the reward of employed states in proto_participation_core.jl (the four reward constructions), unemployment_core.jl and the budget helpers in agency_shock.jl. This changes the solver digest, so every cache rebuilds, as expected.
+
+3.2 Add `theta_A` to SAGEConfig and the calibration files. Report per economy:
+- exposure (mean X among the employed);
+- the agency utility component;
+- the four-part wellbeing decomposition (consumption, effort, belonging, agency);
+- A, A_cond and the job-loss risk.
+
+3.3 **Tests.**
+- theta = 0 reproduces today's economies to machine precision, for all four configurations, in the suite.
+- theta > 0 raises saving among the employed and lowers exposure.
+- Convergence rows at theta > 0 move agency and hand-to-mouth by less than the suite tolerance.
+- The unemployed participation rule stays exact, because the term does not touch the unemployed budget.
+
+3.4 **Prototype on France** at the audited inputs. Report how far theta at the Phase 2 target moves hand-to-mouth, effort and participation before recalibration.
+
+**Gate 3.** Exact reduction, convergence, and no pathology: no mass at the top of the asset grid, and no loss of a stable participation equilibrium.
+
+## Phase 4: recalibration (the main compute, laptop sessions with the user's say-so each time)
+
+**Tasks.**
+
+4.1 Extend calibrate_country.jl with theta: G targets (effort, poor hand-to-mouth), S targets (participation by education), and the A target (the consumption-equivalent cost of insecurity), in the fixed order phi, patience, theta, then the social technology. The order is repeated until all targets hold within tolerance.
+
+4.2 Calibrate FR, DE and IT in all four configurations on `inputs-v2`. The United States stays uncalibrated (decision of 2026-09-24).
+
+4.3 Report the multiplier ranges on the widened sigma scan.
+
+**Gate 4.** Every configuration hits its own targets within tolerance, and the suite passes.
+
+## Phase 5: results
+
+5.1 Policy tests as in MODULAR.md 2026-09-27, plus the wellbeing decomposition by dimension, A_cond as the headline, and the insurance experiment reading both the drop and the anxiety channel.
+
+5.2 Write-up in MODULAR.md, one section, and update the vault status.
+
+## The fallback to version 1
+
+Version 1 is taken if:
+- **Gate 2 fails:** no credible target for theta.
+- **Gate 3 fails:** the reduction is inexact, the term does not converge, or it produces pathological savings.
+- **Gate 4 fails for the preference itself:** a country cannot hit its G targets with theta at its target.
+
+Version 1 keeps theta = 0 in behaviour. It reports measured wellbeing as consumption, effort, belonging and lambda_A × A_cond, with lambda_A taken from the Phase 2 evidence. Phases 1, 4 (without theta) and 5 go ahead unchanged, so a fallback costs no extra compute.
+
+## Parallel track, needing the user
+
+The social multiplier needs a moment beyond national levels. The candidate is regional excess variance (Glaeser, Sacerdote and Scheinkman 1996), with the European Social Survey rounds 1 to 9 (item wrkorg, NUTS regions), ISTAT's regional series and the Freiwilligensurvey Länder. The ESS needs a free account, which the user has to create. It enters after Phase 4 as an added calibration moment.
+
+## Estimated effort
+
+| phase | work | compute |
+|---|---|---|
+| 1 audit | one to two sessions | downloads only |
+| 2 literature | one session | none |
+| 3 implementation | one to two sessions | under an hour |
+| 4 recalibration | monitoring | about a day in laptop sessions |
+| 5 results | one session | about an hour |
+
+Deferred until after this plan: informal insurance (S feeding A), the E dimension, the HFCS targets (when access is granted), general equilibrium for the best fit.
