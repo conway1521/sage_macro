@@ -154,3 +154,13 @@ Background research, reports to be filed on return:
 - **US volunteering by education, 25 and over (BLS 2015 Table 1):** 8.1, 15.6, 26.5 and 38.8.
 - **ATUS 2025 Table 8B has no all-employed column.** It splits employed people by whether a child lives in the household, so the US work share needs re-deriving with population weights. The US is not calibrated, so this is low priority.
 - **Decision for Phase 1:** France's ratio should use the volunteering-based 0.56, the same concept as the targets, with 0.486 kept as a sensitivity. Italy's window mismatch is to be documented.
+
+**Report 1 filed (literature for theta).** The agent read working papers and accepted manuscripts. The published tables are still to be checked.
+
+- **The fixed-effects SOEP and HILDA studies give implausible money values.** Knabe and Ratzel 2011, Clark, Knabe and Ratzel 2010, Geishecker 2012 and Green 2011 imply compensating incomes of 100 percent or more of income for any job worry. The literature attributes this to attenuated income coefficients (Clark, Frijters and Shields 2008).
+- **Carr and Chung (2014, JESP, ESS 2010, 22 countries) is the only European estimate with a plausible share.** The 8 percent of employees who are severely insecure would pay about 15 to 19 percent of income, which averages about 1.4 percent over all employees. This conversion rests on the agent's assumption that the income variable is in deciles.
+- **Recommended target:** theta × mean X of about 3 percent of consumption for the average employed adult, with a range of 1.5 to 6 percent. Country scaling as a sensitivity: Germany about 0.8, France 1, Italy 1.5 to 2.
+- **Design implications:**
+  - The cost is concave in the probability of job loss, and about 70 percent of the gradient is fear unrelated to the expected loss (Green 2011, Geishecker 2012), so a linear theta X overstates the cost at high exposure.
+  - Long-term replacement rates moderate the cost: 10 points more removes about 44 percent of it (Carr and Chung 2014). This supports exposure net of benefits.
+- **Gate 2 status: marginal.** Only one source gives a usable level, below the two the gate requires. **Decision on return:** either accept the 3 percent (1.5 to 6) as an order of magnitude, with the full range as a sensitivity, or fall back to version 1. A concave exposure, for example X to the power one half, or a fixed fear component should also be considered before implementation.
