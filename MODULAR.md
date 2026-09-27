@@ -580,8 +580,8 @@ A_cond at the best fit, G+S+A, the change in its level:
 | insurance up | +0.024 | +0.012 | +0.019 |
 | insurance down | -0.013 | -0.009 | -0.009 |
 
-On this measure, insurance does half to four fifths of what empowerment does,
-where on A it did a fortieth. Which measure is the agency of Snower and Lima de
+On this measure, insurance does a third (France) to five sixths (Germany) of
+what empowerment does, where on A it did a thirtieth to a fortieth. Which measure is the agency of Snower and Lima de
 Miranda (2020) is a conceptual choice, whether protection means the expected
 loss or the loss when the shock comes. It is left open here.
 
