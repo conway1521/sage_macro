@@ -470,6 +470,12 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
     pyb  = [sum(pooled[g].pinc) / sum(pooled[g].mass) for g in 1:2]
     Acell = Tuple(cs[g].α * (1 - pbar[g]) for g in 1:2)
     mE = sum(cs[g].share * sum(pooled[g].mass[emp]) for g in 1:2)
+    # Protection if the shock hits, reported beside A: alpha times one minus
+    # the drop in consumption on job loss, per cell, among the employed. A
+    # averages the drop over the chance of losing the job, which is small, so
+    # A is mostly alpha. This one is not averaged over that chance.
+    dcell = [(m = sum(pooled[g].mass[emp]); m <= 0 ? 0.0 : sum(pooled[g].dmass[emp]) / m) for g in 1:2]
+    Acond = Tuple(cs[g].α * (1 - dcell[g]) for g in 1:2)
     base = (config = c, rate = rate, slope = slope, median_income = med,
             median_model = med_model, mean_income = ymean,
             mean_labour_income = minc,
@@ -484,6 +490,7 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
             rate_U = (m = sum(cs[g].share * sum(pooled[g].mass[.!emp]) for g in 1:2);
                       m <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].part[.!emp]) for g in 1:2) / m),
             A = sum(cs[g].share * Acell[g] for g in 1:2), A_cell = Acell,
+            A_cond = sum(cs[g].share * Acond[g] for g in 1:2), A_cond_cell = Acond,
             shock_loss = sum(cs[g].share * pbar[g] for g in 1:2),
             shock_loss_income = sum(cs[g].share * pyb[g] for g in 1:2),
             A_institutions = sum(cs[g].share * cs[g].α * (1 - pyb[g]) for g in 1:2),

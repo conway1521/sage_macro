@@ -1,0 +1,7 @@
+DE GSA ratio 0.574 | at the calibrated technology: participation 0.2997, multiplier 2.5 | refit: kappa 12.20 sigma 0.78 rootloss 0.0016 mult 2.5, acceptable 1.5 to 6.1
+DE GSA ratio 0.546 | at the calibrated technology: participation 0.2992, multiplier 2.5 | refit: kappa 12.30 sigma 0.80 rootloss 0.0016 mult 2.4, acceptable 1.5 to 7.4
+DE GSA ratio 0.420 | at the calibrated technology: participation 0.2968, multiplier 2.5 | refit: kappa 12.25 sigma 0.78 rootloss 0.0016 mult 2.5, acceptable 1.5 to 7.3
+DE GS  ratio 0.574 | at the calibrated technology: participation 0.3000, multiplier 17.9 | refit: kappa 11.75 sigma 0.48 rootloss 0.0009 mult 17.9, acceptable 1.9 to 46.0
+DE GS  ratio 0.546 | at the calibrated technology: participation 0.2962, multiplier 17.6 | refit: kappa 11.75 sigma 0.50 rootloss 0.0044 mult 11.0, acceptable 1.9 to 17.6
+DE GS  ratio 0.420 | at the calibrated technology: participation 0.2804, multiplier 16.2 | refit: kappa 11.80 sigma 0.56 rootloss 0.0091 mult 5.5, acceptable 1.9 to 16.2
+DONE

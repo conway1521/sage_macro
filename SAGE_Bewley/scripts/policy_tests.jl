@@ -37,9 +37,10 @@ const CODE = ARGS[1]
 const CFGS = length(ARGS) >= 2 ? [uppercase(ARGS[2])] : ["GSA", "GS", "GA", "G"]
 const TAU = 0.20
 const DRR = 0.10
-const FIELDS = [:rate, :rate_E, :rate_U, :A, :shock_loss, :shock_loss_income, :consumption_drop,
+const FIELDS = [:rate, :rate_E, :rate_U, :A, :A_cond, :shock_loss, :shock_loss_income, :consumption_drop,
                 :hardship, :hand_to_mouth_kvw, :mean_effort_employed, :median_income, :mean_labour_income]
 agap(r) = r.A_cell[2] - r.A_cell[1]
+cgap(r) = r.A_cond_cell[2] - r.A_cond_cell[1]
 const ROWS = Vector{Dict{String,Any}}()
 
 function technology_points(c, thr)
@@ -109,7 +110,8 @@ for cfg in CFGS
             row = Dict{String,Any}("code" => CODE, "config" => cfg, "policy" => name, "technology" => pt.tag,
                                    "kappa" => pt.κ, "sigma" => pt.σ,
                                    "multiplier" => b.slope < 1 ? 1 / (1 - b.slope) : 1.0,
-                                   "agency_gap" => agap(r), "d_agency_gap" => agap(r) - agap(b))
+                                   "agency_gap" => agap(r), "d_agency_gap" => agap(r) - agap(b),
+                                   "cond_gap" => cgap(r), "d_cond_gap" => cgap(r) - cgap(b))
             for f in FIELDS
                 row[string(f)] = getfield(r, f); row["d_" * string(f)] = d(f)
             end
@@ -119,7 +121,8 @@ for cfg in CFGS
     @printf("  [%s done in %.1f min]\n", cfg, (time() - t0) / 60); flush(stdout)
 end
 
-cols = vcat(["code", "config", "policy", "technology", "kappa", "sigma", "multiplier", "agency_gap", "d_agency_gap"],
+cols = vcat(["code", "config", "policy", "technology", "kappa", "sigma", "multiplier", "agency_gap", "d_agency_gap",
+             "cond_gap", "d_cond_gap"],
             [string(f) for f in FIELDS], ["d_" * string(f) for f in FIELDS])
 open(joinpath(@__DIR__, "policy_results_$(CODE).csv"), "w") do io
     println(io, join(cols, ","))

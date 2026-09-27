@@ -89,3 +89,39 @@ series shows the poor share at 0.134 in 2010 and 2013 and then falling to 0.094
 times, which probably also holds for the European 2010 snapshot. An application
 for HFCS microdata access (waves 2010 to 2023) is being prepared, after which the
 European targets become pooled averages computed on the same definition.
+
+## 2026-09-27: the carried-over gradients and the German ratio checked
+
+**alpha.** In the model alpha is the pay per unit of effort, so its ratio across
+the cells is the hourly earnings ratio. Eurostat Structure of Earnings Survey
+2022, mean hourly earnings (`earn_ses22_16`, sections B to S, enterprises with 10
+or more employees), non-tertiary (ED0-2 and ED3_4 weighted by employees,
+`earn_ses22_04`) over tertiary (ED5-8): France 0.631, Germany 0.592, Italy
+0.644. The carried-over ratios are 0.840, 0.837 and 0.778, flatter than the data
+and ranked differently. The OECD Education at a Glance series
+(`DF_LSO_EARN_REL_UPPER`) agrees for Germany and Italy, and has no French data.
+Imposing the data ratio at the same population mean puts alpha_high above one
+(1.03 in France, 1.06 in Germany), outside the 0 to 1 agency band.
+
+**B.** Share of adults with someone to ask for help, EU-SILC 2015
+(`ilc_scp15`, ages 25 to 64), non-tertiary (population weighted, `lfsa_pgaed`)
+over tertiary: France 0.941, Germany 0.979, Italy 0.927. The carried-over ratios
+are 0.851, 0.872 and 0.895, steeper than the data.
+
+Neither column is changed yet. The effect on the calibration is in MODULAR.md,
+2026-09-27 (gradients).
+
+**ratio, Germany.** The value 0.574 (26.1 over 45.5) is not in the
+Freiwilligensurvey reports. The closest published pair is men in 2014 (27.9 over
+48.7). The published figures for engagement rates are:
+
+- 2014: unemployed 26.1, full-time employed 46.7, part-time 51.1. The pooled
+  employed rate is 47.8, a ratio of 0.546 (Simonson, Vogel and Tesch-Roemer,
+  eds., Freiwilliges Engagement in Deutschland, 2017, Abb. 16-3).
+- 2019: unemployed 19.0 against full-time 43.5 and part-time 50.8, a ratio of
+  about 0.42 (Simonson, Kelle, Kausmann and Tesch-Roemer, eds., 2022, Abb. 4-5).
+- 2024: unemployed 16.1 against full-time 40.9, a ratio of 0.394 (Wolfert et al.
+  2025, Abb. 2-5).
+
+The figure numbers come from a reading of the reports and are still to be
+checked page by page. 2014 is the wave nearest the 2015 targets.

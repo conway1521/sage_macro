@@ -39,7 +39,7 @@ for pol in pols:
             print(f"{pol:12s} {cfg:5s}" + "".join(cells))
 
 print("\nOther effects at the best fit, G+S+A (agency and gap in levels, the rest in percentage points)")
-fields = [("d_A", "agency", 1), ("d_agency_gap", "gap", 1), ("d_shock_loss", "loss", 100),
+fields = [("d_A", "agency", 1), ("d_agency_gap", "gap", 1), ("d_A_cond", "if hit", 1), ("d_cond_gap", "gap hit", 1), ("d_shock_loss", "loss", 100),
           ("d_consumption_drop", "drop", 100), ("d_hardship", "hardship", 100),
           ("d_hand_to_mouth_kvw", "htm", 100), ("d_mean_effort_employed", "effort", 100)]
 print(f"{'':12s} {'':3s}" + "".join(f"{n:>10s}" for _, n, _ in fields))

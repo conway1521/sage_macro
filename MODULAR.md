@@ -519,3 +519,91 @@ and between configurations.
 rate fixed. The subsidy and insurance effects on participation run through time
 and income in the household problem only. There is no search response and no
 firm side.
+
+## 2026-09-27 (gradients), the limits checked: gradients, protection, the German ratio
+
+**The carried-over gradients disagree with the data** (sources note,
+2026-09-27). Non-tertiary over tertiary:
+
+| | alpha, carried over | hourly earnings, SES 2022 | B, carried over | someone to ask for help, EU-SILC 2015 |
+|---|---|---|---|---|
+| France | 0.840 | 0.631 | 0.851 | 0.941 |
+| Germany | 0.837 | 0.592 | 0.872 | 0.979 |
+| Italy | 0.778 | 0.644 | 0.895 | 0.927 |
+
+The model's alpha gradient is too flat and its B gradient too steep. The
+diagnostic `probe_gradients.jl` imposes the data ratios, keeping each parameter's
+population mean, and refits the social technology to the same participation
+targets. It leaves the savings side as calibrated, so it tests the social block
+only. Multiplier at the best fit, with the range over the acceptable fits, G+S+A:
+
+| | carried over | B from data | alpha from data | both from data |
+|---|---|---|---|---|
+| Germany | 2.5 (1.5 to 6.1) | 11.3 (2.4 to 18.2), poor fit | 1.5 (1.5 to 2.0) | 1.9 (1.5 to 3.4) |
+| France | 1.9 (1.4 to 3.9) | 4.7 (1.5 to 42.0) | 1.4 (1.4 to 1.9) | 1.7 (1.4 to 2.8) |
+| Italy | 1.5 (1.4 to 3.3) | 1.7 (1.4 to 6.1) | 1.3 (1.3 to 2.1) | 1.4 (1.4 to 2.4) |
+
+1. The multiplier rests on the split of the participation gradient between
+   alpha, which acts privately, and B, which the social feedback amplifies. The
+   steeper data alpha explains more of the gradient privately and the flatter
+   data B leaves less for amplification to do. With both from data the range
+   narrows in every country and the ranking holds.
+2. The lower end of every range, 1.3 to 1.5, sits at sigma = 1.50, the edge of
+   the scan. The true lower bound is between 1 and that value.
+3. With the data ratio at the same mean, alpha_high exceeds one (1.03 in France,
+   1.06 in Germany). Alpha is doing two jobs, pay per unit of effort and the
+   level of agency, and the earnings data fix only the first. Adopting the data
+   gradients therefore needs a decision on how agency is normalised, then a full
+   recalibration (phi and the patience spread move with alpha).
+
+**Protection if the shock hits.** A = alpha(1 - p) averages the drop on job loss
+over the chance of losing the job, so p is 0.7 to 2.8 percent and A is mostly
+alpha. Weighting the loss by risk aversion (gamma = 2) raises p only to about 0.8,
+1.3 and 4.6 percent (France, Germany, Italy, a back-of-envelope calculation from
+the calibrated separation rates and drops). That fix would not help. The core now
+also reports `A_cond` = alpha(1 - drop), the drop being the consumption loss on
+job loss among the employed, per cell. It is reported beside A, and A is
+unchanged.
+
+| G+S+A baseline | A | A_cond |
+|---|---|---|
+| France | 0.832 | 0.747 |
+| Germany | 0.838 | 0.590 |
+| Italy | 0.779 | 0.454 |
+
+A_cond at the best fit, G+S+A, the change in its level:
+
+| policy | Germany | France | Italy |
+|---|---|---|---|
+| subsidy | +0.010 | +0.004 | +0.005 |
+| empowerment | +0.028 | +0.034 | +0.032 |
+| insurance up | +0.024 | +0.012 | +0.019 |
+| insurance down | -0.013 | -0.009 | -0.009 |
+
+On this measure, insurance does half to four fifths of what empowerment does,
+where on A it did a fortieth. Which measure is the agency of Snower and Lima de
+Miranda (2020) is a conceptual choice, whether protection means the expected
+loss or the loss when the shock comes. It is left open here.
+
+**The German unemployed ratio.** The value 0.574 has no source. The
+Freiwilligensurvey gives 0.546 for 2014 and about 0.42 for 2019
+(`probe_ratio_de.jl`, household solves unchanged, technology refitted):
+
+| | ratio 0.574 | 0.546 | 0.42 |
+|---|---|---|---|
+| G+S+A multiplier (range) | 2.5 (1.5 to 6.1) | 2.4 (1.5 to 7.4) | 2.5 (1.5 to 7.3) |
+| G+S multiplier (range) | 17.9 (1.9 to 46.0) | 11.0 (1.9 to 17.6) | 5.5 (1.9 to 16.2) |
+
+G+S+A does not move. G+S does, which is its fragility again. The data column is
+left at 0.574 until the next recalibration, when 0.546 replaces it with the
+gradients.
+
+**Regional participation data**, for an excess-variance moment (Glaeser,
+Sacerdote and Scheinkman 1996). No Eurostat table is regional. The degree of
+urbanisation gives three cells per country, and Germany's 2022 values are
+suppressed. EU-SILC microdata carry NUTS 1 at best, with none for France. The
+common free source is the European Social Survey, rounds 1 to 9 (item wrkorg,
+NUTS region, 1,500 to 3,000 respondents per country and round). It needs a free
+account on the ESS portal. ISTAT publishes volunteering for 21 Italian regions
+yearly from 2005 (BES indicator 05REL006), and the Freiwilligensurvey publishes
+the 16 Länder for 2014, 2019 and 2024.

@@ -1,0 +1,22 @@
+
+FR targets (0.202862, 0.291) | carried over alpha (0.765, 0.911) B (0.8, 0.94) | data alpha (0.648, 1.028) B (0.844, 0.896)
+  families at the data alpha built in 3.2 min
+  carried over     best kappa 10.70 sigma 0.94 rootloss 0.0005 (low 0.203 high 0.291) mult   1.9 | 47 acceptable sigmas, mult 1.4 to 3.9
+  B from data      best kappa 10.30 sigma 0.56 rootloss 0.0032 (low 0.205 high 0.293) mult   4.7 | 49 acceptable sigmas, mult 1.5 to 42.0
+  alpha from data  best kappa 14.45 sigma 1.48 rootloss 0.0004 (low 0.203 high 0.291) mult   1.4 | 30 acceptable sigmas, mult 1.4 to 1.9
+  both from data   best kappa 11.40 sigma 1.10 rootloss 0.0007 (low 0.202 high 0.291) mult   1.7 | 42 acceptable sigmas, mult 1.4 to 2.8
+
+IT targets (0.116249, 0.165) | carried over alpha (0.7, 0.9) B (0.85, 0.95) | data alpha (0.627, 0.973) B (0.866, 0.934)
+  families at the data alpha built in 13.5 min
+  carried over     best kappa  6.65 sigma 1.10 rootloss 0.0006 (low 0.117 high 0.165) mult   1.5 | 50 acceptable sigmas, mult 1.4 to 3.3
+  B from data      best kappa  6.70 sigma 0.94 rootloss 0.0005 (low 0.117 high 0.165) mult   1.7 | 54 acceptable sigmas, mult 1.4 to 6.1
+  alpha from data  best kappa  7.25 sigma 1.50 rootloss 0.0010 (low 0.115 high 0.165) mult   1.3 | 40 acceptable sigmas, mult 1.3 to 2.1
+  both from data   best kappa  6.90 sigma 1.34 rootloss 0.0004 (low 0.116 high 0.165) mult   1.4 | 44 acceptable sigmas, mult 1.4 to 2.4
+
+DE targets (0.252077, 0.349) | carried over alpha (0.77, 0.92) B (0.82, 0.94) | data alpha (0.628, 1.062) B (0.871, 0.889)
+  families at the data alpha built in 15.0 min
+  carried over     best kappa 12.20 sigma 0.78 rootloss 0.0016 (low 0.250 high 0.349) mult   2.5 | 49 acceptable sigmas, mult 1.5 to 6.1
+  B from data      best kappa 11.75 sigma 0.50 rootloss 0.0195 (low 0.258 high 0.330) mult  11.3 | 17 acceptable sigmas, mult 2.4 to 18.2
+  alpha from data  best kappa 17.60 sigma 1.40 rootloss 0.0006 (low 0.252 high 0.349) mult   1.5 | 30 acceptable sigmas, mult 1.5 to 2.0
+  both from data   best kappa 13.30 sigma 0.98 rootloss 0.0005 (low 0.252 high 0.350) mult   1.9 | 44 acceptable sigmas, mult 1.5 to 3.4
+DONE
