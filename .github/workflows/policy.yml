@@ -1,5 +1,5 @@
 # Policy tests (subsidy, empowerment, insurance up and down; A on and off; three
-# social technologies) and the equilibrium count, one job per country, on the
+# social technologies), one job per country (the equilibrium count is equilibria.yml), on the
 # committed calibrations. Started by hand.
 name: policy
 on:
@@ -43,7 +43,6 @@ jobs:
         run: |
           cd SAGE_Bewley
           julia --project=scripts/run_env scripts/policy_tests.jl ${{ matrix.code }} 2>&1 | tee scripts/policy_tests_${{ matrix.code }}.txt
-          julia --project=scripts/run_env scripts/policy_equilibria.jl ${{ matrix.code }} 2>&1 | tee scripts/policy_equilibria_${{ matrix.code }}.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -51,4 +50,3 @@ jobs:
           path: |
             SAGE_Bewley/scripts/policy_tests_${{ matrix.code }}.txt
             SAGE_Bewley/scripts/policy_results_${{ matrix.code }}.csv
-            SAGE_Bewley/scripts/policy_equilibria_${{ matrix.code }}.txt

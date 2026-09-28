@@ -1,0 +1,33 @@
+# The equilibrium count for the policy economies of one country, on its own so
+# that it gets a full six hours: it reads the committed policy_results_<CODE>.csv
+# and the levy from policy_tests_<CODE>.txt, and rebuilds the household families.
+name: equilibria
+on:
+  workflow_dispatch:
+    inputs:
+      code:
+        description: "Country code"
+        default: "FR"
+jobs:
+  equilibria:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: "1.7.2"
+      - uses: julia-actions/cache@v2
+      - name: Instantiate
+        run: julia --project=SAGE_Bewley/scripts/run_env -e 'using Pkg; Pkg.instantiate()'
+      - name: Equilibria ${{ inputs.code }}
+        env:
+          SAGE_WORKERS: "3"
+        run: |
+          cd SAGE_Bewley
+          julia --project=scripts/run_env scripts/policy_equilibria.jl ${{ inputs.code }} 2>&1 | tee scripts/policy_equilibria_${{ inputs.code }}.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: equilibria-${{ inputs.code }}
+          path: SAGE_Bewley/scripts/policy_equilibria_${{ inputs.code }}.txt
