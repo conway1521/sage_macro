@@ -133,15 +133,45 @@ collapse_all(ds, w) = merge(collapse(ds, w), collapse_agency(ds, w))
 `build_family_u` with the agency sums added to every summary: the same
 household problems in the same order, mixed the same way.
 """
-function build_family_ag(p0s::Vector{SAGEParams}, ugrid, theta; weights, thresholds = nothing)
+function build_family_ag(p0s::Vector{SAGEParams}, ugrid, theta; weights, thresholds = nothing,
+                         chunked::Bool = true)
     nt = length(p0s); nu = length(ugrid)
-    jobs = [(i, j) for j in 1:nu for i in 1:nt]
-    solve1 = ij -> begin
-        i, j = ij
-        p = update(p0s[i]; social_strength = ugrid[j])
-        s = solve_participation_logit(p, 1.0; theta = theta, full = true)
-        merge(cell_summary(p, s; thresholds = thresholds), agency_summary(p, s))
+    if !chunked
+        # the original path: every (type, belonging scale) problem from scratch
+        jobs = [(i, j) for j in 1:nu for i in 1:nt]
+        solve1 = ij -> begin
+            i, j = ij
+            p = update(p0s[i]; social_strength = ugrid[j])
+            s = solve_participation_logit(p, 1.0; theta = theta, full = true)
+            merge(cell_summary(p, s; thresholds = thresholds), agency_summary(p, s))
+        end
+        out = nworkers() > 1 ? pmap(solve1, jobs) : [solve1(ij) for ij in jobs]
+        return [collapse_all(out[(j-1)*nt+1 : j*nt], weights) for j in 1:nu]
     end
-    out = nworkers() > 1 ? pmap(solve1, jobs) : [solve1(ij) for ij in jobs]
-    [collapse_all(out[(j-1)*nt+1 : j*nt], weights) for j in 1:nu]
+    # The fast path (2026-09-28): the problems of one discount type differ only
+    # in the belonging scale, so they share one reward table, and each starts
+    # from the solution at the neighbouring scale. The belonging grid is split
+    # into as many runs as keep every worker busy.
+    nch = min(nu, max(1, cld(max(nworkers(), 1), nt)))
+    runs = [collect(r) for r in Iterators.partition(1:nu, cld(nu, nch))]
+    jobs = [(i, run) for run in runs for i in 1:nt]
+    solve_run = job -> begin
+        i, run = job
+        rw = participation_rewards(p0s[i])
+        V = nothing
+        out = Vector{Any}(undef, length(run))
+        for (m, j) in enumerate(run)
+            p = update(p0s[i]; social_strength = ugrid[j])
+            s = solve_participation_logit(p, 1.0; theta = theta, full = true, rewards = rw, V0 = V)
+            V = s.V
+            out[m] = (j, merge(cell_summary(p, s; thresholds = thresholds), agency_summary(p, s)))
+        end
+        out
+    end
+    res = nworkers() > 1 ? pmap(solve_run, jobs) : [solve_run(jb) for jb in jobs]
+    table = Dict{Tuple{Int,Int},Any}()
+    for (jb, r) in zip(jobs, res), (j, summ) in r
+        table[(jb[1], j)] = summ
+    end
+    [collapse_all([table[(i, j)] for i in 1:nt], weights) for j in 1:nu]
 end

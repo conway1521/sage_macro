@@ -1,0 +1,17 @@
+Julia 1.7.2 | 4 workers | 5 discount types x 83 belonging scales
+fast path     4.9 min
+original path 13.1 min
+speed-up 2.7x
+  rmass    largest difference 2.07e-08
+  mpcmass  largest difference 8.31e-09
+  rate     largest difference 3.75e-09
+  pbase    largest difference 2.75e-09
+  part     largest difference 2.57e-09
+  hmass    largest difference 2.12e-09
+  dmass    largest difference 2.05e-09
+  eff_E    largest difference 8.05e-10
+  minc     largest difference 6.27e-10
+  ymean    largest difference 5.28e-10
+  pmass    largest difference 1.33e-10
+  mass     largest difference 1.94e-16
+DONE

@@ -248,22 +248,28 @@ end
 # converges at the usual rate. Whether theta can be kept small enough to be a
 # pure regulariser, or is economically real, is an empirical question that
 # the theta-sensitivity test answers.
-function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01,
-                                   full::Bool = false, tol::Float64 = 1e-9,
-                                   maxit::Int = 5000)
+"""
+    participation_rewards(p)
+
+The flow rewards of the logit problem WITHOUT the belonging term: for each
+(state, a', d), the best effort on the grid and its payoff. Belonging adds a
+constant to the d = 1 branch at a given state (it does not depend on effort or
+next assets), so the best effort does not depend on it and the full reward is
+this plus belonging. A family of problems that differ only in the belonging
+scale, which is what `build_family_ag` solves, shares one table. This is where
+most of a single solve's time goes (bench_solver.jl, 2026-09-28).
+"""
+function participation_rewards(p::SAGEParams)
     a = SAGEBewley.exponential_grid(p.a_min, p.a_max, p.na, p.pexp)
-    z_vals, Π = SAGEBewley.income_process(p)
+    z_vals, _ = SAGEBewley.income_process(p)
     na, nz = p.na, p.nz
     e_grid = range(0.0, 1.0, length = p.ne)
     n_s = na * nz
     sidx(i_a, i_z) = (i_z - 1) * na + i_a
-
-    # --- conditional flow rewards: best effort for each (state, a', d) ------
     Rd = (fill(-Inf, n_s, na), fill(-Inf, n_s, na))     # index d+1
     Ed = (zeros(n_s, na), zeros(n_s, na))
     for i_z in 1:nz
-        z = z_vals[i_z]; α = p.α[i_z]; Bz = p.B[i_z]
-        belong = p.social_strength * p.Λ * Bz * Q_agg * QBAR * belong_at(p, i_z)
+        z = z_vals[i_z]; α = p.α[i_z]
         credit = net_participation(p, α, z); tfl = floor_at(p, i_z)
         tr = transfer_at(p, i_z)
         for i_a in 1:na
@@ -276,8 +282,7 @@ function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64
                     c = res + (1 + p.subsidy) * α * e * z * p.Z - p.lumptax - a[k] + credit * d + tr
                     c <= 0 && continue
                     T = tfl + e + QBAR * d
-                    ut = p.Γ * (c^(1 - p.γ) / (1 - p.γ) - p.ϕ * T^(1 + p.ψ) / (1 + p.ψ)) +
-                         belong * d
+                    ut = p.Γ * (c^(1 - p.γ) / (1 - p.γ) - p.ϕ * T^(1 + p.ψ) / (1 + p.ψ))
                     ut > best && (best = ut; beste = e)
                 end
                 best > -Inf && (best -= dread_at(p, i_z, a[k]))
@@ -285,24 +290,56 @@ function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64
             end
         end
     end
+    (Rd = Rd, Ed = Ed)
+end
 
-    # --- warm start from the hard-max problem via DiscreteDP ----------------
-    s_ind = Int[]; a_ind = Int[]; Rvec = Float64[]
-    rows = Int[]; cols = Int[]; vals = Float64[]; pair = 0
-    for i_z in 1:nz, i_a in 1:na
-        s = sidx(i_a, i_z)
-        for k in 1:na
-            r = max(Rd[1][s, k], Rd[2][s, k])
-            r == -Inf && continue
-            pair += 1
-            push!(s_ind, s); push!(a_ind, k); push!(Rvec, r)
-            for i_zn in 1:nz
-                push!(rows, pair); push!(cols, sidx(k, i_zn)); push!(vals, Π[i_z, i_zn])
+function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01,
+                                   full::Bool = false, tol::Float64 = 1e-9,
+                                   maxit::Int = 5000, rewards = nothing, V0 = nothing)
+    a = SAGEBewley.exponential_grid(p.a_min, p.a_max, p.na, p.pexp)
+    z_vals, Π = SAGEBewley.income_process(p)
+    na, nz = p.na, p.nz
+    n_s = na * nz
+    sidx(i_a, i_z) = (i_z - 1) * na + i_a
+
+    # --- conditional flow rewards: the table without belonging, plus it -----
+    rw = rewards === nothing ? participation_rewards(p) : rewards
+    Ed = rw.Ed
+    Rd = (rw.Rd[1], copy(rw.Rd[2]))
+    for i_z in 1:nz
+        belong = p.social_strength * p.Λ * p.B[i_z] * Q_agg * QBAR * belong_at(p, i_z)
+        belong == 0.0 && continue
+        for i_a in 1:na
+            s = sidx(i_a, i_z)
+            @inbounds for k in 1:na
+                r = Rd[2][s, k]
+                r > -Inf && (Rd[2][s, k] = r + belong)
             end
         end
     end
-    ddp = DiscreteDP(Rvec, sparse(rows, cols, vals, pair, n_s), p.β, s_ind, a_ind)
-    V = reshape(solve(ddp, PFI).v, na, nz)
+
+    # --- starting value: the neighbour's solution when given (a family), else
+    # --- the hard-max problem solved by DiscreteDP --------------------------
+    if V0 !== nothing
+        V = copy(V0)
+    else
+        s_ind = Int[]; a_ind = Int[]; Rvec = Float64[]
+        rows = Int[]; cols = Int[]; vals = Float64[]; pair = 0
+        for i_z in 1:nz, i_a in 1:na
+            s = sidx(i_a, i_z)
+            for k in 1:na
+                r = max(Rd[1][s, k], Rd[2][s, k])
+                r == -Inf && continue
+                pair += 1
+                push!(s_ind, s); push!(a_ind, k); push!(Rvec, r)
+                for i_zn in 1:nz
+                    push!(rows, pair); push!(cols, sidx(k, i_zn)); push!(vals, Π[i_z, i_zn])
+                end
+            end
+        end
+        ddp = DiscreteDP(Rvec, sparse(rows, cols, vals, pair, n_s), p.β, s_ind, a_ind)
+        V = reshape(solve(ddp, PFI).v, na, nz)
+    end
 
     # --- logit value iteration --------------------------------------------
     v0 = zeros(na, nz); v1 = zeros(na, nz)
