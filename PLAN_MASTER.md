@@ -69,7 +69,26 @@ A modular, data-disciplined heterogeneous-agent model of multidimensional wellbe
    Gate 3.
 4. **Recalibration** (Phase 4) on GitHub Actions: FR, DE and IT × G, G+A, G+S, G+S+A, as 12 parallel jobs.
 
-**Next session**
+**Order agreed 2026-09-28 (the goal is a model that works, not papers; papers come later):**
+
+1. **Speed:**
+   - native Julia (juliaup, LTS, arm64) with a reference comparison;
+   - fewer social-feedback nodes, checked by the convergence rows;
+   - a joint calibration solver;
+   - the DC-EGM household solver, with the current one kept as the reference.
+
+   Target: a full country calibration in minutes.
+2. **Audit (done).**
+3. **Assessment of the economics, data sources and calibration against the goal:**
+   - the identification table (every parameter against the moment that pins it);
+   - the untargeted misses (drop on job loss, MPC) and what they imply;
+   - the declared assumptions (omega, QBAR, R, the common income process);
+   - whether every configuration behaves as the modular design promises;
+   - the three not-calibrated configurations.
+4. **Map out E,** on the assessed base (E_PLACE_CONCEPT.md).
+5. **More countries and better data** as the HFCS and EU-SILC microdata arrive.
+
+**Earlier sequence (superseded where it conflicts with the order above)**
 
 5. Collect and commit the calibrations. Run the suite, the policy tests and the equilibrium check on Actions. Write up in MODULAR.md, one section, with the identification table (parameter against moment) and the untargeted validation.
 6. **WISE-facing pieces:**
