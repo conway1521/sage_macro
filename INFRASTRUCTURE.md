@@ -4,7 +4,7 @@ Set up 2026-09-27. One page for where the code, Julia, data and compute are, so 
 
 ## Repository
 
-github.com/conway1521/sage_macro (public). Working branch `countries-modular`.
+github.com/conway1521/sage_macro (public). Work happens on `main` (decided 2026-09-28; `countries-modular` is kept as history).
 
 | folder | what |
 |---|---|
