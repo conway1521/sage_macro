@@ -34,7 +34,12 @@ using Printf, Statistics
 say(args...) = (println(args...); flush(stdout))
 
 const CODE = ARGS[1]
-const CFGS = length(ARGS) >= 2 ? [uppercase(ARGS[2])] : ["GSA", "GS", "GA", "G"]
+calfile(cfg) = joinpath(@__DIR__, cfg == "GSA" ? "calibration_country_$(CODE).txt" :
+                                                  "calibration_country_$(CODE)_$(cfg).txt")
+# Only configurations calibrated on the current inputs: a missing file would
+# silently give the table's defaults.
+const CFGS = [c for c in (length(ARGS) >= 2 ? [uppercase(ARGS[2])] : ["GSA", "GS", "GA", "G"]) if isfile(calfile(c))]
+println("configurations calibrated for ", CODE, ": ", join(CFGS, ", "))
 const TAU = 0.20
 const DRR = 0.10
 const FIELDS = [:rate, :rate_E, :rate_U, :A, :A_cond, :room, :dread_cost_E, :mpc, :shock_loss, :shock_loss_income, :consumption_drop,

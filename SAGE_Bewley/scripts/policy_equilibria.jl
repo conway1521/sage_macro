@@ -50,6 +50,9 @@ for code in ARGS
     rows = read_csv(joinpath(@__DIR__, "policy_results_$(code).csv"))
     T = levies(joinpath(@__DIR__, "policy_tests_$(code).txt"))
     for cfg in ("GSA", "GS")
+        isfile(joinpath(@__DIR__, cfg == "GSA" ? "calibration_country_$(code).txt" :
+                                                 "calibration_country_$(code)_$(cfg).txt")) || continue
+        any(r -> r["config"] == cfg, rows) || continue
         A_ = cfg == "GSA"
         base = country_config(code; config = cfg, S = true, A = A_)
         b0 = solve_economy(base); thr = [(b0.ypov, b0.abar)]
