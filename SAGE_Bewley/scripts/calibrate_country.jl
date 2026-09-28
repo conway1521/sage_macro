@@ -138,10 +138,10 @@ end
 const BB = Ref(0.96)
 soff(phi, sp) = _solve(country_config(CODE; config = CFG, S = false, A = A_ON, phi = phi, beta_spread = sp,
                                       beta_bar = BB[]), nothing; disk = true)
-function fit_phi(sp; lo = 0.5, hi = 40.0, steps = 14)   # lo was 3.0: Italy's effort target needs less
+function fit_phi(sp; lo = 0.5, hi = 40.0, steps = 14, aim = E_TARGET)   # lo was 3.0: Italy's effort target needs less
     for _ in 1:steps
         mid = 0.5 * (lo + hi)
-        soff(mid, sp).mean_effort_employed > E_TARGET ? (lo = mid) : (hi = mid)
+        soff(mid, sp).mean_effort_employed > aim ? (lo = mid) : (hi = mid)
     end
     round(0.5 * (lo + hi); digits = 2)
 end
@@ -279,22 +279,30 @@ end
 say("\n4. the calibrated ", CFG, " economy on its own thresholds")
 best = S[RATIO].best
 r = solve_at(phi, spread, best)
+# Cohesion takes time from work and changes saving, so with S on both G targets
+# move: effort falls by about 0.01 and hand-to-mouth rises. Each correction
+# measures this economy's own gaps against the cohesion-off economy at the same
+# parameters and re-fits the effort scale and the discount spread to aims
+# shifted by them.
 for correction in 1:2
-    abs(r.hand_to_mouth_kvw - HTM_TARGET) <= HTM_TOL && break
-    global spread, best, r, S
-    gap_c = r.hand_to_mouth_kvw - soff(phi, spread).hand_to_mouth_kvw
-    say(@sprintf("\n5.%d hand-to-mouth off by %+.4f, more than the %.3f tolerance; this economy's own cohesion gap is %+.4f. Correction %d of 2.",
-                 correction, r.hand_to_mouth_kvw - HTM_TARGET, HTM_TOL, gap_c, correction))
+    (abs(r.hand_to_mouth_kvw - HTM_TARGET) <= HTM_TOL && abs(r.mean_effort_employed - E_TARGET) <= E_TOL) && break
+    global spread, best, r, S, phi
+    s0 = soff(phi, spread)
+    gap_h = r.hand_to_mouth_kvw - s0.hand_to_mouth_kvw
+    gap_e = r.mean_effort_employed - s0.mean_effort_employed
+    say(@sprintf("\n5.%d hand-to-mouth off by %+.4f, effort off by %+.4f; this economy's own cohesion gaps are %+.4f and %+.4f. Correction %d of 2.",
+                 correction, r.hand_to_mouth_kvw - HTM_TARGET, r.mean_effort_employed - E_TARGET, gap_h, gap_e, correction))
     ck5 = ck_read("stage5_$(correction)")
     if ck5 === nothing
-        fs2 = fit_spread(phi, HTM_TARGET - gap_c)
+        phi = fit_phi(spread; lo = max(0.5, phi - 4), hi = phi + 4, steps = 10, aim = E_TARGET - gap_e)
+        fs2 = fit_spread(phi, HTM_TARGET - gap_h)
         spread = fs2.sp; edge2 = fs2.edge; BB[] = fs2.bb
-        ck_write("stage5_$(correction)", Dict("spread" => spread, "edge" => Float64(edge2), "bb" => BB[]))
+        ck_write("stage5_$(correction)", Dict("phi" => phi, "spread" => spread, "edge" => Float64(edge2), "bb" => BB[]))
     else
-        spread, edge2 = ck5["spread"], ck5["edge"] == 1.0; BB[] = get(ck5, "bb", 0.96)
+        phi, spread, edge2 = ck5["phi"], ck5["spread"], ck5["edge"] == 1.0; BB[] = get(ck5, "bb", 0.96)
         say("  from checkpoint ", basename(ckfile("stage5_$(correction)")))
     end
-    @printf("  new spread %.3f, mean patience %.4f%s\n", spread, BB[], edge2 ? " (ON THE GRID EDGE)" : ""); flush(stdout)
+    @printf("  new phi %.2f, spread %.3f, mean patience %.4f%s\n", phi, spread, BB[], edge2 ? " (ON THE GRID EDGE)" : ""); flush(stdout)
     S = scans(phi, spread)
     if S[RATIO] === nothing || S[RATIO].best.loss > 0.035
         say("\nNOT CALIBRATED after the correction. No calibration file written.")

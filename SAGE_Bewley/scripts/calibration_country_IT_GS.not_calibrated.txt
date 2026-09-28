@@ -1,0 +1,1 @@
+# not calibrated (inputs-v2, 2026-09-28): as G, hand-to-mouth 0.064 at spread 0.115 against 0.083. Log: calibrate_IT_GS.log

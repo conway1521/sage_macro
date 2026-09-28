@@ -1,4 +1,1 @@
-# not calibrated, recorded by hand 2026-09-25: under the spell-averaged benefit (0.221) the one-asset
-# model reaches a hand-to-mouth share of at most 0.049 at a discount spread of 0.15 (probe_benefit.txt),
-# far below the US poor hand-to-mouth target (0.138), and this configuration shares that unemployment
-# block. The G+S+A step is retried on the new basis and reports itself. Delete this file to run it anyway.
+# not calibrated: the United States (decision of 2026-09-24); inputs-v2 has no SES or EU-SILC gradients for it

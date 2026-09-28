@@ -1,0 +1,7 @@
+calibrating IT G | effort target 0.725221 | hand-to-mouth target 0.083 | workers 3
+preflight, France G+A through the parallel path: worst gap 3.4e-07 against the suite: HELD
+
+1. effort scale and discount spread, cohesion off, hand-to-mouth aim 0.083
+  phi 2.95, spread 0.115, mean patience 0.9600 (ON THE GRID EDGE): effort 0.7250 (target 0.7252), poor hand-to-mouth 0.0639 (aim 0.0830)  [17.7 min]
+
+NOT CALIBRATED: hand-to-mouth reaches only 0.0639 at the largest spread tried (0.115), against an aim of 0.0830. No calibration file written.

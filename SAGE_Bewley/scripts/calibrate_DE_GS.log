@@ -1,0 +1,11 @@
+calibrating DE GS | effort target 0.608669 | hand-to-mouth target 0.074 | participation targets (0.252077, 0.349) | national ratio 0.546 | workers 3
+preflight, France G+A through the parallel path: worst gap 3.4e-07 against the suite: HELD
+
+1. effort scale and discount spread, cohesion off, hand-to-mouth aim 0.074
+  phi 6.88, spread 0.045, mean patience 0.9600: effort 0.6085 (target 0.6087), poor hand-to-mouth 0.0721 (aim 0.0740)  [16.5 min]
+
+2-3. GS families and technology scans, participation targets (0.252077, 0.349)
+  families built or loaded in 23.2 min
+  ratio 0.546 (national): best kappa 5.65 sigma 0.50, root loss 0.0579, rate 0.2916, multiplier 11.1 | nothing within 0.035
+
+NOT CALIBRATED: at the national ratio the best fit is 0.0579, above the 0.035 standard. No calibration file written.

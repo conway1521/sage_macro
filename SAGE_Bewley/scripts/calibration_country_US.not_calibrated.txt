@@ -1,1 +1,1 @@
-# not calibrated; the reason is in the run log
+# not calibrated: the United States (decision of 2026-09-24); inputs-v2 has no SES or EU-SILC gradients for it
