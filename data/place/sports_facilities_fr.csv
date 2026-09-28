@@ -1,0 +1,22 @@
+measure,place,facilities,population,per_1000,share_of_all,rural_over_cities
+all facilities,cities,64379,25253447,2.5493,1.0,3.05
+all facilities,towns,96914,20897208,4.6377,1.0,3.05
+all facilities,rural,170008,21866436,7.7748,1.0,3.05
+entered service before 1990 (central),cities,31789.5,25253447,1.2588,0.4938,2.489
+entered service before 1990 (central),towns,41608.5,20897208,1.9911,0.4293,2.489
+entered service before 1990 (central),rural,68504.5,21866436,3.1329,0.4029,2.489
+"before 1990, lower bound",cities,30156,25253447,1.1941,0.4684,2.337
+"before 1990, lower bound",towns,37997,20897208,1.8183,0.3921,2.337
+"before 1990, lower bound",rural,61014,21866436,2.7903,0.3589,2.337
+"before 1990, upper bound",cities,33423,25253447,1.3235,0.5192,2.626
+"before 1990, upper bound",towns,45220,20897208,2.1639,0.4666,2.626
+"before 1990, upper bound",rural,75995,21866436,3.4754,0.447,2.626
+entered service before 1985 (exact),cities,26473,25253447,1.0483,0.4112,2.189
+entered service before 1985 (exact),towns,32170,20897208,1.5394,0.3319,2.189
+entered service before 1985 (exact),rural,50180,21866436,2.2948,0.2952,2.189
+entered service before 1975 (exact),cities,14953,25253447,0.5921,0.2323,1.934
+entered service before 1975 (exact),towns,15959,20897208,0.7637,0.1647,1.934
+entered service before 1975 (exact),rural,25036,21866436,1.145,0.1473,1.934
+unknown date,cities,4279,25253447,0.1694,0.0665,3.763
+unknown date,towns,6355,20897208,0.3041,0.0656,3.763
+unknown date,rural,13943,21866436,0.6376,0.082,3.763

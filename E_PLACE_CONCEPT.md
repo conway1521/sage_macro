@@ -226,3 +226,35 @@ The ranking matches except for the centre, where Rome's national organisations i
 3. **Out-of-sample test.** Fit epsilon on one country and predict the other. If it fails, fall back to place-specific belonging calibrated directly (weaker E, same structure).
 4. **The policy lever reported as a range** over epsilon (and over the predetermined against current measures), never as a point estimate.
 5. **Germany** borrows epsilon and is checked against its own volunteering by place (ilc_scp20, 2015).
+
+## Predetermined infrastructure and the Italian regions (2026-09-28)
+
+Scripts: `data/place/sports_facilities_fr.py` (Recensement des equipements sportifs, Ministere des Sports, 333,695 facilities, Licence Ouverte) and `data/place/italy_regions.py` (ISTAT SDMX volunteering 2013, 2023 and 2010-2025; BES 05REL008 non-profits 2011 and 2021; Eurostat regional unemployment and tertiary share).
+
+**France:** sports facilities per 1,000 inhabitants, by year of entry into service.
+
+| | cities | towns | rural | rural / cities |
+|---|---|---|---|---|
+| all | 2.55 | 4.64 | 7.78 | 3.05 |
+| before 1990 | 1.26 | 1.99 | 3.13 | 2.49 (bounds 2.34 to 2.63) |
+| before 1975 | 0.59 | 0.76 | 1.15 | 1.93 |
+| formal volunteering (EU-SILC 2015) | 20.3% | 21.4% | 27.7% | 1.36 |
+
+The rural gradient of predetermined infrastructure is steeper than that of volunteering. The implied elasticity of participation to the stock is below one: about 0.3 to 0.5 on the log ratios. Two caveats apply:
+- facility counts per head overstate rural capacity;
+- "before 1990" means built then and still standing.
+
+**Italy:** 21 regions, log-log slope of volunteering on non-profit density (standard error in brackets).
+
+| pair | r | slope | slope with unemployment and tertiary share |
+|---|---|---|---|
+| organised volunteering 2023 on non-profits 2011 | 0.77 | 1.10 (0.18) | 0.35 (0.25) |
+| annual survey 2023-25 on non-profits 2021 | 0.82 | 1.00 (0.16) | 0.39 (0.18) |
+| same, without Bolzano and Trento | 0.65 | 0.78 (0.19) | 0.05 (0.11) |
+
+The raw association is strong, and non-profit density in 2011 already predicts volunteering in 2023. With unemployment and education controlled for, most of it goes. There is no Rome headquarters effect in the counts: Lazio is at the national average.
+
+**What this means for the design.**
+1. **omega by place is a secondary channel.** In Italy, access to work and composition, which the model carries structurally, absorb most of the regional gradient. This supports building place with all three channels together, not community alone.
+2. **The elasticity of participation to predetermined infrastructure is well below one:** about 0.3 to 0.5 in France, and about 0.3 to 0.4 with controls in Italy. It is identified from two countries that roughly agree. That is the out-of-sample check, passed tentatively.
+3. **Evidence strength:** France's measure is the cleanest (predetermined and administrative). Italy's is cross-sectional with n = 21 and two influential alpine provinces.
