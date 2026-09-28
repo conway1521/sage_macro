@@ -53,6 +53,15 @@ println("poverty line anchored on mean income times the empirical median-to-mean
 @printf("%-58s %-9s %-20s %s\n", "reduction", "largest", "on", "")
 println("-"^100)
 
+# SUITE_PART splits the suite for machines with a time limit per job:
+# "reductions" skips the convergence rows, "convergence" skips the reduction
+# tests (the calibrated footing is solved either way); "all" runs everything.
+const PART = get(ENV, "SUITE_PART", "all")
+const FF = france_footing()
+const CAL = FF.config
+println("France's footing: ", FF.source, "; suite part: ", PART)
+
+if PART != "convergence"
 # ---------------------------------------------------------------- the four --
 G    = solve_economy(SAGEConfig())
 GA   = solve_economy(SAGEConfig(A = true))
@@ -125,9 +134,6 @@ end
 # ------------------------------------------------ the participation rule --
 # The unemployed at a fixed multiple of the employed participation rate, in
 # place of the choice that sends them to one. See `unemployed_ratio`.
-const FF = france_footing()
-const CAL = FF.config
-println("France's footing: ", FF.source)
 
 # 13. With S off, participation feeds back on nothing, so the rule may move
 #     the participation rate and nothing else.
@@ -184,6 +190,7 @@ reduce_to("G, dread set: agency off ignores it",
 reduce_to("G+A, dread weight zero is no dread",
           solve_economy(SAGEConfig(CAL; A = true, dread = 0.0)),
           solve_economy(SAGEConfig(CAL; A = true, dread = 1e-300)); tol = 1e-12)
+end   # PART != "convergence"
 
 println("-"^100)
 @printf("%d of %d reductions pass\n", count(x -> x.ok, RESULTS), length(RESULTS))
@@ -192,7 +199,7 @@ println()
 println("="^100)
 println("THE FOUR ECONOMIES")
 println("="^100)
-for (nm, r) in (("G      baseline Bewley", G), ("G+A    agency", GA),
+PART != "convergence" && for (nm, r) in (("G      baseline Bewley", G), ("G+A    agency", GA),
                 ("G+S    social cohesion", GS), ("G+S+A  both", GSA))
     report(r; label = nm)
     println()
@@ -249,7 +256,7 @@ const CONV = NamedTuple[]
 # so anything inside 0.005 is settled to the two decimals agency is quoted to.
 function conv(name, cfg, ref; tol = 0.005)
     r = solve_economy(cfg; thresholds = [(ref.ypov, ref.abar)])
-    d = abs(r.A - ref.A); dm = r.median_income - ref.median_income
+    d = max(abs(r.A - ref.A), abs(r.A_cond - ref.A_cond)); dm = r.median_income - ref.median_income
     ok = d <= tol && abs(dm) <= 0.002
     push!(CONV, (name = name, move = d, ok = ok))
     @printf("%-44s %-11.6f %-11.6f %-11.6f %+.5f  %+.5f%s\n", name, r.A, r.asset_poor,
@@ -258,7 +265,7 @@ function conv(name, cfg, ref; tol = 0.005)
     flush(stdout)
     r
 end
-let base = SAGEConfig(CAL; S = true, A = true)
+PART != "reductions" && let base = SAGEConfig(CAL; S = true, A = true)
     ref = CALR["GSA"]
     @printf("%-44s %-11.6f %-11.6f %-11.6f  (reference)\n", "G+S+A at the calibrated footing", ref.A, ref.asset_poor, ref.median_income)
     conv("taste quadrature, 8000 nodes against 2000", SAGEConfig(base; nq = 8000), ref)
