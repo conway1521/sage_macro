@@ -14,8 +14,8 @@
 # Selected by `solver = :egm` (SAGEParams and SAGEConfig); `:grid`, the
 # reference, stays the default until the validation in SOLVER_DESIGN.md passes.
 # Returns the same fields as the reference, plus `Va` for warm starts, so
-# everything downstream is unchanged. Dread in behavioural mode is not yet
-# supported here (overlay only).
+# everything downstream is unchanged. Dread in behavioural mode enters the
+# Euler equation through its derivative in next assets.
 #
 # Layers, kept apart so a second, illiquid asset replaces only the middle one:
 # the problem (parameters, grids), the savings step (`egm_branch!`), and the
@@ -62,7 +62,7 @@ upper-envelope rule where the endogenous grid is not monotone.
 """
 function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::Int,
                      w::Float64, other::Float64, tfl::Float64, belong::Float64,
-                     con_c, con_e, aend, cend, eend)
+                     con_c, con_e, aend, cend, eend, Ds, Dps)
     na = length(a)
     tmax = 1.0 - tfl - QBAR * d
     if tmax < 0
@@ -74,7 +74,9 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
     # --- endogenous grid: one point per next-asset node ---------------------
     monotone = true
     @inbounds for k in 1:na
-        m = p.β * EVas[k]
+        # dread (behavioural mode) falls as savings rise, so it adds to the
+        # marginal value of saving: Gamma c^-gamma = beta E V_a - D'(a')
+        m = p.β * EVas[k] - Dps[k]
         c = (m / p.Γ)^(-1 / p.γ)
         e = 0.0
         if w > 0
@@ -91,7 +93,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
         ai = a[i]
         # the constrained candidate: next assets at the lowest node
         cc = con_c[i, s]; ec = con_e[i, s]
-        vcon = isnan(cc) ? -Inf : egm_flow(p, cc, tfl + ec + QBAR * d) + belong * d + p.β * EVs[1]
+        vcon = isnan(cc) ? -Inf : egm_flow(p, cc, tfl + ec + QBAR * d) + belong * d - Ds[1] + p.β * EVs[1]
         best = vcon; bc = cc; be = ec; bap = a[1]
         if monotone
             if ai >= aend[1]
@@ -107,7 +109,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
                 # constrained candidate there made the iteration cycle between two
                 # approximations of the same point (2026-09-28).
                 if c > 0
-                    best = egm_flow(p, c, tfl + e + QBAR * d) + belong * d +
+                    best = egm_flow(p, c, tfl + e + QBAR * d) + belong * d - dread_at(p, s, max(ap, a[1])) +
                            p.β * SAGEBewley.interp_lin(a, EVs, ap)
                     bc = c; be = e; bap = max(ap, a[1])
                 end
@@ -122,7 +124,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
                 e = eend[k] + t * (eend[k+1] - eend[k])
                 ap = a[k] + t * (a[k+1] - a[k])
                 (c <= 0 || ap < a[1]) && continue
-                v = egm_flow(p, c, tfl + e + QBAR * d) + belong * d +
+                v = egm_flow(p, c, tfl + e + QBAR * d) + belong * d - dread_at(p, s, ap) +
                     p.β * SAGEBewley.interp_lin(a, EVs, ap)
                 if v > best
                     best = v; bc = c; be = e; bap = ap
@@ -134,7 +136,8 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
                 c = cend[k] + t * (cend[k+1] - cend[k]); e = clamp(eend[k] + t * (eend[k+1] - eend[k]), 0.0, tmax)
                 ap = min(a[k] + t * (a[k+1] - a[k]), a[end])
                 if c > 0
-                    v = egm_flow(p, c, tfl + e + QBAR * d) + belong * d + p.β * SAGEBewley.interp_lin(a, EVs, ap)
+                    v = egm_flow(p, c, tfl + e + QBAR * d) + belong * d - dread_at(p, s, ap) +
+                        p.β * SAGEBewley.interp_lin(a, EVs, ap)
                     v > best && (best = v; bc = c; be = e; bap = ap)
                 end
             end
@@ -152,7 +155,6 @@ Va) to start from, as the family builder passes along the belonging scales.
 function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01,
                                  full::Bool = false, tol::Float64 = 1e-9, maxit::Int = 5000,
                                  warm = nothing, trace::Bool = false)
-    p.dread > 0 && error("solver = :egm does not yet support dread in behavioural mode")
     a = SAGEBewley.exponential_grid(p.a_min, p.a_max, p.na, p.pexp)
     z_vals, Π = SAGEBewley.income_process(p)
     na, nz = p.na, p.nz
@@ -162,6 +164,18 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
            for s in 1:nz]
     tfl = [floor_at(p, s) for s in 1:nz]
     bel = [p.social_strength * p.Λ * p.B[s] * Q_agg * QBAR * belong_at(p, s) for s in 1:nz]
+
+    # dread in behavioural mode, at each next-asset node, and its derivative
+    D = zeros(na, nz); Dp = zeros(na, nz)
+    if p.dread > 0 && !isempty(p.dread_q)
+        for s in 1:nz, k in 1:na
+            D[k, s] = dread_at(p, s, a[k])
+            q = p.dread_q[s]
+            xh = p.R * a[k] + p.dread_hi[s]; xl = p.R * a[k] + p.dread_lo[s]
+            uh = xh > 1e-4 ? xh^(-p.γ) : 0.0; ul = xl > 1e-4 ? xl^(-p.γ) : 0.0
+            Dp[k, s] = p.Γ * p.dread * q * p.R * (uh - ul)
+        end
+    end
 
     # constrained solutions (next assets at the lowest node): fixed across iterations
     con_c = (fill(NaN, na, nz), fill(NaN, na, nz)); con_e = (zeros(na, nz), zeros(na, nz))
@@ -195,7 +209,8 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
         mul!(EV, V, Π'); mul!(EVa, Va, Π')
         for s in 1:nz, d in (0, 1)
             egm_branch!(cd[d+1], e_d[d+1], a_d[d+1], vd[d+1], p, a, view(EV, :, s), view(EVa, :, s),
-                        s, d, wv[s], oth[s][d+1], tfl[s], bel[s], con_c[d+1], con_e[d+1], aend, cend, eend)
+                        s, d, wv[s], oth[s][d+1], tfl[s], bel[s], con_c[d+1], con_e[d+1], aend, cend, eend,
+                        view(D, :, s), view(Dp, :, s))
         end
         @inbounds for i in eachindex(V)
             b0 = vd[1][i]; b1 = vd[2][i]

@@ -175,3 +175,11 @@ A modular, data-disciplined heterogeneous-agent model of multidimensional wellbe
 - **Native Julia 1.10.12 (arm64): no gain.** A family takes 5.6 min against 4.9 on 1.7.2 under Rosetta (`bench_julia.txt`). Every headline number is identical to five decimals, so an upgrade later is safe.
 - **Decision:** stay on 1.7.2 for now. The remaining speed has to come from the algorithm, the DC-EGM household solver.
 - The Julia 1.10 environment is kept in `scripts/run_env_110`, and the binary in `~/julia/julia-1.10.12`.
+
+**EGM solver, 2026-09-28 (`egm_core.jl`, behind `solver = :egm`):**
+
+- **Per problem:** about 19x faster than the grid solver, with Euler errors near 1e-6 against about 5e-3 (`euler_errors.jl`).
+- **Suite on egm:** the convergence part passes (7 of 7 discretisations settle within 0.005 on agency). The reductions part passed 17 tests and then stopped at test 17, because behavioural dread was not yet in EGM. The job still showed green, because `tee` hid Julia's exit code. Every workflow now sets `pipefail`.
+- **Behavioural dread:** now in EGM, through its derivative in next assets in the Euler equation. Against the grid solver on France G+S+A with weight 1.5 in choices (`test_egm_dread.jl`), assets agree within 1%, participation within 0.0004, effort within 0.0002, and the bottom asset mass is identical.
+- **France G+S+A recalibrated on egm:** 17.8 min against 134 on the grid solver. The same φ (4.76), spread (0.003) and κ (4.85), with σ one step away (0.98 against 0.96). Participation, agency, hardship, poor hand-to-mouth and effort all agree within 0.0005.
+- **Next:** the full suite on egm with the dread fix. If it passes, egm becomes the default and every configuration is recalibrated on GitHub.

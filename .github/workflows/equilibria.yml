@@ -25,6 +25,7 @@ jobs:
           SAGE_WORKERS: "3"
         run: |
           cd SAGE_Bewley
+          set -o pipefail
           julia --project=scripts/run_env scripts/policy_equilibria.jl ${{ inputs.code }} 2>&1 | tee scripts/policy_equilibria_${{ inputs.code }}.txt
       - uses: actions/upload-artifact@v4
         if: always()

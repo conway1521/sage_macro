@@ -32,6 +32,7 @@ jobs:
           SUITE_SKIP_NA400: "1"
         run: |
           cd SAGE_Bewley
+          set -o pipefail
           julia --project=scripts/run_env scripts/test_modular.jl 2>&1 | tee scripts/test_modular_${{ matrix.part }}.txt
       - uses: actions/upload-artifact@v4
         if: always()

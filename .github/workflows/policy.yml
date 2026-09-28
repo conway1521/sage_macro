@@ -46,6 +46,7 @@ jobs:
           SAGE_SOLVER: ${{ inputs.solver }}
         run: |
           cd SAGE_Bewley
+          set -o pipefail
           julia --project=scripts/run_env scripts/policy_tests.jl ${{ matrix.code }} 2>&1 | tee scripts/policy_tests_${{ matrix.code }}.txt
       - uses: actions/upload-artifact@v4
         if: always()
