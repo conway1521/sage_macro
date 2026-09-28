@@ -5,6 +5,7 @@
 include(joinpath(@__DIR__, "..", "src", "SAGEBewley.jl"))
 using .SAGEBewley
 include(joinpath(@__DIR__, "proto_participation_core.jl"))
+include(joinpath(@__DIR__, "egm_core.jl"))
 include(joinpath(@__DIR__, "sa_core.jl"))
 include(joinpath(@__DIR__, "agency_core.jl"))
 include(joinpath(@__DIR__, "unemployment_core.jl"))

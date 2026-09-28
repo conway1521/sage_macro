@@ -194,6 +194,11 @@ Base.@kwdef struct SAGEParams
     dread_q::Vector{Float64}  = Float64[]
     dread_hi::Vector{Float64} = Float64[]
     dread_lo::Vector{Float64} = Float64[]
+    # --- household solver (2026-09-28) ------------------------------------
+    # :grid, the reference: next assets and effort on grids, then next assets
+    # refined. :egm, the endogenous grid method (scripts/egm_core.jl): both
+    # continuous. Read by the participation core only.
+    solver::Symbol = :grid
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."

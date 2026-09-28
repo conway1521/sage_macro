@@ -155,6 +155,8 @@ Base.@kwdef struct SAGEConfig
     # makes households save so much that the German and Italian hand-to-mouth
     # targets are out of reach at any plausible patience (MODULAR.md, 2026-09-28).
     dread_mode::Symbol = :overlay
+    # Household solver: :grid, the reference, or :egm (SOLVER_DESIGN.md).
+    solver::Symbol = :grid
     # numerics
     na::Int          = 200
     ne::Int          = 80
@@ -245,6 +247,7 @@ function params_of(c::SAGEConfig, cell)
     if c.A && c.dread > 0 && c.unemployment
         ps = [dread_params(p, c, cell) for p in ps]
     end
+    c.solver === :grid || (ps = [update(p; solver = c.solver) for p in ps])
     (c.search_time == 0 && c.belong_u == 1) && return ps
     tf = c.search_time == 0 ? Float64[] : [e ? 0.0 : c.search_time for e in emp]
     bsc = c.belong_u == 1 ? Float64[] : [e ? 1.0 : c.belong_u for e in emp]
@@ -335,7 +338,8 @@ const SOLVER_FILES = [joinpath(@__DIR__, "..", "src", "SAGEBewley.jl"),
                       joinpath(@__DIR__, "sa_core.jl"),
                       joinpath(@__DIR__, "agency_core.jl"),
                       joinpath(@__DIR__, "unemployment_core.jl"),
-                 joinpath(@__DIR__, "agency_shock.jl")]
+                 joinpath(@__DIR__, "agency_shock.jl"),
+                 joinpath(@__DIR__, "egm_core.jl")]
 const SOLVER_DIGEST = bytes2hex(sha1(join(read(f, String) for f in SOLVER_FILES)))
 
 "The household part and the threshold part of a family's cache key."

@@ -157,13 +157,13 @@ function build_family_ag(p0s::Vector{SAGEParams}, ugrid, theta; weights, thresho
     jobs = [(i, run) for run in runs for i in 1:nt]
     solve_run = job -> begin
         i, run = job
-        rw = participation_rewards(p0s[i])
+        rw = p0s[i].solver === :egm ? nothing : participation_rewards(p0s[i])
         V = nothing
         out = Vector{Any}(undef, length(run))
         for (m, j) in enumerate(run)
             p = update(p0s[i]; social_strength = ugrid[j])
             s = solve_participation_logit(p, 1.0; theta = theta, full = true, rewards = rw, V0 = V)
-            V = s.V
+            V = s          # the whole solution: the EGM starts from V and its derivative
             out[m] = (j, merge(cell_summary(p, s; thresholds = thresholds), agency_summary(p, s)))
         end
         out

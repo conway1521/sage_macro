@@ -296,6 +296,8 @@ end
 function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01,
                                    full::Bool = false, tol::Float64 = 1e-9,
                                    maxit::Int = 5000, rewards = nothing, V0 = nothing)
+    p.solver === :egm && return solve_participation_egm(p, Q_agg; theta = theta, full = full, tol = tol,
+                                                        maxit = maxit, warm = V0 isa NamedTuple ? V0 : nothing)
     a = SAGEBewley.exponential_grid(p.a_min, p.a_max, p.na, p.pexp)
     z_vals, Π = SAGEBewley.income_process(p)
     na, nz = p.na, p.nz
@@ -321,7 +323,7 @@ function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64
     # --- starting value: the neighbour's solution when given (a family), else
     # --- the hard-max problem solved by DiscreteDP --------------------------
     if V0 !== nothing
-        V = copy(V0)
+        V = copy(V0 isa NamedTuple ? V0.V : V0)
     else
         s_ind = Int[]; a_ind = Int[]; Rvec = Float64[]
         rows = Int[]; cols = Int[]; vals = Float64[]; pair = 0
