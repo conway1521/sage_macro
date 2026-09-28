@@ -84,11 +84,11 @@ function agency_summary(p::SAGEParams, sol)
         end
         # Dread as a consumption equivalent: the share x of this year's
         # consumption with Gamma u(c (1 - x)) = Gamma u(c) - dread cost.
-        if p.dread > 0 && cbar[i, s] > 0
+        if dread_weight(p) > 0 && cbar[i, s] > 0
             D = 0.0
             for d in (0, 1)
                 w = d == 1 ? P1[i, s] : 1 - P1[i, s]
-                w > 0 && (D += w * dread_at(p, s, sol.a_d[d+1][i, s]))
+                w > 0 && (D += w * dread_at(p, s, sol.a_d[d+1][i, s]; weight = dread_weight(p)))
             end
             k = 1 - (1 - p.γ) * D / (p.Γ * cbar[i, s]^(1 - p.γ))
             k > 0 && (xmass[s] += m * (1 - k^(1 / (1 - p.γ))))

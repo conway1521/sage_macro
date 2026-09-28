@@ -45,12 +45,14 @@ floor_at(p::SAGEParams, i_z::Int) = isempty(p.time_floor) ? 0.0 : p.time_floor[i
 # dread vectors are set. It depends on the state and next assets only, not on
 # effort or participation, so it shifts the value of saving and nothing else.
 # Resources are floored at a small positive number so that utility is finite.
-function dread_at(p::SAGEParams, i_z::Int, anext::Float64)
-    (p.dread == 0.0 || isempty(p.dread_q)) && return 0.0
+function dread_at(p::SAGEParams, i_z::Int, anext::Float64; weight::Float64 = p.dread)
+    (weight == 0.0 || isempty(p.dread_q)) && return 0.0
     q = p.dread_q[i_z]; q <= 0.0 && return 0.0
     u(x) = max(x, 1e-4)^(1 - p.γ) / (1 - p.γ)
-    p.Γ * p.dread * q * (u(p.R * anext + p.dread_hi[i_z]) - u(p.R * anext + p.dread_lo[i_z]))
+    p.Γ * weight * q * (u(p.R * anext + p.dread_hi[i_z]) - u(p.R * anext + p.dread_lo[i_z]))
 end
+# The weight for reporting the cost: the behavioural one if set, else the overlay.
+dread_weight(p::SAGEParams) = p.dread > 0 ? p.dread : p.dread_overlay
 
 function solve_participation(p::SAGEParams, Q_agg::Float64; continuous::Bool = true,
                              full::Bool = false)

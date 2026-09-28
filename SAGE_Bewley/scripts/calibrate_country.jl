@@ -136,7 +136,7 @@ end
 const BB = Ref(0.96)
 soff(phi, sp) = _solve(country_config(CODE; config = CFG, S = false, A = A_ON, phi = phi, beta_spread = sp,
                                       beta_bar = BB[]), nothing; disk = true)
-function fit_phi(sp; lo = 3.0, hi = 40.0, steps = 12)
+function fit_phi(sp; lo = 0.5, hi = 40.0, steps = 14)   # lo was 3.0: Italy's effort target needs less
     for _ in 1:steps
         mid = 0.5 * (lo + hi)
         soff(mid, sp).mean_effort_employed > E_TARGET ? (lo = mid) : (hi = mid)
@@ -168,7 +168,7 @@ if ck1 === nothing
     phi = fit_phi(0.037)
     fs = fit_spread(phi, HTM_TARGET - GAP)
     BB[] = fs.bb
-    phi = fit_phi(fs.sp; lo = max(3.0, phi - 4), hi = phi + 4, steps = 8)
+    phi = fit_phi(fs.sp; lo = max(0.5, phi - 4), hi = phi + 4, steps = 8)
     fs = fit_spread(phi, HTM_TARGET - GAP;
                     grid = fs.bb == 0.96 && fs.sp > 0 ? (max(0.0, fs.sp - 0.015):0.005:(fs.sp + 0.015)) : (0.0:0.005:0.10))
     spread = fs.sp; edge = fs.edge; BB[] = fs.bb

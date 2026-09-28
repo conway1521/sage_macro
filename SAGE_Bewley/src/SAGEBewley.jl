@@ -188,6 +188,9 @@ Base.@kwdef struct SAGEParams
     # earlier result. The vectors are per state; empty means no dread. Read by
     # the participation core only.
     dread::Float64 = 0.0
+    # The same weight used for measurement only (version 1, the wellbeing
+    # overlay): the dread cost is reported but does not enter choices.
+    dread_overlay::Float64 = 0.0
     dread_q::Vector{Float64}  = Float64[]
     dread_hi::Vector{Float64} = Float64[]
     dread_lo::Vector{Float64} = Float64[]

@@ -145,6 +145,12 @@ Base.@kwdef struct SAGEConfig
     # earlier result. The country table sets 1.5 (Pagel 2017, eta = 1, lambda =
     # 2.5; Brown et al. 2024 for the loss-aversion range).
     dread::Float64 = 0.0
+    # :overlay (version 1, the calibrated baseline since 2026-09-28): dread is
+    # measured at this weight but does not enter choices. :behaviour (version
+    # 2): it enters choices. At the literature weight the behavioural version
+    # makes households save so much that the German and Italian hand-to-mouth
+    # targets are out of reach at any plausible patience (MODULAR.md, 2026-09-28).
+    dread_mode::Symbol = :overlay
     # numerics
     na::Int          = 200
     ne::Int          = 80
@@ -189,7 +195,7 @@ function describe(c::SAGEConfig)
         push!(ext, @sprintf("unemployed participate at %.3f of the employed rate", c.unemployed_ratio))
     c.pcost > 0 && push!(ext, @sprintf("money cost %.4f", c.pcost))
     (c.rho != 0.9 || c.eta_z != 0.1) && push!(ext, @sprintf("income process %.2f/%.2f", c.rho, c.eta_z))
-    c.dread > 0 && c.A && push!(ext, @sprintf("dread %.2f", c.dread))
+    c.dread > 0 && c.A && push!(ext, @sprintf("dread %.2f (%s)", c.dread, c.dread_mode))
     c.beta_spread > 0 && push!(ext, @sprintf("beta spread %.3f", c.beta_spread))
     c.subsidy > 0 && push!(ext, @sprintf("subsidy %.2f", c.subsidy))
     c.partcredit > 0 && push!(ext, @sprintf("credit %.2f", c.partcredit))
@@ -259,7 +265,10 @@ function dread_params(p::SAGEParams, c::SAGEConfig, cell)
     hi = [(1 + p.subsidy) * cell.α * zl(s) * p.Z * c.e_ref + p.transfer[s <= nh ? s + nh : s] - p.lumptax
           for s in 1:n]
     lo = [p.transfer[s <= nh ? s : s - nh] - p.lumptax for s in 1:n]
-    update(p; dread = c.dread, dread_q = q .* (1 .- q), dread_hi = hi, dread_lo = lo)
+    c.dread_mode in (:overlay, :behaviour) || error("dread_mode must be :overlay or :behaviour")
+    c.dread_mode == :behaviour ?
+        update(p; dread = c.dread, dread_q = q .* (1 .- q), dread_hi = hi, dread_lo = lo) :
+        update(p; dread_overlay = c.dread, dread_q = q .* (1 .- q), dread_hi = hi, dread_lo = lo)
 end
 
 "Unemployment-insurance tax implied by a config, closed form (zero when off)."

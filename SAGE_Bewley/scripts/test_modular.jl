@@ -188,8 +188,14 @@ reduce_to("G, dread set: agency off ignores it",
 #     vectors are attached only when dread is positive, so this compares the
 #     positive-dread code path, switched to zero weight, with the plain path.
 reduce_to("G+A, dread weight zero is no dread",
+          solve_economy(SAGEConfig(CAL; A = true, dread = 0.0, dread_mode = :behaviour)),
+          solve_economy(SAGEConfig(CAL; A = true, dread = 1e-300, dread_mode = :behaviour)); tol = 1e-12)
+
+# 18. The overlay (version 1) measures dread and changes nothing else: every
+#     field but the dread cost equals the economy without dread.
+reduce_to("G+A, dread as overlay changes no choice",
           solve_economy(SAGEConfig(CAL; A = true, dread = 0.0)),
-          solve_economy(SAGEConfig(CAL; A = true, dread = 1e-300)); tol = 1e-12)
+          solve_economy(SAGEConfig(CAL; A = true, dread = 1.5, dread_mode = :overlay)))
 end   # PART != "convergence"
 
 println("-"^100)
