@@ -40,6 +40,18 @@ belong_at(p::SAGEParams, i_z::Int) = isempty(p.belong_scale) ? 1.0 : p.belong_sc
 # Committed time before any choice (stage 8): zero unless time_floor is set.
 floor_at(p::SAGEParams, i_z::Int) = isempty(p.time_floor) ? 0.0 : p.time_floor[i_z]
 
+# Dread of the employment lottery (agency, version 2): the expected news-utility
+# cost of next year's employment status, given next assets. Zero unless the
+# dread vectors are set. It depends on the state and next assets only, not on
+# effort or participation, so it shifts the value of saving and nothing else.
+# Resources are floored at a small positive number so that utility is finite.
+function dread_at(p::SAGEParams, i_z::Int, anext::Float64)
+    (p.dread == 0.0 || isempty(p.dread_q)) && return 0.0
+    q = p.dread_q[i_z]; q <= 0.0 && return 0.0
+    u(x) = max(x, 1e-4)^(1 - p.γ) / (1 - p.γ)
+    p.Γ * p.dread * q * (u(p.R * anext + p.dread_hi[i_z]) - u(p.R * anext + p.dread_lo[i_z]))
+end
+
 function solve_participation(p::SAGEParams, Q_agg::Float64; continuous::Bool = true,
                              full::Bool = false)
     a = SAGEBewley.exponential_grid(p.a_min, p.a_max, p.na, p.pexp)
@@ -79,6 +91,7 @@ function solve_participation(p::SAGEParams, Q_agg::Float64; continuous::Bool = t
                     end
                 end
                 best == -Inf && continue
+                best -= dread_at(p, i_z, anext)
                 Dpol[s, k] = bestd
                 Epol[s, k] = beste
                 pair += 1
@@ -122,7 +135,7 @@ function solve_participation(p::SAGEParams, Q_agg::Float64; continuous::Bool = t
                 f = ap -> begin
                     c = resources - ap
                     c <= 0 ? -Inf :
-                    p.Γ * c^(1 - p.γ) / (1 - p.γ) - disut + belong * d +
+                    p.Γ * c^(1 - p.γ) / (1 - p.γ) - disut + belong * d - dread_at(p, i_z, ap) +
                         p.β * SAGEBewley.interp_lin(a, evz, ap)
                 end
                 kbest = 1; vbest = -Inf
@@ -265,6 +278,7 @@ function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64
                          belong * d
                     ut > best && (best = ut; beste = e)
                 end
+                best > -Inf && (best -= dread_at(p, i_z, a[k]))
                 Rd[d+1][s, k] = best; Ed[d+1][s, k] = beste
             end
         end
@@ -349,7 +363,7 @@ function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64
             f = ap -> begin
                 c = resources - ap
                 c <= 0 ? -Inf :
-                p.Γ * c^(1 - p.γ) / (1 - p.γ) - disut + belong * d +
+                p.Γ * c^(1 - p.γ) / (1 - p.γ) - disut + belong * d - dread_at(p, i_z, ap) +
                     p.β * SAGEBewley.interp_lin(a, evz, ap)
             end
             lo_b = a[max(kb - 1, 1)]; hi_b = min(a[min(kb + 1, na)], hi)

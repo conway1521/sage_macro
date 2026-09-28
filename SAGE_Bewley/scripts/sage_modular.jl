@@ -134,6 +134,17 @@ Base.@kwdef struct SAGEConfig
     # hand-to-mouth differences are carried by the discount spread instead.
     phi::Float64   = 14.0
     e_ref::Float64 = 0.53
+    # Income process of the employed, log z' = rho log z + eps, sd(eps) = eta_z.
+    # The defaults are the engine's and reproduce every earlier result; the
+    # country table sets rho = 0.92, eta = 0.10 (Bayer and Juessen 2012).
+    rho::Float64   = 0.9
+    eta_z::Float64 = 0.1
+    # AGENCY, VERSION 2: dread of the employment lottery, eta (lambda - 1) in
+    # expectations-based news utility (Koszegi and Rabin 2009; Pagel 2017). It
+    # acts only when A is on and unemployment is on; zero reproduces every
+    # earlier result. The country table sets 1.5 (Pagel 2017, eta = 1, lambda =
+    # 2.5; Brown et al. 2024 for the loss-aversion range).
+    dread::Float64 = 0.0
     # numerics
     na::Int          = 200
     ne::Int          = 80
@@ -177,6 +188,8 @@ function describe(c::SAGEConfig)
     c.unemployed_ratio === nothing ||
         push!(ext, @sprintf("unemployed participate at %.3f of the employed rate", c.unemployed_ratio))
     c.pcost > 0 && push!(ext, @sprintf("money cost %.4f", c.pcost))
+    (c.rho != 0.9 || c.eta_z != 0.1) && push!(ext, @sprintf("income process %.2f/%.2f", c.rho, c.eta_z))
+    c.dread > 0 && c.A && push!(ext, @sprintf("dread %.2f", c.dread))
     c.beta_spread > 0 && push!(ext, @sprintf("beta spread %.3f", c.beta_spread))
     c.subsidy > 0 && push!(ext, @sprintf("subsidy %.2f", c.subsidy))
     c.partcredit > 0 && push!(ext, @sprintf("credit %.2f", c.partcredit))
@@ -209,7 +222,8 @@ function params_of(c::SAGEConfig, cell)
     bs, _ = betas_of(c)
     ps = [cell_params_u(cell.α; δ = cell.δ, f = c.f_find, rr = c.rr, na = c.na, ne = c.ne,
                         a_max = c.a_max, pexp = c.pexp, subsidy = c.subsidy, lumptax = c.lumptax,
-                        partcredit = c.partcredit, β = b, pcost = c.pcost, nz = c.nz) for b in bs]
+                        partcredit = c.partcredit, β = b, pcost = c.pcost, nz = c.nz,
+                        ρ = c.rho, η = c.eta_z) for b in bs]
     if c.phi != 14.0 || c.e_ref != E_REF
         ps = [update(p; ϕ = c.phi, transfer = p.transfer .* (c.e_ref / E_REF)) for p in ps]
     end
@@ -218,10 +232,34 @@ function params_of(c::SAGEConfig, cell)
         ps = isempty(ps[1].transfer) ? [update(p; lumptax = p.lumptax + c.levy_employed) for p in ps] :
              [update(p; transfer = [e ? -c.levy_employed : t for (e, t) in zip(emp, p.transfer)]) for p in ps]
     end
+    if c.A && c.dread > 0 && c.unemployment
+        ps = [dread_params(p, c, cell) for p in ps]
+    end
     (c.search_time == 0 && c.belong_u == 1) && return ps
     tf = c.search_time == 0 ? Float64[] : [e ? 0.0 : c.search_time for e in emp]
     bsc = c.belong_u == 1 ? Float64[] : [e ? 1.0 : c.belong_u for e in emp]
     [update(p; time_floor = tf, belong_scale = bsc) for p in ps]
+end
+
+"""
+    dread_params(p, c, cell)
+
+Attach the dread vectors to a parameter set: for every state, q(1 - q) with q
+the chance of changing employment status next year, and next year's resources
+in work (hi) and out of work (lo) at the same latent productivity: labour income
+at the reference effort plus the state's transfer, and the benefit, both net of
+the lump-sum tax. States 1..n/2 are unemployed, n/2+1..n employed with the same
+latent productivity (see `unemployment_process`).
+"""
+function dread_params(p::SAGEParams, c::SAGEConfig, cell)
+    n = length(p.transfer); nh = n ÷ 2
+    z = p.z_vals_override; Π = p.Π_override
+    q = [s <= nh ? sum(Π[s, nh+1:n]) : sum(Π[s, 1:nh]) for s in 1:n]
+    zl(s) = s <= nh ? z[s + nh] : z[s]
+    hi = [(1 + p.subsidy) * cell.α * zl(s) * p.Z * c.e_ref + p.transfer[s <= nh ? s + nh : s] - p.lumptax
+          for s in 1:n]
+    lo = [p.transfer[s <= nh ? s : s - nh] - p.lumptax for s in 1:n]
+    update(p; dread = c.dread, dread_q = q .* (1 .- q), dread_hi = hi, dread_lo = lo)
 end
 
 "Unemployment-insurance tax implied by a config, closed form (zero when off)."
@@ -497,6 +535,14 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
             consumption_drop = mE <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].dmass[emp]) for g in 1:2) / mE,
             hand_to_mouth_kvw = sum(cs[g].share * sum(pooled[g].hmass) for g in 1:2) /
                                 sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
+            # untargeted checks and the other agency parts (agency_shock.jl)
+            mpc = sum(cs[g].share * sum(pooled[g].mpcmass) for g in 1:2) /
+                  sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
+            mpc_htm = (h = sum(cs[g].share * sum(pooled[g].hmass) for g in 1:2);
+                       h <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].mpchmass) for g in 1:2) / h),
+            room = sum(cs[g].share * sum(pooled[g].rmass) for g in 1:2) /
+                   sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
+            dread_cost_E = mE <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].xmass[emp]) for g in 1:2) / mE,
             agrid = agrid, Wtot = Wtot, pooled = pooled, employed = emp, lumptax = T)
     thr === nothing && return merge(base, (asset_poor_by_quintile = Float64[],
                                            quintile_mass = Float64[],
@@ -653,14 +699,18 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", kw
     r = country_rows()[code]
     num(k) = parse(Float64, r[k])
     al, ah = num("alpha_low"), num("alpha_high")
-    # With agency off both cells take the country's mean alpha, as France's
-    # 0.838 is the mean of its two cells.
-    d = Dict{Symbol,Any}(:unemployment => true,
-                         :alpha => (al, ah), :alpha_off => round((al + ah) / 2; digits = 6),
+    sh = haskey(r, "share_high") ? num("share_high") : 0.5
+    # With agency off both cells take the country's population-weighted mean
+    # alpha (one, by the table's normalisation).
+    d = Dict{Symbol,Any}(:unemployment => true, :share => (1 - sh, sh),
+                         :alpha => (al, ah), :alpha_off => round((1 - sh) * al + sh * ah; digits = 6),
                          :B => (num("B_low"), num("B_high")),
                          :delta => (num("delta_low"), num("delta_high")),
                          :f_find => num("f_find"), :rr => num("rr"), :e_ref => num("e_ref"),
                          :unemployed_ratio => num("ratio"))
+    for (col, key) in (("median_to_mean", :median_to_mean), ("rho", :rho), ("eta", :eta_z), ("dread", :dread))
+        haskey(r, col) && r[col] != "NA" && (d[key] = num(col))
+    end
     # Each configuration has its own calibration: G+S+A in calibration_country_<code>.txt,
     # the others in calibration_country_<code>_<config>.txt (config G, GA or GS).
     cal = joinpath(@__DIR__, config == "GSA" ? "calibration_country_$(code).txt" :

@@ -213,7 +213,7 @@ if !S_ON
 end
 
 # ------------------------------------------- 2 and 3. families and scans --
-const SIGMAS = 0.30:0.02:1.50
+const SIGMAS = 0.30:0.02:3.00      # to 3.0: the band's lower end sat at 1.5 (2026-09-27)
 const KAPPAS = 2.0:0.05:25.0
 function scans(phi, spread)
     c = country_config(CODE; config = CFG, S = true, A = A_ON, phi = phi, beta_spread = spread, beta_bar = BB[])

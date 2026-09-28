@@ -45,7 +45,7 @@ const ROWS = Vector{Dict{String,Any}}()
 
 function technology_points(c, thr)
     fi = families(c; thresholds = thr)
-    rows = scan_technology(c, fi, collect(0.30:0.02:1.50), collect(2.0:0.05:25.0);
+    rows = scan_technology(c, fi, collect(0.30:0.02:3.00), collect(2.0:0.05:25.0);
                            targets = (parse(Float64, country_rows()[CODE]["part_low"]),
                                       parse(Float64, country_rows()[CODE]["part_high"])),
                            selected_only = true)

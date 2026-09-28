@@ -51,9 +51,9 @@ the unemployment-insurance tax (see `ui_tax`).
 """
 function cell_params_u(αg; δ, f, rr, na = 200, ne = 80, a_max = 4.0, pexp = 3.0,
                        subsidy = 0.0, lumptax = 0.0, partcredit = 0.0,
-                       β = 0.96, pcost = 0.0, nz = 2)
+                       β = 0.96, pcost = 0.0, nz = 2, ρ = 0.9, η = 0.1)
     base = SAGEParams(na = na, ne = ne, nz = nz, α = fill(αg, nz), B = fill(1.0, nz),
-                      a_max = a_max, pexp = pexp)
+                      a_max = a_max, pexp = pexp, ρ = ρ, η = η)
     if δ === nothing
         # No unemployment: a plain nz-state productivity process and no
         # transfer. This is a DIFFERENT state space from the one below, not the

@@ -49,6 +49,7 @@ function agency_summary(p::SAGEParams, sol)
     z, Π = SAGEBewley.income_process(p)
     ns = length(z)
     pmass = zeros(ns); pinc = zeros(ns); dmass = zeros(ns); hmass = zeros(ns)
+    mpcmass = zeros(ns); mpchmass = zeros(ns); rmass = zeros(ns); xmass = zeros(ns)
     U = findall(==(0.0), z)
     nh = length(U)
     haveU = !isempty(U) && 2 * nh == ns
@@ -68,7 +69,30 @@ function agency_summary(p::SAGEParams, sol)
     end
     for s in 1:ns, i in 1:na
         m = λ[i, s]; m <= 0 && continue
-        a[i] <= ybar[i, s] / 52 && (hmass[s] += m)
+        htm = a[i] <= ybar[i, s] / 52
+        htm && (hmass[s] += m)
+        # Room to manoeuvre: liquid wealth covering three months of own income.
+        a[i] >= ybar[i, s] / 4 && (rmass[s] += m)
+        # Marginal propensity to consume, within the year, out of a windfall of
+        # one month of the household's own income (the size in Jappelli and
+        # Pistaferri 2014 and the HFCS question): cash on hand rises by delta,
+        # which is assets higher by delta / R.
+        Δ = ybar[i, s] / 12
+        if Δ > 0
+            mpc = (SAGEBewley.interp_lin(a, view(cbar, :, s), a[i] + Δ / p.R) - cbar[i, s]) / Δ
+            mpcmass[s] += m * mpc; htm && (mpchmass[s] += m * mpc)
+        end
+        # Dread as a consumption equivalent: the share x of this year's
+        # consumption with Gamma u(c (1 - x)) = Gamma u(c) - dread cost.
+        if p.dread > 0 && cbar[i, s] > 0
+            D = 0.0
+            for d in (0, 1)
+                w = d == 1 ? P1[i, s] : 1 - P1[i, s]
+                w > 0 && (D += w * dread_at(p, s, sol.a_d[d+1][i, s]))
+            end
+            k = 1 - (1 - p.γ) * D / (p.Γ * cbar[i, s]^(1 - p.γ))
+            k > 0 && (xmass[s] += m * (1 - k^(1 / (1 - p.γ))))
+        end
         haveU || continue
         pc = 0.0; py = 0.0
         for d in (0, 1)
@@ -88,14 +112,19 @@ function agency_summary(p::SAGEParams, sol)
         pmass[s] += m * pc; pinc[s] += m * py
         s > nh && cbar[i, s] > 0 && (dmass[s] += m * max(0.0, 1 - cbar[i, s - nh] / cbar[i, s]))
     end
-    (pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass)
+    (pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass,
+     mpcmass = mpcmass, mpchmass = mpchmass, rmass = rmass, xmass = xmass)
 end
 
 "Mix the agency sums across discount types or belonging scales, as `collapse` does the rest."
 collapse_agency(ds, w) = (pmass = sum(w[i] .* ds[i].pmass for i in eachindex(ds)),
                           pinc  = sum(w[i] .* ds[i].pinc  for i in eachindex(ds)),
                           dmass = sum(w[i] .* ds[i].dmass for i in eachindex(ds)),
-                          hmass = sum(w[i] .* ds[i].hmass for i in eachindex(ds)))
+                          hmass = sum(w[i] .* ds[i].hmass for i in eachindex(ds)),
+                          mpcmass  = sum(w[i] .* ds[i].mpcmass  for i in eachindex(ds)),
+                          mpchmass = sum(w[i] .* ds[i].mpchmass for i in eachindex(ds)),
+                          rmass    = sum(w[i] .* ds[i].rmass    for i in eachindex(ds)),
+                          xmass    = sum(w[i] .* ds[i].xmass    for i in eachindex(ds)))
 collapse_all(ds, w) = merge(collapse(ds, w), collapse_agency(ds, w))
 
 """

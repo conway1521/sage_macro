@@ -1,0 +1,7 @@
+G+A, dread 0.00            effort 0.4997  poor htm 0.1288  room 0.4657  mpc 0.140 (htm 0.342)  A 0.9933  A_cond 0.9023  drop 0.0979  dread cost (employed) 0.0000
+G+A, dread 1.00            effort 0.4974  poor htm 0.0097  room 0.8658  mpc 0.084 (htm 0.280)  A 0.9963  A_cond 0.9441  drop 0.0552  dread cost (employed) 0.0077
+G+A, dread 1.50            effort 0.4965  poor htm 0.0012  room 0.9386  mpc 0.079 (htm 0.338)  A 0.9966  A_cond 0.9487  drop 0.0508  dread cost (employed) 0.0093
+G+A, dread 2.45            effort 0.4949  poor htm 0.0001  room 0.9887  mpc 0.074 (htm 0.292)  A 0.9968  A_cond 0.9511  drop 0.0483  dread cost (employed) 0.0114
+reduction, agency off: dread 1.5 against 0, largest gap 0.0e+00  EXACT
+wealth p90 1.442 against a_max 4.0
+DONE

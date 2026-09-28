@@ -172,6 +172,19 @@ let old = SAGEConfig(S = true, A = true, unemployment = true, beta_spread = 0.03
               solve_economy(old; thresholds = thr), q2; fields = keys(q2), tol = 1e-4)
 end
 
+# 16. Dread of the employment lottery belongs to agency (version 2, 2026-09-28):
+#     with agency off it must do nothing at all, whatever its value.
+reduce_to("G, dread set: agency off ignores it",
+          solve_economy(SAGEConfig(CAL; A = false, dread = 0.0)),
+          solve_economy(SAGEConfig(CAL; A = false, dread = 1.5)))
+
+# 17. And with agency on, dread at zero is the economy without it: the dread
+#     vectors are attached only when dread is positive, so this compares the
+#     positive-dread code path, switched to zero weight, with the plain path.
+reduce_to("G+A, dread weight zero is no dread",
+          solve_economy(SAGEConfig(CAL; A = true, dread = 0.0)),
+          solve_economy(SAGEConfig(CAL; A = true, dread = 1e-300)); tol = 1e-12)
+
 println("-"^100)
 @printf("%d of %d reductions pass\n", count(x -> x.ok, RESULTS), length(RESULTS))
 

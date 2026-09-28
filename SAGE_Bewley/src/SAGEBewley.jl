@@ -179,6 +179,18 @@ Base.@kwdef struct SAGEParams
     # part of the curve. Aguiar, Hurst and Karabarbounis (2013) measure the
     # reallocation; the OECD documents the search requirements.
     time_floor::Vector{Float64} = Float64[]
+    # --- dread of the employment lottery (agency, version 2) ------------------
+    # Expectations-based news utility (Koszegi and Rabin 2009; Pagel 2017): a
+    # household that may change employment status next year bears, now, the
+    # expected gain-loss cost dread * q (1 - q) * [u(R a' + hi) - u(R a' + lo)],
+    # q the chance of switching status, hi and lo the resources next year in
+    # work and out of it. dread is eta (lambda - 1); zero reproduces every
+    # earlier result. The vectors are per state; empty means no dread. Read by
+    # the participation core only.
+    dread::Float64 = 0.0
+    dread_q::Vector{Float64}  = Float64[]
+    dread_hi::Vector{Float64} = Float64[]
+    dread_lo::Vector{Float64} = Float64[]
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."
