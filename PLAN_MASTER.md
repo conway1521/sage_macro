@@ -167,3 +167,11 @@ A modular, data-disciplined heterogeneous-agent model of multidimensional wellbe
 | top 10% net wealth share | 55.5 | 49.9 | 54.6 | HFCS 2021, Table J4 p. 58 |
 | net wealth Gini | 0.727 | 0.676 | 0.671 | same |
 | median net liquid assets / gross income | 29.5% | 24.8% | 27.1% | Table F1 p. 34 |
+
+**Speed, 2026-09-28:**
+
+- **Fast family path:** 2.7x faster, agreeing with the old path to 2e-8 (`bench_family.txt`). One reward table per discount type, and warm starts from the neighbouring belonging scale.
+- **Coarse to fine:** searches on 42 belonging scales, and the final re-scan, solve and check on 83. At 42 scales participation moves by 0.0013 and nothing else beyond 1e-4 (`grid_test.txt`).
+- **Native Julia 1.10.12 (arm64): no gain.** A family takes 5.6 min against 4.9 on 1.7.2 under Rosetta (`bench_julia.txt`). Every headline number is identical to five decimals, so an upgrade later is safe.
+- **Decision:** stay on 1.7.2 for now. The remaining speed has to come from the algorithm, the DC-EGM household solver.
+- The Julia 1.10 environment is kept in `scripts/run_env_110`, and the binary in `~/julia/julia-1.10.12`.

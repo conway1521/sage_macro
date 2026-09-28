@@ -1,0 +1,6 @@
+Julia 1.10.12 arm64-apple-darwin25.5.0 | 4 workers
+one family, fast path: 5.6 min (Julia 1.7.2 under Rosetta: 4.9 min)
+calibrated G+S+A economy, no cache: 21.7 min
+part 0.23172 mult 1.868 A 0.99019 A_cond 0.86278 htm 0.02994 effort 0.64292 room 0.6935 mpc 0.1158
+reference (1.7.2): part 0.23172 mult 1.868 A 0.99019 A_cond 0.86278 htm 0.02994 effort 0.64292 room 0.6935 mpc 0.1158
+DONE

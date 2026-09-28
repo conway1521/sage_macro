@@ -1,0 +1,7 @@
+# Runtime-only environment: what the model actually needs. The main project also
+# carries Plots, GR, IJulia and Pluto for the notebook and the lecture site, and
+# those are the parts most likely to fail to build on a fresh machine. Standard
+# library packages (Printf, Statistics, LinearAlgebra, SparseArrays, Distributed,
+# Serialization, SHA, DelimitedFiles) need no entry: they are always on the load path.
+[deps]
+QuantEcon = "fcd29c91-0bd7-5a09-975d-7ac3f643a60c"
