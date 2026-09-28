@@ -34,7 +34,7 @@
 #     targets at the national unemployed ratio, and for G+S+A also at the other
 #     national ratios in the data (free: the rule is applied after the families).
 #  4. The calibrated economy solved on its own thresholds.
-#  5. Up to two corrections if hand-to-mouth misses by more than the tolerance;
+#  5. Up to two corrections if a target misses by more than half the tolerance;
 #     a configuration still outside it is not calibrated.
 #  6. For G+S+A, the four economies at its parameters: the fixed-parameter view.
 #
@@ -290,9 +290,13 @@ r = solve_at(phi, spread, best)
 # move: effort falls by about 0.01 and hand-to-mouth rises. Each correction
 # measures this economy's own gaps against the cohesion-off economy at the same
 # parameters and re-fits the effort scale and the discount spread to aims
-# shifted by them.
+# shifted by them. A correction runs whenever a target misses by more than half
+# its tolerance: the search aims at the centre of the band, so the move from the
+# coarse to the full belonging grid (a few 1e-4) cannot push an economy that
+# sat at the edge outside it (Italy G+S+A on egm, 2026-09-28: effort inside at
+# the coarse grid by 1e-5, outside at the full grid by 5e-5).
 for correction in 1:2
-    (abs(r.hand_to_mouth_kvw - HTM_TARGET) <= HTM_TOL && abs(r.mean_effort_employed - E_TARGET) <= E_TOL) && break
+    (abs(r.hand_to_mouth_kvw - HTM_TARGET) <= HTM_TOL / 2 && abs(r.mean_effort_employed - E_TARGET) <= E_TOL / 2) && break
     global spread, best, r, S, phi
     s0 = soff(phi, spread)
     gap_h = r.hand_to_mouth_kvw - s0.hand_to_mouth_kvw
