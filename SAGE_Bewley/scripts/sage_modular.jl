@@ -29,6 +29,7 @@
 
 using Printf, Statistics, LinearAlgebra, Distributed, Serialization, SHA
 
+const DEFAULT_SOLVER = Symbol(get(ENV, "SAGE_SOLVER", "grid"))
 const UGRID_DEFAULT = vcat(collect(0.0:0.2:12.0), collect(12.5:0.5:16.0), collect(17.0:1.0:30.0))
 # Half the belonging scales, for the search stages of a calibration only. At
 # France's G+S+A it moves participation by 0.0013 and nothing else beyond 1e-4
@@ -155,8 +156,10 @@ Base.@kwdef struct SAGEConfig
     # makes households save so much that the German and Italian hand-to-mouth
     # targets are out of reach at any plausible patience (MODULAR.md, 2026-09-28).
     dread_mode::Symbol = :overlay
-    # Household solver: :grid, the reference, or :egm (SOLVER_DESIGN.md).
-    solver::Symbol = :grid
+    # Household solver: :grid, the reference, or :egm (SOLVER_DESIGN.md). The
+    # default can be set for a whole run with the environment variable
+    # SAGE_SOLVER (grid or egm), which worker processes inherit.
+    solver::Symbol = DEFAULT_SOLVER
     # numerics
     na::Int          = 200
     ne::Int          = 80

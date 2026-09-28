@@ -5,6 +5,9 @@ name: policy
 on:
   workflow_dispatch:
     inputs:
+      solver:
+        description: "Household solver: grid (reference) or egm"
+        default: "grid"
       countries:
         description: "Country codes, space separated"
         default: "FR DE IT"
@@ -40,6 +43,7 @@ jobs:
       - name: Policy tests ${{ matrix.code }}
         env:
           SAGE_WORKERS: "3"
+          SAGE_SOLVER: ${{ inputs.solver }}
         run: |
           cd SAGE_Bewley
           julia --project=scripts/run_env scripts/policy_tests.jl ${{ matrix.code }} 2>&1 | tee scripts/policy_tests_${{ matrix.code }}.txt

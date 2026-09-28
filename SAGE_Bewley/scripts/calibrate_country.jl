@@ -124,10 +124,13 @@ end
 let fr = SAGEConfig(A = true, unemployment = true, beta_spread = 0.037, unemployed_ratio = 0.17 / 0.35),
     r = _solve(fr, nothing; disk = true)
     gap = max(abs(r.mean_effort_employed - 0.518873), abs(r.hand_to_mouth - 0.261599), abs(r.median_income - 0.376010))
-    @printf("preflight, France G+A through the parallel path: worst gap %.1e against the suite: %s\n", gap,
-            gap < 1e-6 ? "HELD" : "FAILED")
+    # The reference numbers are the grid solver's; the EGM solver is held to the
+    # grid solver's discretisation error (euler_errors.jl).
+    ptol = DEFAULT_SOLVER === :grid ? 1e-6 : 5e-3
+    @printf("preflight, France G+A through the parallel path (solver %s): worst gap %.1e against the suite: %s\n",
+            DEFAULT_SOLVER, gap, gap < ptol ? "HELD" : "FAILED")
     flush(stdout)
-    gap < 1e-6 || exit(3)
+    gap < ptol || exit(3)
 end
 
 # --------------------------------------------------- 1. effort and spread --

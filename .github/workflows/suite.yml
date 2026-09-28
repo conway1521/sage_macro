@@ -4,6 +4,10 @@
 name: suite
 on:
   workflow_dispatch:
+    inputs:
+      solver:
+        description: "Household solver: grid (reference) or egm"
+        default: "grid"
 jobs:
   suite:
     runs-on: ubuntu-latest
@@ -23,6 +27,7 @@ jobs:
       - name: Suite, ${{ matrix.part }}
         env:
           SAGE_WORKERS: "3"
+          SAGE_SOLVER: ${{ inputs.solver }}
           SUITE_PART: ${{ matrix.part }}
           SUITE_SKIP_NA400: "1"
         run: |

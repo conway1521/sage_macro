@@ -8,6 +8,9 @@ name: calibrate
 on:
   workflow_dispatch:
     inputs:
+      solver:
+        description: "Household solver: grid (reference) or egm"
+        default: "grid"
       countries:
         description: "Country codes, space separated"
         default: "FR DE IT"
@@ -53,6 +56,7 @@ jobs:
       - name: Calibrate ${{ matrix.code }} ${{ matrix.cfg }}
         env:
           SAGE_WORKERS: "3"
+          SAGE_SOLVER: ${{ inputs.solver }}
         run: |
           cd SAGE_Bewley
           set +e
