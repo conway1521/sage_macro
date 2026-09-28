@@ -688,4 +688,12 @@ Other effects at the best fit, G+S+A. Protection and its gap in levels, the rest
 3. **Empowerment raises protection most.** It also lowers effort and buffers through the income effect of higher pay per hour.
 4. **The subsidy raises buffers and lowers participation,** as before.
 
-Italy's policy tests and the French equilibrium count are running (Actions). Italy is added when it lands.
+**Italy (G+S+A and G+A calibrated; policy tests on Actions, 2026-09-28).**
+
+- **Baseline:** participation 0.125, A_cond 0.570, room 63%, dread cost 3.1% of consumption for the employed, expected loss 3.5%, drop on job loss 42%, poor hand-to-mouth 0.083, MPC 0.19 (data 0.48). Multiplier 1.3 (range 1.1 to 1.9).
+- **Participation effects:** subsidy -1.7 [-0.8, -3.3], empowerment +2.1 [+0.9, +6.2], insurance +0.10: -0.1 [-0.1, -0.3], insurance -0.10: +0.2 [+0.1, +0.4].
+- **Other effects of more insurance:** protection +0.020, room -25 points, poor hand-to-mouth +6.7 points.
+- **Dread rises in Italy under more insurance,** by +0.13 points of consumption, while it falls in France and Germany. Italian households cut their buffers so much that the smaller cushion outweighs the better benefit in the anxiety measure. This is the clearest case of the two agency readings pulling apart.
+- **The equilibrium count:** all 15 Italian policy economies (and all German ones) have a single stable equilibrium. The French count is running separately (`equilibria.yml`); the policy job hit the six-hour limit.
+
+**Across the three countries.** The ranking of participation effects follows the multipliers: Germany, then France, then Italy. Italy has the least insurance and the most dread, and its agency is lowest on every reading. Every sign is the same in all three countries except that one dread response.
