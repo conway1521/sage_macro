@@ -1,0 +1,117 @@
+====================================================================================================
+MODULARITY SUITE: does switching a dimension off give back the economy without it?
+====================================================================================================
+tolerance 1e-06; production grid na 200 ne 80, theta 0.0050, nz 11; 3 workers
+poverty line anchored on mean income times the empirical median-to-mean ratio
+
+reduction                                                  largest   on                   
+----------------------------------------------------------------------------------------------------
+France's footing: calibration_country_FR.txt, EU-SILC participation targets and OECD 2023 labour market; suite part: reductions
+G+A with agency equalised  ->  G                           0.0e+00   none                 pass
+G+S with the interaction strength at zero  ->  G           2.9e-39   rate                 pass
+G+S+A with the interaction strength at zero  ->  G+A       0.0e+00   none                 pass
+G+S+A with agency equalised  ->  G+S                       0.0e+00   none                 pass
+G+S+A with both switched off  ->  G                        2.9e-39   rate                 pass
+G+S+A with unemployment at zero separation  ->  G+S+A      0.0e+00   none                 pass
+G+S+A with the discount spread at zero  ->  G+S+A          0.0e+00   none                 pass
+G+S+A, unemployment and discount spread both off  ->  G+S+A 0.0e+00   none                 pass
+G+S+A with the monetary participation cost at zero  ->  G+S+A 0.0e+00   none                 pass
+G+S+A with every policy instrument at zero  ->  G+S+A      0.0e+00   none                 pass
+G+S+A solved twice  ->  itself                             0.0e+00   none                 pass
+G solved twice  ->  itself                                 0.0e+00   none                 pass
+G+S+A with the two cells listed in the other order  ->  G+S+A 0.0e+00   none                 pass
+G+A, unemployment: the rule moves only participation       0.0e+00   none                 pass
+the rule refused where it is wrong (five cases)            -         all refused          pass
+G+S+A, rule, old technology  ->  quarantine2.jl            4.9e-05   A_hardship           pass
+G, dread set: agency off ignores it                        0.0e+00   none                 pass
+G+A, dread weight zero is no dread                         0.0e+00   none                 pass
+G+A, dread as overlay changes no choice                    0.0e+00   none                 pass
+----------------------------------------------------------------------------------------------------
+19 of 19 reductions pass
+
+====================================================================================================
+THE FOUR ECONOMIES
+====================================================================================================
+G      baseline Bewley
+  G      alpha 0.838  B (no social payoff)
+  participation 0.000000 | agency 0.838000 (from income alone 0.838000) | expected loss 0.000000 | drop on job loss 0.215774
+  hardship 0.547495 (income 0.000001, asset 0.547495) | agency on the old hardship reading 0.379199
+  hand-to-mouth 0.517755 | mean labour income 0.449321 | median disposable 0.394243 | effort 0.541175
+
+G+A    agency
+  G+A    alpha 0.765/0.911  B (no social payoff)
+  participation 0.000000 | agency 0.838000 (from income alone 0.838000) | expected loss 0.000000 | drop on job loss 0.216341
+  hardship 0.549812 (income 0.000001, asset 0.549810) | agency on the old hardship reading 0.377412
+  hand-to-mouth 0.520401 | mean labour income 0.448817 | median disposable 0.393793 | effort 0.541563
+
+G+S    social cohesion
+  G+S    alpha 0.838  B 0.80/0.94, kappa 10.00 sigma 0.400 omega 0.30
+  participation 0.665145 | agency 0.838000 (from income alone 0.838000) | expected loss 0.000000 | drop on job loss 0.189289
+  hardship 0.559709 (income 0.000005, asset 0.559704) | agency on the old hardship reading 0.368964
+  hand-to-mouth 0.520102 | mean labour income 0.421653 | median disposable 0.370028 | effort 0.508573
+
+G+S+A  both
+  G+S+A  alpha 0.765/0.911  B 0.80/0.94, kappa 10.00 sigma 0.400 omega 0.30
+  participation 0.645009 | agency 0.838000 (from income alone 0.838000) | expected loss 0.000000 | drop on job loss 0.190402
+  hardship 0.561476 (income 0.000012, asset 0.561464) | agency on the old hardship reading 0.367874
+  hand-to-mouth 0.523827 | mean labour income 0.421628 | median disposable 0.370008 | effort 0.509967
+
+====================================================================================================
+THE FOUR ECONOMIES AT THE CALIBRATED FOOTING
+====================================================================================================
+unemployment on, discount spread 0.003, kappa 4.85, sigma_m 0.96, unemployed at 0.561 of the
+employed participation rate. Footing: calibration_country_FR.txt, EU-SILC participation targets and OECD 2023 labour market. These are the numbers to read.
+
+G      baseline Bewley
+  G      alpha 1.000  B (no social payoff) | unemployment, phi 4.76, benefit reference 0.643, unemployed participate at 0.561 of the employed rate, income process 0.92/0.10, beta spread 0.003
+  participation 0.000000 | agency 0.989802 (from income alone 0.973649) | expected loss 0.010198 | drop on job loss 0.136070
+  hardship 0.106639 (income 0.011160, asset 0.099819) | agency on the old hardship reading 0.893361
+  hand-to-mouth 0.058988 | mean labour income 0.642589 | median disposable 0.559845 | effort 0.650505
+  participation employed 0.0000, unemployed 0.0000
+  asset poverty by income quintile: 0.241  0.109  0.057  0.041  0.021
+  OECD average for comparison:      0.680  n/a    n/a    0.430  0.270
+
+G+A    agency
+  G+A    alpha 0.860/1.271  B (no social payoff) | unemployment, phi 4.76, benefit reference 0.643, unemployed participate at 0.561 of the employed rate, income process 0.92/0.10, dread 1.50 (overlay), beta spread 0.003
+  participation 0.000000 | agency 0.990092 (from income alone 0.974610) | expected loss 0.010249 | drop on job loss 0.136014
+  hardship 0.121839 (income 0.018002, asset 0.108384) | agency on the old hardship reading 0.867302
+  hand-to-mouth 0.070823 | mean labour income 0.641265 | median disposable 0.558590 | effort 0.653534
+  participation employed 0.0000, unemployed 0.0000
+  asset poverty by income quintile: 0.144  0.103  0.139  0.089  0.039
+  OECD average for comparison:      0.680  n/a    n/a    0.430  0.270
+
+G+S    social cohesion
+  G+S    alpha 1.000  B 0.98/1.04, kappa 4.85 sigma 0.960 omega 0.30 | unemployment, phi 4.76, benefit reference 0.643, unemployed participate at 0.561 of the employed rate, income process 0.92/0.10, beta spread 0.003
+  participation 0.232961 | agency 0.989903 (from income alone 0.974354) | expected loss 0.010097 | drop on job loss 0.134911
+  hardship 0.114916 (income 0.011000, asset 0.108540) | agency on the old hardship reading 0.885084
+  hand-to-mouth 0.064892 | mean labour income 0.631592 | median disposable 0.550080 | effort 0.639863
+  participation employed 0.2400, unemployed 0.1332
+  asset poverty by income quintile: 0.275  0.114  0.078  0.039  0.018
+  OECD average for comparison:      0.680  n/a    n/a    0.430  0.270
+
+G+S+A  both
+  G+S+A  alpha 0.860/1.271  B 0.98/1.04, kappa 4.85 sigma 0.960 omega 0.30 | unemployment, phi 4.76, benefit reference 0.643, unemployed participate at 0.561 of the employed rate, income process 0.92/0.10, dread 1.50 (overlay), beta spread 0.003
+  participation 0.231715 | agency 0.990191 (from income alone 0.975284) | expected loss 0.010153 | drop on job loss 0.134837
+  hardship 0.128225 (income 0.014295, asset 0.118703) | agency on the old hardship reading 0.858536
+  hand-to-mouth 0.080554 | mean labour income 0.629904 | median disposable 0.548516 | effort 0.642924
+  participation employed 0.2390, unemployed 0.1283
+  asset poverty by income quintile: 0.159  0.146  0.155  0.086  0.034
+  OECD average for comparison:      0.680  n/a    n/a    0.430  0.270
+
+G+S+A against its targets: cell participation 0.2013 and 0.2904 (0.203, 0.291), poor hand-to-mouth 0.0299 (0.032)
+slope 0.4646, multiplier 1.9. The old footing, held up by the unemployed at one:
+participation 0.3574, agency 0.4947, hand-to-mouth 0.2998, multiplier 34.0
+
+calibrated G+S+A, families from disk  ->  itself           0.0e+00   none                 pass
+
+====================================================================================================
+CONVERGENCE AT THE CALIBRATED FOOTING: has the agency column settled?
+====================================================================================================
+discretisation                               agency      asset pov   median      move      median move
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+0 of 0 discretisations settled within 0.005 on agency
+
+20 of 20 checks pass
+MODULARITY SUITE PASSES
+DONE

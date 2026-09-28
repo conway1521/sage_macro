@@ -1,0 +1,17 @@
+
+DE GSA
+  baseline     best             1 stable: 0.2796 (mult 1.8)
+  baseline     low multiplier   1 stable: 0.2910 (mult 1.3)
+  baseline     high multiplier  1 stable: 0.2641 (mult 3.0)
+  subsidy      best             1 stable: 0.2297 (mult 1.7)
+  subsidy      low multiplier   1 stable: 0.2715 (mult 1.3)
+  subsidy      high multiplier  1 stable: 0.1654 (mult 2.4)
+  empowerment  best             1 stable: 0.3411 (mult 1.8)
+  empowerment  low multiplier   1 stable: 0.3126 (mult 1.3)
+  empowerment  high multiplier  1 stable: 0.4267 (mult 2.9)
+  ui_up        best             1 stable: 0.2775 (mult 1.8)
+  ui_up        low multiplier   1 stable: 0.2902 (mult 1.3)
+  ui_up        high multiplier  1 stable: 0.2589 (mult 2.9)
+  ui_down      best             1 stable: 0.2820 (mult 1.8)
+  ui_down      low multiplier   1 stable: 0.2918 (mult 1.3)
+  ui_down      high multiplier  1 stable: 0.2700 (mult 3.0)
