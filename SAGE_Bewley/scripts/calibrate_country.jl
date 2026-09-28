@@ -12,7 +12,8 @@
 # hand-to-mouth from 0.308 to 0.262, because participation takes time from work
 # and so changes saving. So every configuration is also calibrated to its own
 # targets: G and G+A to effort and hand-to-mouth, G+S and G+S+A to those plus
-# participation by education. The fixed-parameter comparison says what a
+# participation (G+S+A by education, G+S overall: see TARGET OWNERSHIP below).
+# The fixed-parameter comparison says what a
 # mechanism does; the recalibrated one says what each economy looks like when it
 # is made to fit. Both are reported.
 #
@@ -38,8 +39,9 @@
 #     a configuration still outside it is not calibrated.
 #  6. For G+S+A, the four economies at its parameters: the fixed-parameter view.
 #
-# STOPPING RULES. If no technology gives a stable equilibrium, or the best root
-# loss exceeds 0.035 (stage 7's absolute standard), the configuration is
+# STOPPING RULES. If no technology gives a stable equilibrium with a multiplier
+# of at most MULT_MAX, or the best root loss exceeds the standard (0.035 on the
+# two cell targets, AGG_TOL on overall participation), the configuration is
 # reported as not calibrated and no file is written: exit 2. A failed preflight
 # exits 3. Nothing is tuned by hand.
 include(joinpath(@__DIR__, "modular_workers.jl"))
@@ -60,6 +62,26 @@ const RATIO = num("ratio")
 # The national ratio exactly, and for the headline configuration the other
 # national figures in the data as a sensitivity.
 const RATIOS = CFG == "GSA" ? vcat(RATIO, [x for x in (0.486, 0.574, 0.857, 0.937) if abs(x - RATIO) > 0.002]) : [RATIO]
+# TARGET OWNERSHIP (2026-09-28). A configuration is fitted only to the targets
+# its switches own. The participation gap between the education cells comes from
+# S and A together: capability is what separates the cells, and with A off the
+# only lever left is social feedback, which France G+S could use only by pushing
+# the multiplier to 38, next to the loss of a unique equilibrium. So G+S fits
+# overall participation alone and reports the gap as untargeted. The taste
+# dispersion sigma, which the gap pins down, is held at the country's G+S+A
+# value (the unemployed ratio cannot pin it: it is imposed as a rule, and
+# probe_gs_identification.jl shows what it does when it is not).
+const OWN_GAP = A_ON
+const AGG_TOL = 0.005
+const LOSS_STD = OWN_GAP ? 0.035 : AGG_TOL
+# STABILITY GATE. The calibrated equilibrium must sit away from a fold: a
+# multiplier 1/(1 - slope) of at most 5, a map slope of at most 0.8. A numerical
+# rule, not an estimate; the calibrated G+S+A economies sit at 1.3 to 1.9.
+const MULT_MAX = 5.0
+const CELLS0 = cells_of(country_config(CODE; config = "GSA", S = true, A = A_ON))
+const AGG = CELLS0[1].share * PART[1] + CELLS0[2].share * PART[2]
+const SIGMA_FIX = OWN_GAP ? NaN : country_config(CODE; config = "GSA").sigma_m
+
 # How much switching cohesion on raises hand-to-mouth, used to aim the
 # cohesion-off fit. G+S+A: France on EU-SILC, 0.2804 with cohesion against 0.2512
 # without (calibrate_country_FR.txt, 2026-09-23). The INSEE footing's gap, 0.046,
@@ -243,29 +265,41 @@ function scans(phi, spread; ugrid = UGRID_COARSE)
         fi = [impose_unemployed_ratio(f, emp, ρ) for f in raw]
         # Wide on purpose: France on EU-SILC put its first best sigma on the old
         # 0.80 bound, and a best value on an edge only says the search stopped there.
-        rows = scan_technology(cr, fi, collect(SIGMAS), collect(KAPPAS); targets = PART)
+        sig = OWN_GAP ? collect(SIGMAS) : [SIGMA_FIX]
+        kw = OWN_GAP ? (targets = PART,) : (aggregate = AGG,)
+        rows = scan_technology(cr, fi, sig, collect(KAPPAS); kw..., max_mult = MULT_MAX)
+        # what the gate costs, reported at the national ratio only (a second scan)
+        free = ρ == RATIO ? scan_technology(cr, fi, sig, collect(KAPPAS); kw...) : NamedTuple[]
+        if !isempty(free)
+            fb = free[argmin([x.loss for x in free])]
+            fb.mult > MULT_MAX && @printf("  ratio %.3f: without the stability gate the best fit would be %.4f at multiplier %.1f (kappa %.2f sigma %.2f)\n",
+                                          ρ, fb.loss, fb.mult, fb.κ, fb.σ)
+        end
         if isempty(rows)
-            @printf("  ratio %.3f: no stable equilibrium anywhere on the grid\n", ρ); out[ρ] = nothing; continue
+            @printf("  ratio %.3f: no stable equilibrium with a multiplier of at most %.0f anywhere on the grid\n", ρ, MULT_MAX)
+            out[ρ] = nothing; continue
         end
         best = rows[argmin([x.loss for x in rows])]
-        ok = [x for x in rows if x.loss <= 0.035]
+        ok = [x for x in rows if x.loss <= LOSS_STD]
         edge = (best.σ <= first(SIGMAS) || best.σ >= last(SIGMAS) ? " SIGMA ON THE GRID EDGE" : "") *
                (best.κ <= first(KAPPAS) || best.κ >= last(KAPPAS) ? " KAPPA ON THE GRID EDGE" : "")
         @printf("  ratio %.3f%s: best kappa %.2f sigma %.2f, root loss %.4f, rate %.4f, multiplier %.1f%s",
                 ρ, ρ == RATIO ? " (national)" : "", best.κ, best.σ, best.loss, best.r, best.mult, edge)
-        isempty(ok) ? println(" | nothing within 0.035") :
-            @printf(" | within 0.035: sigma %.2f to %.2f, multiplier %.1f to %.1f\n",
+        isempty(ok) ? @printf(" | nothing within %.3f\n", LOSS_STD) :
+            @printf(" | within %.3f: sigma %.2f to %.2f, multiplier %.1f to %.1f\n", LOSS_STD,
                     minimum(x.σ for x in ok), maximum(x.σ for x in ok), minimum(x.mult for x in ok), maximum(x.mult for x in ok))
         flush(stdout)
         out[ρ] = (best = best, ok = ok)
     end
     out
 end
-say("\n2-3. ", CFG, " families and technology scans, participation targets ", PART)
+say("\n2-3. ", CFG, " families and technology scans, ",
+    OWN_GAP ? "participation targets $(PART)" :
+              @sprintf("overall participation %.4f (the cell gap is not this configuration's target), sigma held at the G+S+A value %.2f", AGG, SIGMA_FIX))
 S = scans(phi, spread)
-if S[RATIO] === nothing || S[RATIO].best.loss > 0.035
+if S[RATIO] === nothing || S[RATIO].best.loss > LOSS_STD
     say("\nNOT CALIBRATED: at the national ratio the best fit is ", S[RATIO] === nothing ? "absent" :
-        @sprintf("%.4f, above the 0.035 standard", S[RATIO].best.loss), ". No calibration file written.")
+        @sprintf("%.4f, above the %.3f standard", S[RATIO].best.loss, LOSS_STD), ". No calibration file written.")
     mark_not_calibrated(); exit(2)
 end
 
@@ -315,7 +349,7 @@ for correction in 1:2
     end
     @printf("  new phi %.2f, spread %.3f, mean patience %.4f%s\n", phi, spread, BB[], edge2 ? " (ON THE GRID EDGE)" : ""); flush(stdout)
     S = scans(phi, spread)
-    if S[RATIO] === nothing || S[RATIO].best.loss > 0.035
+    if S[RATIO] === nothing || S[RATIO].best.loss > LOSS_STD
         say("\nNOT CALIBRATED after the correction. No calibration file written.")
         mark_not_calibrated(); exit(2)
     end
@@ -324,7 +358,7 @@ for correction in 1:2
 end
 say("\n5b. the calibration on the full belonging grid (", length(UGRID_DEFAULT), " scales): technology re-scanned, economy solved and checked")
 S = scans(phi, spread; ugrid = UGRID_DEFAULT)
-if S[RATIO] === nothing || S[RATIO].best.loss > 0.035
+if S[RATIO] === nothing || S[RATIO].best.loss > LOSS_STD
     say("\nNOT CALIBRATED on the full grid. No calibration file written.")
     mark_not_calibrated(); exit(2)
 end
@@ -335,6 +369,13 @@ if abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL || abs(r.mean_effort_employed
                  r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET))
     mark_not_calibrated(); exit(2)
 end
+if 1 / (1 - r.slope) > MULT_MAX
+    say(@sprintf("\nNOT CALIBRATED: the solved economy's multiplier is %.1f, above the stability gate of %.0f. No calibration file written.",
+                 1 / (1 - r.slope), MULT_MAX))
+    mark_not_calibrated(); exit(2)
+end
+OWN_GAP || say(@sprintf("  untargeted: participation gap between the cells %.4f against %.4f in the data (what A adds)",
+                        r.pooled[2].rate - r.pooled[1].rate, PART[2] - PART[1]))
 write_cal(phi, spread; kappa = best.κ, sigma = best.σ)
 
 # ------------------------------------- 6. the fixed-parameter four economies --

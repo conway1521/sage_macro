@@ -630,13 +630,15 @@ end
 
 Fit and slope across the social technology, by interpolation on prebuilt
 families. Returns one row per sigma: the best kappa, the root loss against the
-group participation targets, and the equilibrium there with its map slope. The
+group participation targets (or, with `aggregate`, against overall
+participation alone), and the equilibrium there with its map slope. Equilibria
+whose multiplier exceeds `max_mult` are not candidates. The
 kappa search is global at every sigma, never a window around a coarse winner,
 because a window is what produced a headline this project had to retract.
 """
 function scan_technology(c::SAGEConfig, fams, sigmas, kappas;
                          targets = (0.25, 0.45), nq = c.nq, xgrid = 0.0:0.02:60.0,
-                         selected_only = false)
+                         selected_only = false, aggregate = nothing, max_mult = Inf)
     cs = cells_of(c); XG = collect(xgrid)
     rl = [n.rate for n in fams[1]]; rh = [n.rate for n in fams[2]]
     tab(col, σ) = (ms = taste_nodes_ln(σ; n = nq);
@@ -661,8 +663,12 @@ function scan_technology(c::SAGEConfig, fams, sigmas, kappas;
             end
             selected_only && length(cross) > 1 && (cross = cross[end:end])
             for (rs, sl) in cross
+                1 / (1 - sl) > max_mult && continue
                 _, lo, hi = f(rs)
-                L = (lo - targets[1])^2 + (hi - targets[2])^2
+                # `aggregate`: fit overall participation only, for a
+                # configuration that does not own the gap between the cells
+                L = aggregate === nothing ? (lo - targets[1])^2 + (hi - targets[2])^2 :
+                    (cs[1].share * lo + cs[2].share * hi - aggregate)^2
                 (best === nothing || L < best.L) &&
                     (best = (L = L, κ = κ, r = rs, lo = lo, hi = hi, slope = sl))
             end
