@@ -1,0 +1,5 @@
+
+FR GSA
+  baseline     best             1 stable: 0.2317 (mult 1.9)
+  baseline     low multiplier   1 stable: 0.2420 (mult 1.2)
+  baseline     high multiplier  1 stable: 0.2191 (mult 3.2)

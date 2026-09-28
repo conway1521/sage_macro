@@ -1,75 +1,76 @@
+configurations calibrated for FR: GSA, GS, GA, G
 
 ====================================================================================================
-FR GSA | G+S+A  alpha 0.765/0.911  B 0.80/0.94, kappa 10.70 sigma 0.940 omega 0.30 | unemployment, phi 14.10, unemployed participate at 0.486 of the employed rate
+FR GSA | G+S+A  alpha 0.860/1.271  B 0.98/1.04, kappa 4.85 sigma 0.960 omega 0.30 | unemployment, phi 4.76, benefit reference 0.643, unemployed participate at 0.561 of the employed rate, income process 0.92/0.10, dread 1.50 (overlay), beta spread 0.003
 ====================================================================================================
-  technology best             kappa 10.70 sigma 0.94 | participation 0.2472, multiplier 1.9
-  technology low multiplier   kappa 14.65 sigma 1.50 | participation 0.2475, multiplier 1.4
-  technology high multiplier  kappa 10.20 sigma 0.58 | participation 0.2387, multiplier 3.9
-  subsidy budget iteration 1: levy 0.08956 -> 0.09355
-  subsidy budget iteration 2: levy 0.09400 -> 0.09399
-
-  policy       technology       |   d part    d emp  d unemp | d agency    d gap   d loss   d drop |   d hard    d htm d effort
-  subsidy      best             |  -0.0502  -0.0519  -0.0249 |  +0.0003  -0.0002  -0.0003  -0.0052 |  -0.0280  -0.0049  +0.0267
-  subsidy      low multiplier   |  -0.0256  -0.0264  -0.0129 |  +0.0003  -0.0002  -0.0004  -0.0055 |  -0.0268  -0.0044  +0.0256
-  subsidy      high multiplier  |  -0.1111  -0.1148  -0.0532 |  +0.0003  -0.0002  -0.0003  -0.0048 |  -0.0307  -0.0060  +0.0292
-  empowerment  best             |  +0.0122  +0.0126  +0.0071 |  +0.0363  -0.0725  -0.0001  -0.0008 |  -0.0019  +0.0001  -0.0063
-  empowerment  low multiplier   |  +0.0060  +0.0061  +0.0036 |  +0.0363  -0.0725  -0.0001  -0.0007 |  -0.0021  +0.0000  -0.0060
-  empowerment  high multiplier  |  +0.0393  +0.0405  +0.0207 |  +0.0363  -0.0725  -0.0001  -0.0010 |  -0.0004  +0.0005  -0.0075
-  ui_up        best             |  -0.0025  -0.0026  -0.0012 |  +0.0010  +0.0001  -0.0012  -0.0139 |  +0.1025  +0.0511  +0.0012
-  ui_up        low multiplier   |  -0.0012  -0.0012  -0.0006 |  +0.0010  +0.0001  -0.0012  -0.0140 |  +0.1023  +0.0514  +0.0011
-  ui_up        high multiplier  |  -0.0077  -0.0080  -0.0037 |  +0.0010  +0.0001  -0.0011  -0.0137 |  +0.1021  +0.0502  +0.0014
-  ui_down      best             |  +0.0029  +0.0030  +0.0014 |  -0.0008  +0.0000  +0.0010  +0.0107 |  -0.0640  -0.0145  -0.0013
-  ui_down      low multiplier   |  +0.0014  +0.0014  +0.0007 |  -0.0008  +0.0000  +0.0010  +0.0108 |  -0.0643  -0.0146  -0.0012
-  ui_down      high multiplier  |  +0.0094  +0.0097  +0.0045 |  -0.0008  +0.0000  +0.0009  +0.0104 |  -0.0632  -0.0142  -0.0016
-  [GSA done in 0.3 min]
-
-====================================================================================================
-FR GS | G+S    alpha 0.838  B 0.80/0.94, kappa 10.35 sigma 0.620 omega 0.30 | unemployment, phi 14.13, unemployed participate at 0.486 of the employed rate
-====================================================================================================
-  technology best             kappa 10.35 sigma 0.62 | participation 0.2455, multiplier 3.5
-  technology low multiplier   kappa 14.80 sigma 1.50 | participation 0.2478, multiplier 1.4
-  technology high multiplier  kappa 10.55 sigma 0.44 | participation 0.2514, multiplier 51.0
-  subsidy budget iteration 1: levy 0.08967 -> 0.09413
-  subsidy budget iteration 2: levy 0.09462 -> 0.09464
+  technology best             kappa  4.85 sigma 0.96 | participation 0.2317, multiplier 1.9
+  technology low multiplier   kappa 19.05 sigma 2.38 | participation 0.2420, multiplier 1.2
+  technology high multiplier  kappa  4.65 sigma 0.62 | participation 0.2191, multiplier 3.2
+  subsidy budget iteration 1: levy 0.13491 -> 0.14087
+  subsidy budget iteration 2: levy 0.14153 -> 0.14152
 
   policy       technology       |   d part    d emp  d unemp | d agency    d gap   d loss   d drop |   d hard    d htm d effort
-  subsidy      best             |  -0.1077  -0.1113  -0.0523 |  +0.0002  -0.0000  -0.0003  -0.0053 |  -0.0384  -0.0040  +0.0294
-  subsidy      low multiplier   |  -0.0261  -0.0270  -0.0130 |  +0.0003  -0.0000  -0.0003  -0.0059 |  -0.0338  -0.0027  +0.0260
-  subsidy      high multiplier  |  -0.1865  -0.1929  -0.0888 |  +0.0002  -0.0000  -0.0003  -0.0049 |  -0.0425  -0.0049  +0.0327
-  ui_up        best             |  -0.0070  -0.0072  -0.0033 |  +0.0011  -0.0002  -0.0013  -0.0149 |  +0.1342  +0.0593  +0.0014
-  ui_up        low multiplier   |  -0.0012  -0.0013  -0.0006 |  +0.0011  -0.0002  -0.0013  -0.0151 |  +0.1337  +0.0616  +0.0012
-  ui_up        high multiplier  |  -0.0583  -0.0602  -0.0280 |  +0.0010  -0.0002  -0.0012  -0.0142 |  +0.1286  +0.0554  +0.0038
-  ui_down      best             |  +0.0082  +0.0085  +0.0039 |  -0.0009  +0.0003  +0.0011  +0.0115 |  -0.0818  -0.0137  -0.0016
-  ui_down      low multiplier   |  +0.0014  +0.0014  +0.0007 |  -0.0009  +0.0003  +0.0011  +0.0118 |  -0.0834  -0.0141  -0.0013
-  ui_down      high multiplier  |  +0.1927  +0.1990  +0.0947 |  -0.0008  +0.0002  +0.0010  +0.0101 |  -0.0744  -0.0129  -0.0100
-  [GS done in 0.2 min]
+  subsidy      best             |  -0.0480  -0.0494  -0.0279 |  +0.0004  -0.0004  -0.0004  -0.0058 |  -0.0285  -0.0055  +0.0356
+  subsidy      low multiplier   |  -0.0150  -0.0155  -0.0090 |  +0.0004  -0.0004  -0.0004  -0.0061 |  -0.0268  -0.0049  +0.0343
+  subsidy      high multiplier  |  -0.0902  -0.0930  -0.0509 |  +0.0004  -0.0005  -0.0004  -0.0056 |  -0.0304  -0.0060  +0.0373
+  empowerment  best             |  +0.0384  +0.0394  +0.0243 |  +0.1341  -0.2035  -0.0003  -0.0026 |  -0.0077  +0.0014  -0.0243
+  empowerment  low multiplier   |  +0.0105  +0.0108  +0.0070 |  +0.1341  -0.2035  -0.0003  -0.0025 |  -0.0087  +0.0010  -0.0230
+  empowerment  high multiplier  |  +0.1102  +0.1133  +0.0661 |  +0.1341  -0.2035  -0.0003  -0.0030 |  -0.0038  +0.0026  -0.0276
+  ui_up        best             |  -0.0024  -0.0025  -0.0014 |  +0.0013  +0.0006  -0.0013  -0.0140 |  +0.1182  +0.0576  +0.0015
+  ui_up        low multiplier   |  -0.0007  -0.0007  -0.0004 |  +0.0013  +0.0006  -0.0013  -0.0141 |  +0.1194  +0.0580  +0.0015
+  ui_up        high multiplier  |  -0.0059  -0.0061  -0.0033 |  +0.0013  +0.0006  -0.0013  -0.0139 |  +0.1167  +0.0571  +0.0017
+  ui_down      best             |  +0.0027  +0.0028  +0.0015 |  -0.0010  -0.0004  +0.0010  +0.0106 |  -0.0628  -0.0141  -0.0016
+  ui_down      low multiplier   |  +0.0008  +0.0008  +0.0004 |  -0.0010  -0.0004  +0.0010  +0.0107 |  -0.0633  -0.0143  -0.0015
+  ui_down      high multiplier  |  +0.0069  +0.0071  +0.0039 |  -0.0010  -0.0004  +0.0010  +0.0105 |  -0.0623  -0.0138  -0.0018
+  [GSA done in 178.2 min]
 
 ====================================================================================================
-FR GA | G+A    alpha 0.765/0.911  B (no social payoff) | unemployment, phi 14.10, unemployed participate at 0.486 of the employed rate, beta spread 0.001
+FR GS | G+S    alpha 1.000  B 0.98/1.04, kappa 4.75 sigma 0.520 omega 0.30 | unemployment, phi 4.69, benefit reference 0.643, unemployed participate at 0.561 of the employed rate, income process 0.92/0.10, beta spread 0.012
+====================================================================================================
+  technology best             kappa  4.75 sigma 0.52 | participation 0.2445, multiplier 6.6
+  technology low multiplier   kappa  4.75 sigma 0.52 | participation 0.2445, multiplier 6.6
+  technology high multiplier  kappa  4.75 sigma 0.50 | participation 0.2322, multiplier 7.7
+  subsidy budget iteration 1: levy 0.13571 -> 0.14268
+  subsidy budget iteration 2: levy 0.14346 -> 0.14345
+
+  policy       technology       |   d part    d emp  d unemp | d agency    d gap   d loss   d drop |   d hard    d htm d effort
+  subsidy      best             |  -0.1483  -0.1528  -0.0845 |  +0.0003  -0.0001  -0.0003  -0.0056 |  -0.0342  -0.0040  +0.0389
+  subsidy      low multiplier   |  -0.1483  -0.1528  -0.0845 |  +0.0003  -0.0001  -0.0003  -0.0056 |  -0.0342  -0.0040  +0.0389
+  subsidy      high multiplier  |  -0.1464  -0.1509  -0.0834 |  +0.0003  -0.0001  -0.0003  -0.0056 |  -0.0337  -0.0040  +0.0387
+  ui_up        best             |  -0.0158  -0.0162  -0.0089 |  +0.0014  -0.0004  -0.0014  -0.0132 |  +0.1615  +0.0455  +0.0021
+  ui_up        low multiplier   |  -0.0158  -0.0162  -0.0089 |  +0.0014  -0.0004  -0.0014  -0.0132 |  +0.1615  +0.0455  +0.0021
+  ui_up        high multiplier  |  -0.0181  -0.0187  -0.0103 |  +0.0014  -0.0004  -0.0014  -0.0131 |  +0.1604  +0.0449  +0.0022
+  ui_down      best             |  +0.0191  +0.0197  +0.0109 |  -0.0012  +0.0003  +0.0012  +0.0113 |  -0.0716  -0.0100  -0.0025
+  ui_down      low multiplier   |  +0.0191  +0.0197  +0.0109 |  -0.0012  +0.0003  +0.0012  +0.0113 |  -0.0716  -0.0100  -0.0025
+  ui_down      high multiplier  |  +0.0234  +0.0241  +0.0133 |  -0.0012  +0.0003  +0.0012  +0.0113 |  -0.0709  -0.0099  -0.0027
+  [GS done in 147.6 min]
+
+====================================================================================================
+FR GA | G+A    alpha 0.860/1.271  B (no social payoff) | unemployment, phi 5.08, benefit reference 0.643, unemployed participate at 0.561 of the employed rate, income process 0.92/0.10, dread 1.50 (overlay), beta spread 0.006
 ====================================================================================================
   technology no cohesion      kappa 10.00 sigma 0.40 | participation 0.0000, multiplier 1.0
-  subsidy budget iteration 1: levy 0.09183 -> 0.09554
-  subsidy budget iteration 2: levy 0.09596 -> 0.09592
+  subsidy budget iteration 1: levy 0.13522 -> 0.14073
+  subsidy budget iteration 2: levy 0.14135 -> 0.14130
 
   policy       technology       |   d part    d emp  d unemp | d agency    d gap   d loss   d drop |   d hard    d htm d effort
-  subsidy      no cohesion      |  -0.0000  -0.0000  -0.0000 |  +0.0003  -0.0002  -0.0004  -0.0068 |  -0.0268  -0.0031  +0.0249
-  empowerment  no cohesion      |  +0.0000  +0.0000  +0.0000 |  +0.0362  -0.0724  -0.0001  -0.0010 |  -0.0057  +0.0006  -0.0057
-  ui_up        no cohesion      |  -0.0000  -0.0000  -0.0000 |  +0.0011  +0.0001  -0.0013  -0.0161 |  +0.1300  +0.0600  +0.0011
-  ui_down      no cohesion      |  +0.0000  +0.0000  +0.0000 |  -0.0009  +0.0000  +0.0011  +0.0117 |  -0.0788  -0.0159  -0.0012
-  [GA done in 1.6 min]
+  subsidy      no cohesion      |  -0.0000  -0.0000  -0.0000 |  +0.0004  -0.0004  -0.0005  -0.0066 |  -0.0259  -0.0056  +0.0331
+  empowerment  no cohesion      |  +0.0000  +0.0000  +0.0000 |  +0.1340  -0.2034  -0.0003  -0.0024 |  -0.0093  +0.0012  -0.0223
+  ui_up        no cohesion      |  +0.0000  +0.0000  +0.0000 |  +0.0013  +0.0006  -0.0013  -0.0147 |  +0.1304  +0.0624  +0.0014
+  ui_down      no cohesion      |  +0.0000  +0.0000  +0.0000 |  -0.0011  -0.0004  +0.0011  +0.0112 |  -0.0719  -0.0152  -0.0015
+  [GA done in 2.8 min]
 
 ====================================================================================================
-FR G | G      alpha 0.838  B (no social payoff) | unemployment, phi 14.13, unemployed participate at 0.486 of the employed rate, beta spread 0.003
+FR G | G      alpha 1.000  B (no social payoff) | unemployment, phi 5.01, benefit reference 0.643, unemployed participate at 0.561 of the employed rate, income process 0.92/0.10, beta spread 0.014
 ====================================================================================================
   technology no cohesion      kappa 10.00 sigma 0.40 | participation 0.0000, multiplier 1.0
-  subsidy budget iteration 1: levy 0.09181 -> 0.09555
-  subsidy budget iteration 2: levy 0.09596 -> 0.09591
+  subsidy budget iteration 1: levy 0.13603 -> 0.14162
+  subsidy budget iteration 2: levy 0.14225 -> 0.14219
 
   policy       technology       |   d part    d emp  d unemp | d agency    d gap   d loss   d drop |   d hard    d htm d effort
-  subsidy      no cohesion      |  -0.0000  -0.0000  -0.0000 |  +0.0003  -0.0001  -0.0004  -0.0069 |  -0.0304  -0.0017  +0.0246
-  ui_up        no cohesion      |  -0.0000  -0.0000  -0.0000 |  +0.0011  -0.0003  -0.0014  -0.0157 |  +0.1450  +0.0573  +0.0011
-  ui_down      no cohesion      |  +0.0000  +0.0000  +0.0000 |  -0.0009  +0.0003  +0.0011  +0.0118 |  -0.0819  -0.0139  -0.0011
-  [G done in 1.4 min]
+  subsidy      no cohesion      |  -0.0000  -0.0000  -0.0000 |  +0.0004  -0.0001  -0.0004  -0.0066 |  -0.0295  -0.0023  +0.0317
+  ui_up        no cohesion      |  -0.0000  -0.0000  -0.0000 |  +0.0014  -0.0004  -0.0014  -0.0141 |  +0.1688  +0.0514  +0.0015
+  ui_down      no cohesion      |  +0.0000  +0.0000  +0.0000 |  -0.0012  +0.0003  +0.0012  +0.0119 |  -0.0775  -0.0097  -0.0016
+  [G done in 2.3 min]
 
 wrote policy_results_FR.csv
 DONE
