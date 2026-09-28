@@ -170,7 +170,13 @@ function fit_phi(sp; lo = 0.5, hi = 40.0, steps = 14, aim = E_TARGET)   # lo was
     end
     round(0.5 * (lo + hi); digits = 2)
 end
-function fit_spread(phi, target; grid = 0.0:0.005:0.115)   # the cap is 0.115 everywhere (stage 1 refined to it; the correction had stopped at 0.10)
+# One search bound on the discount spread for every stage. Types run from
+# beta_bar - spread up to beta_bar, so at 0.15 the most impatient type has an
+# annual discount factor of 0.81. A search limit, not an economic claim. It was
+# 0.115, but stage 1's refinement went past it (Italy G at 0.129) while the
+# correction could not, which left Italy G+S unable to reach its own G target.
+const SPREAD_MAX = 0.15
+function fit_spread(phi, target; grid = 0.0:0.005:SPREAD_MAX)
     BB[] = 0.96
     hs = [soff(phi, sp).hand_to_mouth_kvw for sp in grid]
     k = findfirst(>=(target), hs)
@@ -197,7 +203,7 @@ if ck1 === nothing
     BB[] = fs.bb
     phi = fit_phi(fs.sp; lo = max(0.5, phi - 4), hi = phi + 4, steps = 8)
     fs = fit_spread(phi, HTM_TARGET - GAP;
-                    grid = fs.bb == 0.96 && fs.sp > 0 ? (max(0.0, fs.sp - 0.015):0.005:(fs.sp + 0.015)) : (0.0:0.005:0.10))
+                    grid = fs.bb == 0.96 && fs.sp > 0 ? (max(0.0, fs.sp - 0.015):0.005:min(SPREAD_MAX, fs.sp + 0.015)) : (0.0:0.005:0.10))
     spread = fs.sp; edge = fs.edge; BB[] = fs.bb
     chk = soff(phi, spread)
     chk_e, chk_h = chk.mean_effort_employed, chk.hand_to_mouth_kvw

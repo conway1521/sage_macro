@@ -2,38 +2,38 @@ calibrating IT GS | effort target 0.725221 | hand-to-mouth target 0.083 | partic
 preflight, France G+A through the parallel path (solver egm): worst gap 9.4e-04 against the suite: HELD
 
 1. effort scale and discount spread, cohesion off, hand-to-mouth aim 0.083
-  phi 2.95, spread 0.129, mean patience 0.9600: effort 0.7250 (target 0.7252), poor hand-to-mouth 0.0829 (aim 0.0830)  [2.1 min]
+  phi 2.95, spread 0.129, mean patience 0.9600: effort 0.7250 (target 0.7252), poor hand-to-mouth 0.0829 (aim 0.0830)  [2.6 min]
 
-2-3. GS families and technology scans, participation targets (0.116249, 0.165)
-  families built or loaded in 0.4 min
-  ratio 0.937 (national): best kappa 3.65 sigma 0.42, root loss 0.0074, rate 0.1302, multiplier 6.0 | within 0.035: sigma 0.38 to 3.00, multiplier 1.1 to 14.7
+2-3. GS families and technology scans, overall participation 0.1248 (the cell gap is not this configuration's target), sigma held at the G+S+A value 1.48
+  families built or loaded in 0.5 min
+  ratio 0.937 (national): best kappa 3.00 sigma 1.48, root loss 0.0006, rate 0.1242, multiplier 1.3 | within 0.005: sigma 1.48 to 1.48, multiplier 1.3 to 1.3
 
 4. the calibrated GS economy on its own thresholds
-  GS: participation 0.1301 (cells 0.1232, 0.1626 against 0.116, 0.165; employed 0.1310, unemployed 0.1193)
-         agency 0.9632, hardship 0.2727, hand-to-mouth 0.0855 (target 0.08), effort 0.7192, multiplier 6.0  [0.4 min]
-         expected loss to unemployment 0.0368 (income alone 0.0470), drop on job loss 0.4521, agency on the old hardship reading 0.7273
+  GS: participation 0.1242 (cells 0.1222, 0.1336 against 0.116, 0.165; employed 0.1248, unemployed 0.1160)
+         agency 0.9632, hardship 0.2730, hand-to-mouth 0.0855 (target 0.08), effort 0.7195, multiplier 1.3  [0.5 min]
+         expected loss to unemployment 0.0368 (income alone 0.0470), drop on job loss 0.4521, agency on the old hardship reading 0.7270
 
-5.1 hand-to-mouth off by +0.0025, effort off by -0.0060; this economy's own cohesion gaps are +0.0026 and -0.0058. Correction 1 of 2.
-  new phi 2.85, spread 0.115, mean patience 0.9600 (ON THE GRID EDGE)
-  families built or loaded in 0.4 min
-  ratio 0.937 (national): best kappa 3.45 sigma 0.48, root loss 0.0100, rate 0.1286, multiplier 3.8 | within 0.035: sigma 0.36 to 3.00, multiplier 1.1 to 6.3
-  GS: participation 0.1286 (cells 0.1225, 0.1572 against 0.116, 0.165; employed 0.1294, unemployed 0.1182)
-         agency 0.9641, hardship 0.2146, hand-to-mouth 0.0642 (target 0.08), effort 0.7254, multiplier 3.8  [0.4 min]
-         expected loss to unemployment 0.0359 (income alone 0.0473), drop on job loss 0.4365, agency on the old hardship reading 0.7854
+5.1 hand-to-mouth off by +0.0025, effort off by -0.0057; this economy's own cohesion gaps are +0.0026 and -0.0055. Correction 1 of 2.
+  new phi 2.86, spread 0.115, mean patience 0.9600 (ON THE GRID EDGE)
+  families built or loaded in 0.5 min
+  ratio 0.937 (national): best kappa 2.95 sigma 1.48, root loss 0.0005, rate 0.1243, multiplier 1.3 | within 0.005: sigma 1.48 to 1.48, multiplier 1.3 to 1.3
+  GS: participation 0.1243 (cells 0.1223, 0.1337 against 0.116, 0.165; employed 0.1249, unemployed 0.1161)
+         agency 0.9641, hardship 0.2160, hand-to-mouth 0.0644 (target 0.08), effort 0.7250, multiplier 1.3  [0.5 min]
+         expected loss to unemployment 0.0359 (income alone 0.0472), drop on job loss 0.4364, agency on the old hardship reading 0.7840
 
-5.2 hand-to-mouth off by -0.0188, effort off by +0.0002; this economy's own cohesion gaps are +0.0031 and -0.0057. Correction 2 of 2.
-  new phi 2.85, spread 0.115, mean patience 0.9600 (ON THE GRID EDGE)
+5.2 hand-to-mouth off by -0.0186, effort off by -0.0003; this economy's own cohesion gaps are +0.0029 and -0.0055. Correction 2 of 2.
+  new phi 2.86, spread 0.115, mean patience 0.9600 (ON THE GRID EDGE)
   families built or loaded in 0.0 min
-  ratio 0.937 (national): best kappa 3.45 sigma 0.48, root loss 0.0100, rate 0.1286, multiplier 3.8 | within 0.035: sigma 0.36 to 3.00, multiplier 1.1 to 6.3
-  GS: participation 0.1286 (cells 0.1225, 0.1572 against 0.116, 0.165; employed 0.1294, unemployed 0.1182)
-         agency 0.9641, hardship 0.2146, hand-to-mouth 0.0642 (target 0.08), effort 0.7254, multiplier 3.8  [0.0 min]
-         expected loss to unemployment 0.0359 (income alone 0.0473), drop on job loss 0.4365, agency on the old hardship reading 0.7854
+  ratio 0.937 (national): best kappa 2.95 sigma 1.48, root loss 0.0005, rate 0.1243, multiplier 1.3 | within 0.005: sigma 1.48 to 1.48, multiplier 1.3 to 1.3
+  GS: participation 0.1243 (cells 0.1223, 0.1337 against 0.116, 0.165; employed 0.1249, unemployed 0.1161)
+         agency 0.9641, hardship 0.2160, hand-to-mouth 0.0644 (target 0.08), effort 0.7250, multiplier 1.3  [0.0 min]
+         expected loss to unemployment 0.0359 (income alone 0.0472), drop on job loss 0.4364, agency on the old hardship reading 0.7840
 
 5b. the calibration on the full belonging grid (83 scales): technology re-scanned, economy solved and checked
-  families built or loaded in 0.7 min
-  ratio 0.937 (national): best kappa 3.70 sigma 0.38, root loss 0.0075, rate 0.1228, multiplier 9.5 | within 0.035: sigma 0.34 to 3.00, multiplier 1.1 to 12.7
-  GS: participation 0.7547 (cells 0.7441, 0.8045 against 0.116, 0.165; employed 0.7585, unemployed 0.7055)
-         agency 0.9643, hardship 0.2461, hand-to-mouth 0.0790 (target 0.08), effort 0.6975, multiplier 2.8  [0.7 min]
-         expected loss to unemployment 0.0357 (income alone 0.0463), drop on job loss 0.4350, agency on the old hardship reading 0.7539
+  families built or loaded in 0.9 min
+  ratio 0.937 (national): best kappa 2.95 sigma 1.48, root loss 0.0012, rate 0.1236, multiplier 1.3 | within 0.005: sigma 1.48 to 1.48, multiplier 1.3 to 1.3
+  GS: participation 0.1236 (cells 0.1216, 0.1329 against 0.116, 0.165; employed 0.1242, unemployed 0.1154)
+         agency 0.9641, hardship 0.2159, hand-to-mouth 0.0644 (target 0.08), effort 0.7250, multiplier 1.3  [0.9 min]
+         expected loss to unemployment 0.0359 (income alone 0.0472), drop on job loss 0.4364, agency on the old hardship reading 0.7841
 
-NOT CALIBRATED after two corrections: hand-to-mouth 0.0790 (target 0.0830), effort 0.6975 (target 0.7252). No calibration file written.
+NOT CALIBRATED after two corrections: hand-to-mouth 0.0644 (target 0.0830), effort 0.7250 (target 0.7252). No calibration file written.

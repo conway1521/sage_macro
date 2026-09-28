@@ -1,1 +1,0 @@
-# not calibrated (inputs-v2, 2026-09-28): without agency the participation gradient by education cannot be fitted (best root loss 0.058 against 0.035); the data's belonging gradient is nearly flat (EU-SILC 2015 ratio 0.98). Log: calibrate_DE_GS.log
