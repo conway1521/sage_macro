@@ -206,7 +206,20 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
             mu1 = b1 == -Inf ? 0.0 : cd[2][i]^(-p.γ)
             Van[i] = p.R * p.Γ * ((1 - P1[i]) * mu0 + P1[i] * mu1)
         end
-        dist = maximum(abs, Vn .- V)
+        # McQueen-Porteus bounds: with dmin and dmax the smallest and largest
+        # change this iteration, the fixed point lies between V + b/(1-b) dmin and
+        # V + b/(1-b) dmax. When that span is below tol the iteration stops and
+        # the level is set to the midpoint. Choices depend on value differences
+        # only, so they are unaffected; the level shift from one belonging scale
+        # to the next, which plain iteration removes slowly, costs nothing.
+        dmin = Inf; dmax = -Inf
+        @inbounds for i in eachindex(V)
+            δ = Vn[i] - V[i]; δ < dmin && (dmin = δ); δ > dmax && (dmax = δ)
+        end
+        dist = p.β / (1 - p.β) * (dmax - dmin)
+        if dist < tol
+            Vn .+= p.β / (1 - p.β) * 0.5 * (dmin + dmax)
+        end
         if trace && (it % 250 == 0 || it < 5)
             ia = argmax(abs.(Vn .- V))
             println("  it ", it, " dist ", dist, " at ", Tuple(CartesianIndices(V)[ia]), " P1 ", P1[ia])
