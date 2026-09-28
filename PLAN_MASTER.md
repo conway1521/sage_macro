@@ -94,3 +94,43 @@ A modular, data-disciplined heterogeneous-agent model of multidimensional wellbe
 | 3 dread behaviour | exact reduction; convergence; no mass at the top of the grid; implied cost within a factor of 3 of the wellbeing evidence | version 1: the wellbeing overlay only, with the same weight |
 | 4 calibration | own targets within tolerance | not calibrated, reported |
 | cloud | jobs finish within 6 hours | split the stages or resume from checkpoints; laptop sessions only with the user's go |
+
+## Progress log
+
+**2026-09-28, overnight.**
+
+- **Audit done.**
+  - `data/build_country_table.py` regenerates the table from Eurostat, OECD and TaxBEN plus `data/manual_inputs.csv`.
+  - The labour-market, benefit and participation columns reproduce the old values exactly.
+  - The changes are the intended ones: shares, alpha, B, effort, median-to-mean, rho, and the two ratios.
+  - Inventory in `AUDIT_INPUTS.md`. Tag `inputs-v2`.
+- **Agency version 2 in.**
+  - Dread weight 1.5, verified: Pagel (2017) p. 899 and Table 1; Brown et al. (2024) p. 508.
+  - The formula is proportional to q(1-q) and applies to both employed and unemployed, as Koszegi and Rabin imply.
+  - Gate 3 passed (`probe_dread.txt`):
+    - exact reduction with agency off;
+    - cost 0.93 percent of consumption for the employed, against about 1.2 to 2.1 percent in Carr and Chung;
+    - no mass at the top of the grid;
+    - strong precautionary response, offset in calibration by patience.
+  - Also reported: MPC, room to manoeuvre, dread cost.
+- **Calibrations** running on Actions (run 36376419988, 12 jobs).
+- **Workflows ready** for the suite (two parts) and the policy tests.
+- **Place data:**
+  - predetermined sports facilities (France) and 21 Italian regions show community is a secondary channel;
+  - the elasticity of participation to the stock is below one (E_PLACE_CONCEPT.md).
+- **WISE mapping** drafted (WISE_MAPPING.md).
+- **Validation benchmarks:**
+  - MPC: DE 0.50, FR 0.42, IT 0.48;
+  - drop on job loss: DE -6, FR -9, IT -8 percent in the first year;
+  - HFCS 2021 wealth moments (table below).
+
+**Untargeted validation benchmarks.** MPC and drop: agent report of 2026-09-28. Wealth: ECB HFCS Statistical Tables, wave 2021, July 2023.
+
+| | DE | FR | IT | source |
+|---|---|---|---|---|
+| annual MPC, one-month windfall | 0.50 (0.40-0.55) | 0.42 (0.35-0.50) | 0.48 (0.45-0.52) | Drescher, Fessler and Lindner (2020); Jappelli and Pistaferri (2014) |
+| MPC gradient, bottom to top liquid wealth | 25-35 pp | same | same | Jappelli and Pistaferri (2014) Fig. 2; Fagereng, Holm and Natvik (2021) |
+| consumption drop, first year of unemployment | -6% (-4 to -9) | -9% (-5 to -13) | -8% (-5 to -13) | Kolsrud et al. (2018); Andersen et al. (2023); INSEE DT 2024-23 |
+| top 10% net wealth share | 55.5 | 49.9 | 54.6 | HFCS 2021, Table J4 p. 58 |
+| net wealth Gini | 0.727 | 0.676 | 0.671 | same |
+| median net liquid assets / gross income | 29.5% | 24.8% | 27.1% | Table F1 p. 34 |
