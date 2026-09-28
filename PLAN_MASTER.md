@@ -184,3 +184,10 @@ A modular, data-disciplined heterogeneous-agent model of multidimensional wellbe
 - **France G+S+A recalibrated on egm:** 17.8 min against 134 on the grid solver. The same φ (4.76), spread (0.003) and κ (4.85), with σ one step away (0.98 against 0.96). Participation, agency, hardship, poor hand-to-mouth and effort all agree within 0.0005.
 - **Suite on egm with the dread fix:** 19 of 19 reductions and 7 of 7 convergence rows pass (run 36483637288).
 - **Decision:** egm is now the default (`SAGE_SOLVER`, and the workflows' solver input). The grid solver stays as the reference, available with `SAGE_SOLVER=grid`. Every configuration of FR, DE and IT is being recalibrated on egm, and each result is compared with the committed grid calibration before it replaces it.
+
+**ESS cross-check of the participation ratio, 2026-09-28 (`data/ess/ess_volunteering_ratio.py`, aggregates in `data/ess/ess_volunteering_ratio.csv`):**
+
+- **Method:** ESS rounds 6 and 7 (wrkorg) and 10 and 11 (volunfp), ages 20 to 64, weighted with pspwght. Employed are those whose main activity is paid work, unemployed those looking for a job. Pooled ratios (standard error): FR 0.80 (0.18) and 0.85 (0.16), DE 0.60 (0.12) and 0.92 (0.19), IT 0.57 (0.28) and 0.65 (0.13).
+- **The ESS is too thin to replace the national sources:** only 100 to 250 unemployed respondents per country. The committed ratios (FR 0.561, DE 0.546, IT 0.937) come from national surveys with far larger samples, so they stay as the headline. The ESS ratios serve as the harmonised sensitivity.
+- **Italy is the one to watch.** ISTAT's 0.937 uses a four-week window, and the ESS puts Italy about two standard errors lower.
+- **Calibration consequence: small.** The calibration already scans the ratio from 0.486 to 0.937, and κ moves only between 4.75 and 4.90 over that range, with σ between 0.96 and 1.00 (`calibrate_FR_GSA.log`, stage 5b).
