@@ -191,3 +191,5 @@ A modular, data-disciplined heterogeneous-agent model of multidimensional wellbe
 - **The ESS is too thin to replace the national sources:** only 100 to 250 unemployed respondents per country. The committed ratios (FR 0.561, DE 0.546, IT 0.937) come from national surveys with far larger samples, so they stay as the headline. The ESS ratios serve as the harmonised sensitivity.
 - **Italy is the one to watch.** ISTAT's 0.937 uses a four-week window, and the ESS puts Italy about two standard errors lower.
 - **Calibration consequence: small.** The calibration already scans the ratio from 0.486 to 0.937, and κ moves only between 4.75 and 4.90 over that range, with σ between 0.96 and 1.00 (`calibrate_FR_GSA.log`, stage 5b).
+
+**France equilibrium count, grid solver (run 36445128579, stopped by the six-hour limit):** G+S+A is complete. Every policy (baseline, subsidy, empowerment, UI up, UI down) at every technology (best, low and high multiplier) has exactly one stable equilibrium, so the policy comparisons do not depend on equilibrium selection. The G+S rows were cut off. The count is rerun for all three countries on egm once the recalibrations are committed.
