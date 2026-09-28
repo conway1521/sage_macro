@@ -29,7 +29,7 @@
 
 using Printf, Statistics, LinearAlgebra, Distributed, Serialization, SHA
 
-const DEFAULT_SOLVER = Symbol(get(ENV, "SAGE_SOLVER", "grid"))
+const DEFAULT_SOLVER = Symbol(get(ENV, "SAGE_SOLVER", "egm"))
 const UGRID_DEFAULT = vcat(collect(0.0:0.2:12.0), collect(12.5:0.5:16.0), collect(17.0:1.0:30.0))
 # Half the belonging scales, for the search stages of a calibration only. At
 # France's G+S+A it moves participation by 0.0013 and nothing else beyond 1e-4

@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
     inputs:
       solver:
-        description: "Household solver: grid (reference) or egm"
-        default: "grid"
+        description: "Household solver: egm (default) or grid (the reference)"
+        default: "egm"
       countries:
         description: "Country codes, space separated"
         default: "FR DE IT"
