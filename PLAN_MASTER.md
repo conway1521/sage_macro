@@ -69,7 +69,21 @@ A modular, data-disciplined heterogeneous-agent model of multidimensional wellbe
    Gate 3.
 4. **Recalibration** (Phase 4) on GitHub Actions: FR, DE and IT × G, G+A, G+S, G+S+A, as 12 parallel jobs.
 
-**Order agreed 2026-09-28 (the goal is a model that works, not papers; papers come later):**
+**Order agreed 2026-09-28, revised the same day (the goal is a model that works, not papers; papers come later):**
+
+1. **Speed.** The fast solver is built two-asset-ready: a second, illiquid savings state can be added without rewriting it.
+2. **Assessment** of the economics, data and calibration against the goal, including what the one-asset limit costs (MPC, hand-to-mouth, dread, the US).
+3. **Second asset (illiquid wealth),** as a switch that reduces exactly to today's model when off. Calibrated to HFCS poor and wealthy hand-to-mouth (Kaplan, Violante and Weidner 2014). It brings the US in, and may make behavioural dread viable again.
+4. **E as place.**
+5. **More countries** as the HFCS arrives.
+
+**Data applications, decided 2026-09-28:**
+- **HFCS:** send it; it is the one that matters.
+- **EU-SILC microdata:** dropped. The published Eurostat tables cover participation by education and place, belonging, earnings, labour market and time use.
+- **The unemployed participation ratio** comes from the European Social Survey instead (free account, about 25 countries), with a common European ratio as the fallback.
+- **The US** runs on public data (SCF extracts, BLS, OECD).
+
+**Earlier version of the order:**
 
 1. **Speed:**
    - native Julia (juliaup, LTS, arm64) with a reference comparison;
