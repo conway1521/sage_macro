@@ -3,4 +3,4 @@ phi = 2.91
 beta_spread = 0.104
 beta_bar = 0.9600
 kappa = 3.00
-sigma_m = 1.46
+sigma_m = 1.48

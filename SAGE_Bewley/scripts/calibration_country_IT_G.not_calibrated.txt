@@ -1,1 +1,0 @@
-# not calibrated (inputs-v2, 2026-09-28): without agency, poor hand-to-mouth reaches 0.064 at the largest discount spread (0.115) against 0.083. Log: calibrate_IT_G.log

@@ -1,0 +1,12 @@
+calibrating DE G | effort target 0.608669 | hand-to-mouth target 0.074 | workers 3
+preflight, France G+A through the parallel path (solver egm): worst gap 9.4e-04 against the suite: HELD
+
+1. effort scale and discount spread, cohesion off, hand-to-mouth aim 0.074
+  phi 6.87, spread 0.045, mean patience 0.9600: effort 0.6086 (target 0.6087), poor hand-to-mouth 0.0732 (aim 0.0740)  [2.6 min]
+
+2. the G economy on its own thresholds
+  participation 0.0000 | agency 0.9884 | hardship 0.3788 | hand-to-mouth 0.0732 (target 0.07) | effort 0.6086 (target 0.6087) | median 0.5312
+  expected loss to unemployment 0.0116 (income alone 0.0160) | drop on job loss 0.3711 | agency on the old hardship reading 0.6212
+wrote calibration_country_DE_G.txt
+
+DONE DE G in 2.8 min

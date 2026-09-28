@@ -193,3 +193,13 @@ A modular, data-disciplined heterogeneous-agent model of multidimensional wellbe
 - **Calibration consequence: small.** The calibration already scans the ratio from 0.486 to 0.937, and κ moves only between 4.75 and 4.90 over that range, with σ between 0.96 and 1.00 (`calibrate_FR_GSA.log`, stage 5b).
 
 **France equilibrium count, grid solver (run 36445128579, stopped by the six-hour limit):** G+S+A is complete. Every policy (baseline, subsidy, empowerment, UI up, UI down) at every technology (best, low and high multiplier) has exactly one stable equilibrium, so the policy comparisons do not depend on equilibrium selection. The G+S rows were cut off. The count is rerun for all three countries on egm once the recalibrations are committed.
+
+**Recalibration on egm, 2026-09-28 (run 36488350605, with corrections at half the tolerance):**
+
+- **Committed, 8 configurations:** FR G, GA, GSA; DE G, GA, GSA; IT GA, GSA. Each lands on the committed grid calibration or one grid step away.
+- **Italy:** G+S+A lands at poor hand-to-mouth 0.0840 and effort 0.7251. Italy G now calibrates as well. The grid solver's discretisation error was what had blocked it.
+- **Still not calibrated:** DE G+S (best participation loss 0.058) and IT G+S (effort 0.698 against 0.725).
+- **Speed:** each job takes 2 to 12 minutes on GitHub.
+- **France G+S is held back, not committed.** It fits participation only barely (loss 0.029 against 0.035), and only by pushing the social multiplier to 38, a feedback slope of 0.97, close to the loss of a unique equilibrium. The grid-solver version still in the repo is fragile in the same way (multiplier 6.6, loss 0.0325).
+- **Reading:** social feedback alone cannot produce the education gradient in participation without near-critical amplification, and agency is what fits it (multipliers 1.3 to 1.9 in G+S+A).
+- **Proposed:** a stability gate in the calibration (feedback slope at most 0.8, multiplier at most 5), awaiting a decision.
