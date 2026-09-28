@@ -15,7 +15,11 @@ jobs:
       matrix: ${{ steps.m.outputs.matrix }}
     steps:
       - id: m
-        run: echo "matrix=$(python3 -c 'import json,os; print(json.dumps({"code": os.environ["C"].split()}))')" >> "$GITHUB_OUTPUT"
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os
+          print("matrix=" + json.dumps({"code": os.environ["C"].split()}))
+          PY
         env:
           C: ${{ inputs.countries }}
   policy:
