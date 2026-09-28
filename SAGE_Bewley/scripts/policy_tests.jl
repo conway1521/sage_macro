@@ -37,7 +37,7 @@ const CODE = ARGS[1]
 const CFGS = length(ARGS) >= 2 ? [uppercase(ARGS[2])] : ["GSA", "GS", "GA", "G"]
 const TAU = 0.20
 const DRR = 0.10
-const FIELDS = [:rate, :rate_E, :rate_U, :A, :A_cond, :shock_loss, :shock_loss_income, :consumption_drop,
+const FIELDS = [:rate, :rate_E, :rate_U, :A, :A_cond, :room, :dread_cost_E, :mpc, :shock_loss, :shock_loss_income, :consumption_drop,
                 :hardship, :hand_to_mouth_kvw, :mean_effort_employed, :median_income, :mean_labour_income]
 agap(r) = r.A_cell[2] - r.A_cell[1]
 cgap(r) = r.A_cond_cell[2] - r.A_cond_cell[1]
