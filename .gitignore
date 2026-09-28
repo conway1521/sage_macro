@@ -41,3 +41,5 @@ data/scf/
 data/place/raw/
 # CONFIDENTIAL: HFCS microdata never enter the repository (keep them in ~/hfcs_secure)
 data/hfcs/
+# ESS data: downloaded by each user from the ESS Data Portal with their own free account; not redistributed
+data/ess/raw/
