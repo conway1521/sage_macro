@@ -34,7 +34,8 @@
 #     targets at the national unemployed ratio, and for G+S+A also at the other
 #     national ratios in the data (free: the rule is applied after the families).
 #  4. The calibrated economy solved on its own thresholds.
-#  5. One correction if hand-to-mouth misses by more than 0.02.
+#  5. Up to two corrections if hand-to-mouth misses by more than the tolerance;
+#     a configuration still outside it is not calibrated.
 #  6. For G+S+A, the four economies at its parameters: the fixed-parameter view.
 #
 # STOPPING RULES. If no technology gives a stable equilibrium, or the best root
@@ -71,6 +72,7 @@ const GAP = 0.0
 # Switching S on must still hit the G targets, so hand-to-mouth gets one
 # correction when it misses by more than this.
 const HTM_TOL = 0.005        # the poor hand-to-mouth targets are 0.03 to 0.14
+const E_TOL = 0.005          # effort
 const SKIP_GS = get(ENV, "SKIP_GS", "0") == "1"
 const OUTFILE = joinpath(@__DIR__, CFG == "GSA" ? "calibration_country_$(CODE).txt" :
                                                   "calibration_country_$(CODE)_$(CFG).txt")
@@ -192,7 +194,10 @@ flush(stdout)
 # hours on it. First seen for the US, whose benefit runs out after five months
 # (twelve-month replacement 0.13): hand-to-mouth 0.019 at spread 0.115 against
 # an aim of 0.281.
-if edge && abs(chk_h - (HTM_TARGET - GAP)) > max(0.01, 0.25 * (HTM_TARGET - GAP))
+# 2026-09-28: the allowance was max(0.01, a quarter of the aim), which let
+# Italy through at 0.066 against 0.083. Every configuration must hit its G
+# targets, so the standard is now the promised tolerance.
+if edge && abs(chk_h - (HTM_TARGET - GAP)) > HTM_TOL
     say(@sprintf("\nNOT CALIBRATED: hand-to-mouth reaches only %.4f at the largest spread tried (%.3f), against an aim of %.4f. No calibration file written.",
                  chk_h, spread, HTM_TARGET - GAP))
     mark_not_calibrated(); exit(2)
@@ -206,7 +211,11 @@ if !S_ON
             r.rate, r.A, r.hardship, r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET, r.median_income)
     @printf("  expected loss to unemployment %.4f (income alone %.4f) | drop on job loss %.4f | agency on the old hardship reading %.4f\n",
             r.shock_loss, r.shock_loss_income, r.consumption_drop, r.A_hardship)
-    abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL && say("  hand-to-mouth off target by more than ", HTM_TOL, ", recorded, not tuned")
+    if abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL || abs(r.mean_effort_employed - E_TARGET) > E_TOL
+        say(@sprintf("\nNOT CALIBRATED: hand-to-mouth %.4f (target %.4f) or effort %.4f (target %.4f) outside tolerance. No calibration file written.",
+                     r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET))
+        mark_not_calibrated(); exit(2)
+    end
     write_cal(phi, spread)
     @printf("\nDONE %s %s in %.1f min\n", CODE, CFG, (time() - t_start) / 60)
     exit(0)
@@ -270,18 +279,20 @@ end
 say("\n4. the calibrated ", CFG, " economy on its own thresholds")
 best = S[RATIO].best
 r = solve_at(phi, spread, best)
-if abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL
-    gap_c = r.hand_to_mouth_kvw - chk_h
-    say(@sprintf("\n5. hand-to-mouth off by %+.4f, more than the %.3f tolerance; this economy's own cohesion gap is %+.4f against France's %+.4f. One correction.",
-                 r.hand_to_mouth_kvw - HTM_TARGET, HTM_TOL, gap_c, GAP))
-    ck5 = ck_read("stage5")
+for correction in 1:2
+    abs(r.hand_to_mouth_kvw - HTM_TARGET) <= HTM_TOL && break
+    global spread, best, r, S
+    gap_c = r.hand_to_mouth_kvw - soff(phi, spread).hand_to_mouth_kvw
+    say(@sprintf("\n5.%d hand-to-mouth off by %+.4f, more than the %.3f tolerance; this economy's own cohesion gap is %+.4f. Correction %d of 2.",
+                 correction, r.hand_to_mouth_kvw - HTM_TARGET, HTM_TOL, gap_c, correction))
+    ck5 = ck_read("stage5_$(correction)")
     if ck5 === nothing
         fs2 = fit_spread(phi, HTM_TARGET - gap_c)
         spread = fs2.sp; edge2 = fs2.edge; BB[] = fs2.bb
-        ck_write("stage5", Dict("spread" => spread, "edge" => Float64(edge2), "bb" => BB[]))
+        ck_write("stage5_$(correction)", Dict("spread" => spread, "edge" => Float64(edge2), "bb" => BB[]))
     else
         spread, edge2 = ck5["spread"], ck5["edge"] == 1.0; BB[] = get(ck5, "bb", 0.96)
-        say("  from checkpoint ", basename(ckfile("stage5")))
+        say("  from checkpoint ", basename(ckfile("stage5_$(correction)")))
     end
     @printf("  new spread %.3f, mean patience %.4f%s\n", spread, BB[], edge2 ? " (ON THE GRID EDGE)" : ""); flush(stdout)
     S = scans(phi, spread)
@@ -291,8 +302,11 @@ if abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL
     end
     best = S[RATIO].best
     r = solve_at(phi, spread, best)
-    abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL &&
-        say("  hand-to-mouth still off target after the one allowed correction; recorded, not tuned further")
+end
+if abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL || abs(r.mean_effort_employed - E_TARGET) > E_TOL
+    say(@sprintf("\nNOT CALIBRATED after two corrections: hand-to-mouth %.4f (target %.4f), effort %.4f (target %.4f). No calibration file written.",
+                 r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET))
+    mark_not_calibrated(); exit(2)
 end
 write_cal(phi, spread; kappa = best.κ, sigma = best.σ)
 
