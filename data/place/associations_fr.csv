@@ -1,0 +1,10 @@
+group,place,associations,population,per_1000
+all active,cities,1144996,25253447,45.34
+all active,towns,726893,20897208,34.784
+all active,rural,859343,21866436,39.3
+active and declared or updated since 2015,cities,515632,25253447,20.418
+active and declared or updated since 2015,towns,405088,20897208,19.385
+active and declared or updated since 2015,rural,520810,21866436,23.818
+sports,cities,128529,25253447,5.09
+sports,towns,138346,20897208,6.62
+sports,rural,170483,21866436,7.797

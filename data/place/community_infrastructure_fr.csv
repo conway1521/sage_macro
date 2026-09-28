@@ -1,0 +1,31 @@
+group,place,facilities,population,per_1000
+sports (F1),cities,37302,25253447,1.4771
+sports (F1),towns,56024,20897208,2.6809
+sports (F1),rural,96658,21866436,4.4204
+leisure (F2),cities,738,25253447,0.0292
+leisure (F2),towns,3824,20897208,0.183
+leisure (F2),rural,23325,21866436,1.0667
+culture and socio-culture (F3),cities,4299,25253447,0.1702
+culture and socio-culture (F3),towns,5751,20897208,0.2752
+culture and socio-culture (F3),rural,12926,21866436,0.5911
+libraries (F307),cities,1442,25253447,0.0571
+libraries (F307),towns,3101,20897208,0.1484
+libraries (F307),rural,11133,21866436,0.5091
+"all sport, leisure, culture (F)",cities,42339,25253447,1.6766
+"all sport, leisure, culture (F)",towns,65599,20897208,3.1391
+"all sport, leisure, culture (F)",rural,132909,21866436,6.0782
+health and social action (D),cities,298769,25253447,11.8308
+health and social action (D),towns,242064,20897208,11.5836
+health and social action (D),rural,160925,21866436,7.3595
+general practitioners (D265),cities,25659,25253447,1.0161
+general practitioners (D265),towns,19936,20897208,0.954
+general practitioners (D265),rural,15668,21866436,0.7165
+France services (A128),cities,377,25253447,0.0149
+France services (A128),towns,761,20897208,0.0364
+France services (A128),rural,1647,21866436,0.0753
+public employment service (A122),cities,373,25253447,0.0148
+public employment service (A122),towns,447,20897208,0.0214
+public employment service (A122),rural,64,21866436,0.0029
+all facilities,cities,1096144,25253447,43.4057
+all facilities,towns,932579,20897208,44.627
+all facilities,rural,893047,21866436,40.841

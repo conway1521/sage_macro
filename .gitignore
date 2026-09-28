@@ -36,3 +36,4 @@ SAGE_Bewley/scripts/checkpoints/
 data/scf/*.zip
 data/scf/*.csv
 data/hfcs/
+data/place/raw/

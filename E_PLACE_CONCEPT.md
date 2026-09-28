@@ -160,3 +160,61 @@ France's calibrated G+S+A economy was solved once per place type, changing only 
 - **Modelling:** a wrapper over the existing engine, with local social feedback and national financing. Two new pieces are needed, commuting as a time cost and an amenity term in wellbeing.
 
 The place layer stays scheduled after A version 2 and the clean recalibration.
+
+## Community as the local public good: the omega-by-place test (2026-09-27)
+
+In the model the payoff to participation scales with the community fabric, omega + (1 - omega) × participation. The second term is the public good that S produces. omega is the fabric that exists regardless of this year's participation, the stock of community infrastructure. With place, both become local, and omega by place can be measured. The test is whether measured infrastructure lines up with participation by place, which it was not fitted to.
+
+**France, by degree of urbanisation.**
+
+- Scripts: `data/place/community_infrastructure_fr.py` (INSEE Base permanente des equipements 2025) and `data/place/associations_fr.py` (Repertoire national des associations, September 2026).
+- Classes come from the INSEE grille communale de densite 2025, with population from 2022.
+
+| per 1,000 inhabitants | cities | towns | rural | rural / cities |
+|---|---|---|---|---|
+| sport, leisure and culture facilities | 1.68 | 3.14 | 6.08 | 3.63 |
+| libraries | 0.06 | 0.15 | 0.51 | 8.9 |
+| health and social action facilities | 11.8 | 11.6 | 7.4 | 0.62 |
+| France services centres | 0.015 | 0.036 | 0.075 | 5.1 |
+| registered associations, active | 45.3 | 34.8 | 39.3 | 0.87 |
+| active, declared or updated since 2015 | 20.4 | 19.4 | 23.8 | 1.17 |
+| sports associations | 5.1 | 6.6 | 7.8 | 1.53 |
+| **formal volunteering, % (EU-SILC 2015)** | **20.3** | **21.4** | **27.7** | **1.36** |
+
+- Every community measure is higher in rural France, and the volunteering premium sits within the range of the association measures.
+- Facility counts per person overstate rural capacity, since every commune has its own pitch and hall.
+- The raw association count is inflated in cities by national federations registered in Paris. The liveness proxy removes most of that.
+- Health and social services run the other way, and so does the public employment service. That is the access side of E, and France services is the place-based policy that targets it.
+- About 3 percent of active associations could not be placed (cedex postcodes).
+
+**Italy, by macro-area.**
+
+- Non-profit institutions per 10,000 inhabitants in 2021: ISTAT BES at local level, indicator 05REL008, population-weighted over regions.
+- Organised volunteering in the last four weeks: ISTAT, Il volontariato in Italia, 2023. ISTAT publishes neither indicator by urbanisation.
+
+| | non-profits per 10,000 | organised volunteering 2023 (2013), % |
+|---|---|---|
+| north-west | 63.3 | 7.6 (9.4) |
+| north-east | 70.1 | 9.1 (10.2) |
+| centre | 67.8 | 5.8 (7.9) |
+| south | 48.3 | 3.3 (5.3) |
+| islands | 53.0 | 4.3 (5.9) |
+
+The ranking matches except for the centre, where Rome's national organisations inflate the count (the Paris effect). Participation varies more than infrastructure: from the north-east to the south, non-profits fall by 31 percent and volunteering by 64 percent. That is the signature of local social feedback amplifying a difference in the fabric.
+
+**What this shows.**
+
+1. **Measured community infrastructure lines up with participation by place, in both countries and on both typologies.** omega by place is measurable, and it carries the effect that access to work could not.
+2. **The mapping from infrastructure to omega needs one elasticity.** The implied elasticity of participation to infrastructure is above one in Italy, from about 2.7 on non-profits, and around 1 to 2 in France depending on the measure. A multiplier above one explains that naturally. This is the identification route for the social multiplier that national levels could not give.
+3. **Caveats:**
+   - there are few observations;
+   - the Italian gradient also reflects income, unemployment and centuries of civic history (Guiso, Sapienza and Zingales 2016), which the model partly captures through the access channel and composition;
+   - infrastructure is partly an outcome of past participation, so omega is best read as the slow-moving stock and participation as the fast variable;
+   - Germany has no comparable official register by place (Vereine by Land only).
+
+**Design consequence.**
+
+- omega by place = omega × (infrastructure_p / infrastructure_national)^epsilon.
+- epsilon is set on one country and tested on the other.
+- This turns the community channel from a residual into a measured input with one parameter and an out-of-sample test.
+- Public investment in community infrastructure becomes a policy lever acting through omega, which the local social feedback amplifies.
