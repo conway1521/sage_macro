@@ -1,0 +1,5 @@
+national: participation 0.2472, unemployment 0.0610, poor htm 0.0276, A 0.8319, A_cond 0.7472
+cities  f 0.719 delta 0.0686/0.0385 | participation 0.2416 (data volunteering 20.3), unemployment 0.0689, poor htm 0.0226, A 0.8311, A_cond 0.7496
+towns   f 0.755 delta 0.0680/0.0382 | participation 0.2439 (data volunteering 21.4), unemployment 0.0654, poor htm 0.0232, A 0.8316, A_cond 0.7500
+rural   f 0.884 delta 0.0572/0.0321 | participation 0.2563 (data volunteering 27.7), unemployment 0.0479, poor htm 0.0399, A 0.8336, A_cond 0.7458
+DONE
