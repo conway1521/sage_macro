@@ -145,7 +145,7 @@ function fit_phi(sp; lo = 0.5, hi = 40.0, steps = 14, aim = E_TARGET)   # lo was
     end
     round(0.5 * (lo + hi); digits = 2)
 end
-function fit_spread(phi, target; grid = 0.0:0.005:0.10)
+function fit_spread(phi, target; grid = 0.0:0.005:0.115)   # the cap is 0.115 everywhere (stage 1 refined to it; the correction had stopped at 0.10)
     BB[] = 0.96
     hs = [soff(phi, sp).hand_to_mouth_kvw for sp in grid]
     k = findfirst(>=(target), hs)
