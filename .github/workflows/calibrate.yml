@@ -1,0 +1,69 @@
+# Calibrations on GitHub's runners, one job per country and configuration, in
+# parallel. Started by hand from the Actions tab ("Run workflow"). Each job
+# writes its calibration file and log as an artifact; download them and commit
+# the ones you accept. Free for public repositories; each job may run up to six
+# hours on a 4-core runner, so three worker processes are used (about 2.5 GB
+# each at na = 200).
+name: calibrate
+on:
+  workflow_dispatch:
+    inputs:
+      countries:
+        description: "Country codes, space separated"
+        default: "FR DE IT"
+      configs:
+        description: "Configurations, space separated (G GA GS GSA)"
+        default: "GSA GS GA G"
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - id: m
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os
+          c = os.environ["C"].split(); g = os.environ["G"].split()
+          print("matrix=" + json.dumps({"include": [{"code": a, "cfg": b} for a in c for b in g]}))
+          PY
+        env:
+          C: ${{ inputs.countries }}
+          G: ${{ inputs.configs }}
+  calibrate:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: "1.7.2"
+      - uses: julia-actions/cache@v2
+      - name: Restore household families
+        uses: actions/cache@v4
+        with:
+          path: SAGE_Bewley/scripts/cache_families
+          key: families-${{ matrix.code }}-${{ matrix.cfg }}-${{ hashFiles('SAGE_Bewley/src/**', 'SAGE_Bewley/scripts/*_core.jl', 'SAGE_Bewley/scripts/agency_shock.jl') }}
+      - name: Instantiate
+        run: julia --project=SAGE_Bewley/scripts/run_env -e 'using Pkg; Pkg.instantiate()'
+      - name: Calibrate ${{ matrix.code }} ${{ matrix.cfg }}
+        env:
+          SAGE_WORKERS: "3"
+        run: |
+          cd SAGE_Bewley
+          set +e
+          julia --project=scripts/run_env scripts/calibrate_country.jl ${{ matrix.code }} ${{ matrix.cfg }} 2>&1 | tee scripts/calibrate_${{ matrix.code }}_${{ matrix.cfg }}.log
+          code=${PIPESTATUS[0]}
+          # exit 2 means "not calibrated", a legitimate outcome that is reported, not a failure
+          [ "$code" = "0" ] || [ "$code" = "2" ]
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: calibration-${{ matrix.code }}-${{ matrix.cfg }}
+          path: |
+            SAGE_Bewley/scripts/calibration_country_${{ matrix.code }}*.txt
+            SAGE_Bewley/scripts/calibrate_${{ matrix.code }}_${{ matrix.cfg }}.log

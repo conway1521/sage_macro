@@ -1,0 +1,23 @@
+# Fast check on every push: the reduction probe (the participation solver with
+# the social dimension off must reproduce the baseline engine to 1e-6). About
+# a minute including Julia setup. The full suite (test_modular.jl) is too long
+# for CI and runs by hand or through the calibrate workflow.
+name: ci
+on:
+  push:
+    branches: [main, countries-modular]
+  pull_request:
+jobs:
+  reduction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: "1.7.2"      # the version the reference numbers were computed with
+      - uses: julia-actions/cache@v2
+      - name: Instantiate the minimal environment
+        run: julia --project=SAGE_Bewley/scripts/run_env -e 'using Pkg; Pkg.instantiate()'
+      - name: Reduction probe
+        run: julia --project=SAGE_Bewley/scripts/run_env SAGE_Bewley/scripts/probe_reduction.jl

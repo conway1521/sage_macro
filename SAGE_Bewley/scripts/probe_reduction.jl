@@ -47,3 +47,4 @@ println("-"^70)
         worst < 1e-6 ? "the two paths agree: the reduction is exact" :
                        "THE TWO PATHS DISAGREE: the stack is not modular as it stands")
 println("DONE")
+worst < 1e-6 || exit(1)
