@@ -30,6 +30,10 @@
 using Printf, Statistics, LinearAlgebra, Distributed, Serialization, SHA
 
 const UGRID_DEFAULT = vcat(collect(0.0:0.2:12.0), collect(12.5:0.5:16.0), collect(17.0:1.0:30.0))
+# Half the belonging scales, for the search stages of a calibration only. At
+# France's G+S+A it moves participation by 0.0013 and nothing else beyond 1e-4
+# (grid_test.txt, 2026-09-28); every reported number comes from UGRID_DEFAULT.
+const UGRID_COARSE = vcat(collect(0.0:0.4:12.0), collect(13.0:1.0:16.0), collect(18.0:2.0:30.0))
 
 """
     SAGEConfig(; S, A, ...)

@@ -1,0 +1,4 @@
+default, 83   19.2 min | part 0.23172 mult 1.868 A 0.99019 A_cond 0.86278 htm 0.02994 effort 0.64292 room 0.6935 mpc 0.1158 | scan best kappa 4.85 sigma 0.96 loss 0.0016, band 1.24 to 3.23
+half, 42       5.2 min | part 0.23298 mult 1.866 A 0.99019 A_cond 0.86279 htm 0.03006 effort 0.64286 room 0.6933 mpc 0.1157 | scan best kappa 4.85 sigma 0.96 loss 0.0010, band 1.24 to 3.43
+third, 28      3.7 min | part 0.23502 mult 1.864 A 0.99019 A_cond 0.86280 htm 0.02985 effort 0.64277 room 0.6933 mpc 0.1157 | scan best kappa 4.85 sigma 0.98 loss 0.0016, band 1.24 to 3.43
+DONE

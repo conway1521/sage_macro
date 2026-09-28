@@ -224,8 +224,12 @@ end
 # ------------------------------------------- 2 and 3. families and scans --
 const SIGMAS = 0.30:0.02:3.00      # to 3.0: the band's lower end sat at 1.5 (2026-09-27)
 const KAPPAS = 2.0:0.05:25.0
-function scans(phi, spread)
-    c = country_config(CODE; config = CFG, S = true, A = A_ON, phi = phi, beta_spread = spread, beta_bar = BB[])
+# COARSE TO FINE (2026-09-28). The search (scans, corrections) runs on half the
+# belonging scales; the calibration is then re-scanned and solved once on the
+# full grid, and only that economy is checked against the targets and written.
+function scans(phi, spread; ugrid = UGRID_COARSE)
+    c = country_config(CODE; config = CFG, S = true, A = A_ON, phi = phi, beta_spread = spread, beta_bar = BB[],
+                       ugrid = ugrid)
     t0 = time()
     raw = collect(build_families(c, nothing; disk = true))
     @printf("  families built or loaded in %.1f min\n", (time() - t0) / 60); flush(stdout)
@@ -263,9 +267,9 @@ if S[RATIO] === nothing || S[RATIO].best.loss > 0.035
 end
 
 # ------------------------------------------------------ 4 and 5. solve --
-function solve_at(phi, spread, best)
+function solve_at(phi, spread, best; ugrid = UGRID_COARSE)
     c = country_config(CODE; config = CFG, S = true, A = A_ON, phi = phi, beta_spread = spread,
-                       beta_bar = BB[], kappa = best.κ, sigma_m = best.σ)
+                       beta_bar = BB[], kappa = best.κ, sigma_m = best.σ, ugrid = ugrid)
     t0 = time(); r = solve_economy(c)
     @printf("  %s: participation %.4f (cells %.4f, %.4f against %.3f, %.3f; employed %.4f, unemployed %.4f)\n",
             CFG, r.rate, r.pooled[1].rate, r.pooled[2].rate, PART..., r.rate_E, r.rate_U)
@@ -311,6 +315,14 @@ for correction in 1:2
     best = S[RATIO].best
     r = solve_at(phi, spread, best)
 end
+say("\n5b. the calibration on the full belonging grid (", length(UGRID_DEFAULT), " scales): technology re-scanned, economy solved and checked")
+S = scans(phi, spread; ugrid = UGRID_DEFAULT)
+if S[RATIO] === nothing || S[RATIO].best.loss > 0.035
+    say("\nNOT CALIBRATED on the full grid. No calibration file written.")
+    mark_not_calibrated(); exit(2)
+end
+best = S[RATIO].best
+r = solve_at(phi, spread, best; ugrid = UGRID_DEFAULT)
 if abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL || abs(r.mean_effort_employed - E_TARGET) > E_TOL
     say(@sprintf("\nNOT CALIBRATED after two corrections: hand-to-mouth %.4f (target %.4f), effort %.4f (target %.4f). No calibration file written.",
                  r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET))
