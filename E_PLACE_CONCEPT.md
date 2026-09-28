@@ -218,3 +218,11 @@ The ranking matches except for the centre, where Rome's national organisations i
 - epsilon is set on one country and tested on the other.
 - This turns the community channel from a residual into a measured input with one parameter and an out-of-sample test.
 - Public investment in community infrastructure becomes a policy lever acting through omega, which the local social feedback amplifies.
+
+## Plan items added 2026-09-27 (shoring up the limits)
+
+1. **Predetermined infrastructure, against two-way causality.** Measure omega by place with facilities that predate today's participation. The French Ministry of Sport's census of sports facilities (Recensement des equipements sportifs, open data) records each facility's year of entry into service. Use facilities opened before a cut-off (for instance 1990) as the predetermined stock, and report the elasticity with and without the cut-off. Look for the Italian analogue, such as ISTAT or CONI facility censuses with a construction date, or use the long-run civic capital of Guiso, Sapienza and Zingales (2016) as the predetermined stock by region.
+2. **More observations.** Italy: organised volunteering for 21 regions (IstatData, VOLUNTEERING) against non-profits for 21 regions and 107 provinces (BES at local level). France: stay with the three density classes, plus the 13 metropolitan regions if volunteering by region can be found in an official source.
+3. **Out-of-sample test.** Fit epsilon on one country and predict the other. If it fails, fall back to place-specific belonging calibrated directly (weaker E, same structure).
+4. **The policy lever reported as a range** over epsilon (and over the predetermined against current measures), never as a point estimate.
+5. **Germany** borrows epsilon and is checked against its own volunteering by place (ilc_scp20, 2015).

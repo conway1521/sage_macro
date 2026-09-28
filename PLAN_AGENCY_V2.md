@@ -122,6 +122,8 @@ The social multiplier needs a moment beyond national levels. The candidate is re
 | 4 recalibration | monitoring | about a day in laptop sessions |
 | 5 results | one session | about an hour |
 
+E as the lived environment by place is designed and feasibility-tested in E_PLACE_CONCEPT.md, including the predetermined-infrastructure fix for two-way causality. It is built after Phase 5.
+
 Deferred until after this plan: informal insurance (S feeding A), the E dimension, the HFCS targets (when access is granted), general equilibrium for the best fit.
 
 ## Progress (paused 2026-09-27, Phase 1 in progress)
