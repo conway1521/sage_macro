@@ -28,7 +28,7 @@ All three have the same cause. The wealthy hand-to-mouth are missing, households
 | parameter | target | source |
 |---|---|---|
 | illiquid return premium r_k - r_b | not fitted: the return gap on housing and pension wealth | to be sourced from a peer-reviewed or official estimate (e.g. Jorda et al. 2019 for housing returns) |
-| fixed adjustment cost chi_0 | share of wealthy hand-to-mouth | Kaplan, Violante and Weidner (2014) Table 5, wealthy panel (to be read from the published table, as the poor panel was) |
+| fixed adjustment cost chi_0 | share of wealthy hand-to-mouth: DE 0.248, FR 0.173, IT 0.155, US 0.202 | Kaplan, Violante and Weidner (2014) Table 5, wealthy panel, baseline row, p. 120 (verified 2026-09-29; `data/manual_inputs.csv`) |
 | discount spread (as now) | share of poor hand-to-mouth | same table, as now |
 | mean patience beta_bar | median illiquid wealth to income | HFCS 2021 statistical tables (real assets and voluntary pensions) |
 
