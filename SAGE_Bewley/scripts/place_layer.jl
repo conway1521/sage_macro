@@ -75,12 +75,17 @@ function solve_places(c::SAGEConfig, places; weights)
 end
 
 # ---------------------------------------------------------- E2: from data --
-const PLACE_FILE = joinpath(@__DIR__, "..", "..", "data", "place", "place_by_degurba.csv")
+# One schema, any official geography (E_PLACE_CONCEPT.md, "The standard"): the
+# file data/place/place_<typology>.csv holds indicator, country, place, year,
+# value, source. :degurba (cities, towns, rural) and :tl2 (OECD TL2 regions:
+# NUTS 1 in France and Germany, NUTS 2 in Italy).
+const PLACE_DIR = joinpath(@__DIR__, "..", "..", "data", "place")
 const DEGURBA = (("cities", "DEG1"), ("towns and suburbs", "DEG2"), ("rural areas", "DEG3"))
 
-function place_data(code)
+function place_data(code; typology = :degurba)
+    file = joinpath(PLACE_DIR, typology === :degurba ? "place_by_degurba.csv" : "place_$(typology).csv")
     d = Dict{Tuple{String,String},Vector{Tuple{Int,Float64}}}()
-    for (k, ln) in enumerate(eachline(PLACE_FILE))
+    for (k, ln) in enumerate(eachline(file))
         k == 1 && continue
         f = split(ln, ","); f[2] == code || continue
         v = tryparse(Float64, f[5]); v === nothing && continue
@@ -91,98 +96,113 @@ end
 latest(d, k, p) = (x = get(d, (k, p), nothing); x === nothing ? nothing : last(sort(x))[2])
 meanyrs(d, k, p, yrs) = (x = get(d, (k, p), nothing); x === nothing ? nothing :
                          (v = [y[2] for y in x if y[1] in yrs]; isempty(v) ? nothing : sum(v) / length(v)))
+"The places of a typology for a country: (name, code) pairs, in the file's order for TL2."
+function places_of(code; typology = :degurba)
+    typology === :degurba && return collect(DEGURBA)
+    d = place_data(code; typology = typology)
+    codes = sort(unique([k[2] for k in keys(d) if k[1] == "pop_share"]))
+    [(c, c) for c in codes]
+end
 
 """
-    places_from_data(code, c; channels = (:composition, :access))
+    places_from_data(code, c; typology = :degurba, channels = (:composition, :access), epsilon = 0.4)
 
-Place specs from `data/place/place_by_degurba.csv`, and population weights
-(ilc_lvho01):
-- **composition:** the tertiary share by place (edat_lfs_9913, latest year),
-  scaled so the population-weighted share equals the national one in `c`;
-- **access:** job finding scaled by the place's quarterly unemployment-to-
-  employment probability over its population-weighted mean (lfsi_long_e03,
-  2015 to 2018), and separation scaled so that the place's unemployment rate
-  (lfst_r_urgau, latest) holds in steady state, with the two education cells
-  keeping their relative separation rates. Without flows by place (Germany),
-  job finding stays national and separation carries the unemployment rate.
-- **conversion:** the place premium in pay that education mix and
-  unemployment do not explain: median equivalised income by place (ilc_di17)
-  over the income predicted from the place's education mix at the calibrated
-  pay ratio and its employment rate, rescaled so the national mean is unchanged.
-  A residual, labelled as such: no official source gives earnings by place and
-  education together.
-- **community:** omega_p = omega x (infra_p / infra_national)^epsilon, with
-  predetermined infrastructure (France: sports facilities in service before
-  1990, `data/place/sports_facilities_fr.csv`). epsilon between 0.3 and 0.5
-  from France and Italy (E_PLACE_CONCEPT.md); 0.4 by default, report both ends.
-  Germany and Italy have no infrastructure by degree of urbanisation yet, so
-  they keep the national omega.
-Channels without data for a place keep the national value.
+Place specs and population weights from the typology's file. The rule per
+channel is the same under every typology:
+- **composition:** the tertiary share, scaled so the population-weighted share
+  equals the national one in `c`;
+- **access:** job finding scaled by the place's flow into work relative to the
+  population-weighted mean: the quarterly unemployment-to-employment probability
+  where published (degree of urbanisation, lfsi_long_e03), otherwise one minus the
+  long-term share of unemployment (TL2, lfst_r_lfu2ltu, the national table's
+  rule); separation scaled so the place's unemployment rate holds in steady
+  state. A place without flow data keeps national job finding;
+- **conversion:** the place premium in income that education mix and employment
+  do not explain (median equivalised income by urbanisation, ilc_di17;
+  household disposable income per head by region, nama_10r_2hhinc), rescaled so
+  the national mean is unchanged. A residual, labelled as such;
+- **commuting** (degree of urbanisation only; no regional source): minutes by
+  place and education (lfso_19plwk28) over usual weekly hours (lfsa_ewhun2),
+  relative to the national mean;
+- **community:** omega_p = omega x (infra_p / infra_national)^epsilon with
+  predetermined infrastructure: France by urbanisation, sports facilities before
+  1990; Italy by region, non-profit institutions per 10,000 in 2011 (ISTAT BES
+  05REL008). Elsewhere national omega. epsilon 0.3 to 0.5, 0.4 by default.
 """
-function places_from_data(code, c::SAGEConfig; channels = (:composition, :access), epsilon = 0.4,
+function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (:composition, :access), epsilon = 0.4,
                           weekly_hours = Dict("FR" => 37.6, "DE" => 35.4, "IT" => 37.2))
-    d = place_data(code)
-    w = [latest(d, "pop_share", p) for (_, p) in DEGURBA]
-    any(isnothing, w) && error("no population shares by place for $code")
+    d = place_data(code; typology = typology)
+    pl = places_of(code; typology = typology); n = length(pl)
+    w = [latest(d, "pop_share", p) for (_, p) in pl]
+    any(isnothing, w) && error("no population shares by place for $code ($typology)")
     w = w ./ sum(w)
-    specs = [Dict{Symbol,Any}(:name => n) for (n, _) in DEGURBA]
+    specs = [Dict{Symbol,Any}(:name => nm) for (nm, _) in pl]
     if :composition in channels
-        t = [latest(d, "tertiary_share_25_64", p) for (_, p) in DEGURBA]
+        t = [latest(d, "tertiary_share_25_64", p) for (_, p) in pl]
         if !any(isnothing, t)
             t = t ./ 100; scale = c.share[2] / sum(w .* t)
-            for i in 1:3; specs[i][:tertiary] = min(t[i] * scale, 0.95); end
+            for i in 1:n; specs[i][:tertiary] = min(t[i] * scale, 0.95); end
         end
     end
-    if :access in channels
-        u = [latest(d, "unemployment_rate_20_64", p) for (_, p) in DEGURBA]
-        q = [meanyrs(d, "q_unemp_to_emp_25_54", p, 2015:2018) for (_, p) in DEGURBA]
-        if !any(isnothing, u)
-            # without flows by place (Germany), job finding stays national and
-            # separation alone carries the place's unemployment rate
-            haveq = !any(isnothing, q)
-            u = u ./ 100; qn = haveq ? sum(w .* q) : 1.0; un = sum(w .* u)
-            for i in 1:3
-                f = haveq ? min(0.99, c.f_find * q[i] / qn) : c.f_find
-                s = (u[i] / (1 - u[i])) * f / ((un / (1 - un)) * c.f_find)
-                specs[i][:f_find] = f; specs[i][:delta] = (c.delta[1] * s, c.delta[2] * s)
-            end
+    u = [latest(d, "unemployment_rate_20_64", p) for (_, p) in pl]
+    if :access in channels && !any(isnothing, u)
+        q = typology === :degurba ? [meanyrs(d, "q_unemp_to_emp_25_54", p, 2015:2018) for (_, p) in pl] :
+                                    [(l = latest(d, "ltu_share", p); l === nothing ? nothing : 100 - l) for (_, p) in pl]
+        have = [x !== nothing for x in q]
+        qn = any(have) ? sum(w[i] * q[i] for i in 1:n if have[i]) / sum(w[have]) : 1.0
+        uu = u ./ 100; un = sum(w .* uu)
+        for i in 1:n
+            f = have[i] ? min(0.99, c.f_find * q[i] / qn) : c.f_find
+            s = (uu[i] / (1 - uu[i])) * f / ((un / (1 - un)) * c.f_find)
+            specs[i][:f_find] = f; specs[i][:delta] = (c.delta[1] * s, c.delta[2] * s)
         end
     end
-    if :conversion in channels
-        inc = [latest(d, "median_income_eur", p) for (_, p) in DEGURBA]
-        u = [latest(d, "unemployment_rate_20_64", p) for (_, p) in DEGURBA]
-        if !any(isnothing, inc) && !any(isnothing, u)
-            t = [get(specs[i], :tertiary, c.share[2]) for i in 1:3]
-            pred = [((1 - t[i]) * c.alpha[1] + t[i] * c.alpha[2]) * (1 - u[i] / 100) for i in 1:3]
-            raw = inc ./ pred
-            k = sum(w .* pred) / sum(w .* inc)
-            for i in 1:3; specs[i][:conv] = raw[i] * k; end
+    if :conversion in channels && !any(isnothing, u)
+        key = typology === :degurba ? "median_income_eur" : "hh_income_per_head"
+        inc = [latest(d, key, p) for (_, p) in pl]
+        if !any(isnothing, inc)
+            t = [get(specs[i], :tertiary, c.share[2]) for i in 1:n]
+            pred = [((1 - t[i]) * c.alpha[1] + t[i] * c.alpha[2]) * (1 - u[i] / 100) for i in 1:n]
+            raw = inc ./ pred; k = sum(w .* pred) / sum(w .* inc)
+            for i in 1:n; specs[i][:conv] = raw[i] * k; end
         end
     end
-    if :commute in channels
-        # one-way minutes by place and education (lfso_19plwk28, 2019) over usual
-        # weekly hours (lfsa_ewhun2, 2019, employed 20 to 64: FR 37.6, DE 35.4,
-        # IT 37.2), five commuting days: tau = 2 x minutes x 5 / (hours x 60).
-        # The low cell averages ED0-2 and ED3_4. Relative to the population-
-        # weighted national tau, since the national effort scale absorbs the mean.
+    if :commute in channels && typology === :degurba
         h = weekly_hours[code] * 60
-        tl = [(meanyrs(d, "commute_mean_minutes_ED0-2", p, 2019:2019) + meanyrs(d, "commute_mean_minutes_ED3_4", p, 2019:2019)) / 2 for (_, p) in DEGURBA]
-        th = [meanyrs(d, "commute_mean_minutes_ED5-8", p, 2019:2019) for (_, p) in DEGURBA]
+        tl = [(meanyrs(d, "commute_mean_minutes_ED0-2", p, 2019:2019) + meanyrs(d, "commute_mean_minutes_ED3_4", p, 2019:2019)) / 2 for (_, p) in pl]
+        th = [meanyrs(d, "commute_mean_minutes_ED5-8", p, 2019:2019) for (_, p) in pl]
         τl = 10 .* tl ./ h; τh = 10 .* th ./ h
-        t = [get(specs[i], :tertiary, c.share[2]) for i in 1:3]
-        τbar = sum(w[i] * ((1 - t[i]) * τl[i] + t[i] * τh[i]) for i in 1:3)
-        for i in 1:3; specs[i][:commute] = ((1 + τl[i]) / (1 + τbar) - 1, (1 + τh[i]) / (1 + τbar) - 1); end
+        t = [get(specs[i], :tertiary, c.share[2]) for i in 1:n]
+        τbar = sum(w[i] * ((1 - t[i]) * τl[i] + t[i] * τh[i]) for i in 1:n)
+        for i in 1:n; specs[i][:commute] = ((1 + τl[i]) / (1 + τbar) - 1, (1 + τh[i]) / (1 + τbar) - 1); end
     end
-    if :community in channels && code == "FR"
-        inf = Dict{String,Tuple{Float64,Float64}}()
-        for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "place", "sports_facilities_fr.csv"))
-            f = split(ln, ","); length(f) >= 5 || continue
-            f[1] == "entered service before 1990 (central)" || continue
-            inf[f[2]] = (parse(Float64, f[5]), parse(Float64, f[4]))
+    if :community in channels
+        infra = community_infrastructure(code, typology, [p for (_, p) in pl])
+        if infra !== nothing
+            nat = sum(w .* infra)
+            for i in 1:n; specs[i][:omega] = min(0.95, c.omega * (infra[i] / nat)^epsilon); end
         end
-        per = [inf[n][1] for n in ("cities", "towns", "rural")]; pop = [inf[n][2] for n in ("cities", "towns", "rural")]
-        nat = sum(per .* pop) / sum(pop)
-        for i in 1:3; specs[i][:omega] = min(0.95, c.omega * (per[i] / nat)^epsilon); end
     end
     ([(; sp...) for sp in specs], w)
+end
+
+"Predetermined community infrastructure per head, by place, where an official source exists; else nothing."
+function community_infrastructure(code, typology, places)
+    if code == "FR" && typology === :degurba
+        inf = Dict{String,Float64}()
+        for ln in eachline(joinpath(PLACE_DIR, "sports_facilities_fr.csv"))
+            f = split(ln, ","); length(f) >= 5 || continue
+            f[1] == "entered service before 1990 (central)" || continue
+            inf[f[2]] = parse(Float64, f[5])
+        end
+        return [inf[n] for n in ("cities", "towns", "rural")]
+    elseif code == "IT" && typology === :tl2
+        inf = Dict{String,Float64}()
+        for (k, ln) in enumerate(eachline(joinpath(PLACE_DIR, "italy_regions.csv")))
+            k == 1 && continue
+            f = split(ln, ","); inf[f[3]] = parse(Float64, f[9])      # nuts2021, np_per10k_2011
+        end
+        return [inf[p] for p in places]
+    end
+    nothing
 end

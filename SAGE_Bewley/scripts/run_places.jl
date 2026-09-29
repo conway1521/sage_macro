@@ -9,7 +9,7 @@ include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = length(ARGS) >= 1 ? ARGS[1] : "FR"
 c = country_config(code; config = "GSA", S = true, A = true)
-d = place_data(code)
+d = place_data(code; typology = :degurba)
 vol = [meanyrs(d, "formal_volunteering", p, 2015:2015) for (_, p) in DEGURBA]
 all_ch = code == "FR" ? (:composition, :access, :conversion, :commute, :community) : (:composition, :access, :conversion, :commute)
 runs = Any[(string(ch), (ch,), 0.4) for ch in all_ch]
