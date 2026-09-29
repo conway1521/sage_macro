@@ -1,0 +1,6 @@
+# written by calibrate_two_asset.jl FR G; illiquid asset on
+phi = 3.471
+beta_spread = 0.0405
+beta_bar = 1.0054
+chi0 = 0.0104
+illiquid_premium = 0.0354

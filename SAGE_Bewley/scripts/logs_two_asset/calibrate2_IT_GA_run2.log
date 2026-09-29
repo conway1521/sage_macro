@@ -1,0 +1,19 @@
+calibrating IT GA with the illiquid asset | targets: net wealth / income 5.51, wealthy htm 0.155, poor htm 0.083, effort 0.7252 | premium 0.0215, death 0.0222 | workers 3
+start beta_bar 0.9972 chi0 0.0500 spread 0.1050 phi 2.990 | net wealth/income 0.51, wealthy htm 0.0481, poor htm 0.0724, effort 0.7250 | worst 47.75 band  [1 solves, 1.8 min]
+step 1 beta_bar 1.0094 chi0 0.0423 spread 0.1215 phi 2.899 | net wealth/income 0.55, wealthy htm 0.0552, poor htm 0.0699, effort 0.7250 | worst 46.23 band  [6 solves, 9.6 min]
+step 2 beta_bar 1.0176 chi0 0.0287 spread 0.1399 phi 2.810 | net wealth/income 0.54, wealthy htm 0.0675, poor htm 0.0755, effort 0.7276 | worst 46.33 band  [11 solves, 19.7 min]
+  Newton step failed; moved to the best point evaluated
+step 3 beta_bar 1.0176 chi0 0.0287 spread 0.1399 phi 2.954 | net wealth/income 0.55, wealthy htm 0.0662, poor htm 0.0786, effort 0.7187 | worst 46.08 band  [19 solves, 54.0 min]
+step 4 beta_bar 1.0115 chi0 0.0286 spread 0.1306 phi 2.988 | net wealth/income 0.55, wealthy htm 0.0661, poor htm 0.0778, effort 0.7188 | worst 46.04 band  [25 solves, 77.4 min]
+step 5 beta_bar 1.0145 chi0 0.0285 spread 0.1345 phi 2.968 | net wealth/income 0.55, wealthy htm 0.0680, poor htm 0.0773, effort 0.7188 | worst 46.06 band  [32 solves, 99.3 min]
+step 6 beta_bar 1.0084 chi0 0.0280 spread 0.1256 phi 3.006 | net wealth/income 0.55, wealthy htm 0.0676, poor htm 0.0772, effort 0.7189 | worst 46.03 band  [38 solves, 110.8 min]
+  Newton step failed; moved to the best point evaluated
+step 7 beta_bar 1.0125 chi0 0.0280 spread 0.1256 phi 3.006 | net wealth/income 0.60, wealthy htm 0.0719, poor htm 0.0716, effort 0.7169 | worst 44.49 band  [46 solves, 140.5 min]
+step 8 beta_bar 1.0176 chi0 0.0205 spread 0.1371 phi 2.961 | net wealth/income 0.59, wealthy htm 0.0787, poor htm 0.0750, effort 0.7180 | worst 44.54 band  [52 solves, 158.8 min]
+step 9 beta_bar 1.0176 chi0 0.0205 spread 0.1371 phi 2.961 | net wealth/income 0.59, wealthy htm 0.0787, poor htm 0.0750, effort 0.7180 | worst 44.54 band  [60 solves, 194.4 min]
+  no improving point; stopping
+
+validation (not targeted): MPC 0.155 (poor htm 0.364, wealthy 0.198) | drop on job loss 0.335 | protection if hit 0.6588 | room 0.505 | median liquid / median income 0.278 | net wealth top 10% share and Gini below
+  net wealth: top 10% share 0.783, Gini 0.844
+
+NOT CALIBRATED: worst target at 44.54 of its band after the iteration. No calibration file written.

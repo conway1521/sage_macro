@@ -1,0 +1,17 @@
+calibrating IT G with the illiquid asset | targets: net wealth / income 5.51, wealthy htm 0.155, poor htm 0.083, effort 0.7252 | premium 0.0215, death 0.0222 | workers 3
+start beta_bar 0.9972 chi0 0.0500 spread 0.1290 phi 2.950 | net wealth/income 0.36, wealthy htm 0.0405, poor htm 0.0746, effort 0.7247 | worst 54.51 band  [1 solves, 3.0 min]
+step 1 beta_bar 1.0094 chi0 0.0323 spread 0.1479 phi 2.865 | net wealth/income 0.43, wealthy htm 0.0563, poor htm 0.0756, effort 0.7248 | worst 51.11 band  [6 solves, 13.1 min]
+step 2 beta_bar 1.0176 chi0 0.0292 spread 0.1500 phi 2.788 | net wealth/income 0.50, wealthy htm 0.0626, poor htm 0.0637, effort 0.7262 | worst 47.96 band  [11 solves, 35.0 min]
+step 3 beta_bar 1.0176 chi0 0.0303 spread 0.1500 phi 2.723 | net wealth/income 0.54, wealthy htm 0.0621, poor htm 0.0617, effort 0.7305 | worst 46.52 band  [16 solves, 59.4 min]
+step 4 beta_bar 1.0176 chi0 0.0120 spread 0.1500 phi 2.683 | net wealth/income 0.54, wealthy htm 0.0833, poor htm 0.0602, effort 0.7330 | worst 46.59 band  [21 solves, 87.3 min]
+step 5 beta_bar 1.0176 chi0 0.0105 spread 0.1500 phi 2.671 | net wealth/income 0.54, wealthy htm 0.0852, poor htm 0.0603, effort 0.7338 | worst 46.61 band  [28 solves, 132.6 min]
+step 6 beta_bar 1.0176 chi0 0.0093 spread 0.1500 phi 2.667 | net wealth/income 0.54, wealthy htm 0.0859, poor htm 0.0603, effort 0.7341 | worst 46.62 band  [36 solves, 191.5 min]
+  Newton step failed; moved to the best point evaluated
+step 7 beta_bar 1.0176 chi0 0.0093 spread 0.1500 phi 2.803 | net wealth/income 0.54, wealthy htm 0.0862, poor htm 0.0641, effort 0.7251 | worst 46.37 band  [44 solves, 245.1 min]
+step 8 beta_bar 1.0176 chi0 0.0093 spread 0.1500 phi 2.803 | net wealth/income 0.54, wealthy htm 0.0862, poor htm 0.0641, effort 0.7251 | worst 46.37 band  [52 solves, 297.9 min]
+  no improving point; stopping
+
+validation (not targeted): MPC 0.161 (poor htm 0.391, wealthy 0.196) | drop on job loss 0.355 | protection if hit 0.6461 | room 0.407 | median liquid / median income 0.217 | net wealth top 10% share and Gini below
+  net wealth: top 10% share 0.798, Gini 0.849
+
+NOT CALIBRATED: worst target at 46.37 of its band after the iteration. No calibration file written.
