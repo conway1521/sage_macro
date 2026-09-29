@@ -226,8 +226,8 @@ A modular, data-disciplined heterogeneous-agent model of multidimensional wellbe
 
 | # | item | done when | state (2026-09-29) |
 |---|---|---|---|
-| 1 | **Core, one asset:** G, G+A, G+S, G+S+A for FR, DE, IT | calibrated to own targets; suite passes; unique equilibria; policy tests | done |
-| 2 | **Second asset:** the same twelve configurations with the illiquid switch | calibrated, or not calibrated with the reason on record; the wealthy hand-to-mouth in DE and IT reported as untargeted (chi0 from FR) | FR G, GA, DE G, GA, IT GA done; G+S+A running; G+S next |
+| 1 | **The permutation grid, one asset:** every combination with G at the base, G, G+S, G+A, G+E, G+S+A, G+S+E, G+A+E, G+S+A+E, for FR, DE, IT (E over TL2 regions by default) | each calibrated to the national targets it owns (E fits nothing; its place outcomes are untargeted tests); exact reductions for every switch in the suite; unique equilibria; policy tests | without E done (2026-09-28); E as a switch built 2026-09-29, with reductions in the suite and calibrations running |
+| 2 | **Second asset:** the same grid with the illiquid switch (the four without E first, then the four with E, which is item 5) | calibrated, or not calibrated with the reason on record; the wealthy hand-to-mouth in DE and IT reported as untargeted (chi0 from FR) | FR G, GA, DE G, GA, IT GA done; G+S+A running; G+S next |
 | 3 | **E, the standard:** one schema over official geographies; TL2 standard, Degree of Urbanisation alternative | channels from data; reductions in the suite | done |
 | 4 | **E, validation** | participation by place against official data in all three countries | FR by urbanisation (1.34 against 1.37); IT at TL2 (r 0.81 to 0.83); FR and DE at TL2 need OECD Regional Well-Being indicators and the Freiwilligensurvey by Land |
 | 5 | **E on two assets:** the place layer over the two-asset G+S+A | hardship by place no longer wrong-signed, or the failure documented; tested against HFCS by region when the data arrive | next, after item 2 |
