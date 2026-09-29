@@ -76,3 +76,22 @@ Paying the higher first-year replacement rate instead of the spell average lower
    - **A second earner.** This is larger: it changes the household problem, and it overlaps with the illiquid asset in the state space.
 3. **Period length.** An annual period exaggerates the drop. A quarterly period is the standard fix but multiplies the solve time by about four. Keep it in view, not now.
 4. **Policy and equilibrium counts** on the new calibrations (running).
+
+## 6. Anatomy of the unemployed participation gap (2026-09-29, `probe_unemployed_gap.txt`)
+
+The unemployed take part at about 0.56 of the employed rate (INSEE; ESS 0.80 to 0.85). With the imposed rule switched off, France's calibrated G+S+A gives 3.5: nearly every unemployed person takes part. Each measurable mechanism was then switched on alone, and then combined, with everything else held at the calibration.
+
+| mechanism | unemployed / employed |
+|---|---|
+| none (rule off) | 3.48 |
+| money cost of taking part, 1.6% to 12.5% of mean income | 3.77 to 2.88 |
+| time committed out of work (home production, search), 0.05 to 0.30 of the time endowment | 3.48 to 2.91 |
+| belonging out of work at 80% to 40% of its value | 3.48 to 3.44 |
+| money cost 3.1% and committed time 0.19 together (the measured anchors) | 3.17 |
+
+- **The anchors:**
+  - money: recreational and sporting services are about 1% of household consumption, or 0.5% in Italy (Eurostat hbs_str_t211, 2020), so at most about 3% of a participant's income;
+  - time: about 30% of lost market hours go to home production (Aguiar, Hurst and Karabarbounis 2013).
+- **Result: no measurable economic cost comes close.** Money costs cut everyone's participation almost in proportion. Committed time leaves the unemployed with more free time than the employed at any plausible value. Even a belonging value cut to 40% barely moves them, because with time disutility convex in hours, a tenth of the day costs someone not working almost nothing.
+- **Reading:** in a standard model, the gap cannot be rationalised by time or money. It points to what the wellbeing literature calls the non-pecuniary costs of unemployment: lost networks, identity and routine, stigma and mental health (Clark and Oswald 1994; Winkelmann and Winkelmann 1998). The model does not represent these.
+- **Consequence:** the imposed ratio stays. It is reported as an empirical regularity the economics cannot generate, not as a patch that hides a mechanism. This is a finding in its own right.
