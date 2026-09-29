@@ -7,6 +7,9 @@ on:
       script:
         description: "Script in SAGE_Bewley/scripts, e.g. probe_gs_identification.jl"
         required: true
+      args:
+        description: "Arguments for the script (optional)"
+        default: ""
       solver:
         description: "Household solver: egm (default) or grid (the reference)"
         default: "egm"
@@ -29,9 +32,9 @@ jobs:
         run: |
           cd SAGE_Bewley
           set -o pipefail
-          julia --project=scripts/run_env scripts/${{ inputs.script }} 2>&1 | tee scripts/probe_output.txt
+          julia --project=scripts/run_env scripts/${{ inputs.script }} ${{ inputs.args }} 2>&1 | tee scripts/probe_output.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: probe-output
+          name: probe-output-${{ github.run_id }}
           path: SAGE_Bewley/scripts/probe_output.txt
