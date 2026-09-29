@@ -210,3 +210,9 @@ A modular, data-disciplined heterogeneous-agent model of multidimensional wellbe
 - **Search bound:** one spread bound (0.15) for every stage.
 - **Policy tests:** now use the same ownership rule and the gate.
 - **Untargeted moments:** the one-asset limit shows in liquidity, MPC and concentration, which confirms the illiquid asset as next. The consumption drop on job loss is too large in DE and IT because household insurance is missing. That affects protection if hit, and the choice between a borrowing limit and a second earner is open.
+
+**2026-09-29: policy tests and equilibrium counts on egm, all three countries.**
+
+- **Policy tests:** 13 to 18 minutes per country. France alone used to take six hours.
+- **Equilibrium counts:** every policy economy has exactly one stable equilibrium. That is 27 rows per country: G+S+A with baseline plus four policies at three technologies, and G+S with baseline plus three policies at three technologies. Goal G3's "every policy economy has a unique equilibrium" is met.
+- **Two-asset stage 1 done:** the household solver, which reduces exactly to one asset (`TWO_ASSET_DESIGN.md`, build log).
