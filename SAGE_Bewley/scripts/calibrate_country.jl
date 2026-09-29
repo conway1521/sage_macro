@@ -50,9 +50,15 @@ say(args...) = (println(args...); flush(stdout))
 
 const CODE = ARGS[1]
 const CFG = length(ARGS) >= 2 ? uppercase(ARGS[2]) : "GSA"
-CFG in ("G", "GA", "GS", "GSA") || error("configuration must be G, GA, GS or GSA, got $CFG")
+CFG in ("G", "GA", "GS", "GSA", "GE", "GAE", "GSE", "GSAE") ||
+    error("configuration must be G, GA, GS, GSA, or one of them with E (GE, GAE, GSE, GSAE), got $CFG")
 const S_ON = occursin('S', CFG)
 const A_ON = occursin('A', CFG)
+# E ON (2026-09-29): the economy over places (TL2 by default, place_layer.jl).
+# E fits nothing: the national targets are the same as with E off, and the place
+# outcomes are untargeted tests. Every solve below dispatches through
+# solve_economy, and the technology scan becomes place-aware.
+const E_ON = occursin('E', CFG)
 const ROW = country_rows()[CODE]
 num(k) = parse(Float64, ROW[k])
 const E_TARGET = num("effort_target")
@@ -80,7 +86,7 @@ const LOSS_STD = OWN_GAP ? 0.035 : AGG_TOL
 const MULT_MAX = 5.0
 const CELLS0 = cells_of(country_config(CODE; config = "GSA", S = true, A = A_ON))
 const AGG = CELLS0[1].share * PART[1] + CELLS0[2].share * PART[2]
-const SIGMA_FIX = OWN_GAP ? NaN : country_config(CODE; config = "GSA").sigma_m
+const SIGMA_FIX = OWN_GAP ? NaN : country_config(CODE; config = E_ON ? "GSAE" : "GSA", E = E_ON).sigma_m
 
 # How much switching cohesion on raises hand-to-mouth, used to aim the
 # cohesion-off fit. G+S+A: France on EU-SILC, 0.2804 with cohesion against 0.2512
@@ -131,6 +137,20 @@ end
 say("calibrating ", CODE, " ", CFG, " | effort target ", E_TARGET, " | hand-to-mouth target ", HTM_TARGET,
     S_ON ? " | participation targets $(PART) | national ratio $(RATIO)" : "", " | workers ", nworkers())
 t_start = time()
+# TIME BUDGET (2026-09-29). With SAGE_TIME_BUDGET_MIN set, the run stops before
+# a families-and-scan stage that would not finish inside the budget, with exit
+# code 3. The stage checkpoints above (stage 1, each correction) and the family
+# cache let the next job resume; the workflow starts it.
+const BUDGET = parse(Float64, get(ENV, "SAGE_TIME_BUDGET_MIN", "Inf"))
+const LASTSCAN = Ref(30.0)
+function budget_check(tag; factor = 1.3)
+    used = (time() - t_start) / 60
+    if used + factor * LASTSCAN[] > BUDGET
+        say(@sprintf("\nTIME BUDGET: %.0f of %.0f minutes used before %s; checkpoints kept, to resume in a new job.", used, BUDGET, tag))
+        exit(3)
+    end
+end
+timed_scans(args...; kw...) = (t_ = time(); out = scans(args...; kw...); LASTSCAN[] = (time() - t_) / 60 + 5; out)
 
 function write_cal(phi, spread; kappa = nothing, sigma = nothing)
     open(OUTFILE, "w") do io
@@ -161,7 +181,9 @@ end
 # delivers is reached instead by raising average patience, with no spread,
 # up to the model's stationarity limit (beta times R below 0.995).
 const BB = Ref(0.96)
-soff(phi, sp) = _solve(country_config(CODE; config = CFG, S = false, A = A_ON, phi = phi, beta_spread = sp,
+# one pass without thresholds for E off (as before); with E on, the full place solve
+_solve_any(cc) = E_ON ? solve_economy(cc) : _solve(cc, nothing; disk = true)
+soff(phi, sp) = _solve_any(country_config(CODE; config = CFG, S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = sp,
                                       beta_bar = BB[]), nothing; disk = true)
 function fit_phi(sp; lo = 0.5, hi = 40.0, steps = 14, aim = E_TARGET)   # lo was 3.0: Italy's effort target needs less
     for _ in 1:steps
@@ -236,7 +258,7 @@ end
 
 if !S_ON
     say("\n2. the ", CFG, " economy on its own thresholds")
-    r = solve_economy(country_config(CODE; config = CFG, S = false, A = A_ON, phi = phi, beta_spread = spread,
+    r = solve_economy(country_config(CODE; config = CFG, S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = spread,
                                      beta_bar = BB[]))
     @printf("  participation %.4f | agency %.4f | hardship %.4f | hand-to-mouth %.4f (target %.2f) | effort %.4f (target %.4f) | median %.4f\n",
             r.rate, r.A, r.hardship, r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET, r.median_income)
@@ -255,12 +277,45 @@ end
 # ------------------------------------------- 2 and 3. families and scans --
 const SIGMAS = 0.30:0.02:3.00      # to 3.0: the band's lower end sat at 1.5 (2026-09-27)
 const KAPPAS = 2.0:0.05:25.0
+# With E on: families for every place, then the place-aware scan on a global
+# coarse grid (sigma step 0.06, kappa step 0.1) and a refinement around its best
+# point (steps 0.02 and 0.05). The kappa search stays global at every sigma.
+function scans_places(c)
+    c0 = SAGEConfig(c; E = false)
+    places, w = places_from_data(CODE, c0; typology = c.typology, channels = c.e_channels, epsilon = c.epsilon)
+    cps = [place_config(c0, pl, national_tax(c0, places, w)) for pl in places]
+    t0 = time()
+    raws = [collect(build_families(cp, nothing; disk = true)) for cp in cps]
+    @printf("  families for %d places built or loaded in %.1f min\n", length(cps), (time() - t0) / 60); flush(stdout)
+    fis = [[impose_unemployed_ratio(f, employment_mask(cps[i]), RATIO) for f in raws[i]] for i in eachindex(cps)]
+    cpr = [SAGEConfig(cp; unemployed_ratio = RATIO) for cp in cps]
+    kw = OWN_GAP ? (targets = PART,) : (aggregate = AGG,)
+    sig = OWN_GAP ? collect(0.30:0.06:3.00) : [SIGMA_FIX]
+    rows = scan_technology_places(cpr, fis, w, sig, collect(2.0:0.1:25.0); kw..., max_mult = MULT_MAX)
+    if isempty(rows)
+        @printf("  no stable equilibrium with a multiplier of at most %.0f anywhere on the grid\n", MULT_MAX)
+        return Dict(RATIO => nothing)
+    end
+    b0 = rows[argmin([x.loss for x in rows])]
+    sig2 = OWN_GAP ? collect(max(0.30, b0.σ - 0.06):0.02:min(3.00, b0.σ + 0.06)) : [SIGMA_FIX]
+    rows2 = scan_technology_places(cpr, fis, w, sig2, collect(max(2.0, b0.κ - 0.2):0.05:min(25.0, b0.κ + 0.2)); kw..., max_mult = MULT_MAX)
+    allr = vcat(rows, rows2)
+    best = allr[argmin([x.loss for x in allr])]
+    ok = [x for x in allr if x.loss <= LOSS_STD]
+    @printf("  places (%d): best kappa %.2f sigma %.2f, root loss %.4f, rate %.4f, multiplier %.1f", length(cps), best.κ, best.σ, best.loss, best.r, best.mult)
+    isempty(ok) ? @printf(" | nothing within %.3f\n", LOSS_STD) :
+        @printf(" | within %.3f: multiplier %.1f to %.1f\n", LOSS_STD, minimum(x.mult for x in ok), maximum(x.mult for x in ok))
+    flush(stdout)
+    Dict(RATIO => (best = best, ok = ok))
+end
+
 # COARSE TO FINE (2026-09-28). The search (scans, corrections) runs on half the
 # belonging scales; the calibration is then re-scanned and solved once on the
 # full grid, and only that economy is checked against the targets and written.
 function scans(phi, spread; ugrid = UGRID_COARSE)
-    c = country_config(CODE; config = CFG, S = true, A = A_ON, phi = phi, beta_spread = spread, beta_bar = BB[],
+    c = country_config(CODE; config = CFG, S = true, A = A_ON, E = E_ON, phi = phi, beta_spread = spread, beta_bar = BB[],
                        ugrid = ugrid)
+    E_ON && return scans_places(c)
     t0 = time()
     raw = collect(build_families(c, nothing; disk = true))
     @printf("  families built or loaded in %.1f min\n", (time() - t0) / 60); flush(stdout)
@@ -302,7 +357,8 @@ end
 say("\n2-3. ", CFG, " families and technology scans, ",
     OWN_GAP ? "participation targets $(PART)" :
               @sprintf("overall participation %.4f (the cell gap is not this configuration's target), sigma held at the G+S+A value %.2f", AGG, SIGMA_FIX))
-S = scans(phi, spread)
+budget_check("the first technology scan")
+S = timed_scans(phi, spread)
 if S[RATIO] === nothing || S[RATIO].best.loss > LOSS_STD
     say("\nNOT CALIBRATED: at the national ratio the best fit is ", S[RATIO] === nothing ? "absent" :
         @sprintf("%.4f, above the %.3f standard", S[RATIO].best.loss, LOSS_STD), ". No calibration file written.")
@@ -311,7 +367,7 @@ end
 
 # ------------------------------------------------------ 4 and 5. solve --
 function solve_at(phi, spread, best; ugrid = UGRID_COARSE)
-    c = country_config(CODE; config = CFG, S = true, A = A_ON, phi = phi, beta_spread = spread,
+    c = country_config(CODE; config = CFG, S = true, A = A_ON, E = E_ON, phi = phi, beta_spread = spread,
                        beta_bar = BB[], kappa = best.κ, sigma_m = best.σ, ugrid = ugrid)
     t0 = time(); r = solve_economy(c)
     @printf("  %s: participation %.4f (cells %.4f, %.4f against %.3f, %.3f; employed %.4f, unemployed %.4f)\n",
@@ -354,7 +410,8 @@ for correction in 1:2
         say("  from checkpoint ", basename(ckfile("stage5_$(correction)")))
     end
     @printf("  new phi %.2f, spread %.3f, mean patience %.4f%s\n", phi, spread, BB[], edge2 ? " (ON THE GRID EDGE)" : ""); flush(stdout)
-    S = scans(phi, spread)
+    budget_check("correction $(correction)'s scan")
+    S = timed_scans(phi, spread)
     if S[RATIO] === nothing || S[RATIO].best.loss > LOSS_STD
         say("\nNOT CALIBRATED after the correction. No calibration file written.")
         mark_not_calibrated(); exit(2)
@@ -363,7 +420,8 @@ for correction in 1:2
     r = solve_at(phi, spread, best)
 end
 say("\n5b. the calibration on the full belonging grid (", length(UGRID_DEFAULT), " scales): technology re-scanned, economy solved and checked")
-S = scans(phi, spread; ugrid = UGRID_DEFAULT)
+budget_check("the full-grid scan"; factor = 2.5)
+S = timed_scans(phi, spread; ugrid = UGRID_DEFAULT)
 if S[RATIO] === nothing || S[RATIO].best.loss > LOSS_STD
     say("\nNOT CALIBRATED on the full grid. No calibration file written.")
     mark_not_calibrated(); exit(2)

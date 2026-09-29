@@ -176,6 +176,17 @@ Base.@kwdef struct SAGEConfig
     # each unit of work takes 1 + commute units of time. The national effort
     # scale already absorbs average commuting, so the nation has zero here.
     commute::NTuple{2,Float64} = (0.0, 0.0)
+    # THE E SWITCH (E_PLACE_CONCEPT.md, the standard). On, the economy is solved
+    # over places of an official geography (TL2 by default, or :degurba), each
+    # its own economy with local social feedback and national financing, and the
+    # results are the national aggregates plus `by_place`. The place parameters
+    # come from data through the channels listed; E fits nothing. With no
+    # channels, E on gives back E off exactly (the suite).
+    E::Bool = false
+    typology::Symbol = :tl2
+    e_channels::Tuple = (:composition, :access, :conversion, :commute, :community)
+    epsilon::Float64 = 0.4
+    country::String = ""
     illiquid::Bool = false
     illiquid_premium::Float64 = 0.0
     chi0::Float64 = 0.05
@@ -472,6 +483,7 @@ which is how policy counterfactuals are anchored to their baseline. Left
 empty, they are taken from this economy's own median disposable income.
 """
 function solve_economy(c::SAGEConfig; thresholds = nothing, cache = true, verbose = false)
+    c.E && return solve_economy_places(c; thresholds = thresholds, cache = cache)
     key = (c, thresholds)
     cache && haskey(ECON_CACHE, key) && return ECON_CACHE[key]
     r = if thresholds === nothing
@@ -817,6 +829,8 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", kw
             k, v = strip.(split(t, "=")); d[Symbol(k)] = parse(Float64, v)
         end
     end
+    d[:country] = code
+    occursin('E', config) && (d[:E] = true)       # GE, GAE, GSE, GSAE
     for (k, v) in kwargs
         d[k] = v
     end

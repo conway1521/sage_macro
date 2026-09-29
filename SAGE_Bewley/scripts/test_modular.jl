@@ -214,6 +214,16 @@ else
     println("illiquid-asset reductions skipped: they need SAGE_SOLVER=egm")
 end
 
+# 23 to 26. The E switch: on, with every channel off, over the French TL2
+# regions, gives back each configuration without E.
+for (lab, cc) in (("G", SAGEConfig(CAL; A = false)), ("G+A", SAGEConfig(CAL; A = true)),
+                  ("G+S", SAGEConfig(CAL; S = true, A = false)), ("G+S+A", SAGEConfig(CAL; S = true, A = true)))
+    cE = SAGEConfig(cc; E = true, e_channels = (), country = "FR", typology = :tl2)
+    reduce_to("$(lab)+E, no channels  ->  $(lab)", solve_economy(cE), solve_economy(cc);
+              fields = (:rate, :A, :hardship, :hand_to_mouth_kvw, :mean_effort_employed, :median_income, :A_cond,
+                        :consumption_drop, :wealth_p50, :income_poor, :asset_poor), tol = 1e-12)
+end
+
 # 22. The place layer (E1): three places identical to the nation, financed
 # nationally and each with its own social fixed point, give back the nation.
 let c = SAGEConfig(CAL; A = true)

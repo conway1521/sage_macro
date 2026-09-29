@@ -41,7 +41,15 @@ end
 national_tax(c::SAGEConfig, places, w) = c.lumptax + sum(w[i] * ui_tax_of(place_base(c, places[i])) for i in eachindex(places))
 
 "One place, financed nationally: its lump sum plus its own UI tax equals the national total `T_nat`."
-place_config(c::SAGEConfig, pl, T_nat) = (cp = place_base(c, pl); SAGEConfig(cp; lumptax = T_nat - ui_tax_of(cp)))
+function place_config(c::SAGEConfig, pl, T_nat)
+    cp = place_base(c, pl)
+    lt = T_nat - ui_tax_of(cp)
+    # a place identical to the nation gets the nation's tax exactly (rounding in
+    # the national sum would otherwise change it in the last bit and force a
+    # rebuild of families that are the nation's)
+    abs(lt - c.lumptax) < 1e-13 && (lt = c.lumptax)
+    SAGEConfig(cp; lumptax = lt)
+end
 
 # fields aggregated over places, and how: :pop weights by population, :emp by the employed
 const PLACE_FIELDS = ((:rate, :pop), (:unemployment, :pop), (:A, :pop), (:A_cond, :emp), (:hardship, :pop),
@@ -205,4 +213,119 @@ function community_infrastructure(code, typology, places)
         return [inf[p] for p in places]
     end
     nothing
+end
+
+
+# ------------------------------------------------------------ the E switch --
+const E_POP = (:rate, :unemployment, :A, :hardship, :hand_to_mouth_kvw, :hand_to_mouth, :wealthy_htm, :mean_income,
+               :mean_labour_income, :mpc, :mps, :mpe, :mpp, :room, :shock_loss, :shock_loss_income, :A_hardship,
+               :income_poor, :asset_poor, :median_income)
+const E_EMP = (:rate_E, :A_cond, :consumption_drop, :mean_effort_employed, :dread_cost_E)
+
+"""
+    solve_economy_places(c; thresholds = nothing, cache = true)
+
+The economy with E on: every place solved with the national financing and the
+national poverty line, then aggregated. The poverty line comes, as for any
+economy, from its own median: the place economies are solved once without
+thresholds, the national mean income is their population-weighted mean, and
+the line anchored on it (or the thresholds given, for counterfactuals). Returns
+the national aggregates under the usual field names (population weights, or
+employed weights for the employed-only measures; the unemployed rate by
+unemployed weights), `pooled` with the national participation by education
+cell, `slope` from the population-weighted multiplier, `welfare`, `by_place`,
+`places` and `weights`.
+"""
+function solve_economy_places(c::SAGEConfig; thresholds = nothing, cache = true)
+    isempty(c.country) && error("E needs the country code: build the config with country_config")
+    c0 = SAGEConfig(c; E = false)
+    places, w = places_from_data(c.country, c0; typology = c.typology, channels = c.e_channels, epsilon = c.epsilon)
+    T_nat = national_tax(c0, places, w)
+    cps = [place_config(c0, pl, T_nat) for pl in places]
+    thr = thresholds
+    if thr === nothing
+        r1 = [_solve(cp, nothing; disk = cache, any_thresholds = true) for cp in cps]
+        ym = sum(w[i] * r1[i].mean_income for i in eachindex(w))
+        med = c0.poverty_line === :anchored ? c0.median_to_mean * ym : sum(w[i] * r1[i].median_income for i in eachindex(w))
+        thr = [(0.5 * med, hardship_threshold(med; months = c0.months))]
+    end
+    rs = [solve_economy(cp; thresholds = thr, cache = cache) for cp in cps]
+    nat = Dict{Symbol,Any}()
+    wE = [w[i] * (1 - rs[i].unemployment) for i in eachindex(rs)]; wE ./= sum(wE)
+    wU = [w[i] * rs[i].unemployment for i in eachindex(rs)]; wU ./= max(sum(wU), eps())
+    for f in E_POP; nat[f] = sum(w[i] * getfield(rs[i], f) for i in eachindex(rs)); end
+    for f in E_EMP; nat[f] = sum(wE[i] * getfield(rs[i], f) for i in eachindex(rs)); end
+    nat[:rate_U] = sum(wU[i] * rs[i].rate_U for i in eachindex(rs))
+    # participation by education cell: each place's cell weighted by its population and cell share
+    cellw(g) = [w[i] * cells_of(cps[i])[g].share for i in eachindex(rs)]
+    nat[:pooled] = Tuple((rate = sum(cellw(g)[i] * rs[i].pooled[g].rate for i in eachindex(rs)) / sum(cellw(g)),) for g in 1:2)
+    mult = sum(w[i] / (1 - rs[i].slope) for i in eachindex(rs))
+    nat[:slope] = 1 - 1 / mult
+    agrid = rs[1].agrid; Wtot = sum(w[i] .* rs[i].Wtot for i in eachindex(rs))
+    nat[:agrid] = agrid; nat[:Wtot] = Wtot; nat[:wealth_p50] = cdf_quantile(agrid, Wtot, 0.5)
+    ws = [r.welfare for r in rs]
+    comp(k) = sum(w[i] * getfield(ws[i], k) for i in eachindex(ws))
+    nat[:welfare] = (V = comp(:V), Vc = comp(:Vc), Ve = comp(:Ve), Vb = comp(:Vb),
+                     cell = Tuple((V = sum(cellw(g)[i] * ws[i].cell[g].V for i in eachindex(ws)) / sum(cellw(g)),
+                                   Vc = sum(cellw(g)[i] * ws[i].cell[g].Vc for i in eachindex(ws)) / sum(cellw(g))) for g in 1:2),
+                     status = ((V = sum(wE[i] * ws[i].status[1].V for i in eachindex(ws)), Vc = sum(wE[i] * ws[i].status[1].Vc for i in eachindex(ws))),
+                               (V = sum(wU[i] * ws[i].status[2].V for i in eachindex(ws)), Vc = sum(wU[i] * ws[i].status[2].Vc for i in eachindex(ws)))))
+    nat[:ypov] = thr[1][1]; nat[:abar] = thr[1][2]
+    nat[:config] = c; nat[:by_place] = [(get(pl, :name, "place $i"), rs[i]) for (i, pl) in enumerate(places)]
+    nat[:places] = places; nat[:weights] = w; nat[:T_nat] = T_nat
+    (; nat...)
+end
+
+"""
+    scan_technology_places(cps, fams, w, sigmas, kappas; targets, aggregate, nq, max_mult)
+
+`scan_technology` with E on. For each (sigma, kappa), every place solves its own
+participation fixed point on its own families (`fams[i]`, the unemployed rule
+imposed), the selected equilibrium being the highest stable one as
+`solve_economy` selects, and the national participation by education cell is
+the population- and cell-share-weighted sum. The loss is against the two cell
+targets, or with `aggregate` against overall participation. The multiplier is
+the population-weighted mean of the places' multipliers, and the gate applies to
+it. The kappa search is global at every sigma.
+"""
+function scan_technology_places(cps, fams, w, sigmas, kappas; targets = (0.25, 0.45), aggregate = nothing,
+                                nq = 500, xgrid = 0.0:0.02:60.0, max_mult = Inf)
+    XG = collect(xgrid); gr = range(0.0, 1.0, length = 401); np = length(cps)
+    css = [cells_of(cp) for cp in cps]
+    cw = [[w[i] * css[i][g].share for i in 1:np] for g in 1:2]
+    rows = NamedTuple[]
+    for σ in sigmas
+        ms = taste_nodes_ln(σ; n = nq)
+        tab(u, col) = [mean(interp(u, col, x * m) for m in ms) for x in XG]
+        T = [(tab(cps[i].ugrid, [n.rate for n in fams[i][1]]), tab(cps[i].ugrid, [n.rate for n in fams[i][2]])) for i in 1:np]
+        best = nothing
+        for κ in kappas
+            lo = zeros(np); hi = zeros(np); msum = 0.0; ok = true
+            for i in 1:np
+                cs = css[i]; ω = cps[i].omega
+                f(r) = (arg = ω + (1 - ω) * r;
+                        l = interp(XG, T[i][1], κ * cs[1].B * arg); h = interp(XG, T[i][2], κ * cs[2].B * arg);
+                        (cs[1].share * l + cs[2].share * h, l, h))
+                o = [f(r)[1] for r in gr]; sel = nothing
+                for k in 1:400
+                    d1 = o[k] - gr[k]; d2 = o[k+1] - gr[k+1]
+                    (d1 == 0 || sign(d1) != sign(d2)) || continue
+                    sl = (o[k+1] - o[k]) / (gr[k+1] - gr[k]); sl < 1 || continue
+                    sel = (r = gr[k] + d1 / (d1 - d2) * (gr[k+1] - gr[k]), sl = sl)     # the highest is kept
+                end
+                sel === nothing && (ok = false; break)
+                _, lo[i], hi[i] = f(sel.r); msum += w[i] / (1 - sel.sl)
+            end
+            ok || continue
+            msum > max_mult && continue
+            nlo = sum(cw[1] .* lo) / sum(cw[1]); nhi = sum(cw[2] .* hi) / sum(cw[2])
+            rate = sum(w[i] * (css[i][1].share * lo[i] + css[i][2].share * hi[i]) for i in 1:np)
+            L = aggregate === nothing ? (nlo - targets[1])^2 + (nhi - targets[2])^2 : (rate - aggregate)^2
+            (best === nothing || L < best.L) && (best = (L = L, κ = κ, r = rate, lo = nlo, hi = nhi, mult = msum))
+        end
+        best === nothing && continue
+        push!(rows, (σ = σ, κ = best.κ, loss = sqrt(best.L), r = best.r, lo = best.lo, hi = best.hi,
+                     slope = 1 - 1 / best.mult, mult = best.mult))
+    end
+    rows
 end
