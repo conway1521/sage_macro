@@ -324,3 +324,23 @@ The raw association is strong, and non-profit density in 2011 already predicts v
   - Access adds a little.
   - The rural premium must come from the community channel.
   - Composition also gives cities higher agency (1.02 against 0.96 rural) and better protection if hit (0.89 against 0.84), through the capability gradient.
+
+**2026-09-29, all channels** (`run_places_{FR,DE,IT}.txt`). Rural over cities participation, against formal volunteering (EU-SILC 2015):
+
+| | data | composition | access | conversion | commuting | community | all channels |
+|---|---|---|---|---|---|---|---|
+| France | 1.37 | 0.91 | 1.02 | | | 1.56 (epsilon 0.4) | 1.34 (epsilon 0.3) to 1.68 (epsilon 0.5) |
+| Germany | 1.47 | 0.94 | 1.02 | 1.04 | 1.01 | no data | 1.07 (no community) |
+| Italy | 1.07 | 0.94 | 1.00 | 0.94 | 1.01 | no data | 0.94 (no community) |
+
+1. **The economic channels cannot produce the rural participation premium.** Composition works against it, and access, conversion and commuting each add 0 to 4%. In France and Germany, where the premium is large, it has to come from community.
+2. **France with the community channel lands on the data at the low end of the elasticity range:** 1.34 at 0.3 against 1.37, with towns over cities at 1.12 against 1.05.
+3. **How independent is the test?** The range 0.3 to 0.5 came partly from France's own raw ratio (volunteering 1.37 against predetermined infrastructure 2.49 gives about 0.34), so France is not fully out of sample. The independent evidence is Italy's regional estimate with controls, 0.35 to 0.39. At those values the French model gives about 1.44 to 1.53: a rural premium of the right sign and size, overshooting by 0.1 to 0.2.
+   - What the model adds is structure. Local feedback makes the multiplier higher in cities (2.0) than in rural areas (1.7), because a thinner fabric leans more on participation itself.
+4. **National participation drifts** from 0.233 to 0.228 with local feedback and heterogeneous fabric. A recalibration of kappa with places would restore it. Small, but noted.
+5. **Italy:** the urban-rural premium is small in the data (1.07), and the model has composition dominating. Italian place differences are regional, so the regional typology is the right one for Italy. It is prepared in `italy_regions.py`.
+6. **Germany:** there is no community infrastructure by place, so the channel that carries the premium cannot be measured. It could borrow the French or Italian elasticity with a proxy, or be reported as untested.
+7. **Safer jobs, thinner buffers:**
+   - In Germany, lower rural unemployment leads to less precautionary saving, far more asset poverty (hardship 0.47 against 0.18 in cities) and lower protection if hit.
+   - The same sign appears in France, smaller.
+   - This is a testable prediction for the HFCS by place. The size comes from the one-asset model and will shrink with two assets.

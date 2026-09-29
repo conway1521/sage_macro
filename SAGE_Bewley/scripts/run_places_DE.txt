@@ -1,0 +1,43 @@
+DE national G+S+A: participation 0.2801, agency 0.9900, protection 0.6721, hardship 0.2751, poor htm 0.0717
+volunteering by place (2015): 23.5 / 29.6 / 34.5
+
+composition  [0.0 min]
+  place                 part.  unempl.   agency    prot. hardship poor htm   mult
+  cities               0.2890   0.0280   1.0216   0.6908   0.2868   0.0820    1.8
+  towns and suburbs    0.2758   0.0289   0.9743   0.6628   0.2693   0.0666    1.8
+  rural areas          0.2716   0.0291   0.9594   0.6540   0.2638   0.0618    1.8
+  together             0.2802   0.0286   0.9900   0.6721   0.2751   0.0717
+  rural / cities participation: model 0.940, volunteering 1.468 | towns / cities: model 0.954, volunteering 1.260
+
+access  [2.4 min]
+  place                 part.  unempl.   agency    prot. hardship poor htm   mult
+  cities               0.2776   0.0372   0.9880   0.7048   0.1834   0.0387    1.8
+  towns and suburbs    0.2809   0.0258   0.9907   0.6597   0.3152   0.0844    1.8
+  rural areas          0.2829   0.0172   0.9932   0.6144   0.4680   0.1728    1.8
+  together             0.2800   0.0286   0.9901   0.6682   0.2937   0.0841
+  rural / cities participation: model 1.019, volunteering 1.468 | towns / cities: model 1.012, volunteering 1.260
+
+conversion  [2.4 min]
+  place                 part.  unempl.   agency    prot. hardship poor htm   mult
+  cities               0.2746   0.0286   0.9700   0.6580   0.2746   0.0690    1.8
+  towns and suburbs    0.2834   0.0286   1.0019   0.6805   0.2746   0.0729    1.8
+  rural areas          0.2842   0.0286   1.0048   0.6825   0.2743   0.0731    1.8
+  together             0.2801   0.0286   0.9899   0.6720   0.2745   0.0714
+  rural / cities participation: model 1.035, volunteering 1.468 | towns / cities: model 1.032, volunteering 1.260
+
+commute  [2.0 min]
+  place                 part.  unempl.   agency    prot. hardship poor htm   mult
+  cities               0.2778   0.0286   0.9900   0.6730   0.2826   0.0755    1.8
+  towns and suburbs    0.2813   0.0286   0.9900   0.6724   0.2707   0.0743    1.8
+  rural areas          0.2817   0.0286   0.9900   0.6724   0.2693   0.0742    1.8
+  together             0.2800   0.0286   0.9900   0.6726   0.2751   0.0747
+  rural / cities participation: model 1.014, volunteering 1.468 | towns / cities: model 1.013, volunteering 1.260
+
+all channels, epsilon 0.3  [2.3 min]
+  place                 part.  unempl.   agency    prot. hardship poor htm   mult
+  cities               0.2700   0.0365   0.9680   0.6875   0.2004   0.0414    1.8
+  towns and suburbs    0.2854   0.0260   1.0024   0.6699   0.3036   0.0841    1.8
+  rural areas          0.2890   0.0175   1.0076   0.6267   0.4529   0.1608    1.8
+  together             0.2800   0.0285   0.9898   0.6681   0.2927   0.0826
+  rural / cities participation: model 1.070, volunteering 1.468 | towns / cities: model 1.057, volunteering 1.260
+DONE
