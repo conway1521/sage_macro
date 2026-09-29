@@ -48,13 +48,29 @@ agap(r) = r.A_cell[2] - r.A_cell[1]
 cgap(r) = r.A_cond_cell[2] - r.A_cond_cell[1]
 const ROWS = Vector{Dict{String,Any}}()
 
-function technology_points(c, thr)
+# The technology band: the best point and the lowest- and highest-multiplier
+# points that still fit, all under the stability gate (multiplier at most 5,
+# calibrate_country.jl). Target ownership as in the calibration: G+S+A fits the
+# two education cells; G+S fits overall participation only, over the sigma range
+# its own G+S+A band accepts (sigma is not identified without A, so it inherits
+# that band), with kappa fitted at each sigma.
+const MULT_MAX = 5.0
+const SIGMA_BAND = Ref((NaN, NaN))
+function technology_points(c, thr; own_gap = true)
     fi = families(c; thresholds = thr)
-    rows = scan_technology(c, fi, collect(0.30:0.02:3.00), collect(2.0:0.05:25.0);
-                           targets = (parse(Float64, country_rows()[CODE]["part_low"]),
-                                      parse(Float64, country_rows()[CODE]["part_high"])),
-                           selected_only = true)
-    ok = [x for x in rows if x.loss <= 0.035]
+    part = (parse(Float64, country_rows()[CODE]["part_low"]), parse(Float64, country_rows()[CODE]["part_high"]))
+    if own_gap
+        rows = scan_technology(c, fi, collect(0.30:0.02:3.00), collect(2.0:0.05:25.0);
+                               targets = part, selected_only = true, max_mult = MULT_MAX)
+        ok = [x for x in rows if x.loss <= 0.035]
+        SIGMA_BAND[] = (minimum(x.σ for x in ok), maximum(x.σ for x in ok))
+    else
+        isnan(SIGMA_BAND[][1]) && error("G+S needs the G+S+A band first")
+        cs = cells_of(c); agg = cs[1].share * part[1] + cs[2].share * part[2]
+        rows = scan_technology(c, fi, collect(SIGMA_BAND[][1]:0.02:SIGMA_BAND[][2]), collect(2.0:0.05:25.0);
+                               aggregate = agg, selected_only = true, max_mult = MULT_MAX)
+        ok = [x for x in rows if x.loss <= 0.005]
+    end
     lo = ok[argmin([x.mult for x in ok])]; hi = ok[argmax([x.mult for x in ok])]
     [(tag = "best", κ = c.kappa, σ = c.sigma_m, r = NaN),
      (tag = "low multiplier", κ = lo.κ, σ = lo.σ, r = lo.r),
@@ -68,7 +84,7 @@ for cfg in CFGS
     b0 = solve_economy(base)
     thr = [(b0.ypov, b0.abar)]
     say("\n", "="^100, "\n", CODE, " ", cfg, " | ", describe(base), "\n", "="^100)
-    pts = S_ ? technology_points(base, thr) : [(tag = "no cohesion", κ = base.kappa, σ = base.sigma_m, r = NaN)]
+    pts = S_ ? technology_points(base, thr; own_gap = A_) : [(tag = "no cohesion", κ = base.kappa, σ = base.sigma_m, r = NaN)]
     at(c, pt) = SAGEConfig(c; kappa = pt.κ, sigma_m = pt.σ)
     bases = [solve_economy(at(base, pt); thresholds = thr) for pt in pts]
     for (pt, b) in zip(pts, bases)
