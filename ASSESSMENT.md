@@ -15,7 +15,7 @@ Step 3 of `PLAN_MASTER.md`: what each parameter is fitted to, where each configu
 | rho, eta, rr, f, delta | not fitted: external | all | Bayer and Juessen (2012); OECD TaxBEN 2023; OECD 2023 |
 | dread weight 1.5 | not fitted: overlay only | A on | Pagel (2017); Brown et al. (2024) |
 
-**Target ownership (2026-09-28).** A configuration is fitted only to the targets its switches own. The education gap in participation belongs to S and A together, so G+S reports it as an untargeted moment. G+S cannot identify sigma without it, so sigma is held at the G+S+A value, and in the policy tests G+S inherits the G+S+A band for sigma. The unemployed ratio could not replace the gap, because it is imposed rather than produced.
+**Target ownership (2026-09-28).** A configuration is fitted only to the targets its switches own. The education gap in participation belongs to S and A together, so G+S reports it as an untargeted moment. G+S cannot identify sigma without it, so sigma is held at the G+S+A value, and in the policy tests G+S inherits the G+S+A band for sigma. The unemployed ratio could not replace the gap. It is imposed rather than produced. With the rule off (`probe_gs_identification.jl`, France G+S), the unemployed participate 4.6 to 25 times as much as the employed across sigma from 0.3 to 1.7, against 0.561 in the data, because they have more free time. So the model's own ratio points the wrong way and cannot identify sigma.
 
 **Stability gate.** No configuration counts as calibrated with a social multiplier above 5, that is, a map slope above 0.8. It binds nowhere in the committed calibrations.
 
