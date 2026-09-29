@@ -12,7 +12,7 @@ c = country_config(code; config = "GSA", S = true, A = true)
 d = place_data(code)
 vol = [meanyrs(d, "formal_volunteering", p, 2015:2015) for (_, p) in DEGURBA]
 all_ch = code == "FR" ? (:composition, :access, :conversion, :commute, :community) : (:composition, :access, :conversion, :commute)
-runs = [(string(ch), (ch,), 0.4) for ch in all_ch]
+runs = Any[(string(ch), (ch,), 0.4) for ch in all_ch]
 push!(runs, ("all channels, epsilon 0.3", all_ch, 0.3))
 code == "FR" && push!(runs, ("all channels, epsilon 0.5", all_ch, 0.5))
 r0 = solve_economy(c)
