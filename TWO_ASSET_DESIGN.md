@@ -75,3 +75,17 @@ The two branches are combined with a small logit smoothing, as participation is 
 - **First uncalibrated look** (Italy, lower-education cell, fixed cost 0.05): wealthy hand-to-mouth 0.15 against the target of 0.155, and median liquid wealth about 0.3 of income against 0.27 in the HFCS. For France at the same fixed cost few households hold illiquid wealth, so the calibration of chi0 and mean patience will carry the weight.
 
 **Next:** the two-asset summaries (poor and wealthy hand-to-mouth, liquid and illiquid medians, MPC out of liquid wealth, drop on job loss, room to manoeuvre on liquid wealth), the switch in SAGEConfig and the family builder, the suite, then the calibration on GitHub.
+
+**2026-09-29, stage 2: the economy (summaries, switch, suite, calibration).**
+
+- **Summaries** (`two_asset_cell_summary`, `two_asset_agency_summary` in `egm2_core.jl`): the same fields as one asset. Hand-to-mouth, room to manoeuvre, OECD asset poverty, the MPC and dread are on liquid wealth. Poor hand-to-mouth hold no illiquid wealth and wealthy hand-to-mouth some. Capital income is the liquid return only. New fields: the wealthy hand-to-mouth (and their MPC), and the illiquid and net-wealth distributions. A shared branch walker (`each_branch`) makes the expected loss follow exactly the branches the distribution uses.
+- **Switch:** `SAGEConfig(illiquid = true, ...)`. Two-asset calibrations live in `calibration_country_<code>_<config>_I.txt`, so the one-asset ones are untouched.
+- **Reduction, economy level:** with the illiquid asset inert, all 16 headline numbers equal the one-asset economy's to within 3e-10. It is in the suite as tests 20 and 21, and the suite passes 21 of 21.
+- **Targets added** (`data/manual_inputs.csv`): median net wealth over median gross income, from the HFCS 2021 tables (June 2026 edition): DE 2.38, FR 4.02, IT 5.51. Also the wealthy hand-to-mouth shares, from Kaplan, Violante and Weidner (2014) Table 5 p. 120.
+- **Calibration, first run:** none calibrated. The cap on nominal patience (0.998) held effective patience, with survival, at 0.976. With the wide discount spreads that the German and Italian poor hand-to-mouth need, the median household ran its illiquid wealth down, and net wealth to income stuck at 0.3 to 0.5. France G+A came within 2.8 bands (net wealth 3.5 against 4.0, the other three on target). The logs are kept in `scripts/logs_two_asset/`.
+- **Second run:** the calibration now fits effective patience, capped at 0.995, with an L2 line search and a fallback to the best point evaluated.
+- **Early economics, France G+A, not yet converged:**
+  - net-wealth Gini 0.695 against 0.676 in the HFCS, and top 10% share 0.52 against 0.50;
+  - drop on job loss 0.11 against 0.09 in the data;
+  - median liquid over median income 0.25, matching Table F1.
+  - The MPC stays at about 0.11 against survey MPCs of 0.42. That is the open gap: in the model even the hand-to-mouth spend only 20 to 25% of a one-month windfall within the year.
