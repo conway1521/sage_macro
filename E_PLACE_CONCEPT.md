@@ -396,3 +396,29 @@ E version 1 is the here and now of environment. Sustainability is added as the c
   - A range of official values: the German Environment Agency's methodological convention, the European Investment Bank's shadow cost of carbon, France's valeur de l'action pour le climat, and the US EPA's 2023 estimate. Each is to be verified in its source before entering `data/manual_inputs.csv`.
   - The same values set the carbon tax in scenarios.
   - Physical emissions are always reported first, since much of the Beyond-GDP audience prefers them to a monetised figure.
+
+**2026-09-29, E at TL2** (`run_places_tl2_{FR,DE,IT}.txt`; 14, 16 and 21 regions). Composition, access and conversion from Eurostat regional data. For Italy, community from non-profit density in 2011.
+
+**Italy, the untargeted test,** against organised volunteering across 21 regions (ISTAT, 2023-25):
+
+| channels | correlation | log-log slope | spread of log participation (model / data) |
+|---|---|---|---|
+| composition, access, conversion | 0.67 | 0.26 | 0.117 / 0.309 |
+| plus community, epsilon 0.3 | 0.81 | 0.51 | 0.193 / 0.309 |
+| plus community, epsilon 0.5 | 0.83 | 0.68 | 0.255 / 0.309 |
+
+1. **Participation passes with real statistical weight.**
+   - The economic channels alone reproduce two thirds of the regional pattern: the north-south gradient runs through unemployment, education and pay.
+   - Predetermined community infrastructure lifts the correlation to above 0.8.
+   - Even at epsilon 0.5 the model's spread is below the data's (0.26 against 0.31), which points to an elasticity at or above the top of the range, or a channel still missing.
+2. **Agency by region is large and plausible:** 1.0 to 1.3 in the north against 0.73 to 0.86 in the south, carried by the pay premium net of education.
+3. **Hardship by region is wrong-signed. This is a failure, reported as such.**
+   - The model puts hardship highest in the low-unemployment north (Bolzano 0.66, Lombardy 0.56) and lowest in the south (about 0.19). Official poverty statistics show the reverse.
+   - The cause is the precautionary channel, "safer jobs, thinner buffers", which dominates liquid wealth by place in the one-asset model. OECD asset poverty is on liquid wealth, so low job risk shows up as asset poverty.
+   - Real differences in wealth across regions also reflect pay levels, housing and inheritance, which the model does not carry by place.
+   - The places-together national hardship (0.32 against 0.20 for the national economy) is the same problem in aggregate.
+   - **Consequences:**
+     - hardship by place is not reported until this is fixed;
+     - the two-asset model by place is the first candidate fix;
+     - the HFCS by region is the test.
+4. **France and Germany at TL2** run cleanly: national participation is preserved, with regional agency from 0.88 to 1.10 in Germany. There is no regional participation validation yet. The next data step is the OECD Regional Well-Being indicators (social support, life satisfaction) and the Freiwilligensurvey by Land.
