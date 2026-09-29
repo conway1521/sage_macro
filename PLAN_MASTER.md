@@ -203,3 +203,10 @@ A modular, data-disciplined heterogeneous-agent model of multidimensional wellbe
 - **France G+S is held back, not committed.** It fits participation only barely (loss 0.029 against 0.035), and only by pushing the social multiplier to 38, a feedback slope of 0.97, close to the loss of a unique equilibrium. The grid-solver version still in the repo is fragile in the same way (multiplier 6.6, loss 0.0325).
 - **Reading:** social feedback alone cannot produce the education gradient in participation without near-critical amplification, and agency is what fits it (multipliers 1.3 to 1.9 in G+S+A).
 - **Proposed:** a stability gate in the calibration (feedback slope at most 0.8, multiplier at most 5), awaiting a decision.
+
+**2026-09-29: all twelve configurations calibrated; assessment written (`ASSESSMENT.md`).**
+
+- **Target ownership:** G+S fits overall participation with sigma from G+S+A. FR and DE G+S now calibrate at multiplier 1.8, and IT G+S at 1.3. A accounts for 73 to 92% of the education gradient.
+- **Search bound:** one spread bound (0.15) for every stage.
+- **Policy tests:** now use the same ownership rule and the gate.
+- **Untargeted moments:** the one-asset limit shows in liquidity, MPC and concentration, which confirms the illiquid asset as next. The consumption drop on job loss is too large in DE and IT because household insurance is missing. That affects protection if hit, and the choice between a borrowing limit and a second earner is open.
