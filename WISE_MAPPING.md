@@ -54,7 +54,7 @@ Inputs are not tests: a variable used to set a channel cannot also validate it.
 | OECD topic (headline indicator) | E version 1 | model object | by degree of urbanisation (Eurostat) |
 |---|---|---|---|
 | Income (household disposable income) | input: the conversion premium c_p, net of education mix | alpha by place | median equivalised income, ilc_di17 |
-| Jobs (employment and unemployment rates) | input: access channel | job finding and separation by place | unemployment rate and flows, lfsa_urgau and the LFS flow tables |
+| Jobs (employment and unemployment rates) | input: access channel | job finding and separation by place | unemployment rate, lfst_r_urgau; quarterly flows, lfsi_long_e03 and lfsi_long_e04 |
 | Education (share with at least upper secondary) | input: composition | education cells by place | tertiary share, edat_lfs_9913 |
 | Access to services (broadband; download speed) | reported beside c_p as its candidate mechanism | inside the conversion premium | households with broadband, isoc_ci_it_h |
 | Community (someone to rely on in case of need) | test | local participation and the community fabric | someone to ask for help, ilc_scp16; formal volunteering, ilc_scp20 (also a test) |
@@ -62,7 +62,7 @@ Inputs are not tests: a variable used to set a channel cannot also validate it.
 | Environment (PM2.5 exposure) | reported (amenity) | none in choices | pollution and grime, ilc_mddw05. PM2.5 by degree of urbanisation from the EEA/JRC grids is to be sourced. |
 | Health (life expectancy; mortality) | access part reported; health as a state out of scope | none | unmet medical need because too far, hlth_silc_21. Life expectancy by urbanisation is not published. |
 | Housing (rooms per person; affordability) | out of scope in version 1: no housing market. Planned as housing by place, the illiquid asset | later | housing cost overburden by degree of urbanisation (to collect) |
-| Safety (homicide rate) | out of scope: nothing in the model responds to it | none | crime, violence or vandalism in the area, ilc_mddw03 (to collect, reported only) |
+| Safety (homicide rate) | out of scope: nothing in the model responds to it | none | crime, violence or vandalism in the area (EU-SILC; to collect and verify the table code, reported only) |
 | Civic engagement (voter turnout) | out of scope: S models social participation, not voting | none | none by urbanisation |
 
 Not an OECD topic, but part of the access channel: commuting time, an input (lfso_19plwk28, by place and education).
