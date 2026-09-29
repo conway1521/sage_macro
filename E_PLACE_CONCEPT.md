@@ -344,3 +344,55 @@ The raw association is strong, and non-profit density in 2011 already predicts v
    - In Germany, lower rural unemployment leads to less precautionary saving, far more asset poverty (hardship 0.47 against 0.18 in cities) and lower protection if hit.
    - The same sign appears in France, smaller.
    - This is a testable prediction for the HFCS by place. The size comes from the one-asset model and will shrink with two assets.
+
+## The standard (agreed 2026-09-29): E as one schema over official geographies
+
+**A place is a cell of an official statistical geography.** The place layer does not care which geography: it takes any partition of the population with a population share and the channel data. What makes E standard is a fixed data schema and one rule per channel, applied the same way under every typology.
+
+| layer | standard | coverage | status |
+|---|---|---|---|
+| national | the calibrated model | FR, DE, IT; the US next | done (one asset); two assets in progress |
+| **sub-layer, standard** | **OECD TL2 regions** | all 38 OECD countries | building (2026-09-29) |
+| sub-layer, alternative | Degree of Urbanisation (UN standard 2020) | EU now; global where survey data exist | done (E1-E2) |
+| sub-sub layer, later | the urban-rural classes of TL3 regions within a TL2 region | where data exist | later |
+
+**Why TL2 is the standard sub-layer:**
+- It is the level of the OECD Regional Well-Being indicators, the same eleven topics that ground E.
+- It exists for every OECD country: US states, Canadian provinces, and so on.
+- It gives many observations (France 18, Germany 16, Italy 21) for estimating and testing the community elasticity.
+
+TL2 is NUTS 1 in France and Germany (régions, Länder) and NUTS 2 in Italy (regioni, with Bolzano and Trento separate), per the OECD Regional Well-Being user's guide (October 2025), Table 1.
+
+**Caveats:**
+- A TL2 region, like a place type, is a statistical unit, not the scale of social interaction. Local feedback is a representative-place approximation.
+- Small regions have noisy survey indicators. Results are population-weighted, and small regions are flagged.
+
+**The schema:** one file per typology, `data/place/place_<typology>.csv`, with columns indicator, country, place, year, value, source. Same indicators, same names, whatever the geography. `place_by_degurba.csv` is the first instance.
+
+**The rule per channel**, identical across typologies:
+
+| channel | rule | TL2 source (to verify in the build) |
+|---|---|---|
+| population | population share | Eurostat regional population (NUTS 1 or 2) |
+| composition | tertiary share, scaled to the national share | Eurostat edat_lfse_04 |
+| access | unemployment rate and long-term share. Job finding = 1 - long-term share, as the national table does; separation from steady state | Eurostat lfst_r_lfu3rt, lfst_r_lfu2ltu |
+| conversion | disposable income per head over the education- and employment-predicted value | Eurostat nama_10r_2hhinc |
+| commuting | national (0) where no regional data exist | none published by region |
+| community | predetermined infrastructure, one elasticity | France: sports facilities before 1990 aggregated to régions; Italy: non-profits 2011 by region; Germany: clubs by Land (source to find) |
+| validation (untargeted) | social support and life satisfaction; volunteering where official | OECD Regional Well-Being (TL2); ISTAT volunteering by region; the Freiwilligensurvey by Land |
+
+**Beyond Europe:** the same schema with national official sources. For the US, state unemployment (BLS), education and commuting (Census, ACS), personal income (BEA), and volunteering (the Census/AmeriCorps volunteering supplement). The national US model is calibrated first.
+
+## Sustainability: the cost side of E (agreed 2026-09-29)
+
+E version 1 is the here and now of environment. Sustainability is added as the cost side, in the CES terms of later and elsewhere.
+
+- **Consumption-based greenhouse-gas footprint:** emissions = intensity_p x consumption, with the intensity per euro of consumption varying by place (heating, car dependence, commuting). Consumption-based accounting includes emissions embodied in imports, so one measure covers both later (climate) and elsewhere (other countries).
+- **Data (to source and verify):** national consumption-based footprints (Eurostat); regional footprints for EU regions from the peer-reviewed literature (Ivanova and co-authors, 2017, Environmental Research Letters, to check); OECD regional territorial emissions as a fallback elsewhere.
+- **Outputs:** emissions per person by group and place in every scenario, beside the wellbeing indicators. A carbon tax with revenue recycling is a policy instrument.
+- **Guardrail:** emissions are an output with a fixed intensity by place. There is no climate-damage feedback into wellbeing, which is a different and much larger model.
+- **Valuation (optional, never the headline):**
+  - The social cost of carbon turns emissions into the units of the welfare measure (consumption equivalents), so a scenario can show a net of wellbeing gained here and now against damage later and elsewhere.
+  - A range of official values: the German Environment Agency's methodological convention, the European Investment Bank's shadow cost of carbon, France's valeur de l'action pour le climat, and the US EPA's 2023 estimate. Each is to be verified in its source before entering `data/manual_inputs.csv`.
+  - The same values set the carbon tax in scenarios.
+  - Physical emissions are always reported first, since much of the Beyond-GDP audience prefers them to a monetised figure.
