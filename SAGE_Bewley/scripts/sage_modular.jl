@@ -380,7 +380,8 @@ const SOLVER_FILES = [joinpath(@__DIR__, "..", "src", "SAGEBewley.jl"),
                       joinpath(@__DIR__, "unemployment_core.jl"),
                  joinpath(@__DIR__, "agency_shock.jl"),
                  joinpath(@__DIR__, "egm_core.jl"),
-                 joinpath(@__DIR__, "egm2_core.jl")]
+                 joinpath(@__DIR__, "egm2_core.jl"),
+                 joinpath(@__DIR__, "reporting_core.jl")]
 const SOLVER_DIGEST = bytes2hex(sha1(join(read(f, String) for f in SOLVER_FILES)))
 
 "The household part and the threshold part of a family's cache key."
@@ -596,6 +597,25 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
             # the wealthy hand-to-mouth: low liquid wealth, some illiquid (zero without the switch)
             wealthy_htm = sum(cs[g].share * sum(pooled[g].whmass) for g in 1:2) /
                           sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
+            # the reporting layer (reporting_core.jl): value and its parts, per head,
+            # overall and by cell; propensities out of a one-month windfall
+            welfare = (m_ = sum(cs[g].share * sum(pooled[g].mass) for g in 1:2);
+                       (V = sum(cs[g].share * sum(pooled[g].vmass) for g in 1:2) / m_,
+                        Vc = sum(cs[g].share * sum(pooled[g].vcmass) for g in 1:2) / m_,
+                        Ve = sum(cs[g].share * sum(pooled[g].vemass) for g in 1:2) / m_,
+                        Vb = sum(cs[g].share * sum(pooled[g].vbmass) for g in 1:2) / m_,
+                        cell = Tuple((V = sum(pooled[g].vmass) / sum(pooled[g].mass), Vc = sum(pooled[g].vcmass) / sum(pooled[g].mass),
+                                      Ve = sum(pooled[g].vemass) / sum(pooled[g].mass), Vb = sum(pooled[g].vbmass) / sum(pooled[g].mass))
+                                     for g in 1:2),
+                        # by employment status now (employed / unemployed states)
+                        status = Tuple((mk = (st == 1 ? emp : .!emp);
+                                        ms = sum(cs[g].share * sum(pooled[g].mass[mk]) for g in 1:2);
+                                        (V = sum(cs[g].share * sum(pooled[g].vmass[mk]) for g in 1:2) / ms,
+                                         Vc = sum(cs[g].share * sum(pooled[g].vcmass[mk]) for g in 1:2) / ms))
+                                       for st in 1:2))),
+            mps = sum(cs[g].share * sum(pooled[g].mpsmass) for g in 1:2) / sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
+            mpe = sum(cs[g].share * sum(pooled[g].mpemass) for g in 1:2) / sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
+            mpp = sum(cs[g].share * sum(pooled[g].mppmass) for g in 1:2) / sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
             mpc_wealthy = (h = sum(cs[g].share * sum(pooled[g].whmass) for g in 1:2);
                            h <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].mpcwmass) for g in 1:2) / h),
             # untargeted checks and the other agency parts (agency_shock.jl)
@@ -845,4 +865,32 @@ function report(r; label = "")
             r.hardship, r.income_poor, r.asset_poor, r.A_hardship)
     @printf("  hand-to-mouth %.6f | mean labour income %.6f | median disposable %.6f | effort %.6f\n",
             r.hand_to_mouth, r.mean_labour_income, r.median_income, r.mean_effort_employed)
+end
+
+
+# -------------------------------------------------------- reporting layer --
+"""
+    welfare_ce(rB, rP; γ)
+
+Consumption-equivalent welfare of economy `rP` against the baseline `rB`, both
+results of `solve_economy`: the share omega of consumption, in every period and
+state, that makes the baseline's expected value equal the policy's, V_B with
+consumption scaled by (1 + omega) = V_P, using that the consumption part of
+the value scales by (1 + omega)^(1 - gamma). Steady state to steady state: the
+cost of the transition is not in it (that needs the transition solver, 7b).
+Returns the total, the part carried by each component of the value
+(consumption, effort, belonging, the remainder) as each component's change
+alone would give, and the same by education cell and by employment status
+today (employed, unemployed).
+"""
+function welfare_ce(rB, rP; γ = 2.0)
+    ce(dW, Vc) = (x = 1 + dW / Vc; x > 0 ? x^(1 / (1 - γ)) - 1 : NaN)
+    wB, wP = rB.welfare, rP.welfare
+    tot = ce(wP.V - wB.V, wB.Vc)
+    parts = (consumption = ce(wP.Vc - wB.Vc, wB.Vc), effort = ce(wP.Ve - wB.Ve, wB.Vc),
+             belonging = ce(wP.Vb - wB.Vb, wB.Vc),
+             choice_and_rest = ce((wP.V - wP.Vc - wP.Ve - wP.Vb) - (wB.V - wB.Vc - wB.Ve - wB.Vb), wB.Vc))
+    cells = Tuple(ce(wP.cell[g].V - wB.cell[g].V, wB.cell[g].Vc) for g in 1:2)
+    status = Tuple(ce(wP.status[k].V - wB.status[k].V, wB.status[k].Vc) for k in 1:2)
+    (total = tot, parts = parts, cells = cells, employed = status[1], unemployed = status[2])
 end

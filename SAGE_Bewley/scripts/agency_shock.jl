@@ -80,7 +80,7 @@ function agency_summary(p::SAGEParams, sol)
         # which is assets higher by delta / R.
         Δ = ybar[i, s] / 12
         if Δ > 0
-            mpc = (SAGEBewley.interp_lin(a, view(cbar, :, s), a[i] + Δ / p.R) - cbar[i, s]) / Δ
+            mpc = (interp_ext(a, view(cbar, :, s), a[i] + Δ / p.R) - cbar[i, s]) / Δ
             mpcmass[s] += m * mpc; htm && (mpchmass[s] += m * mpc)
         end
         # Dread as a consumption equivalent: the share x of this year's
@@ -113,8 +113,9 @@ function agency_summary(p::SAGEParams, sol)
         pmass[s] += m * pc; pinc[s] += m * py
         s > nh && cbar[i, s] > 0 && (dmass[s] += m * max(0.0, 1 - cbar[i, s - nh] / cbar[i, s]))
     end
-    (pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = zeros(ns),
-     mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = zeros(ns), rmass = rmass, xmass = xmass)
+    merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = zeros(ns),
+           mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = zeros(ns), rmass = rmass, xmass = xmass),
+          welfare_parts(p, sol))
 end
 
 "Mix the agency sums across discount types or belonging scales, as `collapse` does the rest."
@@ -127,7 +128,14 @@ collapse_agency(ds, w) = (pmass = sum(w[i] .* ds[i].pmass for i in eachindex(ds)
                           mpcmass  = sum(w[i] .* ds[i].mpcmass  for i in eachindex(ds)),
                           mpchmass = sum(w[i] .* ds[i].mpchmass for i in eachindex(ds)),
                           rmass    = sum(w[i] .* ds[i].rmass    for i in eachindex(ds)),
-                          xmass    = sum(w[i] .* ds[i].xmass    for i in eachindex(ds)))
+                          xmass    = sum(w[i] .* ds[i].xmass    for i in eachindex(ds)),
+                          vmass    = sum(w[i] .* ds[i].vmass    for i in eachindex(ds)),
+                          vcmass   = sum(w[i] .* ds[i].vcmass   for i in eachindex(ds)),
+                          vemass   = sum(w[i] .* ds[i].vemass   for i in eachindex(ds)),
+                          vbmass   = sum(w[i] .* ds[i].vbmass   for i in eachindex(ds)),
+                          mpsmass  = sum(w[i] .* ds[i].mpsmass  for i in eachindex(ds)),
+                          mpemass  = sum(w[i] .* ds[i].mpemass  for i in eachindex(ds)),
+                          mppmass  = sum(w[i] .* ds[i].mppmass  for i in eachindex(ds)))
 collapse_all(ds, w) = merge(collapse(ds, w), collapse_agency(ds, w))
 
 """

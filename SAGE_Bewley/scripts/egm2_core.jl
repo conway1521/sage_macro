@@ -477,7 +477,7 @@ function two_asset_agency_summary(p::SAGEParams, sol)
         a[i] >= ybar[i, m, s] / 4 && (rmass[s] += mm)
         Δ = ybar[i, m, s] / 12
         if Δ > 0
-            mpc = (SAGEBewley.interp_lin(a, cb, a[i] + Δ / p.R) - cb[i]) / Δ
+            mpc = (interp_ext(a, cb, a[i] + Δ / p.R) - cb[i]) / Δ
             mpcmass[s] += mm * mpc
             htm && (m == 1 ? (mpchmass[s] += mm * mpc) : (mpcwmass[s] += mm * mpc))
         end
@@ -505,6 +505,7 @@ function two_asset_agency_summary(p::SAGEParams, sol)
         pmass[s] += mm * pc; pinc[s] += mm * py
         s > nh && cb[i] > 0 && (dmass[s] += mm * max(0.0, 1 - cbar[i, m, s - nh] / cb[i]))
     end
-    (pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = whmass,
-     mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = mpcwmass, rmass = rmass, xmass = xmass)
+    merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = whmass,
+           mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = mpcwmass, rmass = rmass, xmass = xmass),
+          welfare_parts_nan(ns))
 end
