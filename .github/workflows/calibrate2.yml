@@ -9,7 +9,7 @@ on:
         description: "Country codes, space separated"
         default: "FR DE IT"
       configs:
-        description: "Configurations, space separated (G GA)"
+        description: "Configurations, space separated (G GA first; then GSA; then GS, which needs GSA)"
         default: "GA G"
 jobs:
   plan:
@@ -49,7 +49,8 @@ jobs:
         run: |
           cd SAGE_Bewley
           set +e
-          julia --project=scripts/run_env scripts/calibrate_two_asset.jl ${{ matrix.code }} ${{ matrix.cfg }} 2>&1 | tee scripts/calibrate2_${{ matrix.code }}_${{ matrix.cfg }}.log
+          case "${{ matrix.cfg }}" in GS|GSA) script=calibrate_two_asset_s.jl ;; *) script=calibrate_two_asset.jl ;; esac
+          julia --project=scripts/run_env scripts/$script ${{ matrix.code }} ${{ matrix.cfg }} 2>&1 | tee scripts/calibrate2_${{ matrix.code }}_${{ matrix.cfg }}.log
           code=${PIPESTATUS[0]}
           [ "$code" = "0" ] || [ "$code" = "2" ]
       - uses: actions/upload-artifact@v4

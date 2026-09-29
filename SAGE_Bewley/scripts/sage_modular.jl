@@ -771,7 +771,10 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", kw
     end
     # Each configuration has its own calibration: G+S+A in calibration_country_<code>.txt,
     # the others in calibration_country_<code>_<config>.txt (config G, GA or GS).
-    cal = joinpath(@__DIR__, config == "GSA" ? "calibration_country_$(code).txt" :
+    # With the illiquid asset: calibration_country_<code>_<config>_I.txt for every configuration.
+    illq = haskey(kwargs, :illiquid) && kwargs[:illiquid] == true
+    cal = illq ? joinpath(@__DIR__, "calibration_country_$(code)_$(config)_I.txt") :
+          joinpath(@__DIR__, config == "GSA" ? "calibration_country_$(code).txt" :
                                                "calibration_country_$(code)_$(config).txt")
     if isfile(cal)
         for ln in eachline(cal)
