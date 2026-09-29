@@ -164,9 +164,12 @@ A modular, data-disciplined heterogeneous-agent model of multidimensional wellbe
 | annual MPC, one-month windfall | 0.50 (0.40-0.55) | 0.42 (0.35-0.50) | 0.48 (0.45-0.52) | Drescher, Fessler and Lindner (2020); Jappelli and Pistaferri (2014) |
 | MPC gradient, bottom to top liquid wealth | 25-35 pp | same | same | Jappelli and Pistaferri (2014) Fig. 2; Fagereng, Holm and Natvik (2021) |
 | consumption drop, first year of unemployment | -6% (-4 to -9) | -9% (-5 to -13) | -8% (-5 to -13) | Kolsrud et al. (2018); Andersen et al. (2023); INSEE DT 2024-23 |
-| top 10% net wealth share | 55.5 | 49.9 | 54.6 | HFCS 2021, Table J4 p. 58 |
-| net wealth Gini | 0.727 | 0.676 | 0.671 | same |
-| median net liquid assets / gross income | 29.5% | 24.8% | 27.1% | Table F1 p. 34 |
+| top 10% net wealth share | 55.5 | 49.9 | 49.5 | HFCS 2021 statistical tables (June 2026 edition), Table J4, PDF p. 60 |
+| net wealth Gini | 0.727 | 0.676 | 0.640 | same |
+| median net liquid assets / gross income | 29.5% | 24.9% | 24.1% | same edition, Table F1, PDF p. 36 |
+| median net wealth / median gross income | 2.38 | 4.02 | 5.51 | same edition, Tables A1 (p. 4) and I1 (p. 52): DE 106.7/44.8, FR 125.7/31.3, IT 151.0/27.4 |
+
+*Correction, 2026-09-29:* the Italian top 10% share, Gini and liquid ratio, and the French liquid ratio, were read again from the June 2026 edition of the tables and corrected (previously 54.6, 0.671, 27.1% and 24.8%). The earlier Italian figures do not match any column of the current edition. Germany and France otherwise matched.
 
 **Speed, 2026-09-28:**
 
