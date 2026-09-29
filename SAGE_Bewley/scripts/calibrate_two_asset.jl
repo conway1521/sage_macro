@@ -45,11 +45,18 @@ say("calibrating ", CODE, " ", CFG, " with the illiquid asset | targets: net wea
     " | premium ", PREMIUM, ", death ", round(base.death; digits = 4), " | workers ", nworkers())
 
 qmed(x, cm) = (k = findfirst(>=(0.5 * cm[end]), cm); x[k])
-# parameters in the transformed space the iteration works in
-unpack(x) = (beta_bar = x[1], chi0 = exp(x[2]), beta_spread = max(x[3], 0.0), phi = exp(x[4]))
+# parameters in the transformed space the iteration works in. The first is
+# EFFECTIVE patience, beta_bar times survival, bounded by 0.995 so the household
+# problem stays a contraction. A cap on beta_bar itself at 0.998 held effective
+# patience at 0.976 and left Germany and Italy far short of their net wealth
+# (2026-09-29): with death, effective patience times the illiquid return near or
+# above one is what two-asset models need, and death keeps the distribution
+# stationary.
+const SURV = 1 - base.death
+unpack(x) = (beta_bar = x[1] / SURV, chi0 = exp(x[2]), beta_spread = max(x[3], 0.0), phi = exp(x[4]))
 cfg_at(x) = (u = unpack(x); SAGEConfig(base; beta_bar = u.beta_bar, chi0 = u.chi0, beta_spread = u.beta_spread, phi = u.phi))
-const LO = [0.93, log(1e-3), 0.0, log(0.3)]
-const HI = [0.998, log(2.0), 0.15, log(40.0)]
+const LO = [0.90, log(1e-3), 0.0, log(0.3)]
+const HI = [0.995, log(2.0), 0.15, log(40.0)]
 const STEP = [0.004, 0.25, 0.006, 0.05]    # finite-difference steps
 const MAXMOVE = [0.012, 1.0, 0.03, 0.3]
 
@@ -69,33 +76,44 @@ report(tag, x, m, t0) = (u = unpack(x);
     flush(stdout))
 
 t0 = time()
-x = [0.99, log(0.05), base.beta_spread, log(base.phi)]
+x = [0.975, log(0.05), base.beta_spread, log(base.phi)]
 m = moments(x); report("start", x, m, t0)
 ok = false
-for it in 1:8
+for it in 1:10
     F = resid(m)
     global ok = maximum(abs.(F)) <= 1.0
     ok && break
     J = zeros(4, 4)
+    tried = Tuple{Vector{Float64},Any}[]      # every point evaluated this iteration
     for k in 1:4
         xk = copy(x); h = (xk[k] + STEP[k] > HI[k]) ? -STEP[k] : STEP[k]; xk[k] += h
-        J[:, k] = (resid(moments(xk)) .- F) ./ h
+        mk = moments(xk); push!(tried, (xk, mk))
+        J[:, k] = (resid(mk) .- F) ./ h
     end
     Δ = -(J \ F)
     any(!isfinite, Δ) && (Δ = -pinv(J) * F)
     # damp: no coordinate moves more than its cap, then a backtracking line search
     s = minimum(min(1.0, MAXMOVE[k] / max(abs(Δ[k]), 1e-12)) for k in 1:4)
+    # a step is accepted when the sum of squared (scaled) misses falls
     accepted = false
     for _ in 1:4
         xn = clamp.(x .+ s .* Δ, LO, HI)
-        mn = moments(xn)
-        if maximum(abs.(resid(mn))) < maximum(abs.(F))
+        mn = moments(xn); push!(tried, (xn, mn))
+        if sum(abs2, resid(mn)) < sum(abs2, F)
             global x = xn; global m = mn; accepted = true; break
         end
         s /= 2
     end
+    if !accepted
+        # fall back on the best point evaluated this iteration, if it improves
+        kb = argmin([sum(abs2, resid(t[2])) for t in tried])
+        if sum(abs2, resid(tried[kb][2])) < sum(abs2, F)
+            global x = tried[kb][1]; global m = tried[kb][2]; accepted = true
+            say("  Newton step failed; moved to the best point evaluated")
+        end
+    end
     report("step $it", x, m, t0)
-    accepted || (say("  no improving step; stopping"); break)
+    accepted || (say("  no improving point; stopping"); break)
 end
 ok = maximum(abs.(resid(m))) <= 1.0
 

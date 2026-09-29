@@ -1,0 +1,11 @@
+calibrating FR GA with the illiquid asset | targets: net wealth / income 4.02, wealthy htm 0.173, poor htm 0.032, effort 0.6432 | premium 0.0354, death 0.0222 | workers 3
+start beta_bar 0.9900 chi0 0.0500 spread 0.0060 phi 5.080 | net wealth/income 4.15, wealthy htm 0.1086, poor htm 0.0322, effort 0.5894 | worst 10.77 band  [1 solves, 8.0 min]
+step 1 beta_bar 0.9911 chi0 0.0213 spread 0.0182 phi 3.763 | net wealth/income 3.05, wealthy htm 0.1674, poor htm 0.0322, effort 0.6460 | worst 5.50 band  [6 solves, 42.8 min]
+step 2 beta_bar 0.9965 chi0 0.0100 spread 0.0253 phi 3.614 | net wealth/income 3.49, wealthy htm 0.1715, poor htm 0.0313, effort 0.6451 | worst 2.84 band  [11 solves, 65.5 min]
+step 3 beta_bar 0.9965 chi0 0.0100 spread 0.0253 phi 3.614 | net wealth/income 3.49, wealthy htm 0.1715, poor htm 0.0313, effort 0.6451 | worst 2.84 band  [19 solves, 106.1 min]
+  no improving step; stopping
+
+validation (not targeted): MPC 0.107 (poor htm 0.222, wealthy 0.202) | drop on job loss 0.110 | protection if hit 0.8891 | room 0.461 | median liquid / median income 0.252 | net wealth top 10% share and Gini below
+  net wealth: top 10% share 0.522, Gini 0.695
+
+NOT CALIBRATED: worst target at 2.84 of its band after the iteration. No calibration file written.

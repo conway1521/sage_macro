@@ -1,0 +1,11 @@
+calibrating DE GA with the illiquid asset | targets: net wealth / income 2.38, wealthy htm 0.248, poor htm 0.074, effort 0.6087 | premium 0.0216, death 0.0222 | workers 3
+start beta_bar 0.9900 chi0 0.0500 spread 0.0310 phi 7.110 | net wealth/income 0.44, wealthy htm 0.0695, poor htm 0.0644, effort 0.6055 | worst 33.73 band  [1 solves, 4.2 min]
+step 1 beta_bar 0.9960 chi0 0.0326 spread 0.0427 phi 6.881 | net wealth/income 0.48, wealthy htm 0.0838, poor htm 0.0645, effort 0.6073 | worst 32.06 band  [7 solves, 27.6 min]
+step 2 beta_bar 0.9975 chi0 0.0305 spread 0.0454 phi 6.848 | net wealth/income 0.52, wealthy htm 0.0853, poor htm 0.0646, effort 0.6072 | worst 30.37 band  [15 solves, 59.3 min]
+step 3 beta_bar 0.9975 chi0 0.0305 spread 0.0454 phi 6.848 | net wealth/income 0.52, wealthy htm 0.0853, poor htm 0.0646, effort 0.6072 | worst 30.37 band  [23 solves, 92.4 min]
+  no improving step; stopping
+
+validation (not targeted): MPC 0.127 (poor htm 0.257, wealthy 0.195) | drop on job loss 0.258 | protection if hit 0.7396 | room 0.428 | median liquid / median income 0.206 | net wealth top 10% share and Gini below
+  net wealth: top 10% share 0.707, Gini 0.802
+
+NOT CALIBRATED: worst target at 30.37 of its band after the iteration. No calibration file written.
