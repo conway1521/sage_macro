@@ -213,6 +213,14 @@ if DEFAULT_SOLVER === :egm
 else
     println("illiquid-asset reductions skipped: they need SAGE_SOLVER=egm")
 end
+
+# 22. The place layer (E1): three places identical to the nation, financed
+# nationally and each with its own social fixed point, give back the nation.
+let c = SAGEConfig(CAL; A = true)
+    sp = solve_places(c, [(name = n,) for (n, _) in DEGURBA]; weights = [0.366, 0.298, 0.336])
+    reduce_to("G+A, three identical places  ->  G+A", sp.national, solve_economy(c);
+              fields = Tuple(first.(PLACE_FIELDS)), tol = 1e-12)
+end
 end   # PART != "convergence"
 
 println("-"^100)
