@@ -1,0 +1,17 @@
+calibrating IT GA with the illiquid asset | targets: net wealth / income 5.51, wealthy htm 0.155, poor htm 0.083, effort 0.7252 | premium 0.0215, death 0.0222 | workers 3
+start beta_bar 1.0074 chi0 0.0200 impatient share 0.0830 phi 2.990 | net wealth/income 12.24, wealthy htm 0.0492, poor htm 0.0441, effort 0.6744 | worst 15.96 band  [1 solves, 6.4 min]
+step 1 beta_bar 1.0052 chi0 0.0544 impatient share 0.1095 phi 2.493 | net wealth/income 10.27, wealthy htm 0.0525, poor htm 0.0494, effort 0.7098 | worst 12.45 band  [6 solves, 34.9 min]
+step 2 beta_bar 1.0049 chi0 0.0200 impatient share 0.1299 phi 2.400 | net wealth/income 9.91, wealthy htm 0.0562, poor htm 0.0528, effort 0.7147 | worst 11.74 band  [11 solves, 63.4 min]
+step 3 beta_bar 1.0035 chi0 0.0544 impatient share 0.1399 phi 2.407 | net wealth/income 8.28, wealthy htm 0.0579, poor htm 0.0556, effort 0.7194 | worst 9.71 band  [16 solves, 91.5 min]
+step 4 beta_bar 1.0036 chi0 0.0200 impatient share 0.1669 phi 2.344 | net wealth/income 7.73, wealthy htm 0.0558, poor htm 0.0600, effort 0.7225 | worst 9.92 band  [21 solves, 120.0 min]
+step 5 beta_bar 1.0033 chi0 0.0544 impatient share 0.1648 phi 2.367 | net wealth/income 7.73, wealthy htm 0.0577, poor htm 0.0605, effort 0.7239 | worst 9.73 band  [26 solves, 148.1 min]
+step 6 beta_bar 1.0032 chi0 0.0200 impatient share 0.1818 phi 2.318 | net wealth/income 7.23, wealthy htm 0.0559, poor htm 0.0627, effort 0.7260 | worst 9.91 band  [31 solves, 176.4 min]
+step 7 beta_bar 1.0030 chi0 0.0330 impatient share 0.1785 phi 2.328 | net wealth/income 7.24, wealthy htm 0.0564, poor htm 0.0627, effort 0.7262 | worst 9.86 band  [37 solves, 210.7 min]
+step 8 beta_bar 1.0029 chi0 0.0423 impatient share 0.1775 phi 2.338 | net wealth/income 7.24, wealthy htm 0.0565, poor htm 0.0628, effort 0.7263 | worst 9.85 band  [44 solves, 250.7 min]
+step 9 beta_bar 1.0032 chi0 0.0156 impatient share 0.1846 phi 2.289 | net wealth/income 7.21, wealthy htm 0.0564, poor htm 0.0627, effort 0.7280 | worst 9.86 band  [49 solves, 279.4 min]
+step 10 beta_bar 1.0036 chi0 0.0057 impatient share 0.1919 phi 2.275 | net wealth/income 7.18, wealthy htm 0.0596, poor htm 0.0645, effort 0.7281 | worst 9.54 band  [54 solves, 307.5 min]
+
+validation (not targeted): MPC 0.089 (poor htm 0.327, wealthy 0.085) | drop on job loss 0.190 | protection if hit 0.8080 | room 0.662 | median liquid / median income 0.581 | net wealth top 10% share and Gini below
+  net wealth: top 10% share 0.471, Gini 0.674
+
+NOT CALIBRATED: worst target at 9.54 of its band after the iteration. No calibration file written.

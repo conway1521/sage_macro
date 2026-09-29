@@ -1,0 +1,13 @@
+calibrating FR G with the illiquid asset | targets: net wealth / income 4.02, wealthy htm 0.173, poor htm 0.032, effort 0.6432 | premium 0.0354, death 0.0222 | workers 3
+start beta_bar 1.0074 chi0 0.0200 impatient share 0.0320 phi 5.010 | net wealth/income 17.71, wealthy htm 0.0721, poor htm 0.0558, effort 0.5440 | worst 29.66 band  [1 solves, 6.5 min]
+step 1 beta_bar 0.9951 chi0 0.0488 impatient share 0.0273 phi 5.050 | net wealth/income 8.64, wealthy htm 0.0986, poor htm 0.0538, effort 0.5676 | worst 15.31 band  [6 solves, 31.8 min]
+step 2 beta_bar 0.9828 chi0 0.0341 impatient share 0.0157 phi 4.790 | net wealth/income 3.08, wealthy htm 0.1423, poor htm 0.0476, effort 0.6069 | worst 7.26 band  [11 solves, 43.9 min]
+step 3 beta_bar 0.9825 chi0 0.0196 impatient share 0.0028 phi 3.649 | net wealth/income 3.32, wealthy htm 0.1718, poor htm 0.0336, effort 0.6464 | worst 3.85 band  [16 solves, 55.5 min]
+step 4 beta_bar 0.9838 chi0 0.0143 impatient share 0.0016 phi 3.590 | net wealth/income 4.28, wealthy htm 0.1660, poor htm 0.0318, effort 0.6440 | worst 1.27 band  [21 solves, 67.4 min]
+step 5 beta_bar 0.9835 chi0 0.0143 impatient share 0.0015 phi 3.630 | net wealth/income 3.95, wealthy htm 0.1727, poor htm 0.0319, effort 0.6435 | worst 0.35 band  [27 solves, 77.1 min]
+
+validation (not targeted): MPC 0.106 (poor htm 0.223, wealthy 0.202) | drop on job loss 0.110 | protection if hit 0.8906 | room 0.449 | median liquid / median income 0.251 | net wealth top 10% share and Gini below
+  net wealth: top 10% share 0.461, Gini 0.646
+wrote calibration_country_FR_G_I.txt
+
+DONE FR G (illiquid) in 77.1 min, 27 solves

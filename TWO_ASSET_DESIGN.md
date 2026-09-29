@@ -101,3 +101,15 @@ The two branches are combined with a small logit smoothing, as participation is 
 - **Germany and Italy not calibrated.** Their poor hand-to-mouth targets (0.074 and 0.083) needed a uniform spread of up to 0.15. With the top type capped, that put the median household at effective patience of about 0.92, and median net wealth stuck at 0.5 to 2 times income against 2.4 and 5.5.
 - **Decision: two patience groups.** A patient majority at beta_bar, and an impatient minority at effective patience 0.85 whose share is fitted to the poor hand-to-mouth. The probe (`probe_twopoint.txt`) shows the German and Italian targets now bracketed: net wealth of 11 to 18 times income at high patience, with poor hand-to-mouth moving with the share.
 - **Run 3** recalibrates all three countries with the two groups, so they share one structure. The one-asset model keeps the uniform spread for now. Aligning it is a later choice, and its calibrations are unaffected.
+
+**2026-09-29, calibration run 3 (two patience groups):**
+
+- **France G and G+A calibrated,** replacing the run-2 files. G+A: net wealth to income 3.98, wealthy hand-to-mouth 0.167, poor 0.032, effort 0.643. The impatient share is small (0.4%), so France hardly needs the second group.
+- **France G+A, untargeted checks:** median liquid over median income 0.253 (data 0.249), drop on job loss 0.109 (about 0.09), net-wealth Gini 0.650 (0.676), top 10% share 0.46 (0.50), MPC 0.11 (0.42).
+- **Germany not calibrated.** G+A reaches net wealth 2.9 (target 2.4), poor 0.083 and effort 0.606. The wealthy hand-to-mouth stop at 0.13 against 0.25.
+- **Italy not calibrated.** G+A reaches net wealth 7.2 (target 5.5) and poor 0.064. The wealthy hand-to-mouth stop at 0.06 against 0.155. Households hold 0.58 of median income in liquid form, against 0.24 in the data.
+- **The common cause.** With an illiquid premium of about 2.2 points (Germany and Italy, 1980-2015), holding wealth illiquid while short of cash pays too little in an annual model. Households keep cash instead, and lowering the fixed cost does not change that. France's premium of 3.5 points is enough.
+- **Two structural candidates, with the annual period behind both the MPC gap and this one:**
+  - A quarterly period, as in Kaplan and Violante (2014), where the wealthy hand-to-mouth arise from the cash cycle within the year.
+  - Saving by rule: a mandatory pension contribution, which is how German wealthy hand-to-mouth hold their wealth (Kaplan, Violante and Weidner 2014).
+  - A decision for the user.
