@@ -219,3 +219,31 @@ A modular, data-disciplined heterogeneous-agent model of multidimensional wellbe
 - **Policy tests:** 13 to 18 minutes per country. France alone used to take six hours.
 - **Equilibrium counts:** every policy economy has exactly one stable equilibrium. That is 27 rows per country: G+S+A with baseline plus four policies at three technologies, and G+S with baseline plus three policies at three technologies. Goal G3's "every policy economy has a unique equilibrium" is met.
 - **Two-asset stage 1 done:** the household solver, which reduces exactly to one asset (`TWO_ASSET_DESIGN.md`, build log).
+
+## Version 2.0: scope and what counts as done (agreed 2026-09-29)
+
+**Principle:** version 2.0 is what the WISE audience (the Hoekstra and Jansen circle) can pick up and use. Every item below either passes a test or carries a documented limitation. Anything not listed is parked.
+
+| # | item | done when | state (2026-09-29) |
+|---|---|---|---|
+| 1 | **Core, one asset:** G, G+A, G+S, G+S+A for FR, DE, IT | calibrated to own targets; suite passes; unique equilibria; policy tests | done |
+| 2 | **Second asset:** the same twelve configurations with the illiquid switch | calibrated, or not calibrated with the reason on record; the wealthy hand-to-mouth in DE and IT reported as untargeted (chi0 from FR) | FR G, GA, DE G, GA, IT GA done; G+S+A running; G+S next |
+| 3 | **E, the standard:** one schema over official geographies; TL2 standard, Degree of Urbanisation alternative | channels from data; reductions in the suite | done |
+| 4 | **E, validation** | participation by place against official data in all three countries | FR by urbanisation (1.34 against 1.37); IT at TL2 (r 0.81 to 0.83); FR and DE at TL2 need OECD Regional Well-Being indicators and the Freiwilligensurvey by Land |
+| 5 | **E on two assets:** the place layer over the two-asset G+S+A | hardship by place no longer wrong-signed, or the failure documented; tested against HFCS by region when the data arrive | next, after item 2 |
+| 6 | **Sustainability (E cost side)** | consumption-based footprint by place as an output; a carbon-tax scenario; social-cost-of-carbon valuation over a range of official values, never the headline | to build |
+| 7 | **Reporting layer** | welfare as consumption equivalents; propensities (money and time: consume, save liquid and illiquid, work, participate) by education and place, with the social multiplier on the aggregate | to build |
+| 8 | **User layer** | a scenario notebook (country, configuration, place typology, policy, giving WISE indicators by group and place); one-page country cards; user documentation | to build |
+| 9 | **Regularities and limits stated** | the unemployed participation gap as an empirical regularity; the MPC and the annual period; DE/IT wealthy hand-to-mouth; the conversion residual | written in ASSESSMENT.md and E_PLACE_CONCEPT.md; collect into the user documentation |
+| 10 | **Release** | tag v2.0; data release with manifest; HFCS never included | at the end |
+
+**Parked until after v2.0:**
+- the quarterly period;
+- the labour-market (search and matching) block;
+- a housing market and housing by place as a separate asset;
+- the TL3 urban-rural sub-sub layer;
+- the US and further countries;
+- behavioural dread;
+- climate-damage feedback.
+
+**Compute note for item 5:** each place of a two-asset G+S+A economy builds its own social families. That runs to about 21 regions times the two-asset family cost, so it needs a GitHub matrix with one job per place and checkpointing, not one job per country.
