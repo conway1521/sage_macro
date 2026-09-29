@@ -93,13 +93,41 @@ report(tag, x, m, t0) = (u = unpack(x);
     flush(stdout))
 
 t0 = time()
+# CHECKPOINTS (2026-09-29). GitHub stops a job at six hours. The iteration writes
+# its point after every step to CKPT and starts from it when the file exists.
+# With SAGE_TIME_BUDGET_MIN set, it stops before a step that would not finish
+# inside the budget, with exit code 3; the workflow then starts a new job that
+# resumes. SAGE_START ("effective patience, chi0, impatient share, phi")
+# restarts from a point read off a log.
+const CKPT = joinpath(@__DIR__, "checkpoint_two_asset_$(CODE)_$(CFG).txt")
+const BUDGET = parse(Float64, get(ENV, "SAGE_TIME_BUDGET_MIN", "Inf"))
+write_ckpt(x) = open(io -> println(io, join(string.(x), ",")), CKPT, "w")
+function read_start()
+    isfile(CKPT) && return parse.(Float64, split(strip(read(CKPT, String)), ","))
+    if haskey(ENV, "SAGE_START") && !isempty(ENV["SAGE_START"])
+        v = parse.(Float64, split(ENV["SAGE_START"], ","))
+        return [v[1], log(v[2]), v[3], log(v[4])]
+    end
+    nothing
+end
 chi_start = isempty(CHI_FROM) ? 0.02 :
     country_config(CHI_FROM; config = CFG, S = false, A = A_ON, illiquid = true).chi0
 isempty(CHI_FROM) || say("  chi0 taken from ", CHI_FROM, ": ", chi_start, "; the wealthy hand-to-mouth are not targeted")
 x = [0.985, log(chi_start), HTM_TARGET, log(base.phi)]
-m = moments(x); report("start", x, m, t0)
+let st = read_start()
+    st === nothing || (global x = st; say("  resuming from ", isfile(CKPT) ? "the checkpoint" : "SAGE_START", ": ", round.(st; digits = 5)))
+end
+m = moments(x); report("start", x, m, t0); write_ckpt(x)
 ok = false
 for it in 1:10
+    # stop before a step that would not finish inside the budget (a step is
+    # about the Jacobian plus two line-search solves)
+    per = (time() - t0) / 60 / nsolve[]
+    if (time() - t0) / 60 + per * (length(ACT) + 2) > BUDGET
+        write_ckpt(x)
+        say(@sprintf("\nTIME BUDGET: %.0f of %.0f minutes used; checkpoint written, to resume in a new job.", (time() - t0) / 60, BUDGET))
+        exit(3)
+    end
     F = ract(m)
     global ok = maximum(abs.(F)) <= 1.0
     ok && break
@@ -134,7 +162,7 @@ for it in 1:10
             say("  Newton step failed; moved to the best point evaluated")
         end
     end
-    report("step $it", x, m, t0)
+    report("step $it", x, m, t0); write_ckpt(x)
     accepted || (say("  no improving point; stopping"); break)
 end
 ok = maximum(abs.(ract(m))) <= 1.0
@@ -162,5 +190,6 @@ open(OUTFILE, "w") do io
             u.phi, u.beta_bar, u.impatient_share, BETA_LOW_EFF / SURV, u.chi0, PREMIUM)
 end
 isfile(NOTCAL) && rm(NOTCAL)
+isfile(CKPT) && rm(CKPT)
 say("wrote ", basename(OUTFILE))
 @printf("\nDONE %s %s (illiquid) in %.1f min, %d solves\n", CODE, CFG, (time() - t0) / 60, nsolve[])

@@ -43,3 +43,4 @@ data/place/raw/
 data/hfcs/
 # ESS data: downloaded by each user from the ESS Data Portal with their own free account; not redistributed
 data/ess/raw/
+SAGE_Bewley/scripts/checkpoint_two_asset_*.txt

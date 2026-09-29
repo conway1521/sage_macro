@@ -14,6 +14,25 @@ on:
       chi_from:
         description: "G and GA only: country to take the fixed cost from, dropping the wealthy hand-to-mouth target (empty: fit it)"
         default: ""
+      resume_from:
+        description: "Run id whose checkpoint to resume from (set automatically when a job stops at its time budget)"
+        default: ""
+      budget:
+        description: "Minutes a job may run before it checkpoints and hands over (GitHub's limit is 360)"
+        default: "320"
+      hop:
+        description: "How many times this calibration has been resumed (set automatically; stops at 5)"
+        default: "0"
+      start:
+        description: "G and GA only: starting point 'effective patience,chi0,impatient share,phi', e.g. read off a log (optional)"
+        default: ""
+# A job stops before its six-hour limit (SAGE_TIME_BUDGET_MIN), writes a
+# checkpoint and exits with code 3; this workflow then starts a new run for that
+# country and configuration that resumes from the checkpoint, with the household
+# families restored from the cache.
+permissions:
+  actions: write
+  contents: read
 jobs:
   plan:
     runs-on: ubuntu-latest
@@ -43,12 +62,29 @@ jobs:
         with:
           version: "1.7.2"
       - uses: julia-actions/cache@v2
+      - name: Restore household families
+        uses: actions/cache@v4
+        with:
+          path: SAGE_Bewley/scripts/cache_families
+          key: families2-${{ matrix.code }}-${{ matrix.cfg }}-${{ hashFiles('SAGE_Bewley/src/**', 'SAGE_Bewley/scripts/*_core.jl', 'SAGE_Bewley/scripts/agency_shock.jl') }}-${{ github.run_id }}
+          restore-keys: |
+            families2-${{ matrix.code }}-${{ matrix.cfg }}-${{ hashFiles('SAGE_Bewley/src/**', 'SAGE_Bewley/scripts/*_core.jl', 'SAGE_Bewley/scripts/agency_shock.jl') }}-
       - name: Instantiate
         run: julia --project=SAGE_Bewley/scripts/run_env -e 'using Pkg; Pkg.instantiate()'
+      - name: Fetch the checkpoint to resume from
+        if: inputs.resume_from != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download ${{ inputs.resume_from }} -n calibration2-${{ matrix.code }}-${{ matrix.cfg }} -D /tmp/ck || true
+          cp /tmp/ck/checkpoint_two_asset_${{ matrix.code }}_${{ matrix.cfg }}.txt SAGE_Bewley/scripts/ 2>/dev/null && echo "checkpoint restored" || echo "no checkpoint found"
       - name: Calibrate ${{ matrix.code }} ${{ matrix.cfg }} with the illiquid asset
+        id: cal
         env:
           SAGE_WORKERS: "3"
           SAGE_SOLVER: egm
+          SAGE_TIME_BUDGET_MIN: ${{ inputs.budget }}
+          SAGE_START: ${{ inputs.start }}
         run: |
           cd SAGE_Bewley
           set +e
@@ -56,7 +92,9 @@ jobs:
           extra=""; [ "$script" = calibrate_two_asset.jl ] && extra="${{ inputs.chi_from }}"
           julia --project=scripts/run_env scripts/$script ${{ matrix.code }} ${{ matrix.cfg }} $extra 2>&1 | tee scripts/calibrate2_${{ matrix.code }}_${{ matrix.cfg }}.log
           code=${PIPESTATUS[0]}
-          [ "$code" = "0" ] || [ "$code" = "2" ]
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          # 2: not calibrated (reported); 3: stopped at the time budget, to resume
+          [ "$code" = "0" ] || [ "$code" = "2" ] || [ "$code" = "3" ]
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -64,3 +102,12 @@ jobs:
           path: |
             SAGE_Bewley/scripts/calibration_country_${{ matrix.code }}_${{ matrix.cfg }}_I*.txt
             SAGE_Bewley/scripts/calibrate2_${{ matrix.code }}_${{ matrix.cfg }}.log
+            SAGE_Bewley/scripts/checkpoint_two_asset_${{ matrix.code }}_${{ matrix.cfg }}.txt
+      - name: Resume in a new run
+        if: steps.cal.outputs.code == '3' && inputs.hop < 5
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run calibrate2.yml --ref ${{ github.ref_name }} -f countries=${{ matrix.code }} -f configs=${{ matrix.cfg }} \
+            -f chi_from="${{ inputs.chi_from }}" -f resume_from=${{ github.run_id }} \
+            -f budget=${{ inputs.budget }} -f hop=$(( ${{ inputs.hop }} + 1 ))

@@ -70,15 +70,46 @@ resid(m) = [log(m.nw / NW_TARGET) / TOL.nw, (m.whtm - WHTM_TARGET) / TOL.whtm, (
 t0 = time()
 elapsed() = (time() - t0) / 60
 
-# 1 and 2
-x = [off.beta_bar * SURV, log(off.chi0), off.impatient_share, log(off.phi)]
-F0 = resid(mom(_solve(with(off, x), nothing; disk = false)))
-J = zeros(4, 4)
-for k in 1:4
-    xk = copy(x); h = (xk[k] + STEP[k] > HI[k]) ? -STEP[k] : STEP[k]; xk[k] += h
-    J[:, k] = (resid(mom(_solve(with(off, xk), nothing; disk = false))) .- F0) ./ h
+# CHECKPOINTS (2026-09-29), as in calibrate_two_asset.jl. The file holds the
+# stage k (the point after k corrections, not yet evaluated; 4 = the corrections
+# are over and the full-grid stage is next), the point and the S-off Jacobian.
+# With SAGE_TIME_BUDGET_MIN set, the run stops before a stage that would not
+# finish inside the budget, with exit code 3, and the workflow resumes it.
+const CKPT = joinpath(@__DIR__, "checkpoint_two_asset_$(CODE)_$(CFG).txt")
+const BUDGET = parse(Float64, get(ENV, "SAGE_TIME_BUDGET_MIN", "Inf"))
+save_ckpt(k, x, J) = open(CKPT, "w") do io
+    println(io, k); println(io, join(string.(x), ",")); println(io, join(string.(vec(J)), ","))
 end
-say(@sprintf("1-2. %s point and its S-off Jacobian  [%.1f min]", OFF, elapsed()))
+function load_ckpt()
+    isfile(CKPT) || return nothing
+    l = readlines(CKPT)
+    (parse(Int, l[1]), parse.(Float64, split(l[2], ",")), reshape(parse.(Float64, split(l[3], ",")), 4, 4))
+end
+const LAST = Ref(60.0)      # minutes the last families-and-solve stage took
+function budget_check(k, x, J; factor = 1.2)
+    if elapsed() + factor * LAST[] > BUDGET
+        save_ckpt(k, x, J)
+        say(@sprintf("\nTIME BUDGET: %.0f of %.0f minutes used; checkpoint written at stage %d, to resume in a new job.", elapsed(), BUDGET, k))
+        exit(3)
+    end
+end
+
+# 1 and 2
+ck = load_ckpt()
+if ck === nothing
+    x = [off.beta_bar * SURV, log(off.chi0), off.impatient_share, log(off.phi)]
+    F0 = resid(mom(_solve(with(off, x), nothing; disk = false)))
+    J = zeros(4, 4)
+    for k in 1:4
+        xk = copy(x); h = (xk[k] + STEP[k] > HI[k]) ? -STEP[k] : STEP[k]; xk[k] += h
+        J[:, k] = (resid(mom(_solve(with(off, xk), nothing; disk = false))) .- F0) ./ h
+    end
+    stage = 0; save_ckpt(stage, x, J)
+    say(@sprintf("1-2. %s point and its S-off Jacobian  [%.1f min]", OFF, elapsed()))
+else
+    stage, x, J = ck
+    say("1-2. resumed from the checkpoint at stage ", stage)
+end
 
 # 3. technology scan on the families
 function scan(x; ugrid = UGRID_COARSE)
@@ -104,17 +135,23 @@ showr(tag, x, s) = (u = unpack(x);
             s.m.nw, s.m.whtm, s.m.htm, s.m.e, maximum(abs.(resid(s.m))), elapsed()); flush(stdout))
 
 say("3-4. families, technology and corrections")
-sc = scan(x); s = solveS(sc); showr("  start", x, s)
-for it in 1:3
+while stage < 4
+    budget_check(stage, x, J)
+    t2 = time()
+    global sc = scan(x); global s = solveS(sc)
+    LAST[] = (time() - t2) / 60
+    showr(stage == 0 ? "  start" : "  correction $stage", x, s)
     F = resid(s.m)
-    maximum(abs.(F)) <= 0.5 && break
+    (maximum(abs.(F)) <= 0.5 || stage >= 3) && break
     Δ = -(J \ F)
     sfac = minimum(min(1.0, MAXMOVE[k] / max(abs(Δ[k]), 1e-12)) for k in 1:4)
     global x = clamp.(x .+ sfac .* Δ, LO, HI)
-    global sc = scan(x); global s = solveS(sc); showr("  correction $it", x, s)
+    global stage += 1; save_ckpt(stage, x, J)
 end
+stage = 4; save_ckpt(stage, x, J)
 
 say("5. the full belonging grid")
+budget_check(4, x, J; factor = 2.5)       # the full grid has about twice the scales
 sc = scan(x; ugrid = UGRID_DEFAULT); s = solveS(sc); showr("  final", x, s)
 maximum(abs.(resid(s.m))) <= 1.0 || notcal(@sprintf("worst G target at %.2f of its band on the full grid.", maximum(abs.(resid(s.m)))))
 1 / (1 - s.r.slope) <= MULT_MAX || notcal(@sprintf("multiplier %.1f above the gate.", 1 / (1 - s.r.slope)))
@@ -129,5 +166,6 @@ open(OUTFILE, "w") do io
             u.phi, u.beta_bar, u.impatient_share, BETA_LOW_EFF / SURV, u.chi0, off.illiquid_premium, sc.best.κ, sc.best.σ)
 end
 isfile(NOTCAL) && rm(NOTCAL)
+isfile(CKPT) && rm(CKPT)
 say("wrote ", basename(OUTFILE))
 @printf("\nDONE %s %s (illiquid) in %.1f min\n", CODE, CFG, elapsed())
