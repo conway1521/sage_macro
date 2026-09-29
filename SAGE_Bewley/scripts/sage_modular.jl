@@ -342,7 +342,8 @@ const SOLVER_FILES = [joinpath(@__DIR__, "..", "src", "SAGEBewley.jl"),
                       joinpath(@__DIR__, "agency_core.jl"),
                       joinpath(@__DIR__, "unemployment_core.jl"),
                  joinpath(@__DIR__, "agency_shock.jl"),
-                 joinpath(@__DIR__, "egm_core.jl")]
+                 joinpath(@__DIR__, "egm_core.jl"),
+                 joinpath(@__DIR__, "egm2_core.jl")]
 const SOLVER_DIGEST = bytes2hex(sha1(join(read(f, String) for f in SOLVER_FILES)))
 
 "The household part and the threshold part of a family's cache key."

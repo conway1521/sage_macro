@@ -199,6 +199,20 @@ Base.@kwdef struct SAGEParams
     # refined. :egm, the endogenous grid method (scripts/egm_core.jl): both
     # continuous. Read by the participation core only.
     solver::Symbol = :grid
+    # The illiquid asset (TWO_ASSET_DESIGN.md), solved by egm2_core.jl. Off gives
+    # the one-asset model exactly. Returns on illiquid wealth accrue to it; changing
+    # it costs chi0 in the period of the change.
+    illiquid::Bool = false
+    Rk::Float64 = 1.02
+    chi0::Float64 = 0.0
+    nk::Int = 30
+    k_max::Float64 = 60.0
+    # Perpetual youth with the illiquid asset on: households die with this
+    # probability and are replaced by newborns with no wealth (Kaplan, Moll and
+    # Violante 2018: 1/180 a quarter, a 45-year average lifetime). Discounting
+    # includes survival. Without it the two-asset wealth distribution settles
+    # over thousands of years (beta Rk close to one). Used only by egm2_core.jl.
+    death::Float64 = 0.0
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."

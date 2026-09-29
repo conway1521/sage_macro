@@ -59,3 +59,19 @@ The two branches are combined with a small logit smoothing, as participation is 
 
 - The illiquid return premium should be taken from a published estimate, not fitted. A source still has to be chosen.
 - Whether the second earner or a borrowing limit (`ASSESSMENT.md`, section 5) is built in the same step, since both touch the budget. My recommendation is a borrowing limit here, and a second earner later if protection if hit still misses once the illiquid buffer exists.
+
+## Build log
+
+**2026-09-29, stage 1: the household solver (`egm2_core.jl`, `test_egm2.jl`).**
+
+- **Reduction.** With adjustment unaffordable and no illiquid wealth, the solver reproduces the one-asset EGM: values to 6e-10 (the solve tolerance), the distribution to 1e-11, participation and income to ten digits.
+- **Returns and discounting.** The illiquid return premium is taken from the Jorda-Schularick-Taylor data (`data/jst_premium.py`: 1980-2015, FR 0.035, DE 0.022, IT 0.022, US 0.040). The liquid return R = 1.02 matches the real bill rate of about 2%.
+- **Perpetual youth**, with death at 1/45 a year (Kaplan, Moll and Violante 2018). Without it, with beta Rk near one, the wealth distribution settled only over thousands of years, and the distribution iteration never converged. With it, the distribution converges in about 1,300 iterations. Discounting includes survival. It is used only with the switch on.
+- **Adjusting choice.** It carries logit smoothing of scale 0.01. At 0.005 the iteration cycles. At 0.05 the smoothing itself moves the adjusting share from 9% to 22%. At 0.01 and 0.02 the results agree.
+- **Relaxation.** It is applied when the iteration stops improving, with convergence still judged on the full Bellman step. A remaining tiny stall is averaged and recorded in the result (`stalled`).
+- **Liquid grid for the two-asset model:** top 30, 150 points. The one-asset grid's top of 100 put far-out states, with no mass, into cycles. Topping it at 15 instead gives the same moments.
+- **Upper envelope** (shared with the one-asset solver): rewritten to visit only the grid points each segment covers. Results are bit-identical on one-asset and two-asset problems.
+- **Speed:** 10 to 27 seconds per household problem.
+- **First uncalibrated look** (Italy, lower-education cell, fixed cost 0.05): wealthy hand-to-mouth 0.15 against the target of 0.155, and median liquid wealth about 0.3 of income against 0.27 in the HFCS. For France at the same fixed cost few households hold illiquid wealth, so the calibration of chi0 and mean patience will carry the weight.
+
+**Next:** the two-asset summaries (poor and wealthy hand-to-mouth, liquid and illiquid medians, MPC out of liquid wealth, drop on job loss, room to manoeuvre on liquid wealth), the switch in SAGEConfig and the family builder, the suite, then the calibration on GitHub.

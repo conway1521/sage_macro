@@ -88,37 +88,45 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
         k > 1 && aend[k] <= aend[k-1] && (monotone = false)
     end
     # --- back onto the fixed grid ---------------------------------------------
-    j = 1
+    # every grid point starts from the constrained candidate (next assets at the
+    # lowest node)
     @inbounds for i in 1:na
-        ai = a[i]
-        # the constrained candidate: next assets at the lowest node
         cc = con_c[i, s]; ec = con_e[i, s]
-        vcon = isnan(cc) ? -Inf : egm_flow(p, cc, tfl + ec + QBAR * d) + belong * d - Ds[1] + p.β * EVs[1]
-        best = vcon; bc = cc; be = ec; bap = a[1]
-        if monotone
-            if ai >= aend[1]
-                while j < na - 1 && aend[j+1] <= ai
-                    j += 1
-                end
-                t = (ai - aend[j]) / (aend[j+1] - aend[j])
-                c = cend[j] + t * (cend[j+1] - cend[j])
-                e = clamp(eend[j] + t * (eend[j+1] - eend[j]), 0.0, tmax)
-                ap = a[j] + t * (a[j+1] - a[j])
-                # Above the first endogenous point the household is unconstrained:
-                # the interpolated solution is taken as it is. Comparing it with the
-                # constrained candidate there made the iteration cycle between two
-                # approximations of the same point (2026-09-28).
-                if c > 0
-                    best = egm_flow(p, c, tfl + e + QBAR * d) + belong * d - dread_at(p, s, max(ap, a[1])) +
-                           p.β * SAGEBewley.interp_lin(a, EVs, ap)
-                    bc = c; be = e; bap = max(ap, a[1])
-                end
+        cd[i, s] = cc; ed[i, s] = ec; apd[i, s] = a[1]
+        vd[i, s] = isnan(cc) ? -Inf : egm_flow(p, cc, tfl + ec + QBAR * d) + belong * d - Ds[1] + p.β * EVs[1]
+    end
+    if monotone
+        j = 1
+        @inbounds for i in 1:na
+            ai = a[i]
+            ai >= aend[1] || continue
+            while j < na - 1 && aend[j+1] <= ai
+                j += 1
             end
-        else
-            # upper envelope: every endogenous segment that covers ai
-            for k in 1:na-1
-                lo, hi = minmax(aend[k], aend[k+1])
-                (ai < lo || ai > hi || hi == lo) && continue
+            t = (ai - aend[j]) / (aend[j+1] - aend[j])
+            c = cend[j] + t * (cend[j+1] - cend[j])
+            e = clamp(eend[j] + t * (eend[j+1] - eend[j]), 0.0, tmax)
+            ap = a[j] + t * (a[j+1] - a[j])
+            # Above the first endogenous point the household is unconstrained:
+            # the interpolated solution is taken as it is. Comparing it with the
+            # constrained candidate there made the iteration cycle between two
+            # approximations of the same point (2026-09-28).
+            if c > 0
+                vd[i, s] = egm_flow(p, c, tfl + e + QBAR * d) + belong * d - dread_at(p, s, max(ap, a[1])) +
+                           p.β * SAGEBewley.interp_lin(a, EVs, ap)
+                cd[i, s] = c; ed[i, s] = e; apd[i, s] = max(ap, a[1])
+            end
+        end
+    else
+        # upper envelope: each endogenous segment is compared only at the grid
+        # points it covers (2026-09-29; the same comparisons, in segment order,
+        # as the point-by-point loop it replaces, which was O(na^2))
+        @inbounds for k in 1:na-1
+            lo, hi = minmax(aend[k], aend[k+1])
+            hi == lo && continue
+            ilo = searchsortedfirst(a, lo); ihi = searchsortedlast(a, hi)
+            for i in ilo:ihi
+                ai = a[i]
                 t = (ai - aend[k]) / (aend[k+1] - aend[k])
                 c = cend[k] + t * (cend[k+1] - cend[k])
                 e = eend[k] + t * (eend[k+1] - eend[k])
@@ -126,23 +134,25 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
                 (c <= 0 || ap < a[1]) && continue
                 v = egm_flow(p, c, tfl + e + QBAR * d) + belong * d - dread_at(p, s, ap) +
                     p.β * SAGEBewley.interp_lin(a, EVs, ap)
-                if v > best
-                    best = v; bc = c; be = e; bap = ap
-                end
-            end
-            if ai > maximum(aend)     # beyond the endogenous grid: extrapolate the top segment
-                k = argmax(aend); k = k == 1 ? 1 : k - 1
-                t = (ai - aend[k]) / (aend[k+1] - aend[k])
-                c = cend[k] + t * (cend[k+1] - cend[k]); e = clamp(eend[k] + t * (eend[k+1] - eend[k]), 0.0, tmax)
-                ap = min(a[k] + t * (a[k+1] - a[k]), a[end])
-                if c > 0
-                    v = egm_flow(p, c, tfl + e + QBAR * d) + belong * d - dread_at(p, s, ap) +
-                        p.β * SAGEBewley.interp_lin(a, EVs, ap)
-                    v > best && (best = v; bc = c; be = e; bap = ap)
+                if v > vd[i, s]
+                    vd[i, s] = v; cd[i, s] = c; ed[i, s] = e; apd[i, s] = ap
                 end
             end
         end
-        cd[i, s] = bc; ed[i, s] = be; apd[i, s] = bap; vd[i, s] = best
+        amax = maximum(aend)
+        km = argmax(aend); km = km == 1 ? 1 : km - 1
+        @inbounds for i in 1:na
+            ai = a[i]
+            ai > amax || continue     # beyond the endogenous grid: extrapolate the top segment
+            t = (ai - aend[km]) / (aend[km+1] - aend[km])
+            c = cend[km] + t * (cend[km+1] - cend[km]); e = clamp(eend[km] + t * (eend[km+1] - eend[km]), 0.0, tmax)
+            ap = min(a[km] + t * (a[km+1] - a[km]), a[end])
+            if c > 0
+                v = egm_flow(p, c, tfl + e + QBAR * d) + belong * d - dread_at(p, s, ap) +
+                    p.β * SAGEBewley.interp_lin(a, EVs, ap)
+                v > vd[i, s] && (vd[i, s] = v; cd[i, s] = c; ed[i, s] = e; apd[i, s] = ap)
+            end
+        end
     end
 end
 
