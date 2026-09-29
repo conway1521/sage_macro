@@ -1,0 +1,61 @@
+# Two-asset calibrations (calibrate_two_asset.jl), one job per country and
+# configuration, in parallel. Started by hand. Each job uploads its calibration
+# file (or not-calibrated marker) and log.
+name: calibrate2
+on:
+  workflow_dispatch:
+    inputs:
+      countries:
+        description: "Country codes, space separated"
+        default: "FR DE IT"
+      configs:
+        description: "Configurations, space separated (G GA)"
+        default: "GA G"
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - id: m
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os
+          c = os.environ["C"].split(); g = os.environ["G"].split()
+          print("matrix=" + json.dumps({"include": [{"code": a, "cfg": b} for a in c for b in g]}))
+          PY
+        env:
+          C: ${{ inputs.countries }}
+          G: ${{ inputs.configs }}
+  calibrate:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: "1.7.2"
+      - uses: julia-actions/cache@v2
+      - name: Instantiate
+        run: julia --project=SAGE_Bewley/scripts/run_env -e 'using Pkg; Pkg.instantiate()'
+      - name: Calibrate ${{ matrix.code }} ${{ matrix.cfg }} with the illiquid asset
+        env:
+          SAGE_WORKERS: "3"
+          SAGE_SOLVER: egm
+        run: |
+          cd SAGE_Bewley
+          set +e
+          julia --project=scripts/run_env scripts/calibrate_two_asset.jl ${{ matrix.code }} ${{ matrix.cfg }} 2>&1 | tee scripts/calibrate2_${{ matrix.code }}_${{ matrix.cfg }}.log
+          code=${PIPESTATUS[0]}
+          [ "$code" = "0" ] || [ "$code" = "2" ]
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: calibration2-${{ matrix.code }}-${{ matrix.cfg }}
+          path: |
+            SAGE_Bewley/scripts/calibration_country_${{ matrix.code }}_${{ matrix.cfg }}_I*.txt
+            SAGE_Bewley/scripts/calibrate2_${{ matrix.code }}_${{ matrix.cfg }}.log

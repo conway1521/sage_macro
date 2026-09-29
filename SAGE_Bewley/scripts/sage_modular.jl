@@ -160,6 +160,19 @@ Base.@kwdef struct SAGEConfig
     # default can be set for a whole run with the environment variable
     # SAGE_SOLVER (grid or egm), which worker processes inherit.
     solver::Symbol = DEFAULT_SOLVER
+    # THE ILLIQUID ASSET (TWO_ASSET_DESIGN.md; egm2_core.jl), EGM only. Off gives
+    # the one-asset model exactly. The premium Rk - R comes from the country
+    # table (Jorda-Schularick-Taylor data), the fixed cost chi0 is calibrated to
+    # the wealthy hand-to-mouth, death gives perpetual youth (Kaplan, Moll and
+    # Violante 2018). With it on, the liquid grid is b_max and nb, not a_max and na.
+    illiquid::Bool = false
+    illiquid_premium::Float64 = 0.0
+    chi0::Float64 = 0.05
+    death::Float64 = 1 / 45
+    nk::Int = 24
+    k_max::Float64 = 150.0        # 60 held 1% of the mass at the top at beta_bar 0.99 (2026-09-29)
+    b_max::Float64 = 15.0
+    nb::Int = 120
     # numerics
     na::Int          = 200
     ne::Int          = 80
@@ -251,6 +264,11 @@ function params_of(c::SAGEConfig, cell)
         ps = [dread_params(p, c, cell) for p in ps]
     end
     c.solver === :grid || (ps = [update(p; solver = c.solver) for p in ps])
+    if c.illiquid
+        c.solver === :egm || error("the illiquid asset needs solver = :egm")
+        ps = [update(p; illiquid = true, Rk = p.R + c.illiquid_premium, chi0 = c.chi0, death = c.death,
+                     nk = c.nk, k_max = c.k_max, a_max = c.b_max, na = c.nb) for p in ps]
+    end
     (c.search_time == 0 && c.belong_u == 1) && return ps
     tf = c.search_time == 0 ? Float64[] : [e ? 0.0 : c.search_time for e in emp]
     bsc = c.belong_u == 1 ? Float64[] : [e ? 1.0 : c.belong_u for e in emp]
@@ -325,6 +343,10 @@ function check_ratio(c::SAGEConfig)
         error("unemployed_ratio replaces the unemployed participation choice, so search_time and belong_u would do nothing; leave them at their defaults")
     nothing
 end
+
+"The liquid wealth grid the household problem uses: a_max and na, or b_max and nb with the illiquid asset."
+liquid_grid_of(c::SAGEConfig) = c.illiquid ? SAGEBewley.exponential_grid(1e-10, c.b_max, c.nb, c.pexp) :
+                                            SAGEBewley.exponential_grid(1e-10, c.a_max, c.na, c.pexp)
 
 # ------------------------------------------------------- family disk cache --
 # A response family is a pure function of the household parameters, the
@@ -466,7 +488,7 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
     cs = cells_of(c); bs, bw = betas_of(c)
     T = c.lumptax + ui_tax_of(c)
     cfgT = SAGEConfig(c; lumptax = T)
-    agrid = SAGEBewley.exponential_grid(1e-10, c.a_max, c.na, c.pexp)
+    agrid = liquid_grid_of(c)
 
     local pooled, rate, slope
     if c.S
@@ -556,6 +578,11 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
             consumption_drop = mE <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].dmass[emp]) for g in 1:2) / mE,
             hand_to_mouth_kvw = sum(cs[g].share * sum(pooled[g].hmass) for g in 1:2) /
                                 sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
+            # the wealthy hand-to-mouth: low liquid wealth, some illiquid (zero without the switch)
+            wealthy_htm = sum(cs[g].share * sum(pooled[g].whmass) for g in 1:2) /
+                          sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
+            mpc_wealthy = (h = sum(cs[g].share * sum(pooled[g].whmass) for g in 1:2);
+                           h <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].mpcwmass) for g in 1:2) / h),
             # untargeted checks and the other agency parts (agency_shock.jl)
             mpc = sum(cs[g].share * sum(pooled[g].mpcmass) for g in 1:2) /
                   sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
@@ -564,7 +591,11 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
             room = sum(cs[g].share * sum(pooled[g].rmass) for g in 1:2) /
                    sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
             dread_cost_E = mE <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].xmass[emp]) for g in 1:2) / mE,
-            agrid = agrid, Wtot = Wtot, pooled = pooled, employed = emp, lumptax = T)
+            agrid = agrid, Wtot = Wtot, pooled = pooled, employed = emp, lumptax = T,
+            kgrid = c.illiquid ? SAGEBewley.exponential_grid(0.0, c.k_max, c.nk, c.pexp) : [0.0],
+            Ktot = sum(cs[g].share .* vec(sum(pooled[g].K, dims = 1)) for g in 1:2),
+            # net wealth, liquid plus illiquid, with the illiquid asset (cumulative on NWGRID)
+            Ntot = sum(cs[g].share .* vec(sum(pooled[g].N, dims = 1)) for g in 1:2))
     thr === nothing && return merge(base, (asset_poor_by_quintile = Float64[],
                                            quintile_mass = Float64[],
                                            A_income_only = NaN, hardship_cell = (),

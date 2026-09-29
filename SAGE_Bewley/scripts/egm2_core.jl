@@ -218,7 +218,9 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     # policies by state, for the distribution and the aggregates
     t2 = time()
     trace && @printf("  value iteration: inner %.1f s, outer %.1f s\n", t_in, t_out)
-    λ, P1s, es = two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj; death = p0.death)
+    dist = two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
+                                  death = p0.death, oth = oth, wv = wv, trs = [transfer_at(p, s) for s in 1:nz])
+    λ = dist.lambda; P1s = dist.P1; es = dist.e
     trace && @printf("  distribution %.1f s\n", time() - t2)
     part = 0.0; meaninc = 0.0; partbase = 0.0
     @inbounds for s in 1:nz, m in 1:nk, i in 1:na
@@ -229,7 +231,8 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     end
     full || return QBAR * part, part, meaninc, partbase
     (Q = QBAR * part, rate = part, meaninc = meaninc, partbase = partbase, a = a, k = kg,
-     lambda = λ, P1 = P1s, e = es, Padj = Padj, V = V, Vb = Vb, z_vals = z_vals,
+     lambda = λ, P1 = P1s, e = es, e_d = dist.e_d, cbar = dist.cbar, ybar = dist.ybar, post = dist.post,
+     Pi = Π, Padj = Padj, V = V, Vb = Vb, z_vals = z_vals,
      iters = iters, stalled = stall, relax = relax, theta = theta, inner = (c = cin, e = ein, bp = bpin, P1 = P1in), qadj = qadj,
      j0 = j0, om = om, shift = shift)
 end
@@ -240,12 +243,21 @@ to post-decision (b', k', s) by lotteries on both grids (Young 2010); the
 income transition then mixes s. Mass starts at k = 0. Also returns the
 participation probability and expected effort by state.
 """
-function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj; death = 0.0)
+function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
+                                death = 0.0, oth = nothing, wv = nothing, trs = nothing)
     na, nk, nz = length(a), length(kg), size(Π, 1)
     n = na * nk * nz
     idx(i, m, s) = i + (m - 1) * na + (s - 1) * na * nk
     rows = Int[]; cols = Int[]; vals = Float64[]
     P1s = zeros(na, nk, nz); es = zeros(na, nk, nz)
+    # by participation branch, mixed over keeping and adjusting: effort (as
+    # weighted sums, divided by the branch weight below), expected consumption
+    # and labour-plus-transfer income, for the summaries (agency_shock.jl)
+    e0s = zeros(na, nk, nz); e1s = zeros(na, nk, nz)
+    cbar = zeros(na, nk, nz); ybar = zeros(na, nk, nz)
+    haveC = oth !== nothing
+    # consumption from the budget with the policies, as agency_summary does for
+    # one asset, so the two agree exactly when the illiquid asset is inert
     function blot!(from, bp, j, s, wt)
         k = clamp(searchsortedlast(a, bp), 1, na - 1)
         w = clamp((a[k+1] - bp) / (a[k+1] - a[k]), 0.0, 1.0)
@@ -260,6 +272,13 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
             p1 = P1in[i, jj, s]
             P1s[i, m, s] += wt * p1
             es[i, m, s] += wt * ((1 - p1) * ein[1][i, jj, s] + p1 * ein[2][i, jj, s])
+            e0s[i, m, s] += wt * (1 - p1) * ein[1][i, jj, s]; e1s[i, m, s] += wt * p1 * ein[2][i, jj, s]
+            if haveC
+                c0 = p.R * a[i] + wv[s] * ein[1][i, jj, s] + oth[s][1] - bpin[1][i, jj, s]
+                c1 = p.R * a[i] + wv[s] * ein[2][i, jj, s] + oth[s][2] - bpin[2][i, jj, s]
+                p1 < 1 && (cbar[i, m, s] += wt * (1 - p1) * c0; ybar[i, m, s] += wt * (1 - p1) * (wv[s] * ein[1][i, jj, s] + trs[s]))
+                p1 > 0 && (cbar[i, m, s] += wt * p1 * c1; ybar[i, m, s] += wt * p1 * (wv[s] * ein[2][i, jj, s] + trs[s]))
+            end
             p1 < 1 && blot!(from, bpin[1][i, jj, s], jj, s, wt * (1 - p1))
             p1 > 0 && blot!(from, bpin[2][i, jj, s], jj, s, wt * p1)
         end
@@ -273,7 +292,15 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
             e0 = lin_at(a, view(ein[1], :, j, s), be, r); e1 = lin_at(a, view(ein[2], :, j, s), be, r)
             b0 = max(lin_at(a, view(bpin[1], :, j, s), be, r), a[1]); b1 = max(lin_at(a, view(bpin[2], :, j, s), be, r), a[1])
             P1s[i, m, s] += wt * p1
-            es[i, m, s] += wt * ((1 - p1) * max(e0, 0.0) + p1 * max(e1, 0.0))
+            e0 = max(e0, 0.0); e1 = max(e1, 0.0)
+            es[i, m, s] += wt * ((1 - p1) * e0 + p1 * e1)
+            e0s[i, m, s] += wt * (1 - p1) * e0; e1s[i, m, s] += wt * p1 * e1
+            if haveC
+                c0 = p.R * be + wv[s] * e0 + oth[s][1] - b0
+                c1 = p.R * be + wv[s] * e1 + oth[s][2] - b1
+                p1 < 1 && (cbar[i, m, s] += wt * (1 - p1) * c0; ybar[i, m, s] += wt * (1 - p1) * (wv[s] * e0 + trs[s]))
+                p1 > 0 && (cbar[i, m, s] += wt * p1 * c1; ybar[i, m, s] += wt * p1 * (wv[s] * e1 + trs[s]))
+            end
             p1 < 1 && blot!(from, b0, j, s, wt * (1 - p1))
             p1 > 0 && blot!(from, b1, j, s, wt * p1)
         end
@@ -316,5 +343,168 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
     end
     get(ENV, "EGM2_TRACE", "0") == "1" && println("  distribution iterations ", nit)
     λ ./= sum(λ)
-    reshape(λ, na, nk, nz), P1s, es
+    @inbounds for x in eachindex(e0s)
+        m0 = 1 - P1s[x]; e0s[x] = m0 > 1e-14 ? e0s[x] / m0 : 0.0
+        e1s[x] = P1s[x] > 1e-14 ? e1s[x] / P1s[x] : 0.0
+    end
+    (lambda = reshape(λ, na, nk, nz), P1 = P1s, e = es, e_d = (e0s, e1s), cbar = cbar, ybar = ybar,
+     post = (rows = rows, cols = cols, vals = vals))
+end
+
+# ------------------------------------------------------------- summaries --
+"Grid for net wealth, liquid plus illiquid, on which the two-asset summaries record its distribution."
+const NWGRID = SAGEBewley.exponential_grid(0.0, 80.0, 240, 3.0)
+
+"""
+    each_branch(f, sol, i, m, s)
+
+Call f(wt, d, bprime, j) for every branch of state (i, m, s): keeping (the two
+illiquid nodes around Rk k) and adjusting (each target k_j), each split by the
+participation choice d, with its probability wt, next liquid wealth bprime and
+next illiquid node j. The same branches, in the same order, as
+`two_asset_distribution`.
+"""
+function each_branch(f, sol, i, m, s)
+    a = sol.a; na = length(a); inn = sol.inner
+    pa = sol.Padj[i, m, s]
+    for (jj, wk) in ((sol.j0[m], 1 - sol.om[m]), (sol.j0[m] + 1, sol.om[m]))
+        wt = (1 - pa) * wk; wt <= 0 && continue
+        p1 = inn.P1[i, jj, s]
+        p1 < 1 && f(wt * (1 - p1), 0, inn.bp[1][i, jj, s], jj)
+        p1 > 0 && f(wt * p1, 1, inn.bp[2][i, jj, s], jj)
+    end
+    pa <= 0 && return
+    nk = length(sol.k)
+    for j in 1:nk
+        wt = pa * sol.qadj[j, i, m, s]; wt <= 1e-12 && continue
+        be = min(a[i] + sol.shift[m, j], a[end])
+        r = clamp(searchsortedlast(a, be), 1, na - 1)
+        p1 = clamp(lin_at(a, view(inn.P1, :, j, s), be, r), 0.0, 1.0)
+        p1 < 1 && f(wt * (1 - p1), 0, max(lin_at(a, view(inn.bp[1], :, j, s), be, r), a[1]), j)
+        p1 > 0 && f(wt * p1, 1, max(lin_at(a, view(inn.bp[2], :, j, s), be, r), a[1]), j)
+    end
+end
+
+"""
+    two_asset_cell_summary(p, sol; thresholds)
+
+`cell_summary` for the two-asset solution: the same fields, with W the LIQUID
+wealth distribution (OECD asset poverty is defined on liquid financial assets,
+Balestra and Tonkin 2018) and capital income the liquid return only (the
+illiquid return accrues to illiquid wealth, not to disposable income), plus K,
+the illiquid distribution by state (cumulative on the illiquid grid).
+"""
+function two_asset_cell_summary(p::SAGEParams, sol; thresholds = nothing)
+    a = sol.a; kg = sol.k; λ = sol.lambda; P1 = sol.P1; z = sol.z_vals
+    na, nk, nz = length(a), length(kg), p.nz
+    W = zeros(nz, na); K = zeros(nz, nk); N = zeros(nz, length(NWGRID))
+    mass = zeros(nz); part = zeros(nz); ym_s = zeros(nz)
+    Y = zeros(length(YGRID)); Ys = zeros(nz, length(YGRID)); ypoor = zeros(length(YGRID))
+    ymean = 0.0; ymin_E = Inf
+    thr = thresholds === nothing ? Tuple{Float64,Float64}[] : collect(thresholds)
+    np = length(thr)
+    jinc = zeros(nz, np); jboth = zeros(nz, np); eff_E = 0.0
+    @inbounds for i_z in 1:nz, m in 1:nk, i_a in 1:na
+        w = λ[i_a, m, i_z]
+        w <= 0 && continue
+        W[i_z, i_a] += w; K[i_z, m] += w; mass[i_z] += w
+        # net wealth: split between the two NWGRID points around b + k
+        nw = a[i_a] + kg[m]; q = clamp(searchsortedlast(NWGRID, nw), 1, length(NWGRID) - 1)
+        t = clamp((nw - NWGRID[q]) / (NWGRID[q+1] - NWGRID[q]), 0.0, 1.0)
+        N[i_z, q] += w * (1 - t); N[i_z, q+1] += w * t
+        p1 = P1[i_a, m, i_z]; part[i_z] += w * p1
+        α = p.α[i_z]; zz = z[i_z]
+        cap = (p.R - 1) * a[i_a]
+        credit = p.partcredit * α * zz * p.Z * QBAR
+        tr = transfer_at(p, i_z)
+        employed = zz > 0
+        for d in (0, 1)
+            wd = d == 1 ? w * p1 : w * (1 - p1)
+            wd <= 0 && continue
+            e = sol.e_d[d+1][i_a, m, i_z]
+            y = (1 + p.subsidy) * α * zz * p.Z * e + cap - p.lumptax + (d == 1 ? credit : 0.0) + tr
+            ymean += wd * y; ym_s[i_z] += wd * y
+            employed && y < ymin_E && (ymin_E = y)
+            employed && (eff_E += wd * e)
+            k = searchsortedfirst(YGRID, y)
+            if k <= length(YGRID)
+                Y[k] += wd; Ys[i_z, k] += wd
+                np > 0 && a[i_a] < thr[1][2] && (ypoor[k] += wd)
+            end
+            for q in 1:np
+                y < thr[q][1] || continue
+                jinc[i_z, q] += wd
+                a[i_a] < thr[q][2] && (jboth[i_z, q] += wd)
+            end
+        end
+    end
+    for i_z in 1:nz
+        cumsum!(view(W, i_z, :), view(W, i_z, :)); cumsum!(view(K, i_z, :), view(K, i_z, :))
+        cumsum!(view(N, i_z, :), view(N, i_z, :))
+        cumsum!(view(Ys, i_z, :), view(Ys, i_z, :))
+    end
+    cumsum!(Y, Y); cumsum!(ypoor, ypoor)
+    (W = W, K = K, N = N, mass = mass, part = part, Y = Y, Ys = Ys, ymean = ymean, ym_s = ym_s,
+     ymin_E = ymin_E, rate = sol.rate, minc = sol.meaninc, pbase = sol.partbase,
+     jinc = jinc, jboth = jboth, thresholds = thr, eff_E = eff_E, ypoor = ypoor)
+end
+
+"""
+    two_asset_agency_summary(p, sol)
+
+`agency_summary` for the two-asset solution, the same fields plus the wealthy
+hand-to-mouth. Hand-to-mouth, room to manoeuvre, the MPC and dread are on
+LIQUID wealth. Poor hand-to-mouth hold no illiquid wealth and wealthy
+hand-to-mouth some (Kaplan, Violante and Weidner 2014). The MPC is out of a
+liquid windfall at unchanged illiquid wealth. The drop on job loss is at the
+same liquid and illiquid wealth, and the expected loss follows every branch of
+next year's wealth.
+"""
+function two_asset_agency_summary(p::SAGEParams, sol)
+    a = sol.a; kg = sol.k; λ = sol.lambda; z = sol.z_vals; Π = sol.Pi
+    na, nk, ns = length(a), length(kg), length(z)
+    cbar = sol.cbar; ybar = sol.ybar
+    pmass = zeros(ns); pinc = zeros(ns); dmass = zeros(ns); hmass = zeros(ns); whmass = zeros(ns)
+    mpcmass = zeros(ns); mpchmass = zeros(ns); mpcwmass = zeros(ns); rmass = zeros(ns); xmass = zeros(ns)
+    U = findall(==(0.0), z); nh = length(U)
+    haveU = !isempty(U) && 2 * nh == ns
+    dw = dread_weight(p)
+    @inbounds for s in 1:ns, m in 1:nk, i in 1:na
+        mm = λ[i, m, s]; mm <= 0 && continue
+        cb = view(cbar, :, m, s)
+        htm = a[i] <= ybar[i, m, s] / 52
+        htm && (m == 1 ? (hmass[s] += mm) : (whmass[s] += mm))
+        a[i] >= ybar[i, m, s] / 4 && (rmass[s] += mm)
+        Δ = ybar[i, m, s] / 12
+        if Δ > 0
+            mpc = (SAGEBewley.interp_lin(a, cb, a[i] + Δ / p.R) - cb[i]) / Δ
+            mpcmass[s] += mm * mpc
+            htm && (m == 1 ? (mpchmass[s] += mm * mpc) : (mpcwmass[s] += mm * mpc))
+        end
+        if dw > 0 && cb[i] > 0
+            D = 0.0
+            each_branch(sol, i, m, s) do wt, d, bp, j
+                D += wt * dread_at(p, s, bp; weight = dw)
+            end
+            kk = 1 - (1 - p.γ) * D / (p.Γ * cb[i]^(1 - p.γ))
+            kk > 0 && (xmass[s] += mm * (1 - kk^(1 / (1 - p.γ))))
+        end
+        haveU || continue
+        pc = 0.0; py = 0.0
+        each_branch(sol, i, m, s) do wt, d, bp, j
+            for u in U
+                pr = Π[s, u]; pr <= 0 && continue
+                cE = SAGEBewley.interp_lin(a, view(cbar, :, j, u + nh), bp)
+                cU = SAGEBewley.interp_lin(a, view(cbar, :, j, u), bp)
+                yE = SAGEBewley.interp_lin(a, view(ybar, :, j, u + nh), bp)
+                yU = SAGEBewley.interp_lin(a, view(ybar, :, j, u), bp)
+                cE > 0 && (pc += wt * pr * max(0.0, 1 - cU / cE))
+                yE > 0 && (py += wt * pr * max(0.0, 1 - yU / yE))
+            end
+        end
+        pmass[s] += mm * pc; pinc[s] += mm * py
+        s > nh && cb[i] > 0 && (dmass[s] += mm * max(0.0, 1 - cbar[i, m, s - nh] / cb[i]))
+    end
+    (pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = whmass,
+     mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = mpcwmass, rmass = rmass, xmass = xmass)
 end

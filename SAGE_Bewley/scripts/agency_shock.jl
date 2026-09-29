@@ -45,6 +45,7 @@ productivity (see `unemployment_process`). Without unemployed states all three
 are zero.
 """
 function agency_summary(p::SAGEParams, sol)
+    p.illiquid && return two_asset_agency_summary(p, sol)
     a = sol.a; λ = sol.lambda; P1 = sol.P1; na = p.na
     z, Π = SAGEBewley.income_process(p)
     ns = length(z)
@@ -112,8 +113,8 @@ function agency_summary(p::SAGEParams, sol)
         pmass[s] += m * pc; pinc[s] += m * py
         s > nh && cbar[i, s] > 0 && (dmass[s] += m * max(0.0, 1 - cbar[i, s - nh] / cbar[i, s]))
     end
-    (pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass,
-     mpcmass = mpcmass, mpchmass = mpchmass, rmass = rmass, xmass = xmass)
+    (pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = zeros(ns),
+     mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = zeros(ns), rmass = rmass, xmass = xmass)
 end
 
 "Mix the agency sums across discount types or belonging scales, as `collapse` does the rest."
@@ -121,6 +122,8 @@ collapse_agency(ds, w) = (pmass = sum(w[i] .* ds[i].pmass for i in eachindex(ds)
                           pinc  = sum(w[i] .* ds[i].pinc  for i in eachindex(ds)),
                           dmass = sum(w[i] .* ds[i].dmass for i in eachindex(ds)),
                           hmass = sum(w[i] .* ds[i].hmass for i in eachindex(ds)),
+                          whmass = sum(w[i] .* ds[i].whmass for i in eachindex(ds)),
+                          mpcwmass = sum(w[i] .* ds[i].mpcwmass for i in eachindex(ds)),
                           mpcmass  = sum(w[i] .* ds[i].mpcmass  for i in eachindex(ds)),
                           mpchmass = sum(w[i] .* ds[i].mpchmass for i in eachindex(ds)),
                           rmass    = sum(w[i] .* ds[i].rmass    for i in eachindex(ds)),

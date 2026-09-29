@@ -296,6 +296,11 @@ end
 function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01,
                                    full::Bool = false, tol::Float64 = 1e-9,
                                    maxit::Int = 5000, rewards = nothing, V0 = nothing)
+    if p.illiquid
+        p.solver === :egm || error("the illiquid asset needs solver = :egm")
+        return solve_two_asset_egm(p, Q_agg; theta = theta, full = full, tol = tol, maxit = maxit,
+                                   warm = V0 isa NamedTuple && hasproperty(V0, :Vb) ? V0 : nothing)
+    end
     p.solver === :egm && return solve_participation_egm(p, Q_agg; theta = theta, full = full, tol = tol,
                                                         maxit = maxit, warm = V0 isa NamedTuple ? V0 : nothing)
     a = SAGEBewley.exponential_grid(p.a_min, p.a_max, p.na, p.pexp)

@@ -110,7 +110,7 @@ feasibility check.
 function collapse(ds, w)
     n = length(ds); length(w) == n || error("weights do not match")
     acc(fld) = sum(w[i] .* getfield(ds[i], fld) for i in 1:n)
-    (W = acc(:W), mass = acc(:mass), part = acc(:part), Y = acc(:Y), Ys = acc(:Ys),
+    (W = acc(:W), K = acc(:K), N = acc(:N), mass = acc(:mass), part = acc(:part), Y = acc(:Y), Ys = acc(:Ys),
      ym_s = acc(:ym_s), jinc = acc(:jinc), jboth = acc(:jboth), ymean = acc(:ymean),
      rate = acc(:rate), minc = acc(:minc), pbase = acc(:pbase), eff_E = acc(:eff_E),
      ypoor = acc(:ypoor),
@@ -150,6 +150,7 @@ stationary distribution so that pooling across nodes and cells is exact:
   rate, minc, pbase   as the solver returns them
 """
 function cell_summary(p::SAGEParams, sol; thresholds = nothing)
+    p.illiquid && return two_asset_cell_summary(p, sol; thresholds = thresholds)
     a = sol.a; λ = sol.lambda; P1 = sol.P1; z = sol.z_vals
     na, nz = p.na, p.nz
     W = zeros(nz, na); mass = zeros(nz); part = zeros(nz); ym_s = zeros(nz)
@@ -209,7 +210,7 @@ function cell_summary(p::SAGEParams, sol; thresholds = nothing)
         cumsum!(view(Ys, i_z, :), view(Ys, i_z, :))
     end
     cumsum!(Y, Y); cumsum!(ypoor, ypoor)
-    (W = W, mass = mass, part = part, Y = Y, Ys = Ys, ymean = ymean, ym_s = ym_s,
+    (W = W, K = zeros(nz, 1), N = zeros(nz, 1), mass = mass, part = part, Y = Y, Ys = Ys, ymean = ymean, ym_s = ym_s,
      ymin_E = ymin_E, rate = sol.rate, minc = sol.meaninc, pbase = sol.partbase,
      jinc = jinc, jboth = jboth, thresholds = thr, eff_E = eff_E, ypoor = ypoor)
 end
