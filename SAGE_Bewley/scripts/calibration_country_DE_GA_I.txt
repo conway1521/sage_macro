@@ -1,0 +1,8 @@
+# written by calibrate_two_asset.jl DE GA; illiquid asset on; chi0 from FR, wealthy hand-to-mouth untargeted
+phi = 6.135
+beta_spread = 0.0
+beta_bar = 0.9898
+impatient_share = 0.0483
+beta_low = 0.8693
+chi0 = 0.0113
+illiquid_premium = 0.0216
