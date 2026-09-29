@@ -1,0 +1,13 @@
+calibrating DE G with the illiquid asset | targets: net wealth / income 2.38, wealthy htm 0.248, poor htm 0.074, effort 0.6087 | premium 0.0216, death 0.0222 | workers 3
+  chi0 taken from FR: 0.0143; the wealthy hand-to-mouth are not targeted
+start beta_bar 1.0074 chi0 0.0143 impatient share 0.0740 phi 6.870 | net wealth/income 12.03, wealthy htm 0.0477, poor htm 0.0958, effort 0.5599 | worst targeted 32.40 band  [1 solves, 22.0 min]
+step 1 beta_bar 0.9951 chi0 0.0143 impatient share 0.0685 phi 5.561 | net wealth/income 4.58, wealthy htm 0.0986, poor htm 0.0914, effort 0.6071 | worst targeted 13.09 band  [5 solves, 59.7 min]
+step 2 beta_bar 0.9870 chi0 0.0143 impatient share 0.0486 phi 6.066 | net wealth/income 1.62, wealthy htm 0.1563, poor htm 0.0748, effort 0.6100 | worst targeted 7.66 band  [9 solves, 66.5 min]
+step 3 beta_bar 0.9898 chi0 0.0143 impatient share 0.0489 phi 5.896 | net wealth/income 2.47, wealthy htm 0.1442, poor htm 0.0740, effort 0.6086 | worst targeted 0.76 band  [13 solves, 73.8 min]
+  untargeted: wealthy hand-to-mouth 0.1442 against 0.2480 in the data
+
+validation (not targeted): MPC 0.107 (poor htm 0.323, wealthy 0.223) | drop on job loss 0.168 | protection if hit 0.8315 | room 0.473 | median liquid / median income 0.259 | net wealth top 10% share and Gini below
+  net wealth: top 10% share 0.479, Gini 0.667
+wrote calibration_country_DE_G_I.txt
+
+DONE DE G (illiquid) in 73.9 min, 13 solves
