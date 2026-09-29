@@ -304,3 +304,23 @@ The raw association is strong, and non-profit density in 2011 already predicts v
 **Decisions made here, open to the user:**
 - **E is built on the one-asset core first.** It is calibrated for all three countries and fast. It moves to two assets when that parallel is complete for the three countries.
 - **Conversion is a composition-adjusted residual** in version 1, not a broadband elasticity.
+
+## Build log
+
+**2026-09-29, E1 and E2.**
+
+- **The place layer** (`place_layer.jl`): each place is its own economy with local social feedback, financed nationally, with hardship against the national line. Three places identical to the nation reduce to it to 6e-16 (G+A and G+S+A), and the reduction is in the suite.
+- **Channels from data:** composition, access to work, conversion (a labelled residual), commuting (a new EGM parameter, relative to the national mean, exact when zero), and community (France: sports facilities in service before 1990, epsilon 0.4 with ends 0.3 and 0.5).
+- **First test, France G+S+A** (`test_places.txt`), rural over cities participation, against formal volunteering at 1.365:
+
+| channels | ratio |
+|---|---|
+| composition only | 0.905 |
+| access only | 1.022 |
+| both | 0.925 |
+
+- **Reading:**
+  - Composition works against the data: rural areas have fewer tertiary-educated people, who take part more.
+  - Access adds a little.
+  - The rural premium must come from the community channel.
+  - Composition also gives cities higher agency (1.02 against 0.96 rural) and better protection if hit (0.89 against 0.84), through the capability gradient.
