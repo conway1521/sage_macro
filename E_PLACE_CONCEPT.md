@@ -258,3 +258,47 @@ The raw association is strong, and non-profit density in 2011 already predicts v
 1. **omega by place is a secondary channel.** In Italy, access to work and composition, which the model carries structurally, absorb most of the regional gradient. This supports building place with all three channels together, not community alone.
 2. **The elasticity of participation to predetermined infrastructure is well below one:** about 0.3 to 0.5 in France, and about 0.3 to 0.4 with controls in Italy. It is identified from two countries that roughly agree. That is the out-of-sample check, passed tentatively.
 3. **Evidence strength:** France's measure is the cleanest (predetermined and administrative). Italy's is cross-sectional with n = 21 and two influential alpine provinces.
+
+## Economics specification, version 1 (2026-09-29)
+
+**Principle:** the place parameters come from data, and the national calibration is left as it is. E adds one free parameter, the community elasticity epsilon, which is reported as a range. Everything E predicts by place is untargeted: unemployment, volunteering and, later, the hand-to-mouth from the HFCS by place. That makes E a test of the model, not a fit.
+
+**Structure.**
+- **Cells:** education × place (2 × 3), with population and tertiary shares by place from `place_by_degurba.csv` (ilc_lvho01, edat_lfs_9913).
+- **Social feedback is local:** each place has its own participation fixed point, and the community fabric omega_p + (1 - omega_p) × participation_p is local.
+- **Financing is national:** one unemployment-insurance tax and one lump-sum tax across places.
+- **Reduction:** three identical places give back the national economy exactly.
+
+**Channel 1, access to work** (links to G and A):
+- **Job finding f_p and separation delta_p by place,** from the quarterly unemployment-to-employment flows and unemployment rates by degree of urbanisation, converted to annual rates as the national ones are (`build_country_table.py`).
+- **Commuting as time:** each unit of work costs (1 + tau_p) units of time, with tau_p = commuting minutes a day over working minutes a day, by place and education (Eurostat commuting by degree of urbanisation).
+- **What it does:** it enters the time budget and the disutility of effort. The model already has a time floor; commuting scales with work rather than being fixed.
+- **New solver parameter:** tau per state.
+
+**Channel 2, conversion** (links to A, Sen's conversion factors):
+- **alpha_{g,p} = alpha_g × c_p,** where c_p is the place premium in earnings that education composition does not explain. It is median income by place (ilc_di17) over the median predicted from the place's education mix at national education pay ratios.
+- **Normalisation:** c_p averages to one nationally, so national calibration and reductions are unchanged.
+- **Broadband and services are not a separate parameter in version 1.** Their effect sits inside c_p. They are reported beside it as the candidate mechanism.
+- **Data gap:** no official source has earnings by degree of urbanisation and education together, so c_p is a residual, and I will label it as such.
+
+**Channel 3, community** (links to S):
+- **omega_p = omega × (infra_p / infra_national)^epsilon,** with predetermined infrastructure (French sports facilities from before 1990, Italian non-profit density in 2011).
+- **epsilon is between 0.3 and 0.5,** from France and Italy. Results are reported at both ends.
+- **Validation:** formal volunteering by place (EU-SILC 2015, ilc_scp20) is untargeted.
+
+**Amenities** (wellbeing only, no choice in version 1):
+- **Measures:** pollution and grime, unmet medical need for reasons of distance, and life satisfaction by place.
+- **Role:** reported beside the model's wellbeing outputs by place, not fed into choices. Choices come later, and only with a source for the valuation.
+
+**Outputs by place** (for the WISE audience): participation, agency and protection if hit, hardship, hand-to-mouth, effort, commuting time. Each is by education within place.
+
+**Build order:**
+- **E1: the place layer.** Six cells, local fixed points, national financing, and the reduction test in the suite.
+- **E2: channel parameters by place** from the data (a script, with sources).
+- **E3: France** with validation against unemployment and volunteering by place, then Germany and Italy.
+- **E4: the HFCS-by-place layer,** when the data arrive: liquid buffers and hand-to-mouth by place as targets.
+- **Later: housing by place** as E's illiquid asset, joining the two-asset parallel.
+
+**Decisions made here, open to the user:**
+- **E is built on the one-asset core first.** It is calibrated for all three countries and fast. It moves to two assets when that parallel is complete for the three countries.
+- **Conversion is a composition-adjusted residual** in version 1, not a broadband elasticity.
