@@ -46,11 +46,11 @@ Social feedback alone produces a quarter of the gradient at most. The capability
 | annual MPC, one-month windfall | 0.115 | 0.42 | 0.141 | 0.50 | 0.185 | 0.48 |
 | MPC of the hand-to-mouth | 0.330 | | 0.285 | | 0.420 | |
 | consumption drop on job loss | 0.134 | 0.09 (0.05 to 0.13) | 0.323 | 0.06 (0.04 to 0.09) | 0.422 | 0.08 (0.05 to 0.13) |
-| top 10% wealth share | 0.227 | 0.499 | 0.248 | 0.555 | 0.235 | 0.546 |
-| wealth Gini | 0.398 | 0.676 | 0.440 | 0.727 | 0.413 | 0.671 |
-| median liquid assets / mean income | 2.22 | 0.25 | 2.01 | 0.30 | 1.86 | 0.27 |
+| top 10% wealth share | 0.227 | 0.499 | 0.248 | 0.555 | 0.235 | 0.495 |
+| wealth Gini | 0.398 | 0.676 | 0.440 | 0.727 | 0.413 | 0.640 |
+| median liquid assets / mean income | 2.22 | 0.25 | 2.01 | 0.30 | 1.86 | 0.24 |
 
-Benchmark sources are in the validation table of `PLAN_MASTER.md`. The wealth rows compare the model's single liquid asset with HFCS net wealth.
+Benchmark sources are in the validation table of `PLAN_MASTER.md`. The Italian wealth benchmarks were corrected on 2026-09-29 from the June 2026 edition of the HFCS tables. The wealth rows compare the model's single liquid asset with HFCS net wealth.
 
 ## 4. Reading
 

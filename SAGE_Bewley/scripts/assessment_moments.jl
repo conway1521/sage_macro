@@ -21,8 +21,8 @@ function median_of(x, m)
 end
 
 BENCH = Dict("DE" => (mpc = "0.50 (0.40-0.55)", drop = "0.06 (0.04-0.09)", top = "0.555", gini = "0.727", liq = "0.295"),
-             "FR" => (mpc = "0.42 (0.35-0.50)", drop = "0.09 (0.05-0.13)", top = "0.499", gini = "0.676", liq = "0.248"),
-             "IT" => (mpc = "0.48 (0.45-0.52)", drop = "0.08 (0.05-0.13)", top = "0.546", gini = "0.671", liq = "0.271"))
+             "FR" => (mpc = "0.42 (0.35-0.50)", drop = "0.09 (0.05-0.13)", top = "0.499", gini = "0.676", liq = "0.249"),
+             "IT" => (mpc = "0.48 (0.45-0.52)", drop = "0.08 (0.05-0.13)", top = "0.495", gini = "0.640", liq = "0.241"))
 for code in ("FR", "DE", "IT")
     t0 = time()
     r = solve_economy(country_config(code; config = "GSA", S = true, A = true))
