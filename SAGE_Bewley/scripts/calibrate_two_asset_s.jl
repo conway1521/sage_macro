@@ -58,17 +58,20 @@ say("calibrating ", CODE, " ", CFG, " with the illiquid asset, from the ", OFF, 
 qmed(x, cm) = (k = findfirst(>=(0.5 * cm[end]), cm); x[k])
 # the first parameter is effective patience, beta_bar times survival (calibrate_two_asset.jl)
 const SURV = 1 - off.death
-unpack(x) = (beta_bar = x[1] / SURV, chi0 = exp(x[2]), beta_spread = max(x[3], 0.0), phi = exp(x[4]))
-with(c, x) = (u = unpack(x); SAGEConfig(c; beta_bar = u.beta_bar, chi0 = u.chi0, beta_spread = u.beta_spread, phi = u.phi))
-const LO = [0.90, log(1e-3), 0.0, log(0.3)]; const HI = [0.995, log(2.0), 0.15, log(40.0)]
-const STEP = [0.004, 0.25, 0.006, 0.05]; const MAXMOVE = [0.012, 1.0, 0.03, 0.3]
+# two patience groups, as in calibrate_two_asset.jl
+const BETA_LOW_EFF = 0.85
+unpack(x) = (beta_bar = x[1] / SURV, chi0 = exp(x[2]), impatient_share = clamp(x[3], 0.0, 0.4), phi = exp(x[4]))
+with(c, x) = (u = unpack(x); SAGEConfig(c; beta_bar = u.beta_bar, chi0 = u.chi0, beta_spread = 0.0,
+                                       impatient_share = u.impatient_share, beta_low = BETA_LOW_EFF / SURV, phi = u.phi))
+const LO = [0.90, log(1e-3), 0.0, log(0.3)]; const HI = [0.995, log(2.0), 0.4, log(40.0)]
+const STEP = [0.004, 0.25, 0.01, 0.05]; const MAXMOVE = [0.012, 1.0, 0.05, 0.3]
 mom(r) = (nw = qmed(NWGRID, r.Ntot) / r.median_income, whtm = r.wealthy_htm, htm = r.hand_to_mouth_kvw, e = r.mean_effort_employed)
 resid(m) = [log(m.nw / NW_TARGET) / TOL.nw, (m.whtm - WHTM_TARGET) / TOL.whtm, (m.htm - HTM_TARGET) / TOL.htm, (m.e - E_TARGET) / TOL.e]
 t0 = time()
 elapsed() = (time() - t0) / 60
 
 # 1 and 2
-x = [off.beta_bar * SURV, log(off.chi0), off.beta_spread, log(off.phi)]
+x = [off.beta_bar * SURV, log(off.chi0), off.impatient_share, log(off.phi)]
 F0 = resid(mom(_solve(with(off, x), nothing; disk = false)))
 J = zeros(4, 4)
 for k in 1:4
@@ -96,8 +99,8 @@ function scan(x; ugrid = UGRID_COARSE)
 end
 solveS(sc) = (r = _solve(sc.c, nothing; disk = true); (r = r, m = mom(r)))
 showr(tag, x, s) = (u = unpack(x);
-    @printf("%s beta_bar %.4f chi0 %.4f spread %.4f phi %.3f | participation %.4f (cells %.4f, %.4f), multiplier %.1f | net wealth/income %.2f, wealthy htm %.4f, poor htm %.4f, effort %.4f | worst %.2f band  [%.1f min]\n",
-            tag, u.beta_bar, u.chi0, u.beta_spread, u.phi, s.r.rate, s.r.pooled[1].rate, s.r.pooled[2].rate, 1 / (1 - s.r.slope),
+    @printf("%s beta_bar %.4f chi0 %.4f impatient share %.4f phi %.3f | participation %.4f (cells %.4f, %.4f), multiplier %.1f | net wealth/income %.2f, wealthy htm %.4f, poor htm %.4f, effort %.4f | worst %.2f band  [%.1f min]\n",
+            tag, u.beta_bar, u.chi0, u.impatient_share, u.phi, s.r.rate, s.r.pooled[1].rate, s.r.pooled[2].rate, 1 / (1 - s.r.slope),
             s.m.nw, s.m.whtm, s.m.htm, s.m.e, maximum(abs.(resid(s.m))), elapsed()); flush(stdout))
 
 say("3-4. families, technology and corrections")
@@ -122,8 +125,8 @@ say(@sprintf("  validation (not targeted): MPC %.3f (poor htm %.3f, wealthy %.3f
 u = unpack(x)
 open(OUTFILE, "w") do io
     println(io, "# written by calibrate_two_asset_s.jl $(CODE) $(CFG); illiquid asset on")
-    @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\nchi0 = %.4f\nilliquid_premium = %.4f\nkappa = %.2f\nsigma_m = %.2f\n",
-            u.phi, u.beta_spread, u.beta_bar, u.chi0, off.illiquid_premium, sc.best.κ, sc.best.σ)
+    @printf(io, "phi = %.3f\nbeta_spread = 0.0\nbeta_bar = %.4f\nimpatient_share = %.4f\nbeta_low = %.4f\nchi0 = %.4f\nilliquid_premium = %.4f\nkappa = %.2f\nsigma_m = %.2f\n",
+            u.phi, u.beta_bar, u.impatient_share, BETA_LOW_EFF / SURV, u.chi0, off.illiquid_premium, sc.best.κ, sc.best.σ)
 end
 isfile(NOTCAL) && rm(NOTCAL)
 say("wrote ", basename(OUTFILE))

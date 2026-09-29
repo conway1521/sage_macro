@@ -66,6 +66,13 @@ Base.@kwdef struct SAGEConfig
     delta::NTuple{2,Float64} = (0.0795784, 0.0403684)   # separation, by cell
     beta_spread::Float64     = 0.0              # downward spread of the discount factor
     nbeta::Int               = 5
+    # Two patience groups instead of the uniform spread, when impatient_share > 0:
+    # a patient majority at beta_bar and an impatient minority at beta_low. A
+    # uniform spread wide enough for the German and Italian poor hand-to-mouth
+    # dragged the median household's patience down so far that the two-asset
+    # model could not hold their median net wealth (TWO_ASSET_DESIGN.md).
+    impatient_share::Float64 = 0.0
+    beta_low::Float64        = 0.0
     beta_bar::Float64        = 0.96
     # Productivity states per employment status. SEVEN, not the engine's two.
     # With two states of near-equal mass the income distribution is two
@@ -240,6 +247,9 @@ end
 
 "Discount-factor nodes and weights implied by a config."
 function betas_of(c::SAGEConfig)
+    # two groups: a patient majority at beta_bar and an impatient minority of
+    # share impatient_share at beta_low (the two-asset calibration, 2026-09-29)
+    c.impatient_share > 0 && return ([c.beta_low, c.beta_bar], [c.impatient_share, 1 - c.impatient_share])
     c.beta_spread <= 0 && return ([c.beta_bar], [1.0])
     b = [c.beta_bar - c.beta_spread + c.beta_spread * (2i - 1) / (2 * c.nbeta) for i in 1:c.nbeta]
     (b, fill(1 / length(b), length(b)))

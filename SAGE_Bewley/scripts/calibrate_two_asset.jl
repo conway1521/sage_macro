@@ -53,12 +53,19 @@ qmed(x, cm) = (k = findfirst(>=(0.5 * cm[end]), cm); x[k])
 # above one is what two-asset models need, and death keeps the distribution
 # stationary.
 const SURV = 1 - base.death
-unpack(x) = (beta_bar = x[1] / SURV, chi0 = exp(x[2]), beta_spread = max(x[3], 0.0), phi = exp(x[4]))
-cfg_at(x) = (u = unpack(x); SAGEConfig(base; beta_bar = u.beta_bar, chi0 = u.chi0, beta_spread = u.beta_spread, phi = u.phi))
+# Two patience groups (2026-09-29): the third parameter is the share of an
+# impatient minority at effective patience BETA_LOW_EFF; the patient majority is
+# at the first parameter. A uniform spread wide enough for the German and
+# Italian poor hand-to-mouth pulled the median household below what their net
+# wealth needs (logs_two_asset, runs 1 and 2).
+const BETA_LOW_EFF = 0.85
+unpack(x) = (beta_bar = x[1] / SURV, chi0 = exp(x[2]), impatient_share = clamp(x[3], 0.0, 0.4), phi = exp(x[4]))
+cfg_at(x) = (u = unpack(x); SAGEConfig(base; beta_bar = u.beta_bar, chi0 = u.chi0, beta_spread = 0.0,
+                                       impatient_share = u.impatient_share, beta_low = BETA_LOW_EFF / SURV, phi = u.phi))
 const LO = [0.90, log(1e-3), 0.0, log(0.3)]
-const HI = [0.995, log(2.0), 0.15, log(40.0)]
-const STEP = [0.004, 0.25, 0.006, 0.05]    # finite-difference steps
-const MAXMOVE = [0.012, 1.0, 0.03, 0.3]
+const HI = [0.995, log(2.0), 0.4, log(40.0)]
+const STEP = [0.004, 0.25, 0.01, 0.05]    # finite-difference steps
+const MAXMOVE = [0.012, 1.0, 0.05, 0.3]
 
 nsolve = Ref(0)
 function moments(x)
@@ -71,12 +78,12 @@ end
 resid(m) = [log(m.nw / NW_TARGET) / TOL.nw, (m.whtm - WHTM_TARGET) / TOL.whtm,
             (m.htm - HTM_TARGET) / TOL.htm, (m.e - E_TARGET) / TOL.e]
 report(tag, x, m, t0) = (u = unpack(x);
-    @printf("%s beta_bar %.4f chi0 %.4f spread %.4f phi %.3f | net wealth/income %.2f, wealthy htm %.4f, poor htm %.4f, effort %.4f | worst %.2f band  [%d solves, %.1f min]\n",
-            tag, u.beta_bar, u.chi0, u.beta_spread, u.phi, m.nw, m.whtm, m.htm, m.e, maximum(abs.(resid(m))), nsolve[], (time() - t0) / 60);
+    @printf("%s beta_bar %.4f chi0 %.4f impatient share %.4f phi %.3f | net wealth/income %.2f, wealthy htm %.4f, poor htm %.4f, effort %.4f | worst %.2f band  [%d solves, %.1f min]\n",
+            tag, u.beta_bar, u.chi0, u.impatient_share, u.phi, m.nw, m.whtm, m.htm, m.e, maximum(abs.(resid(m))), nsolve[], (time() - t0) / 60);
     flush(stdout))
 
 t0 = time()
-x = [0.975, log(0.05), base.beta_spread, log(base.phi)]
+x = [0.985, log(0.02), HTM_TARGET, log(base.phi)]
 m = moments(x); report("start", x, m, t0)
 ok = false
 for it in 1:10
@@ -135,8 +142,8 @@ end
 u = unpack(x)
 open(OUTFILE, "w") do io
     println(io, "# written by calibrate_two_asset.jl $(CODE) $(CFG); illiquid asset on")
-    @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\nchi0 = %.4f\nilliquid_premium = %.4f\n",
-            u.phi, u.beta_spread, u.beta_bar, u.chi0, PREMIUM)
+    @printf(io, "phi = %.3f\nbeta_spread = 0.0\nbeta_bar = %.4f\nimpatient_share = %.4f\nbeta_low = %.4f\nchi0 = %.4f\nilliquid_premium = %.4f\n",
+            u.phi, u.beta_bar, u.impatient_share, BETA_LOW_EFF / SURV, u.chi0, PREMIUM)
 end
 isfile(NOTCAL) && rm(NOTCAL)
 say("wrote ", basename(OUTFILE))

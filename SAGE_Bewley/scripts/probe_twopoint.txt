@@ -1,0 +1,5 @@
+DE patient 0.985, impatient share 0.08 (2.7 min): net wealth/income 11.82 (target 2.38) | poor htm 0.101 wealthy 0.048 | effort 0.5610 | MPC 0.062 | drop 0.106 | liquid/income 0.956
+DE patient 0.995, impatient share 0.08 (2.6 min): net wealth/income 14.14 (target 2.38) | poor htm 0.101 wealthy 0.007 | effort 0.6675 | MPC 0.042 | drop 0.075 | liquid/income 2.618
+IT patient 0.990, impatient share 0.10 (2.7 min): net wealth/income 11.10 (target 5.51) | poor htm 0.048 wealthy 0.013 | effort 0.7480 | MPC 0.047 | drop 0.113 | liquid/income 1.688
+IT patient 0.995, impatient share 0.10 (2.7 min): net wealth/income 17.81 (target 5.51) | poor htm 0.047 wealthy 0.036 | effort 0.7150 | MPC 0.061 | drop 0.109 | liquid/income 1.985
+DONE
