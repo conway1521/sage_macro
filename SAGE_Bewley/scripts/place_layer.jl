@@ -102,10 +102,23 @@ Place specs from `data/place/place_by_degurba.csv`, and population weights
   employment probability over its population-weighted mean (lfsi_long_e03,
   2015 to 2018), and separation scaled so that the place's unemployment rate
   (lfst_r_urgau, latest) holds in steady state, with the two education cells
-  keeping their relative separation rates.
+  keeping their relative separation rates. Without flows by place (Germany),
+  job finding stays national and separation carries the unemployment rate.
+- **conversion:** the place premium in pay that education mix and
+  unemployment do not explain: median equivalised income by place (ilc_di17)
+  over the income predicted from the place's education mix at the calibrated
+  pay ratio and its employment rate, rescaled so the national mean is unchanged.
+  A residual, labelled as such: no official source gives earnings by place and
+  education together.
+- **community:** omega_p = omega x (infra_p / infra_national)^epsilon, with
+  predetermined infrastructure (France: sports facilities in service before
+  1990, `data/place/sports_facilities_fr.csv`). epsilon between 0.3 and 0.5
+  from France and Italy (E_PLACE_CONCEPT.md); 0.4 by default, report both ends.
+  Germany and Italy have no infrastructure by degree of urbanisation yet, so
+  they keep the national omega.
 Channels without data for a place keep the national value.
 """
-function places_from_data(code, c::SAGEConfig; channels = (:composition, :access))
+function places_from_data(code, c::SAGEConfig; channels = (:composition, :access), epsilon = 0.4)
     d = place_data(code)
     w = [latest(d, "pop_share", p) for (_, p) in DEGURBA]
     any(isnothing, w) && error("no population shares by place for $code")
@@ -121,14 +134,39 @@ function places_from_data(code, c::SAGEConfig; channels = (:composition, :access
     if :access in channels
         u = [latest(d, "unemployment_rate_20_64", p) for (_, p) in DEGURBA]
         q = [meanyrs(d, "q_unemp_to_emp_25_54", p, 2015:2018) for (_, p) in DEGURBA]
-        if !any(isnothing, u) && !any(isnothing, q)
-            u = u ./ 100; qn = sum(w .* q); un = sum(w .* u)
+        if !any(isnothing, u)
+            # without flows by place (Germany), job finding stays national and
+            # separation alone carries the place's unemployment rate
+            haveq = !any(isnothing, q)
+            u = u ./ 100; qn = haveq ? sum(w .* q) : 1.0; un = sum(w .* u)
             for i in 1:3
-                f = min(0.99, c.f_find * q[i] / qn)
+                f = haveq ? min(0.99, c.f_find * q[i] / qn) : c.f_find
                 s = (u[i] / (1 - u[i])) * f / ((un / (1 - un)) * c.f_find)
                 specs[i][:f_find] = f; specs[i][:delta] = (c.delta[1] * s, c.delta[2] * s)
             end
         end
+    end
+    if :conversion in channels
+        inc = [latest(d, "median_income_eur", p) for (_, p) in DEGURBA]
+        u = [latest(d, "unemployment_rate_20_64", p) for (_, p) in DEGURBA]
+        if !any(isnothing, inc) && !any(isnothing, u)
+            t = [get(specs[i], :tertiary, c.share[2]) for i in 1:3]
+            pred = [((1 - t[i]) * c.alpha[1] + t[i] * c.alpha[2]) * (1 - u[i] / 100) for i in 1:3]
+            raw = inc ./ pred
+            k = sum(w .* pred) / sum(w .* inc)
+            for i in 1:3; specs[i][:conv] = raw[i] * k; end
+        end
+    end
+    if :community in channels && code == "FR"
+        inf = Dict{String,Tuple{Float64,Float64}}()
+        for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "place", "sports_facilities_fr.csv"))
+            f = split(ln, ","); length(f) >= 5 || continue
+            f[1] == "entered service before 1990 (central)" || continue
+            inf[f[2]] = (parse(Float64, f[5]), parse(Float64, f[4]))
+        end
+        per = [inf[n][1] for n in ("cities", "towns", "rural")]; pop = [inf[n][2] for n in ("cities", "towns", "rural")]
+        nat = sum(per .* pop) / sum(pop)
+        for i in 1:3; specs[i][:omega] = min(0.95, c.omega * (per[i] / nat)^epsilon); end
     end
     ([(; sp...) for sp in specs], w)
 end
