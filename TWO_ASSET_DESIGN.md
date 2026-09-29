@@ -89,3 +89,15 @@ The two branches are combined with a small logit smoothing, as participation is 
   - drop on job loss 0.11 against 0.09 in the data;
   - median liquid over median income 0.25, matching Table F1.
   - The MPC stays at about 0.11 against survey MPCs of 0.42. That is the open gap: in the model even the hand-to-mouth spend only 20 to 25% of a one-month windfall within the year.
+
+**2026-09-29, calibration run 2 (effective patience capped at 0.995):**
+
+- **France calibrated.** G+A: net wealth to income 3.83 (target 4.02), wealthy hand-to-mouth 0.169, poor 0.031, effort 0.640.
+- **France G+A, untargeted checks:**
+  - median liquid over median income 0.254 against 0.249 (HFCS Table F1);
+  - drop on job loss 0.108 against 0.09;
+  - net-wealth Gini 0.704 against 0.676, and top 10% share 0.53 against 0.50;
+  - the MPC stays at 0.11 against 0.42.
+- **Germany and Italy not calibrated.** Their poor hand-to-mouth targets (0.074 and 0.083) needed a uniform spread of up to 0.15. With the top type capped, that put the median household at effective patience of about 0.92, and median net wealth stuck at 0.5 to 2 times income against 2.4 and 5.5.
+- **Decision: two patience groups.** A patient majority at beta_bar, and an impatient minority at effective patience 0.85 whose share is fitted to the poor hand-to-mouth. The probe (`probe_twopoint.txt`) shows the German and Italian targets now bracketed: net wealth of 11 to 18 times income at high patience, with poor hand-to-mouth moving with the share.
+- **Run 3** recalibrates all three countries with the two groups, so they share one structure. The one-asset model keeps the uniform spread for now. Aligning it is a later choice, and its calibrations are unaffected.
