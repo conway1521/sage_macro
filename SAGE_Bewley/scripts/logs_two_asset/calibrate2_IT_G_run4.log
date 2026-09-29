@@ -1,0 +1,26 @@
+calibrating IT G with the illiquid asset | targets: net wealth / income 5.51, wealthy htm 0.155, poor htm 0.083, effort 0.7252 | premium 0.0215, death 0.0222 | workers 3
+  chi0 taken from FR: 0.0143; the wealthy hand-to-mouth are not targeted
+start beta_bar 1.0074 chi0 0.0143 impatient share 0.0830 phi 2.950 | net wealth/income 13.18, wealthy htm 0.0505, poor htm 0.0432, effort 0.6724 | worst targeted 17.45 band  [1 solves, 4.9 min]
+step 1 beta_bar 1.0169 chi0 0.0143 impatient share 0.1214 phi 3.982 | net wealth/income 13.62, wealthy htm 0.0133, poor htm 0.0529, effort 0.6938 | worst targeted 18.10 band  [5 solves, 23.5 min]
+  Newton step failed; moved to the best point evaluated
+step 2 beta_bar 1.0169 chi0 0.0143 impatient share 0.1314 phi 3.982 | net wealth/income 13.30, wealthy htm 0.0133, poor htm 0.0551, effort 0.6936 | worst targeted 17.62 band  [12 solves, 54.3 min]
+step 3 beta_bar 1.0158 chi0 0.0143 impatient share 0.1343 phi 5.375 | net wealth/income 11.59, wealthy htm 0.0062, poor htm 0.0567, effort 0.6867 | worst targeted 14.87 band  [16 solves, 72.6 min]
+  Newton step failed; moved to the best point evaluated
+step 4 beta_bar 1.0158 chi0 0.0143 impatient share 0.1443 phi 5.375 | net wealth/income 11.31, wealthy htm 0.0062, poor htm 0.0589, effort 0.6860 | worst targeted 14.39 band  [23 solves, 103.2 min]
+  Newton step failed; moved to the best point evaluated
+step 5 beta_bar 1.0158 chi0 0.0143 impatient share 0.1543 phi 5.375 | net wealth/income 11.04, wealthy htm 0.0062, poor htm 0.0612, effort 0.6853 | worst targeted 13.90 band  [30 solves, 135.2 min]
+step 6 beta_bar 1.0134 chi0 0.0143 impatient share 0.2043 phi 5.208 | net wealth/income 8.20, wealthy htm 0.0056, poor htm 0.0726, effort 0.6946 | worst targeted 7.96 band  [34 solves, 152.7 min]
+  Newton step failed; moved to the best point evaluated
+step 7 beta_bar 1.0134 chi0 0.0143 impatient share 0.2143 phi 5.208 | net wealth/income 7.98, wealthy htm 0.0056, poor htm 0.0749, effort 0.6938 | worst targeted 7.41 band  [41 solves, 183.4 min]
+  Newton step failed; moved to the best point evaluated
+step 8 beta_bar 1.0134 chi0 0.0143 impatient share 0.2243 phi 5.208 | net wealth/income 7.53, wealthy htm 0.0057, poor htm 0.0771, effort 0.6930 | worst targeted 6.45 band  [48 solves, 214.5 min]
+  Newton step failed; moved to the best point evaluated
+step 9 beta_bar 1.0134 chi0 0.0143 impatient share 0.2343 phi 5.208 | net wealth/income 7.32, wealthy htm 0.0057, poor htm 0.0794, effort 0.6922 | worst targeted 6.61 band  [55 solves, 246.3 min]
+  Newton step failed; moved to the best point evaluated
+step 10 beta_bar 1.0134 chi0 0.0143 impatient share 0.2443 phi 5.208 | net wealth/income 7.11, wealthy htm 0.0058, poor htm 0.0817, effort 0.6914 | worst targeted 6.77 band  [62 solves, 278.3 min]
+  untargeted: wealthy hand-to-mouth 0.0058 against 0.1550 in the data
+
+validation (not targeted): MPC 0.090 (poor htm 0.390, wealthy 0.227) | drop on job loss 0.165 | protection if hit 0.8355 | room 0.717 | median liquid / median income 1.576 | net wealth top 10% share and Gini below
+  net wealth: top 10% share 0.254, Gini 0.524
+
+NOT CALIBRATED: worst target at 6.77 of its band after the iteration. No calibration file written.
