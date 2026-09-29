@@ -261,6 +261,8 @@ The raw association is strong, and non-profit density in 2011 already predicts v
 
 ## Economics specification, version 1 (2026-09-29)
 
+**Why these variables:** see `WISE_MAPPING.md`, section E. The OECD Regional Well-Being topics and the CES here, later and elsewhere frame decide what is an input, a test, reported, or out of scope.
+
 **Principle:** the place parameters come from data, and the national calibration is left as it is. E adds one free parameter, the community elasticity epsilon, which is reported as a range. Everything E predicts by place is untargeted: unemployment, volunteering and, later, the hand-to-mouth from the HFCS by place. That makes E a test of the model, not a fit.
 
 **Structure.**
