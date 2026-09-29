@@ -213,6 +213,9 @@ Base.@kwdef struct SAGEParams
     # includes survival. Without it the two-asset wealth distribution settles
     # over thousands of years (beta Rk close to one). Used only by egm2_core.jl.
     death::Float64 = 0.0
+    # Commuting (E, the place layer): each unit of work takes 1 + commute units
+    # of time. Zero leaves every solve unchanged. EGM solvers only.
+    commute::Float64 = 0.0
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."

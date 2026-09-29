@@ -30,6 +30,7 @@ function place_base(c::SAGEConfig, pl)
     haskey(pl, :f_find) && (kw[:f_find] = pl.f_find)
     haskey(pl, :delta) && (kw[:delta] = pl.delta)
     haskey(pl, :omega) && (kw[:omega] = pl.omega)
+    haskey(pl, :commute) && (kw[:commute] = pl.commute)
     if haskey(pl, :conv)
         kw[:alpha] = (c.alpha[1] * pl.conv, c.alpha[2] * pl.conv); kw[:alpha_off] = c.alpha_off * pl.conv
     end
@@ -118,7 +119,8 @@ Place specs from `data/place/place_by_degurba.csv`, and population weights
   they keep the national omega.
 Channels without data for a place keep the national value.
 """
-function places_from_data(code, c::SAGEConfig; channels = (:composition, :access), epsilon = 0.4)
+function places_from_data(code, c::SAGEConfig; channels = (:composition, :access), epsilon = 0.4,
+                          weekly_hours = Dict("FR" => 37.6, "DE" => 35.4, "IT" => 37.2))
     d = place_data(code)
     w = [latest(d, "pop_share", p) for (_, p) in DEGURBA]
     any(isnothing, w) && error("no population shares by place for $code")
@@ -156,6 +158,20 @@ function places_from_data(code, c::SAGEConfig; channels = (:composition, :access
             k = sum(w .* pred) / sum(w .* inc)
             for i in 1:3; specs[i][:conv] = raw[i] * k; end
         end
+    end
+    if :commute in channels
+        # one-way minutes by place and education (lfso_19plwk28, 2019) over usual
+        # weekly hours (lfsa_ewhun2, 2019, employed 20 to 64: FR 37.6, DE 35.4,
+        # IT 37.2), five commuting days: tau = 2 x minutes x 5 / (hours x 60).
+        # The low cell averages ED0-2 and ED3_4. Relative to the population-
+        # weighted national tau, since the national effort scale absorbs the mean.
+        h = weekly_hours[code] * 60
+        tl = [(meanyrs(d, "commute_mean_minutes_ED0-2", p, 2019:2019) + meanyrs(d, "commute_mean_minutes_ED3_4", p, 2019:2019)) / 2 for (_, p) in DEGURBA]
+        th = [meanyrs(d, "commute_mean_minutes_ED5-8", p, 2019:2019) for (_, p) in DEGURBA]
+        τl = 10 .* tl ./ h; τh = 10 .* th ./ h
+        t = [get(specs[i], :tertiary, c.share[2]) for i in 1:3]
+        τbar = sum(w[i] * ((1 - t[i]) * τl[i] + t[i] * τh[i]) for i in 1:3)
+        for i in 1:3; specs[i][:commute] = ((1 + τl[i]) / (1 + τbar) - 1, (1 + τh[i]) / (1 + τbar) - 1); end
     end
     if :community in channels && code == "FR"
         inf = Dict{String,Tuple{Float64,Float64}}()

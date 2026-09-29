@@ -33,14 +33,15 @@ the monotone gap. Returns (c, e) or (NaN, NaN) when no effort gives positive
 consumption.
 """
 function egm_constrained(p::SAGEParams, cash0::Float64, w::Float64, tfl::Float64, d::Int)
-    tmax = 1.0 - tfl - QBAR * d
+    κ = 1.0 + p.commute                       # time per unit of work (commuting)
+    tmax = (1.0 - tfl - QBAR * d) / κ
     tmax < 0 && return (NaN, NaN)
     if w <= 0.0
         return cash0 > 0 ? (cash0, 0.0) : (NaN, NaN)
     end
     e_lo = cash0 > 0 ? 0.0 : (1e-12 - cash0) / w
     e_lo > tmax && return (NaN, NaN)
-    g(e) = p.ϕ * (tfl + e + QBAR * d)^p.ψ - w * (cash0 + w * e)^(-p.γ)
+    g(e) = p.ϕ * κ * (tfl + κ * e + QBAR * d)^p.ψ - w * (cash0 + w * e)^(-p.γ)
     g(e_lo) >= 0 && return (cash0 + w * e_lo, e_lo)
     g(tmax) <= 0 && return (cash0 + w * tmax, tmax)
     lo, hi = e_lo, tmax
@@ -52,6 +53,7 @@ function egm_constrained(p::SAGEParams, cash0::Float64, w::Float64, tfl::Float64
     (cash0 + w * e, e)
 end
 
+# T is total time: floor + (1 + commute) x effort + participation
 @inline egm_flow(p::SAGEParams, c::Float64, T::Float64) =
     p.Γ * (c^(1 - p.γ) / (1 - p.γ) - p.ϕ * T^(1 + p.ψ) / (1 + p.ψ))
 
@@ -64,7 +66,8 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
                      w::Float64, other::Float64, tfl::Float64, belong::Float64,
                      con_c, con_e, aend, cend, eend, Ds, Dps)
     na = length(a)
-    tmax = 1.0 - tfl - QBAR * d
+    κ = 1.0 + p.commute
+    tmax = (1.0 - tfl - QBAR * d) / κ
     if tmax < 0
         @inbounds for i in 1:na
             cd[i, s] = NaN; ed[i, s] = 0.0; apd[i, s] = a[1]; vd[i, s] = -Inf
@@ -80,8 +83,8 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
         c = (m / p.Γ)^(-1 / p.γ)
         e = 0.0
         if w > 0
-            T = (w * c^(-p.γ) / p.ϕ)^(1 / p.ψ)
-            e = clamp(T - tfl - QBAR * d, 0.0, tmax)
+            T = (w * c^(-p.γ) / (p.ϕ * κ))^(1 / p.ψ)
+            e = clamp((T - tfl - QBAR * d) / κ, 0.0, tmax)
         end
         aend[k] = (c + a[k] - w * e - other) / p.R
         cend[k] = c; eend[k] = e
@@ -93,7 +96,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
     @inbounds for i in 1:na
         cc = con_c[i, s]; ec = con_e[i, s]
         cd[i, s] = cc; ed[i, s] = ec; apd[i, s] = a[1]
-        vd[i, s] = isnan(cc) ? -Inf : egm_flow(p, cc, tfl + ec + QBAR * d) + belong * d - Ds[1] + p.β * EVs[1]
+        vd[i, s] = isnan(cc) ? -Inf : egm_flow(p, cc, tfl + κ * ec + QBAR * d) + belong * d - Ds[1] + p.β * EVs[1]
     end
     if monotone
         j = 1
@@ -112,7 +115,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
             # constrained candidate there made the iteration cycle between two
             # approximations of the same point (2026-09-28).
             if c > 0
-                vd[i, s] = egm_flow(p, c, tfl + e + QBAR * d) + belong * d - dread_at(p, s, max(ap, a[1])) +
+                vd[i, s] = egm_flow(p, c, tfl + κ * e + QBAR * d) + belong * d - dread_at(p, s, max(ap, a[1])) +
                            p.β * SAGEBewley.interp_lin(a, EVs, ap)
                 cd[i, s] = c; ed[i, s] = e; apd[i, s] = max(ap, a[1])
             end
@@ -132,7 +135,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
                 e = eend[k] + t * (eend[k+1] - eend[k])
                 ap = a[k] + t * (a[k+1] - a[k])
                 (c <= 0 || ap < a[1]) && continue
-                v = egm_flow(p, c, tfl + e + QBAR * d) + belong * d - dread_at(p, s, ap) +
+                v = egm_flow(p, c, tfl + κ * e + QBAR * d) + belong * d - dread_at(p, s, ap) +
                     p.β * SAGEBewley.interp_lin(a, EVs, ap)
                 if v > vd[i, s]
                     vd[i, s] = v; cd[i, s] = c; ed[i, s] = e; apd[i, s] = ap
@@ -148,7 +151,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
             c = cend[km] + t * (cend[km+1] - cend[km]); e = clamp(eend[km] + t * (eend[km+1] - eend[km]), 0.0, tmax)
             ap = min(a[km] + t * (a[km+1] - a[km]), a[end])
             if c > 0
-                v = egm_flow(p, c, tfl + e + QBAR * d) + belong * d - dread_at(p, s, ap) +
+                v = egm_flow(p, c, tfl + κ * e + QBAR * d) + belong * d - dread_at(p, s, ap) +
                     p.β * SAGEBewley.interp_lin(a, EVs, ap)
                 v > vd[i, s] && (vd[i, s] = v; cd[i, s] = c; ed[i, s] = e; apd[i, s] = ap)
             end

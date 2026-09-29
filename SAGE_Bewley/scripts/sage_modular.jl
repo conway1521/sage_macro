@@ -172,6 +172,10 @@ Base.@kwdef struct SAGEConfig
     # table (Jorda-Schularick-Taylor data), the fixed cost chi0 is calibrated to
     # the wealthy hand-to-mouth, death gives perpetual youth (Kaplan, Moll and
     # Violante 2018). With it on, the liquid grid is b_max and nb, not a_max and na.
+    # Commuting relative to the national average, by cell (the place layer):
+    # each unit of work takes 1 + commute units of time. The national effort
+    # scale already absorbs average commuting, so the nation has zero here.
+    commute::NTuple{2,Float64} = (0.0, 0.0)
     illiquid::Bool = false
     illiquid_premium::Float64 = 0.0
     chi0::Float64 = 0.05
@@ -241,8 +245,8 @@ end
 "The effective cell parameters implied by a config: alpha and B per cell."
 function cells_of(c::SAGEConfig)
     αs = c.A ? c.alpha : (c.alpha_off, c.alpha_off)
-    ((α = αs[1], B = c.B[1], share = c.share[1], δ = c.unemployment ? c.delta[1] : 0.0),
-     (α = αs[2], B = c.B[2], share = c.share[2], δ = c.unemployment ? c.delta[2] : 0.0))
+    ((α = αs[1], B = c.B[1], share = c.share[1], δ = c.unemployment ? c.delta[1] : 0.0, τ = c.commute[1]),
+     (α = αs[2], B = c.B[2], share = c.share[2], δ = c.unemployment ? c.delta[2] : 0.0, τ = c.commute[2]))
 end
 
 "Discount-factor nodes and weights implied by a config."
@@ -274,6 +278,7 @@ function params_of(c::SAGEConfig, cell)
         ps = [dread_params(p, c, cell) for p in ps]
     end
     c.solver === :grid || (ps = [update(p; solver = c.solver) for p in ps])
+    cell.τ == 0 || (ps = [update(p; commute = cell.τ) for p in ps])
     if c.illiquid
         c.solver === :egm || error("the illiquid asset needs solver = :egm")
         ps = [update(p; illiquid = true, Rk = p.R + c.illiquid_premium, chi0 = c.chi0, death = c.death,
