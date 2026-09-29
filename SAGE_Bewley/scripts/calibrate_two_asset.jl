@@ -20,6 +20,14 @@ say(args...) = (println(args...); flush(stdout))
 
 const CODE = ARGS[1]
 const CFG = uppercase(ARGS[2])
+# Optional third argument, a country code: take the fixed cost chi0 from that
+# country's calibration of the same configuration and drop the wealthy
+# hand-to-mouth target. For Germany and Italy (2026-09-29): with their illiquid
+# premium of about 2.2 points the annual model cannot make wealth illiquid while
+# cash is short, whatever chi0 is, so chi0 is not identified there and is
+# borrowed, as sigma is in G+S. The wealthy hand-to-mouth are then reported as
+# an untargeted miss.
+const CHI_FROM = length(ARGS) >= 3 ? uppercase(ARGS[3]) : ""
 CFG in ("G", "GA") || error("two-asset calibration covers G and GA so far, got $CFG")
 const A_ON = CFG == "GA"
 const ROW = country_rows()[CODE]
@@ -75,46 +83,53 @@ function moments(x)
     (r = r, nw = nw, whtm = r.wealthy_htm, htm = r.hand_to_mouth_kvw, e = r.mean_effort_employed)
 end
 # residuals scaled by the tolerances, so 1 means "at the edge of the band"
+const ACT = isempty(CHI_FROM) ? [1, 2, 3, 4] : [1, 3, 4]      # parameters fitted and targets owned
+ract(m) = resid(m)[ACT]
 resid(m) = [log(m.nw / NW_TARGET) / TOL.nw, (m.whtm - WHTM_TARGET) / TOL.whtm,
             (m.htm - HTM_TARGET) / TOL.htm, (m.e - E_TARGET) / TOL.e]
 report(tag, x, m, t0) = (u = unpack(x);
-    @printf("%s beta_bar %.4f chi0 %.4f impatient share %.4f phi %.3f | net wealth/income %.2f, wealthy htm %.4f, poor htm %.4f, effort %.4f | worst %.2f band  [%d solves, %.1f min]\n",
-            tag, u.beta_bar, u.chi0, u.impatient_share, u.phi, m.nw, m.whtm, m.htm, m.e, maximum(abs.(resid(m))), nsolve[], (time() - t0) / 60);
+    @printf("%s beta_bar %.4f chi0 %.4f impatient share %.4f phi %.3f | net wealth/income %.2f, wealthy htm %.4f, poor htm %.4f, effort %.4f | worst targeted %.2f band  [%d solves, %.1f min]\n",
+            tag, u.beta_bar, u.chi0, u.impatient_share, u.phi, m.nw, m.whtm, m.htm, m.e, maximum(abs.(ract(m))), nsolve[], (time() - t0) / 60);
     flush(stdout))
 
 t0 = time()
-x = [0.985, log(0.02), HTM_TARGET, log(base.phi)]
+chi_start = isempty(CHI_FROM) ? 0.02 :
+    country_config(CHI_FROM; config = CFG, S = false, A = A_ON, illiquid = true).chi0
+isempty(CHI_FROM) || say("  chi0 taken from ", CHI_FROM, ": ", chi_start, "; the wealthy hand-to-mouth are not targeted")
+x = [0.985, log(chi_start), HTM_TARGET, log(base.phi)]
 m = moments(x); report("start", x, m, t0)
 ok = false
 for it in 1:10
-    F = resid(m)
+    F = ract(m)
     global ok = maximum(abs.(F)) <= 1.0
     ok && break
-    J = zeros(4, 4)
+    na_ = length(ACT)
+    J = zeros(na_, na_)
     tried = Tuple{Vector{Float64},Any}[]      # every point evaluated this iteration
-    for k in 1:4
+    for (col, k) in enumerate(ACT)
         xk = copy(x); h = (xk[k] + STEP[k] > HI[k]) ? -STEP[k] : STEP[k]; xk[k] += h
         mk = moments(xk); push!(tried, (xk, mk))
-        J[:, k] = (resid(mk) .- F) ./ h
+        J[:, col] = (ract(mk) .- F) ./ h
     end
-    Δ = -(J \ F)
-    any(!isfinite, Δ) && (Δ = -pinv(J) * F)
+    Δa = -(J \ F)
+    any(!isfinite, Δa) && (Δa = -pinv(J) * F)
+    Δ = zeros(4); Δ[ACT] .= Δa
     # damp: no coordinate moves more than its cap, then a backtracking line search
-    s = minimum(min(1.0, MAXMOVE[k] / max(abs(Δ[k]), 1e-12)) for k in 1:4)
+    s = minimum(min(1.0, MAXMOVE[k] / max(abs(Δ[k]), 1e-12)) for k in ACT)
     # a step is accepted when the sum of squared (scaled) misses falls
     accepted = false
     for _ in 1:4
         xn = clamp.(x .+ s .* Δ, LO, HI)
         mn = moments(xn); push!(tried, (xn, mn))
-        if sum(abs2, resid(mn)) < sum(abs2, F)
+        if sum(abs2, ract(mn)) < sum(abs2, F)
             global x = xn; global m = mn; accepted = true; break
         end
         s /= 2
     end
     if !accepted
         # fall back on the best point evaluated this iteration, if it improves
-        kb = argmin([sum(abs2, resid(t[2])) for t in tried])
-        if sum(abs2, resid(tried[kb][2])) < sum(abs2, F)
+        kb = argmin([sum(abs2, ract(t[2])) for t in tried])
+        if sum(abs2, ract(tried[kb][2])) < sum(abs2, F)
             global x = tried[kb][1]; global m = tried[kb][2]; accepted = true
             say("  Newton step failed; moved to the best point evaluated")
         end
@@ -122,7 +137,8 @@ for it in 1:10
     report("step $it", x, m, t0)
     accepted || (say("  no improving point; stopping"); break)
 end
-ok = maximum(abs.(resid(m))) <= 1.0
+ok = maximum(abs.(ract(m))) <= 1.0
+isempty(CHI_FROM) || say(@sprintf("  untargeted: wealthy hand-to-mouth %.4f against %.4f in the data", m.whtm, WHTM_TARGET))
 
 r = m.r
 say(@sprintf("\nvalidation (not targeted): MPC %.3f (poor htm %.3f, wealthy %.3f) | drop on job loss %.3f | protection if hit %.4f | room %.3f | median liquid / median income %.3f | net wealth top 10%% share and Gini below",
@@ -136,12 +152,12 @@ let cm = r.Ntot ./ r.Ntot[end], x = NWGRID
 end
 if !ok
     open(io -> println(io, "# not calibrated; the reason is in the run log"), NOTCAL, "w")
-    say(@sprintf("\nNOT CALIBRATED: worst target at %.2f of its band after the iteration. No calibration file written.", maximum(abs.(resid(m)))))
+    say(@sprintf("\nNOT CALIBRATED: worst target at %.2f of its band after the iteration. No calibration file written.", maximum(abs.(ract(m)))))
     exit(2)
 end
 u = unpack(x)
 open(OUTFILE, "w") do io
-    println(io, "# written by calibrate_two_asset.jl $(CODE) $(CFG); illiquid asset on")
+    println(io, "# written by calibrate_two_asset.jl $(CODE) $(CFG); illiquid asset on", isempty(CHI_FROM) ? "" : "; chi0 from $(CHI_FROM), wealthy hand-to-mouth untargeted")
     @printf(io, "phi = %.3f\nbeta_spread = 0.0\nbeta_bar = %.4f\nimpatient_share = %.4f\nbeta_low = %.4f\nchi0 = %.4f\nilliquid_premium = %.4f\n",
             u.phi, u.beta_bar, u.impatient_share, BETA_LOW_EFF / SURV, u.chi0, PREMIUM)
 end
