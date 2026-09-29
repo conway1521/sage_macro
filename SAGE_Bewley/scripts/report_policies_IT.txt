@@ -1,0 +1,9 @@
+IT G+S+A baseline: participation 0.1245 (multiplier 1.33) | propensities out of a one-month windfall: consume 0.185, save 0.663, earn -0.152, take part +0.00442 (with feedback +0.00587); check 1.000000
+
+policy            welfare |  consump.    effort   belong.      rest |   low edu  high edu |  employed   unempl. |  d part. d agency  d prot.  d hard.
+benefits +0.10    +0.444% |   +0.807%   -0.331%   -0.027%   -0.000% |   +0.437%   +0.489% |   +0.008%   +5.070% |  -0.0014  +0.0022  +0.0201  +0.2216
+benefits -0.10    -0.412% |   -0.794%   +0.357%   +0.032%   +0.000% |   -0.409%   -0.430% |   +0.117%   -5.464% |  +0.0017  -0.0015  -0.0102  -0.0811
+empowerment      +26.294% |  +18.999%   +4.694%   +0.371%   +0.001% |  +31.309%   -0.334% |  +26.127%  +28.004% |  +0.0203  +0.2211  +0.1396  -0.0067
+
+Welfare: consumption equivalent, steady state to steady state (no transition). Status: employed or unemployed today.
+DONE

@@ -95,3 +95,19 @@ The unemployed take part at about 0.56 of the employed rate (INSEE; ESS 0.80 to 
 - **Result: no measurable economic cost comes close.** Money costs cut everyone's participation almost in proportion. Committed time leaves the unemployed with more free time than the employed at any plausible value. Even a belonging value cut to 40% barely moves them, because with time disutility convex in hours, a tenth of the day costs someone not working almost nothing.
 - **Reading:** in a standard model, the gap cannot be rationalised by time or money. It points to what the wellbeing literature calls the non-pecuniary costs of unemployment: lost networks, identity and routine, stigma and mental health (Clark and Oswald 1994; Winkelmann and Winkelmann 1998). The model does not represent these.
 - **Consequence:** the imposed ratio stays. It is reported as an empirical regularity the economics cannot generate, not as a patch that hides a mechanism. This is a finding in its own right.
+
+## 7. The reporting layer on the three economies (2026-09-29, `report_policies_{FR,DE,IT}.txt`)
+
+G+S+A, one asset. Welfare is the consumption equivalent, steady state to steady state, with no transition cost.
+
+| | benefits +0.10: welfare | employed / unemployed today | d hardship | benefits -0.10: welfare | propensity to take part per one-month windfall, with feedback |
+|---|---|---|---|---|---|
+| France (rr 0.65) | -0.22% | -0.27% / +0.44% | +0.117 | +0.28% | +0.007, +0.013 (multiplier 1.83) |
+| Germany (rr 0.46) | -0.11% | -0.17% / +1.56% | +0.192 | +0.18% | +0.010, +0.017 (1.78) |
+| Italy (rr 0.37) | +0.44% | +0.01% / +5.07% | +0.222 | -0.41% | +0.004, +0.006 (1.33) |
+
+1. **Benefits: the model gives the textbook trade-off,** and the sign depends on where a country starts. Where replacement is already high (France), more insurance costs more in taxed work than it returns. Where it is low (Italy, 0.37), it is worth 0.44% of consumption, and 5% to those unemployed today. That is the Baily-Chetty logic the model produces unprompted.
+2. **The indicators disagree with welfare.** Higher benefits raise measured hardship in all three countries (by 0.12 to 0.22), including Italy, where welfare and protection if hit both rise. People hold smaller buffers when insured, and OECD asset poverty counts that as hardship. For the Beyond-GDP audience this is the central lesson of the layer: an indicator can move against welfare, and the model says why.
+3. **Belonging is small but not zero.** More insurance lowers participation slightly (people work more to pay for it), which costs 0.03 to 0.07% in belonging.
+4. **The propensities add up exactly** (1.000000 in each country). A one-month windfall raises the chance of taking part by 0.4 to 1.0 points directly, and by 1.3 to 1.8 times that with social feedback.
+5. **Empowerment** (lower-education pay raised halfway to the higher) is worth 17 to 30% of consumption. It is unfinanced, a benchmark for the size of the capability gap, not a policy. The lower-education gain (25 to 40%) against almost nothing for the higher-educated shows the layer separating groups.
