@@ -16,6 +16,8 @@ Indicators (Eurostat regional statistics):
                             unemployed, ages 20 to 64, mean of the latest two years
   hh_income_per_head        nama_10r_2hhinc, balance of disposable income (B6N) per
                             inhabitant, EUR, latest year
+  arop_rate                 ilc_li41, at-risk-of-poverty rate, mean of the latest three
+                            years; a validation indicator, never an input
 """
 import csv, json, os, time, urllib.request
 
@@ -89,6 +91,9 @@ emit("ltu_share", by_geo_year(get("lfst_r_lfu2ltu", geo=allgeo, sex="T", isced11
                                   unit="PC_UNE", sinceTimePeriod=2021)), "lfst_r_lfu2ltu", years=2)
 emit("hh_income_per_head", by_geo_year(get("nama_10r_2hhinc", geo=allgeo, unit="EUR_HAB", na_item="B6N",
                                            direct="BAL", sinceTimePeriod=2018)), "nama_10r_2hhinc")
+# validation only (untargeted): at-risk-of-poverty rate (income below 60% of the
+# national median), mean of the latest three years
+emit("arop_rate", by_geo_year(get("ilc_li41", geo=allgeo, unit="PC", sinceTimePeriod=2021)), "ilc_li41", years=3)
 
 with open(os.path.join(HERE, "place_tl2.csv"), "w", newline="") as f:
     w = csv.writer(f)
