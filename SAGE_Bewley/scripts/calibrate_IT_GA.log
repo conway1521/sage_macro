@@ -2,11 +2,11 @@ calibrating IT GA | effort target 0.725221 | hand-to-mouth target 0.083 | worker
 preflight, France G+A through the parallel path (solver egm): worst gap 9.4e-04 against the suite: HELD
 
 1. effort scale and discount spread, cohesion off, hand-to-mouth aim 0.083
-  phi 2.99, spread 0.105, mean patience 0.9600: effort 0.7258 (target 0.7252), poor hand-to-mouth 0.0837 (aim 0.0830)  [1.7 min]
+  phi 4.04, spread 0.087, mean patience 0.9600: effort 0.7257 (target 0.7252), poor hand-to-mouth 0.0830 (aim 0.0830)  [3.5 min]
 
 2. the GA economy on its own thresholds
-  participation 0.0001 | agency 0.9663 | hardship 0.1981 | hand-to-mouth 0.0837 (target 0.08) | effort 0.7258 (target 0.7252) | median 0.6360
-  expected loss to unemployment 0.0351 (income alone 0.0475) | drop on job loss 0.4230 | agency on the old hardship reading 0.7657
+  participation 0.0000 | agency 0.9683 | hardship 0.1939 | hand-to-mouth 0.0830 (target 0.08) | effort 0.7257 (target 0.7252) | median 0.5906
+  expected loss to unemployment 0.0331 (income alone 0.0456) | drop on job loss 0.3950 | agency on the old hardship reading 0.7701
 wrote calibration_country_IT_GA.txt
 
-DONE IT GA in 1.8 min
+DONE IT GA in 3.7 min
