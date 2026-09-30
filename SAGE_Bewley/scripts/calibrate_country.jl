@@ -182,7 +182,7 @@ end
 # up to the model's stationarity limit (beta times R below 0.995).
 const BB = Ref(0.96)
 # one pass without thresholds for E off (as before); with E on, the full place solve
-_solve_any(cc) = E_ON ? solve_economy(cc) : _solve(cc, nothing; disk = true)
+_solve_any(cc, thr = nothing; disk = true) = E_ON ? solve_economy(cc) : _solve(cc, thr; disk = disk)
 soff(phi, sp) = _solve_any(country_config(CODE; config = CFG, S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = sp,
                                       beta_bar = BB[]), nothing; disk = true)
 function fit_phi(sp; lo = 0.5, hi = 40.0, steps = 14, aim = E_TARGET)   # lo was 3.0: Italy's effort target needs less

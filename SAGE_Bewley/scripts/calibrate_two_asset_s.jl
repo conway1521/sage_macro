@@ -47,6 +47,11 @@ notcal(msg) = (open(io -> println(io, "# not calibrated; the reason is in the ru
 isfile(joinpath(@__DIR__, "calibration_country_$(CODE)_$(OFF)_I.txt")) ||
     error("needs the two-asset $(OFF) calibration first")
 off = country_config(CODE; config = OFF, S = false, A = A_ON, illiquid = true)
+# If the cohesion-off calibration borrowed chi0 and left the wealthy hand-to-mouth
+# untargeted (Germany and Italy: calibrate_two_asset.jl with a third argument),
+# so does this one: chi0 stays at its value and the target is reported, not fitted.
+const CHI_BORROWED = occursin("chi0 from", readline(joinpath(@__DIR__, "calibration_country_$(CODE)_$(OFF)_I.txt")))
+const ACT = CHI_BORROWED ? [1, 3, 4] : [1, 2, 3, 4]
 const SIGMA_FIX = OWN_GAP ? NaN : country_config(CODE; config = "GSA", illiquid = true).sigma_m
 cs0 = cells_of(SAGEConfig(off; S = true))
 const AGG = cs0[1].share * PART[1] + cs0[2].share * PART[2]
@@ -100,7 +105,7 @@ if ck === nothing
     x = [off.beta_bar * SURV, log(off.chi0), off.impatient_share, log(off.phi)]
     F0 = resid(mom(_solve(with(off, x), nothing; disk = false)))
     J = zeros(4, 4)
-    for k in 1:4
+    for k in ACT
         xk = copy(x); h = (xk[k] + STEP[k] > HI[k]) ? -STEP[k] : STEP[k]; xk[k] += h
         J[:, k] = (resid(mom(_solve(with(off, xk), nothing; disk = false))) .- F0) ./ h
     end
@@ -132,7 +137,7 @@ solveS(sc) = (r = _solve(sc.c, nothing; disk = true); (r = r, m = mom(r)))
 showr(tag, x, s) = (u = unpack(x);
     @printf("%s beta_bar %.4f chi0 %.4f impatient share %.4f phi %.3f | participation %.4f (cells %.4f, %.4f), multiplier %.1f | net wealth/income %.2f, wealthy htm %.4f, poor htm %.4f, effort %.4f | worst %.2f band  [%.1f min]\n",
             tag, u.beta_bar, u.chi0, u.impatient_share, u.phi, s.r.rate, s.r.pooled[1].rate, s.r.pooled[2].rate, 1 / (1 - s.r.slope),
-            s.m.nw, s.m.whtm, s.m.htm, s.m.e, maximum(abs.(resid(s.m))), elapsed()); flush(stdout))
+            s.m.nw, s.m.whtm, s.m.htm, s.m.e, maximum(abs.(resid(s.m)[ACT])), elapsed()); flush(stdout))
 
 say("3-4. families, technology and corrections")
 while stage < 4
@@ -141,10 +146,10 @@ while stage < 4
     global sc = scan(x); global s = solveS(sc)
     LAST[] = (time() - t2) / 60
     showr(stage == 0 ? "  start" : "  correction $stage", x, s)
-    F = resid(s.m)
+    F = resid(s.m)[ACT]
     (maximum(abs.(F)) <= 0.5 || stage >= 3) && break
-    Δ = -(J \ F)
-    sfac = minimum(min(1.0, MAXMOVE[k] / max(abs(Δ[k]), 1e-12)) for k in 1:4)
+    Δ = zeros(4); Δ[ACT] .= -(J[ACT, ACT] \ F)     # the owned targets on the fitted parameters
+    sfac = minimum(min(1.0, MAXMOVE[k] / max(abs(Δ[k]), 1e-12)) for k in ACT)
     global x = clamp.(x .+ sfac .* Δ, LO, HI)
     global stage += 1; save_ckpt(stage, x, J)
 end
@@ -153,7 +158,8 @@ stage = 4; save_ckpt(stage, x, J)
 say("5. the full belonging grid")
 budget_check(4, x, J; factor = 2.5)       # the full grid has about twice the scales
 sc = scan(x; ugrid = UGRID_DEFAULT); s = solveS(sc); showr("  final", x, s)
-maximum(abs.(resid(s.m))) <= 1.0 || notcal(@sprintf("worst G target at %.2f of its band on the full grid.", maximum(abs.(resid(s.m)))))
+maximum(abs.(resid(s.m)[ACT])) <= 1.0 || notcal(@sprintf("worst G target at %.2f of its band on the full grid.", maximum(abs.(resid(s.m)[ACT]))))
+CHI_BORROWED && say(@sprintf("  untargeted: wealthy hand-to-mouth %.4f against %.4f in the data (chi0 borrowed with the %s calibration)", s.m.whtm, WHTM_TARGET, OFF))
 1 / (1 - s.r.slope) <= MULT_MAX || notcal(@sprintf("multiplier %.1f above the gate.", 1 / (1 - s.r.slope)))
 OWN_GAP || say(@sprintf("  untargeted: participation gap between the cells %.4f against %.4f in the data", s.r.pooled[2].rate - s.r.pooled[1].rate, PART[2] - PART[1]))
 r = s.r
@@ -161,7 +167,7 @@ say(@sprintf("  validation (not targeted): MPC %.3f (poor htm %.3f, wealthy %.3f
              r.mpc, r.mpc_htm, r.mpc_wealthy, r.consumption_drop, r.A_cond, r.A, r.room, qmed(r.agrid, r.Wtot) / r.median_income))
 u = unpack(x)
 open(OUTFILE, "w") do io
-    println(io, "# written by calibrate_two_asset_s.jl $(CODE) $(CFG); illiquid asset on")
+    println(io, "# written by calibrate_two_asset_s.jl $(CODE) $(CFG); illiquid asset on", CHI_BORROWED ? "; chi0 from the $(OFF) calibration (borrowed there), wealthy hand-to-mouth untargeted" : "")
     @printf(io, "phi = %.3f\nbeta_spread = 0.0\nbeta_bar = %.4f\nimpatient_share = %.4f\nbeta_low = %.4f\nchi0 = %.4f\nilliquid_premium = %.4f\nkappa = %.2f\nsigma_m = %.2f\n",
             u.phi, u.beta_bar, u.impatient_share, BETA_LOW_EFF / SURV, u.chi0, off.illiquid_premium, sc.best.κ, sc.best.σ)
 end
