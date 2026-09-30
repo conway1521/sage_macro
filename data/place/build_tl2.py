@@ -95,6 +95,12 @@ emit("hh_income_per_head", by_geo_year(get("nama_10r_2hhinc", geo=allgeo, unit="
 # national median), mean of the latest three years
 emit("arop_rate", by_geo_year(get("ilc_li41", geo=allgeo, unit="PC", sinceTimePeriod=2021)), "ilc_li41", years=3)
 
+# validation only: formal volunteering by region from the national surveys
+# (Germany: Freiwilligensurvey 2019 by Land; Italy: ISTAT), volunteering_by_region.csv
+with open(os.path.join(HERE, "volunteering_by_region.csv")) as f:
+    for r in csv.DictReader(f):
+        rows_out.append((r["indicator"], r["country"], r["place"], int(r["year"]), float(r["value"]), r["source"].split(",")[0]))
+
 with open(os.path.join(HERE, "place_tl2.csv"), "w", newline="") as f:
     w = csv.writer(f)
     w.writerow(["indicator", "country", "place", "year", "value", "source"])
