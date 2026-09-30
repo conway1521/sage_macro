@@ -180,6 +180,10 @@ Base.@kwdef struct SAGEConfig
     # tonne times the footprint intensity per euro). Its revenue is recycled
     # lump-sum by `carbon_tax_economy`. EGM, one asset.
     ctax::Float64 = 0.0
+    # Extra time for every household, as a share of the time endowment (the
+    # reporting layer's time propensities: where does an extra hour go?). Zero
+    # leaves every solve unchanged.
+    time_bonus::Float64 = 0.0
     # THE E SWITCH (E_PLACE_CONCEPT.md, the standard). On, the economy is solved
     # over places of an official geography (TL2 by default, or :degurba), each
     # its own economy with local social feedback and national financing, and the
@@ -300,8 +304,8 @@ function params_of(c::SAGEConfig, cell)
         ps = [update(p; illiquid = true, Rk = p.R + c.illiquid_premium, chi0 = c.chi0, death = c.death,
                      nk = c.nk, k_max = c.k_max, a_max = c.b_max, na = c.nb) for p in ps]
     end
-    (c.search_time == 0 && c.belong_u == 1) && return ps
-    tf = c.search_time == 0 ? Float64[] : [e ? 0.0 : c.search_time for e in emp]
+    (c.search_time == 0 && c.belong_u == 1 && c.time_bonus == 0) && return ps
+    tf = (c.search_time == 0 && c.time_bonus == 0) ? Float64[] : [(e ? 0.0 : c.search_time) - c.time_bonus for e in emp]
     bsc = c.belong_u == 1 ? Float64[] : [e ? 1.0 : c.belong_u for e in emp]
     [update(p; time_floor = tf, belong_scale = bsc) for p in ps]
 end
@@ -978,4 +982,25 @@ function carbon_tax_economy(c::SAGEConfig, eur_per_tonne; code, thresholds = not
         rev = rev_new
     end
     (economy = r, rate = t, recycled = rev)
+end
+
+
+"""
+    time_propensities(c; h = 0.01, thresholds)
+
+Where extra time goes: every household gets `h` more of its time endowment (h =
+0.01 is about an hour a week), and the economy is solved again. Per unit of time:
+the change in work of the employed, in participation (time QBAR each), and the
+remainder, leisure. By construction the three add to one for the employed; for
+the unemployed work is zero. Also the welfare of the extra time.
+"""
+function time_propensities(c::SAGEConfig; h = 0.01, thresholds = nothing)
+    rB = solve_economy(c; thresholds = thresholds)
+    thr = [(rB.ypov, rB.abar)]
+    rP = solve_economy(SAGEConfig(c; time_bonus = h); thresholds = thr)
+    κ = 1.0
+    work = (rP.mean_effort_employed - rB.mean_effort_employed) / h
+    part = QBAR * (rP.rate - rB.rate) / h
+    (work_employed = work, participation = part, participation_rate_per_h = (rP.rate - rB.rate) / h,
+     leisure_employed = 1 - work - part, welfare = welfare_ce(rB, rP))
 end
