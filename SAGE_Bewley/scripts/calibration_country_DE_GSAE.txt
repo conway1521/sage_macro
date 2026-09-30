@@ -1,0 +1,6 @@
+# written by calibrate_country.jl DE GSAE; read by country_config
+phi = 7.33
+beta_spread = 0.023
+beta_bar = 0.9600
+kappa = 6.60
+sigma_m = 1.06

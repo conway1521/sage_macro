@@ -1,0 +1,4 @@
+# written by calibrate_country.jl DE GE; read by country_config
+phi = 7.74
+beta_spread = 0.035
+beta_bar = 0.9600
