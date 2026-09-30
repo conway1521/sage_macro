@@ -591,7 +591,13 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
             hand_to_mouth = share_below_interp(agrid, Wtot, (4 / 52) * minc),
             wealth_p50 = cdf_quantile(agrid, Wtot, 0.5),
             wealth_p90 = cdf_quantile(agrid, Wtot, 0.9),
-            mean_effort_employed = sum(cs[g].share * pooled[g].eff_E for g in 1:2),
+            # effort of the EMPLOYED, averaged over employed households: the HETUS
+            # target is the paid share of time of employed people. Until 2026-09-30
+            # this was divided by everyone (the unemployed counting as zero), so
+            # every calibration had fitted per-person effort to an employed-person
+            # target; all were redone.
+            mean_effort_employed = sum(cs[g].share * pooled[g].eff_E for g in 1:2) /
+                                   sum(cs[g].share * sum(pooled[g].mass[emp]) for g in 1:2),
             unemployment = sum(cs[g].share * sum(pooled[g].mass[.!emp]) for g in 1:2),
             partbase = sum(cs[g].share * pooled[g].pbase for g in 1:2),
             rate_E = sum(cs[g].share * sum(pooled[g].part[emp]) for g in 1:2) /

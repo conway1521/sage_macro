@@ -165,7 +165,7 @@ end
 # ------------------------------------------------------------- 0. preflight --
 let fr = SAGEConfig(A = true, unemployment = true, beta_spread = 0.037, unemployed_ratio = 0.17 / 0.35),
     r = _solve(fr, nothing; disk = true)
-    gap = max(abs(r.mean_effort_employed - 0.518873), abs(r.hand_to_mouth - 0.261599), abs(r.median_income - 0.376010))
+    gap = max(abs(r.mean_effort_employed - 0.559130), abs(r.hand_to_mouth - 0.261599), abs(r.median_income - 0.376010))
     # The reference numbers are the grid solver's; the EGM solver is held to the
     # grid solver's discretisation error (euler_errors.jl).
     ptol = DEFAULT_SOLVER === :grid ? 1e-6 : 5e-3

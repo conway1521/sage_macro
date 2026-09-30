@@ -16,9 +16,9 @@ check("expected loss is zero (to floating-point dust on unreachable states)", r0
 
 say("\n2. the old statistics are untouched (France G+A, INSEE footing, against the suite)")
 r1 = _solve(SAGEConfig(A = true, unemployment = true, beta_spread = 0.037, unemployed_ratio = 0.17 / 0.35), nothing; disk = false)
-@printf("   effort %.6f (0.518873), hand-to-mouth, old measure %.6f (0.261599), poor hand-to-mouth %.4f\n",
+@printf("   effort of the employed %.6f (0.559130; 0.518873 per person before 2026-09-30), hand-to-mouth, old measure %.6f (0.261599), poor hand-to-mouth %.4f\n",
         r1.mean_effort_employed, r1.hand_to_mouth, r1.hand_to_mouth_kvw)
-check("effort and old hand-to-mouth reproduce the suite", abs(r1.mean_effort_employed - 0.518873) < 1e-6 && abs(r1.hand_to_mouth - 0.261599) < 1e-6)
+check("effort and old hand-to-mouth reproduce the suite", abs(r1.mean_effort_employed - 0.559130) < 1e-6 && abs(r1.hand_to_mouth - 0.261599) < 1e-6)
 check("the one-week measure is below the four-week one", r1.hand_to_mouth_kvw < r1.hand_to_mouth)
 
 say("\n3. direction: a more generous benefit protects more (France, new data, spread 0.02)")

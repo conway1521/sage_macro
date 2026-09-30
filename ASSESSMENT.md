@@ -111,3 +111,31 @@ G+S+A, one asset. Welfare is the consumption equivalent, steady state to steady 
 3. **Belonging is small but not zero.** More insurance lowers participation slightly (people work more to pay for it), which costs 0.03 to 0.07% in belonging.
 4. **The propensities add up exactly** (1.000000 in each country). A one-month windfall raises the chance of taking part by 0.4 to 1.0 points directly, and by 1.3 to 1.8 times that with social feedback.
 5. **Empowerment** (lower-education pay raised halfway to the higher) is worth 17 to 30% of consumption. It is unfinanced, a benchmark for the size of the capability gap, not a policy. The lower-education gain (25 to 40%) against almost nothing for the higher-educated shows the layer separating groups.
+
+## 8. Calibration error found and corrected: the effort moment (2026-09-30)
+
+- **The error.** The effort target is the HETUS paid share of time of employed people. The model's `mean_effort_employed` divided employed effort by everyone, so the unemployed counted as zero. Every calibration therefore fitted per-person effort to an employed-person target.
+- **The size.** Model employed effort ran above the target by the unemployment rate: about 7% in France and Italy and 3% in Germany. The effort scale phi was too low everywhere.
+- **Where it came from.** It was a regression: the earlier prototypes (`s6_pop.jl`, `s7_pop.jl`) divided by employed mass, and the modular engine did not.
+- **How it was found.** The new transition solver computes effort of the employed directly, and its zero-shock path did not match the steady-state number: 0.689 against 0.644, with 0.689 x (1 - 0.066) = 0.644.
+- **The fix.** The moment now averages over employed households. The preflight reference was rescaled exactly (unemployment is exogenous): 0.518873 / (1 - 0.072) = 0.559130.
+- **Consequence.** Every calibration, one asset and two, is redone. So are the policy tests, equilibria and reports that rest on them. The earlier files stay in the history.
+
+## 9. Hardship by place: income right, assets wrong-signed (2026-09-30, `probe_hardship_by_place.jl`)
+
+Correlation across TL2 regions with the official at-risk-of-poverty rate (Eurostat ilc_li41; the model's income poverty is at 50% of the median, the official rate at 60%, so patterns are compared, not levels). G+A with E, one asset, with regional unemployment by education cell:
+
+| | income poverty | asset poverty | hardship |
+|---|---|---|---|
+| France (14 regions) | +0.84 | -0.78 | -0.34 |
+| Italy (21) | +0.93 | -0.70 | -0.62 |
+| Germany (16) | +0.68 | -0.49 | -0.48 |
+
+- **Income poverty by place is validated.**
+- **Asset poverty by place is wrong-signed.** Poorer regions have higher unemployment, so the model's households there hold more liquid buffers. In reality they hold fewer. The second asset does not change this (France two assets: asset poverty -0.80).
+- **Letting each education cell carry its own regional unemployment** (poorer regions' unemployment is mostly lower-education) reduces the problem, taking France's hardship from -0.63 to -0.34, but does not flip it.
+- **Reading.** Regional differences in liquid wealth are driven in the model by the precautionary response to risk. In the data they reflect permanent pay, housing and wealth passed down, which the model does not carry by place.
+- **Consequences:**
+  - by place, E reports income poverty, participation and agency, and does not report asset poverty or hardship;
+  - the test is the HFCS by region;
+  - a mechanism for regional wealth levels is a candidate extension, not a patch to fit.
