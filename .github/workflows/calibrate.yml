@@ -29,6 +29,12 @@ on:
       hop:
         description: "How many times this calibration has been resumed (set automatically; stops at 5)"
         default: "0"
+      prereq:
+        description: "Calibration file this one needs, from an earlier run's artifact: 'run id:artifact:file' (set by .github/chain.sh)"
+        default: ""
+      chain:
+        description: "On success, start the calibrations that need this one (.github/chain.sh); nothing is committed"
+        default: "yes"
 jobs:
   plan:
     runs-on: ubuntu-latest
@@ -67,6 +73,15 @@ jobs:
             families-${{ matrix.code }}-${{ matrix.cfg }}-${{ hashFiles('SAGE_Bewley/src/**', 'SAGE_Bewley/scripts/*_core.jl', 'SAGE_Bewley/scripts/agency_shock.jl') }}-
       - name: Instantiate
         run: julia --project=SAGE_Bewley/scripts/run_env -e 'using Pkg; Pkg.instantiate()'
+      - name: Fetch the calibration this one needs
+        if: inputs.prereq != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRE: ${{ inputs.prereq }}
+        run: |
+          IFS=: read -r rid art file <<< "$PRE"
+          gh run download "$rid" -n "$art" -D /tmp/pre
+          cp "/tmp/pre/$file" SAGE_Bewley/scripts/ && echo "using $file from run $rid"
       - name: Fetch the checkpoints to resume from
         if: inputs.resume_from != ''
         env:
@@ -98,10 +113,16 @@ jobs:
             SAGE_Bewley/scripts/calibration_country_${{ matrix.code }}*.txt
             SAGE_Bewley/scripts/calibrate_${{ matrix.code }}_${{ matrix.cfg }}.log
             SAGE_Bewley/scripts/checkpoints/${{ matrix.code }}_${{ matrix.cfg }}_*
+      - name: Start the calibrations that need this one
+        if: steps.cal.outputs.code == '0' && inputs.chain == 'yes'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/chain.sh 1 ${{ matrix.code }} ${{ matrix.cfg }}
       - name: Resume in a new run
         if: steps.cal.outputs.code == '3' && inputs.hop < 5
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh workflow run calibrate.yml --ref ${{ github.ref_name }} -f solver=${{ inputs.solver }} -f countries=${{ matrix.code }} \
-            -f configs=${{ matrix.cfg }} -f budget=${{ inputs.budget }} -f resume_from=${{ github.run_id }} -f hop=$(( ${{ inputs.hop }} + 1 ))
+            -f configs=${{ matrix.cfg }} -f budget=${{ inputs.budget }} -f resume_from=${{ github.run_id }} -f hop=$(( ${{ inputs.hop }} + 1 )) \
+            -f prereq="${{ inputs.prereq }}" -f chain=${{ inputs.chain }}
