@@ -216,6 +216,10 @@ Base.@kwdef struct SAGEParams
     # Commuting (E, the place layer): each unit of work takes 1 + commute units
     # of time. Zero leaves every solve unchanged. EGM solvers only.
     commute::Float64 = 0.0
+    # Price of consumption relative to income (a consumption tax, the carbon tax
+    # of E's cost side): the budget is pc c + a' = cash. One leaves every solve
+    # unchanged. EGM, one asset.
+    pc::Float64 = 1.0
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."

@@ -55,7 +55,7 @@ function welfare_parts(p::SAGEParams, sol)
                 w <= 0 && continue
                 e = sol.e_d[d+1][i, s]; ap = sol.a_d[d+1][i, s]
                 lab = (1 + p.subsidy) * α * e * z[s] * p.Z
-                c = max(p.R * a[i] + lab - p.lumptax + credit * d + tr - ap, 1e-10)
+                c = max((p.R * a[i] + lab - p.lumptax + credit * d + tr - ap) / p.pc, 1e-10)
                 T = tfl + κ * e + QBAR * d
                 uc[x] += w * p.Γ * c^(1 - p.γ) / (1 - p.γ)
                 ue[x] -= w * p.Γ * p.ϕ * T^(1 + p.ψ) / (1 + p.ψ)

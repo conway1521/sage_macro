@@ -302,6 +302,7 @@ function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64
                                    warm = V0 isa NamedTuple && hasproperty(V0, :Vb) ? V0 : nothing)
     end
     p.commute == 0 || p.solver === :egm || error("commuting (the place layer) needs solver = :egm")
+    p.pc == 1.0 || p.solver === :egm || error("a consumption tax (pc) needs solver = :egm")
     p.solver === :egm && return solve_participation_egm(p, Q_agg; theta = theta, full = full, tol = tol,
                                                         maxit = maxit, warm = V0 isa NamedTuple ? V0 : nothing)
     a = SAGEBewley.exponential_grid(p.a_min, p.a_max, p.na, p.pexp)

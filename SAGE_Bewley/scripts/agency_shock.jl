@@ -64,7 +64,7 @@ function agency_summary(p::SAGEParams, sol)
             w = d == 1 ? P1[i, s] : 1 - P1[i, s]
             w <= 0 && continue
             lab = (1 + p.subsidy) * α * sol.e_d[d+1][i, s] * z[s] * p.Z
-            cbar[i, s] += w * (p.R * a[i] + lab - p.lumptax + credit * d + tr - sol.a_d[d+1][i, s])
+            cbar[i, s] += w * (p.R * a[i] + lab - p.lumptax + credit * d + tr - sol.a_d[d+1][i, s]) / p.pc   # real consumption
             ybar[i, s] += w * (lab + tr)
         end
     end
@@ -81,7 +81,7 @@ function agency_summary(p::SAGEParams, sol)
         # which is assets higher by delta / R.
         Δ = ybar[i, s] / 12
         if Δ > 0
-            mpc = (interp_ext(a, view(cbar, :, s), a[i] + Δ / p.R) - cbar[i, s]) / Δ
+            mpc = p.pc * (interp_ext(a, view(cbar, :, s), a[i] + Δ / p.R) - cbar[i, s]) / Δ   # spending share
             mpcmass[s] += m * mpc; htm && (mpchmass[s] += m * mpc)
         end
         # Dread as a consumption equivalent: the share x of this year's

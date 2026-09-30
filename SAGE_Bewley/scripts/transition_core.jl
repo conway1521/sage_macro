@@ -53,7 +53,7 @@ function egm_step(p::SAGEParams, a, V, Va; theta::Float64)
         Vn[i] = m + theta * log(exp((b0 - m) / theta) + exp((b1 - m) / theta))
         P1[i] = b1 == -Inf ? 0.0 : (b0 == -Inf ? 1.0 : 1 / (1 + exp((b0 - b1) / theta)))
         mu0 = b0 == -Inf ? 0.0 : cd[1][i]^(-p.γ); mu1 = b1 == -Inf ? 0.0 : cd[2][i]^(-p.γ)
-        Van[i] = p.R * p.Γ * ((1 - P1[i]) * mu0 + P1[i] * mu1)
+        Van[i] = p.R * p.Γ * ((1 - P1[i]) * mu0 + P1[i] * mu1) / p.pc
     end
     (V = Vn, Va = Van, P1 = P1, e_d = e_d, a_d = a_d, c_d = cd, Π = Π, z = z_vals)
 end

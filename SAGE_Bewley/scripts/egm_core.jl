@@ -34,23 +34,24 @@ consumption.
 """
 function egm_constrained(p::SAGEParams, cash0::Float64, w::Float64, tfl::Float64, d::Int)
     κ = 1.0 + p.commute                       # time per unit of work (commuting)
+    pc = p.pc                                 # price of consumption (a consumption tax)
     tmax = (1.0 - tfl - QBAR * d) / κ
     tmax < 0 && return (NaN, NaN)
     if w <= 0.0
-        return cash0 > 0 ? (cash0, 0.0) : (NaN, NaN)
+        return cash0 > 0 ? (cash0 / pc, 0.0) : (NaN, NaN)
     end
     e_lo = cash0 > 0 ? 0.0 : (1e-12 - cash0) / w
     e_lo > tmax && return (NaN, NaN)
-    g(e) = p.ϕ * κ * (tfl + κ * e + QBAR * d)^p.ψ - w * (cash0 + w * e)^(-p.γ)
-    g(e_lo) >= 0 && return (cash0 + w * e_lo, e_lo)
-    g(tmax) <= 0 && return (cash0 + w * tmax, tmax)
+    g(e) = p.ϕ * κ * (tfl + κ * e + QBAR * d)^p.ψ - (w / pc) * ((cash0 + w * e) / pc)^(-p.γ)
+    g(e_lo) >= 0 && return ((cash0 + w * e_lo) / pc, e_lo)
+    g(tmax) <= 0 && return ((cash0 + w * tmax) / pc, tmax)
     lo, hi = e_lo, tmax
     for _ in 1:60
         mid = 0.5 * (lo + hi)
         g(mid) > 0 ? (hi = mid) : (lo = mid)
     end
     e = 0.5 * (lo + hi)
-    (cash0 + w * e, e)
+    ((cash0 + w * e) / pc, e)
 end
 
 # T is total time: floor + (1 + commute) x effort + participation
@@ -80,13 +81,13 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
         # dread (behavioural mode) falls as savings rise, so it adds to the
         # marginal value of saving: Gamma c^-gamma = beta E V_a - D'(a')
         m = p.β * EVas[k] - Dps[k]
-        c = (m / p.Γ)^(-1 / p.γ)
+        c = (p.pc * m / p.Γ)^(-1 / p.γ)
         e = 0.0
         if w > 0
-            T = (w * c^(-p.γ) / (p.ϕ * κ))^(1 / p.ψ)
+            T = (w * c^(-p.γ) / (p.ϕ * κ * p.pc))^(1 / p.ψ)
             e = clamp((T - tfl - QBAR * d) / κ, 0.0, tmax)
         end
-        aend[k] = (c + a[k] - w * e - other) / p.R
+        aend[k] = (p.pc * c + a[k] - w * e - other) / p.R
         cend[k] = c; eend[k] = e
         k > 1 && aend[k] <= aend[k-1] && (monotone = false)
     end
@@ -208,7 +209,7 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
             isnan(c) && (c = con_c[2][i, s]; e = con_e[2][i, s])
             c = isnan(c) ? 1e-6 : c
             V[i, s] = egm_flow(p, c, tfl[s] + e) / (1 - p.β)
-            Va[i, s] = p.R * p.Γ * c^(-p.γ)
+            Va[i, s] = p.R * p.Γ * c^(-p.γ) / p.pc
         end
     end
 
@@ -232,7 +233,7 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
             P1[i] = b1 == -Inf ? 0.0 : (b0 == -Inf ? 1.0 : 1 / (1 + exp((b0 - b1) / theta)))
             mu0 = b0 == -Inf ? 0.0 : cd[1][i]^(-p.γ)
             mu1 = b1 == -Inf ? 0.0 : cd[2][i]^(-p.γ)
-            Van[i] = p.R * p.Γ * ((1 - P1[i]) * mu0 + P1[i] * mu1)
+            Van[i] = p.R * p.Γ * ((1 - P1[i]) * mu0 + P1[i] * mu1) / p.pc
         end
         # McQueen-Porteus bounds: with dmin and dmax the smallest and largest
         # change this iteration, the fixed point lies between V + b/(1-b) dmin and

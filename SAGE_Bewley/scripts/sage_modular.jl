@@ -176,6 +176,10 @@ Base.@kwdef struct SAGEConfig
     # each unit of work takes 1 + commute units of time. The national effort
     # scale already absorbs average commuting, so the nation has zero here.
     commute::NTuple{2,Float64} = (0.0, 0.0)
+    # A tax on consumption, ad valorem (E's cost side: a carbon tax is tau per
+    # tonne times the footprint intensity per euro). Its revenue is recycled
+    # lump-sum by `carbon_tax_economy`. EGM, one asset.
+    ctax::Float64 = 0.0
     # THE E SWITCH (E_PLACE_CONCEPT.md, the standard). On, the economy is solved
     # over places of an official geography (TL2 by default, or :degurba), each
     # its own economy with local social feedback and national financing, and the
@@ -290,6 +294,7 @@ function params_of(c::SAGEConfig, cell)
     end
     c.solver === :grid || (ps = [update(p; solver = c.solver) for p in ps])
     cell.τ == 0 || (ps = [update(p; commute = cell.τ) for p in ps])
+    c.ctax == 0 || (ps = [update(p; pc = 1 + c.ctax) for p in ps])
     if c.illiquid
         c.solver === :egm || error("the illiquid asset needs solver = :egm")
         ps = [update(p; illiquid = true, Rk = p.R + c.illiquid_premium, chi0 = c.chi0, death = c.death,
@@ -942,4 +947,35 @@ function emissions(r; code, rB = r, year = "2021")
     isnan(tph) && error("no footprint for $code in $year")
     k = tph / rB.consumption
     (total = k * r.consumption, cells = Tuple(k * x for x in r.consumption_cell), status = Tuple(k * x for x in r.consumption_status))
+end
+
+
+"The household footprint intensity, kg CO2e per euro of consumption (data/sustainability/footprint_intensity.csv)."
+function footprint_intensity(code; year = "2021")
+    for (k, ln) in enumerate(eachline(joinpath(@__DIR__, "..", "..", "data", "sustainability", "footprint_intensity.csv")))
+        k == 1 && continue
+        f = split(ln, ","); (f[1] == code && f[2] == year) && return parse(Float64, f[5])
+    end
+    error("no intensity for $code in $year")
+end
+
+"""
+    carbon_tax_economy(c, eur_per_tonne; code, rB, thresholds, iters = 4)
+
+The economy with a carbon tax of `eur_per_tonne` on household consumption, at
+the country's footprint intensity: an ad valorem consumption tax of eur_per_tonne
+x kg per euro / 1000, its revenue returned as an equal lump sum to every
+household (budget-neutral, found by a few fixed-point steps on the revenue).
+Returns the economy and the recycled amount per head.
+"""
+function carbon_tax_economy(c::SAGEConfig, eur_per_tonne; code, thresholds = nothing, iters = 4)
+    t = eur_per_tonne * footprint_intensity(code) / 1000
+    rev = 0.0; r = nothing
+    for _ in 1:iters
+        r = solve_economy(SAGEConfig(c; ctax = t, lumptax = c.lumptax - rev); thresholds = thresholds)
+        rev_new = t * r.consumption
+        abs(rev_new - rev) < 1e-7 && (rev = rev_new; break)
+        rev = rev_new
+    end
+    (economy = r, rate = t, recycled = rev)
 end

@@ -41,6 +41,7 @@ adjusting, and the grids, plus V and Vb for warm starts.
 function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01,
                              theta_adj::Float64 = 0.01, full::Bool = false, tol::Float64 = 1e-9,
                              maxit::Int = 5000, warm = nothing, trace::Bool = false)
+    p0.pc == 1.0 || error("a consumption tax (pc) is not built for two assets yet")
     # survival enters discounting; the distribution adds the newborns
     p = p0.death > 0 ? update(p0; β = p0.β * (1 - p0.death)) : p0
     a = SAGEBewley.exponential_grid(p.a_min, p.a_max, p.na, p.pexp)
