@@ -632,6 +632,12 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
                                          Vc = sum(cs[g].share * sum(pooled[g].vcmass[mk]) for g in 1:2) / ms))
                                        for st in 1:2))),
             mps = sum(cs[g].share * sum(pooled[g].mpsmass) for g in 1:2) / sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
+            # mean consumption per head, overall, by cell and by employment status (the footprint scales with it)
+            consumption = sum(cs[g].share * sum(pooled[g].cmass) for g in 1:2) / sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
+            consumption_cell = Tuple(sum(pooled[g].cmass) / sum(pooled[g].mass) for g in 1:2),
+            consumption_status = Tuple((mk = (st == 1 ? emp : .!emp);
+                                        sum(cs[g].share * sum(pooled[g].cmass[mk]) for g in 1:2) /
+                                        sum(cs[g].share * sum(pooled[g].mass[mk]) for g in 1:2)) for st in 1:2),
             mpe = sum(cs[g].share * sum(pooled[g].mpemass) for g in 1:2) / sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
             mpp = sum(cs[g].share * sum(pooled[g].mppmass) for g in 1:2) / sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
             mpc_wealthy = (h = sum(cs[g].share * sum(pooled[g].whmass) for g in 1:2);
@@ -913,4 +919,27 @@ function welfare_ce(rB, rP; γ = 2.0)
     cells = Tuple(ce(wP.cell[g].V - wB.cell[g].V, wB.cell[g].Vc) for g in 1:2)
     status = Tuple(ce(wP.status[k].V - wB.status[k].V, wB.status[k].Vc) for k in 1:2)
     (total = tot, parts = parts, cells = cells, employed = status[1], unemployed = status[2])
+end
+
+
+"""
+    emissions(r; code, rB = r, year = "2021")
+
+Household greenhouse-gas footprint per head, tonnes CO2e (the E cost side):
+the country's official per-head household footprint (Eurostat env_ac_ghgfp,
+data/sustainability/footprint_intensity.csv) scaled by the economy's mean
+consumption relative to the baseline `rB`, at the country's fixed intensity per
+euro. So the baseline reproduces the official figure, a policy moves emissions
+through consumption, and groups differ by their consumption. Returns the total,
+by education cell and by employment status.
+"""
+function emissions(r; code, rB = r, year = "2021")
+    tph = NaN
+    for (k, ln) in enumerate(eachline(joinpath(@__DIR__, "..", "..", "data", "sustainability", "footprint_intensity.csv")))
+        k == 1 && continue
+        f = split(ln, ","); (f[1] == code && f[2] == year) && (tph = parse(Float64, f[7]))
+    end
+    isnan(tph) && error("no footprint for $code in $year")
+    k = tph / rB.consumption
+    (total = k * r.consumption, cells = Tuple(k * x for x in r.consumption_cell), status = Tuple(k * x for x in r.consumption_status))
 end

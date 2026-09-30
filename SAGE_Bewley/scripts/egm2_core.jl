@@ -465,7 +465,7 @@ function two_asset_agency_summary(p::SAGEParams, sol)
     na, nk, ns = length(a), length(kg), length(z)
     cbar = sol.cbar; ybar = sol.ybar
     pmass = zeros(ns); pinc = zeros(ns); dmass = zeros(ns); hmass = zeros(ns); whmass = zeros(ns)
-    mpcmass = zeros(ns); mpchmass = zeros(ns); mpcwmass = zeros(ns); rmass = zeros(ns); xmass = zeros(ns)
+    mpcmass = zeros(ns); mpchmass = zeros(ns); mpcwmass = zeros(ns); rmass = zeros(ns); xmass = zeros(ns); cmass = zeros(ns)
     U = findall(==(0.0), z); nh = length(U)
     haveU = !isempty(U) && 2 * nh == ns
     dw = dread_weight(p)
@@ -475,6 +475,7 @@ function two_asset_agency_summary(p::SAGEParams, sol)
         htm = a[i] <= ybar[i, m, s] / 52
         htm && (m == 1 ? (hmass[s] += mm) : (whmass[s] += mm))
         a[i] >= ybar[i, m, s] / 4 && (rmass[s] += mm)
+        cmass[s] += mm * cb[i]
         Δ = ybar[i, m, s] / 12
         if Δ > 0
             mpc = (interp_ext(a, cb, a[i] + Δ / p.R) - cb[i]) / Δ
@@ -506,6 +507,6 @@ function two_asset_agency_summary(p::SAGEParams, sol)
         s > nh && cb[i] > 0 && (dmass[s] += mm * max(0.0, 1 - cbar[i, m, s - nh] / cb[i]))
     end
     merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = whmass,
-           mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = mpcwmass, rmass = rmass, xmass = xmass),
+           mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = mpcwmass, rmass = rmass, xmass = xmass, cmass = cmass),
           welfare_parts_nan(ns))
 end

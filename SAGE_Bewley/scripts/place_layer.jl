@@ -232,7 +232,7 @@ end
 # ------------------------------------------------------------ the E switch --
 const E_POP = (:rate, :unemployment, :A, :hardship, :hand_to_mouth_kvw, :hand_to_mouth, :wealthy_htm, :mean_income,
                :mean_labour_income, :mpc, :mps, :mpe, :mpp, :room, :shock_loss, :shock_loss_income, :A_hardship,
-               :income_poor, :asset_poor, :median_income)
+               :income_poor, :asset_poor, :median_income, :consumption)
 const E_EMP = (:rate_E, :A_cond, :consumption_drop, :mean_effort_employed, :dread_cost_E)
 
 """
@@ -283,6 +283,9 @@ function solve_economy_places(c::SAGEConfig; thresholds = nothing, cache = true)
                                    Vc = sum(cellw(g)[i] * ws[i].cell[g].Vc for i in eachindex(ws)) / sum(cellw(g))) for g in 1:2),
                      status = ((V = sum(wE[i] * ws[i].status[1].V for i in eachindex(ws)), Vc = sum(wE[i] * ws[i].status[1].Vc for i in eachindex(ws))),
                                (V = sum(wU[i] * ws[i].status[2].V for i in eachindex(ws)), Vc = sum(wU[i] * ws[i].status[2].Vc for i in eachindex(ws)))))
+    nat[:consumption_cell] = Tuple(sum(cellw(g)[i] * rs[i].consumption_cell[g] for i in eachindex(rs)) / sum(cellw(g)) for g in 1:2)
+    nat[:consumption_status] = (sum(wE[i] * rs[i].consumption_status[1] for i in eachindex(rs)),
+                                sum(wU[i] * rs[i].consumption_status[2] for i in eachindex(rs)))
     nat[:ypov] = thr[1][1]; nat[:abar] = thr[1][2]
     nat[:config] = c; nat[:by_place] = [(get(pl, :name, "place $i"), rs[i]) for (i, pl) in enumerate(places)]
     nat[:places] = places; nat[:weights] = w; nat[:T_nat] = T_nat

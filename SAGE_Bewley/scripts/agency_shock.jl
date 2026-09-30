@@ -50,7 +50,7 @@ function agency_summary(p::SAGEParams, sol)
     z, Π = SAGEBewley.income_process(p)
     ns = length(z)
     pmass = zeros(ns); pinc = zeros(ns); dmass = zeros(ns); hmass = zeros(ns)
-    mpcmass = zeros(ns); mpchmass = zeros(ns); rmass = zeros(ns); xmass = zeros(ns)
+    mpcmass = zeros(ns); mpchmass = zeros(ns); rmass = zeros(ns); xmass = zeros(ns); cmass = zeros(ns)
     U = findall(==(0.0), z)
     nh = length(U)
     haveU = !isempty(U) && 2 * nh == ns
@@ -74,6 +74,7 @@ function agency_summary(p::SAGEParams, sol)
         htm && (hmass[s] += m)
         # Room to manoeuvre: liquid wealth covering three months of own income.
         a[i] >= ybar[i, s] / 4 && (rmass[s] += m)
+        cmass[s] += m * cbar[i, s]
         # Marginal propensity to consume, within the year, out of a windfall of
         # one month of the household's own income (the size in Jappelli and
         # Pistaferri 2014 and the HFCS question): cash on hand rises by delta,
@@ -114,7 +115,7 @@ function agency_summary(p::SAGEParams, sol)
         s > nh && cbar[i, s] > 0 && (dmass[s] += m * max(0.0, 1 - cbar[i, s - nh] / cbar[i, s]))
     end
     merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = zeros(ns),
-           mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = zeros(ns), rmass = rmass, xmass = xmass),
+           mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = zeros(ns), rmass = rmass, xmass = xmass, cmass = cmass),
           welfare_parts(p, sol))
 end
 
@@ -125,6 +126,7 @@ collapse_agency(ds, w) = (pmass = sum(w[i] .* ds[i].pmass for i in eachindex(ds)
                           hmass = sum(w[i] .* ds[i].hmass for i in eachindex(ds)),
                           whmass = sum(w[i] .* ds[i].whmass for i in eachindex(ds)),
                           mpcwmass = sum(w[i] .* ds[i].mpcwmass for i in eachindex(ds)),
+                          cmass = sum(w[i] .* ds[i].cmass for i in eachindex(ds)),
                           mpcmass  = sum(w[i] .* ds[i].mpcmass  for i in eachindex(ds)),
                           mpchmass = sum(w[i] .* ds[i].mpchmass for i in eachindex(ds)),
                           rmass    = sum(w[i] .* ds[i].rmass    for i in eachindex(ds)),
