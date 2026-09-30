@@ -276,6 +276,9 @@ function solve_economy_places(c::SAGEConfig; thresholds = nothing, cache = true)
     nat[:slope] = 1 - 1 / mult
     agrid = rs[1].agrid; Wtot = sum(w[i] .* rs[i].Wtot for i in eachindex(rs))
     nat[:agrid] = agrid; nat[:Wtot] = Wtot; nat[:wealth_p50] = cdf_quantile(agrid, Wtot, 0.5)
+    # two assets: the net-wealth and illiquid distributions, summed over places the same way
+    hasproperty(rs[1], :Ntot) && (nat[:Ntot] = sum(w[i] .* rs[i].Ntot for i in eachindex(rs)))
+    hasproperty(rs[1], :Ktot) && (nat[:Ktot] = sum(w[i] .* rs[i].Ktot for i in eachindex(rs)); nat[:kgrid] = rs[1].kgrid)
     ws = [r.welfare for r in rs]
     comp(k) = sum(w[i] * getfield(ws[i], k) for i in eachindex(ws))
     nat[:welfare] = (V = comp(:V), Vc = comp(:Vc), Ve = comp(:Ve), Vb = comp(:Vb),

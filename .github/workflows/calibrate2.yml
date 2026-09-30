@@ -9,7 +9,7 @@ on:
         description: "Country codes, space separated"
         default: "FR DE IT"
       configs:
-        description: "Configurations, space separated (G GA first; then GSA; then GS, which needs GSA)"
+        description: "Configurations, space separated (G GA first; then GSA; then GS, which needs GSA; GE and GAE need G and GA)"
         default: "GA G"
       chi_from:
         description: "G and GA only: country to take the fixed cost from, dropping the wealthy hand-to-mouth target (empty: fit it)"
@@ -103,7 +103,7 @@ jobs:
         run: |
           cd SAGE_Bewley
           set +e
-          case "${{ matrix.cfg }}" in GS|GSA) script=calibrate_two_asset_s.jl ;; *) script=calibrate_two_asset.jl ;; esac
+          case "${{ matrix.cfg }}" in GS|GSA) script=calibrate_two_asset_s.jl ;; GE|GAE) script=calibrate_two_asset_e.jl ;; *) script=calibrate_two_asset.jl ;; esac
           extra=""; [ "$script" = calibrate_two_asset.jl ] && extra="${{ inputs.chi_from }}"
           julia --project=scripts/run_env scripts/$script ${{ matrix.code }} ${{ matrix.cfg }} $extra 2>&1 | tee scripts/calibrate2_${{ matrix.code }}_${{ matrix.cfg }}.log
           code=${PIPESTATUS[0]}

@@ -11,7 +11,7 @@
 # The order:
 #   one asset   GSA -> GS (sigma from GSA)      GSAE -> GSE
 #   two assets  FR GA -> DE GA, IT GA (chi0 from France)
-#               GA -> GSA (the fixed cost of GA)      GSA -> GS
+#               G -> GE      GA -> GSA, GAE (the fixed cost of GA)      GSA -> GS
 set -euo pipefail
 kind=$1; code=$2; cfg=$3; chi_from=${4:-}
 if [ "$kind" = 1 ]; then
@@ -35,7 +35,8 @@ else
   case "$cfg" in
     GA)
       [ "$code" = FR ] && [ -z "$chi_from" ] && run2 "DE IT" GA FR
-      run2 "$code" GSA ;;
+      run2 "$code" "GSA GAE" ;;
+    G) run2 "$code" GE ;;
     GSA) run2 "$code" GS ;;
   esac
 fi
