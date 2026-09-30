@@ -1,6 +1,6 @@
 # written by calibrate_country.jl IT GSA; read by country_config
-phi = 2.91
-beta_spread = 0.104
+phi = 3.92
+beta_spread = 0.086
 beta_bar = 0.9600
-kappa = 3.00
-sigma_m = 1.48
+kappa = 3.55
+sigma_m = 1.50
