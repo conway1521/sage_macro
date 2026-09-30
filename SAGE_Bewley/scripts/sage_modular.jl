@@ -990,6 +990,43 @@ function carbon_value(rB, rP; code, key = "uba_central", year = "2021")
 end
 
 """
+    place_report(rB, rP = rB; code)
+
+The group-by-place table for an economy with E on: one row per place with its
+population weight, the WISE indicators in the baseline and their change under
+the policy, the money propensities, welfare as a consumption equivalent (in
+total, by education cell and by employment status) and emissions per head, all
+against the same national baseline. With rP = rB it is the baseline by place.
+"""
+function place_report(rB, rP = rB; code)
+    haskey(rB, :by_place) || error("place_report needs an economy solved with E on")
+    eB = emissions(rB; code = code)
+    rows = NamedTuple[]
+    for (i, ((name, b), (_, q))) in enumerate(zip(rB.by_place, rP.by_place))
+        w = welfare_ce(b, q)
+        push!(rows, (place = name, weight = rB.weights[i],
+                     participation = b.rate, d_participation = q.rate - b.rate,
+                     agency = b.A, d_agency = q.A - b.A, hardship = b.hardship, d_hardship = q.hardship - b.hardship,
+                     mpc = b.mpc, mps = b.mps, mpe = b.mpe, mpp = b.mpp,
+                     welfare = w.total, welfare_cells = w.cells, welfare_employed = w.employed, welfare_unemployed = w.unemployed,
+                     emissions = eB.total * b.consumption / rB.consumption,
+                     d_emissions = eB.total * (q.consumption - b.consumption) / rB.consumption))
+    end
+    rows
+end
+
+"Print `place_report` rows as a table."
+function print_place_report(rows; io = stdout)
+    @printf(io, "%-24s %6s %8s %8s %7s %8s %7s %8s %6s %8s %8s %8s\n", "place", "weight", "particip", "change", "agency", "change",
+            "hardsh.", "change", "MPC", "welfare", "t CO2e", "change")
+    for r in rows
+        @printf(io, "%-24s %6.3f %8.4f %+8.4f %7.3f %+8.4f %7.3f %+8.4f %6.3f %+7.3f%% %8.3f %+8.3f\n",
+                first(r.place, 24), r.weight, r.participation, r.d_participation, r.agency, r.d_agency,
+                r.hardship, r.d_hardship, r.mpc, 100 * r.welfare, r.emissions, r.d_emissions)
+    end
+end
+
+"""
     carbon_tax_economy(c, eur_per_tonne; code, rB, thresholds, iters = 4)
 
 The economy with a carbon tax of `eur_per_tonne` on household consumption, at
