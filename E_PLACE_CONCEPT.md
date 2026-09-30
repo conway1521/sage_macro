@@ -422,3 +422,14 @@ E version 1 is the here and now of environment. Sustainability is added as the c
      - the two-asset model by place is the first candidate fix;
      - the HFCS by region is the test.
 4. **France and Germany at TL2** run cleanly: national participation is preserved, with regional agency from 0.88 to 1.10 in Germany. There is no regional participation validation yet. The next data step is the OECD Regional Well-Being indicators (social support, life satisfaction) and the Freiwilligensurvey by Land.
+
+**2026-09-30, the cost side built** (`sage_modular.jl`: `emissions`, `carbon_tax_economy`, `carbon_value`; `data/sustainability/`; test `SAGE_Bewley/scripts/test_carbon.jl`).
+
+- Emissions per head are anchored on the official household footprint (Eurostat env_ac_ghgfp, FIGARO, 2021) at a fixed national intensity per euro: France 0.233, Germany 0.282 and Italy 0.282 kg CO2e per euro.
+- The carbon values are in `data/sustainability/carbon_values.csv`, not in `manual_inputs.csv`, each labelled as a damage estimate or as a target-consistent shadow price. The German Environment Agency's current convention is Methodenkonvention 4.0: EUR 350 per tonne (2025 prices, 2026 emissions, 1% pure time preference) and EUR 1,000 at 0%. These replace the EUR 195 of convention 3.1.
+- `carbon_value` returns the emissions change in tonnes, in euros per head, and as a share of consumption per head. The share sits beside the welfare consumption equivalent and is never added to it, because the damage falls on the world rather than on the household.
+- **France G+A, EUR 100 per tonne, recycled lump-sum:**
+  - emissions fall 0.6% (4.364 to 4.338 t per head) and welfare rises 0.16% of consumption (lower-education +0.34%, higher -0.33%);
+  - the emissions change is worth EUR 9 per head at the UBA central value (0.05% of consumption), EUR 26 at 0%, and EUR 5 to 21 at the other values.
+- **Limit, and the next design question.** With one consumption good, a carbon tax is a uniform consumption tax. Emissions fall only through the level of consumption, and the 0.6% is a pure income effect. The measured emissions response to carbon pricing runs mostly through substitution away from energy-intensive goods. A two-good split (energy-intensive against other consumption, with a substitution elasticity from the literature) would give the tax its proper bite. Until then, the tax scenarios understate abatement, and their distributional incidence is a flat-rate incidence rather than the regressive energy-share incidence the literature finds.
+- Place-specific intensity waits for an official regional household footprint, which Eurostat does not publish. Groups and places differ only by their consumption.
