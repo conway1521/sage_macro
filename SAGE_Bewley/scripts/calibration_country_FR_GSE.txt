@@ -1,0 +1,6 @@
+# written by calibrate_country.jl FR GSE; read by country_config
+phi = 6.17
+beta_spread = 0.001
+beta_bar = 0.9600
+kappa = 5.75
+sigma_m = 1.10
