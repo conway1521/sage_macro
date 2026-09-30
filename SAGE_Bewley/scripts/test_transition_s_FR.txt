@@ -1,0 +1,13 @@
+1. zero shock (22.1 min, 7 iterations, gap 8.7e-08): participation 0.23308350 against the families' 0.23308318; drift participation 8.1e-08, consumption 1.2e-09, assets 6.7e-08; welfare 2.9e-08
+2. recession, job-loss x1.5 for two years (105.4 min, 40 iterations, gap 5.8e-05)
+   year particip.  unempl.    cons.   effort   assets
+      1   -1.475%   +0.00%   -0.56%   +0.97%   +0.00%
+      2   -1.607%   +2.50%   -0.53%   +0.62%   +1.17%
+      3   -0.808%   +2.90%   -0.41%   +0.19%   -0.03%
+      4   +0.070%   +0.55%   -0.27%   +0.16%   -2.00%
+      5   +0.058%   +0.10%   -0.19%   +0.15%   -2.17%
+      8   -0.046%   +0.00%   -0.11%   +0.11%   -1.67%
+     12   -0.043%   +0.00%   -0.07%   +0.07%   -1.17%
+     20   -0.024%   +0.00%   -0.03%   +0.04%   -0.61%
+   welfare of living through it: -0.175% of consumption
+DONE

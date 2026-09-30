@@ -1,0 +1,18 @@
+Estimation on Italy's 21 regions:
+  epsilon 0.2: weighted SSE 0.0287, correlation 0.872, spread model 0.165 against data 0.309
+  epsilon 0.3: weighted SSE 0.0226, correlation 0.884, spread model 0.193 against data 0.309
+  epsilon 0.4: weighted SSE 0.0185, correlation 0.886, spread model 0.223 against data 0.309
+  epsilon 0.5: weighted SSE 0.0167, correlation 0.885, spread model 0.255 against data 0.309
+  epsilon 0.6: weighted SSE 0.0172, correlation 0.881, spread model 0.287 against data 0.309
+  epsilon 0.7: weighted SSE 0.0202, correlation 0.877, spread model 0.321 against data 0.309
+  epsilon 0.8: weighted SSE 0.0257, correlation 0.872, spread model 0.355 against data 0.309
+  epsilon 0.9: weighted SSE 0.0341, correlation 0.867, spread model 0.390 against data 0.309
+  epsilon 1.0: weighted SSE 0.0453, correlation 0.862, spread model 0.426 against data 0.309
+  epsilon 1.1: weighted SSE 0.0596, correlation 0.857, spread model 0.463 against data 0.309
+  epsilon 1.2: weighted SSE 0.0771, correlation 0.853, spread model 0.501 against data 0.309
+estimate: epsilon 0.5
+
+Out-of-sample test, France by degree of urbanisation (data rural / cities 1.365):
+  epsilon 0.3: rural / cities 1.337, towns / cities 1.117 (data 1.365, 1.054)
+  epsilon 0.5: rural / cities 1.687, towns / cities 1.287 (data 1.365, 1.054)
+DONE
