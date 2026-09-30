@@ -250,6 +250,92 @@ hh_income_per_head,IT,ITF5,2024,17300.0,nama_10r_2hhinc
 hh_income_per_head,IT,ITF6,2024,16400.0,nama_10r_2hhinc
 hh_income_per_head,IT,ITG1,2024,16800.0,nama_10r_2hhinc
 hh_income_per_head,IT,ITG2,2024,18900.0,nama_10r_2hhinc
+unemployment_rate_low_20_64,FR,FR1,2025,11.3254,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,FR,FR1,2025,6.8,lfst_r_lfu3rt
+unemployment_rate_low_20_64,FR,FRB,2025,6.2114,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,FR,FRB,2025,5.2,lfst_r_lfu3rt
+unemployment_rate_low_20_64,FR,FRC,2025,9.496,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,FR,FRC,2025,3.5,lfst_r_lfu3rt
+unemployment_rate_low_20_64,FR,FRD,2025,9.0496,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,FR,FRD,2025,4.4,lfst_r_lfu3rt
+unemployment_rate_low_20_64,FR,FRE,2025,9.9258,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,FR,FRE,2025,5.1,lfst_r_lfu3rt
+unemployment_rate_low_20_64,FR,FRF,2025,7.6427,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,FR,FRF,2025,3.9,lfst_r_lfu3rt
+unemployment_rate_low_20_64,FR,FRG,2025,7.3433,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,FR,FRG,2025,4.8,lfst_r_lfu3rt
+unemployment_rate_low_20_64,FR,FRH,2025,6.2674,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,FR,FRH,2025,3.8,lfst_r_lfu3rt
+unemployment_rate_low_20_64,FR,FRI,2025,8.1432,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,FR,FRI,2025,5.3,lfst_r_lfu3rt
+unemployment_rate_low_20_64,FR,FRJ,2025,9.1991,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,FR,FRJ,2025,5.0,lfst_r_lfu3rt
+unemployment_rate_low_20_64,FR,FRK,2025,8.2913,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,FR,FRK,2025,5.0,lfst_r_lfu3rt
+unemployment_rate_low_20_64,FR,FRL,2025,7.9738,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,FR,FRL,2025,5.3,lfst_r_lfu3rt
+unemployment_rate_low_20_64,FR,FRY,2025,20.643,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,FR,FRY,2025,7.6,lfst_r_lfu3rt
+unemployment_rate_low_20_64,DE,DE1,2025,3.5949,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,DE,DE1,2025,2.7,lfst_r_lfu3rt
+unemployment_rate_low_20_64,DE,DE2,2025,3.1309,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,DE,DE2,2025,2.7,lfst_r_lfu3rt
+unemployment_rate_low_20_64,DE,DE3,2025,6.9674,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,DE,DE3,2025,6.0,lfst_r_lfu3rt
+unemployment_rate_low_20_64,DE,DE4,2025,4.2973,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_low_20_64,DE,DE6,2025,5.5176,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,DE,DE6,2025,4.8,lfst_r_lfu3rt
+unemployment_rate_low_20_64,DE,DE7,2025,3.6418,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,DE,DE7,2025,2.7,lfst_r_lfu3rt
+unemployment_rate_low_20_64,DE,DE9,2025,3.6691,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,DE,DE9,2025,2.7,lfst_r_lfu3rt
+unemployment_rate_low_20_64,DE,DEA,2025,4.7048,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,DE,DEA,2025,3.0,lfst_r_lfu3rt
+unemployment_rate_low_20_64,DE,DEB,2025,3.5697,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,DE,DEB,2025,2.7,lfst_r_lfu3rt
+unemployment_rate_low_20_64,DE,DED,2025,5.0885,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,DE,DED,2025,3.5,lfst_r_lfu3rt
+unemployment_rate_low_20_64,DE,DEF,2025,4.1145,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_low_20_64,IT,ITC1,2025,6.7829,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITC1,2025,3.3,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITC2,2021,8.1299,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_low_20_64,IT,ITC3,2025,5.4825,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITC3,2025,1.9,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITC4,2025,3.0835,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITC4,2025,2.2,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITH1,2025,1.7341,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_low_20_64,IT,ITH2,2025,2.3735,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITH2,2023,3.2,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITH3,2025,3.9028,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITH3,2025,2.0,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITH4,2025,4.9882,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITH4,2025,3.8,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITH5,2025,4.4983,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITH5,2025,2.8,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITI1,2025,4.7615,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITI1,2025,2.8,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITI2,2025,4.8965,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITI2,2025,3.3,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITI3,2025,5.4761,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITI3,2025,4.3,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITI4,2025,6.7153,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITI4,2025,3.2,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITF1,2025,7.5331,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITF1,2025,3.4,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITF2,2025,7.1801,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITF2,2023,6.9,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITF3,2025,17.0728,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITF3,2025,4.3,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITF4,2025,11.3573,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITF4,2025,5.4,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITF5,2025,6.0877,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITF5,2025,3.4,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITF6,2025,11.1168,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITF6,2025,6.9,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITG1,2025,13.7174,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITG1,2025,6.9,lfst_r_lfu3rt
+unemployment_rate_low_20_64,IT,ITG2,2025,11.1285,"lfst_r_lfu3rt, lfst_r_lfp2acedu"
+unemployment_rate_high_20_64,IT,ITG2,2025,3.3,lfst_r_lfu3rt
 arop_rate,FR,FR1,2025,15.7333,ilc_li41
 arop_rate,FR,FRB,2025,11.3,ilc_li41
 arop_rate,FR,FRC,2025,14.2,ilc_li41

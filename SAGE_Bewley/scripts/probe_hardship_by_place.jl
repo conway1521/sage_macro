@@ -5,7 +5,7 @@
 # model's income poverty is at 50%, so patterns are compared, not levels).
 # Regions inherit the national poverty line (anchored, as counterfactuals do).
 #
-#   julia --project=scripts/run_env scripts/probe_hardship_by_place.jl IT
+#   julia --project=scripts/run_env scripts/probe_hardship_by_place.jl IT        (add 'one' to skip two assets)
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf, Statistics
 code = length(ARGS) >= 1 ? ARGS[1] : "IT"
@@ -29,6 +29,6 @@ function run(lab, c)
     flush(stdout)
 end
 run("one asset, G+A+E", country_config(code; config = "GA", S = false, A = true))
-isfile(joinpath(@__DIR__, "calibration_country_$(code)_GA_I.txt")) &&
+(length(ARGS) < 2 || ARGS[2] != "one") && isfile(joinpath(@__DIR__, "calibration_country_$(code)_GA_I.txt")) &&
     run("two assets, G+A+E", country_config(code; config = "GA", S = false, A = true, illiquid = true))
 println("DONE")

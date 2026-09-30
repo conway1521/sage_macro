@@ -91,6 +91,28 @@ emit("ltu_share", by_geo_year(get("lfst_r_lfu2ltu", geo=allgeo, sex="T", isced11
                                   unit="PC_UNE", sinceTimePeriod=2021)), "lfst_r_lfu2ltu", years=2)
 emit("hh_income_per_head", by_geo_year(get("nama_10r_2hhinc", geo=allgeo, unit="EUR_HAB", na_item="B6N",
                                            direct="BAL", sinceTimePeriod=2018)), "nama_10r_2hhinc")
+# unemployment by education (ages 20 to 64) and the labour force by education
+# (25 to 64), to give each education cell its own unemployment rate by region:
+# the lower cell combines ED0-2 and ED3_4 weighted by their labour forces
+ue = get("lfst_r_lfu3rt", geo=allgeo, sex="T", isced11=["ED0-2", "ED3_4", "ED5-8"], age="Y20-64", unit="PC", sinceTimePeriod=2021)
+lf = get("lfst_r_lfp2acedu", geo=allgeo, sex="T", isced11=["ED0-2", "ED3_4", "ED5-8"], age="Y25-64", unit="THS_PER", sinceTimePeriod=2021)
+def latest_by(rows):
+    t = {}
+    for lab, v in rows:
+        k = (lab["geo"], lab["isced11"]); y = int(lab["time"])
+        if k not in t or y > t[k][0]:
+            t[k] = (y, v)
+    return t
+U, L = latest_by(ue), latest_by(lf)
+for c, regs in REGIONS.items():
+    for g in regs:
+        if all((g, e) in U and (g, e) in L for e in ("ED0-2", "ED3_4")):
+            l02, l34 = L[(g, "ED0-2")][1], L[(g, "ED3_4")][1]
+            v = (U[(g, "ED0-2")][1] * l02 + U[(g, "ED3_4")][1] * l34) / (l02 + l34)
+            rows_out.append(("unemployment_rate_low_20_64", c, g, U[(g, "ED3_4")][0], round(v, 4), "lfst_r_lfu3rt, lfst_r_lfp2acedu"))
+        if (g, "ED5-8") in U:
+            rows_out.append(("unemployment_rate_high_20_64", c, g, U[(g, "ED5-8")][0], U[(g, "ED5-8")][1], "lfst_r_lfu3rt"))
+
 # validation only (untargeted): at-risk-of-poverty rate (income below 60% of the
 # national median), mean of the latest three years
 emit("arop_rate", by_geo_year(get("ilc_li41", geo=allgeo, unit="PC", sinceTimePeriod=2021)), "ilc_li41", years=3)

@@ -124,7 +124,9 @@ channel is the same under every typology:
   where published (degree of urbanisation, lfsi_long_e03), otherwise one minus the
   long-term share of unemployment (TL2, lfst_r_lfu2ltu, the national table's
   rule); separation scaled so the place's unemployment rate holds in steady
-  state. A place without flow data keeps national job finding;
+  state, separately for each education cell where the rate by education is
+  published (TL2, lfst_r_lfu3rt), otherwise the overall rate. A place without
+  flow data keeps national job finding;
 - **conversion:** the place premium in income that education mix and employment
   do not explain (median equivalised income by urbanisation, ilc_di17;
   household disposable income per head by region, nama_10r_2hhinc), rescaled so
@@ -159,10 +161,21 @@ function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (
         have = [x !== nothing for x in q]
         qn = any(have) ? sum(w[i] * q[i] for i in 1:n if have[i]) / sum(w[have]) : 1.0
         uu = u ./ 100; un = sum(w .* uu)
+        # unemployment by education cell where published (TL2): regional gaps are
+        # mostly a lower-education phenomenon, so each cell's separation follows
+        # its own rate relative to its national (population-weighted) rate
+        ul = [latest(d, "unemployment_rate_low_20_64", p) for (_, p) in pl]
+        uh = [latest(d, "unemployment_rate_high_20_64", p) for (_, p) in pl]
+        cellrate(v, i) = v[i] === nothing ? nothing : v[i] / 100
+        nat(v) = (h = [x !== nothing for x in v]; any(h) ? sum(w[i] * v[i] / 100 for i in 1:n if h[i]) / sum(w[h]) : nothing)
+        ul_n, uh_n = nat(ul), nat(uh)
+        odds(x) = x / (1 - x)
         for i in 1:n
             f = have[i] ? min(0.99, c.f_find * q[i] / qn) : c.f_find
-            s = (uu[i] / (1 - uu[i])) * f / ((un / (1 - un)) * c.f_find)
-            specs[i][:f_find] = f; specs[i][:delta] = (c.delta[1] * s, c.delta[2] * s)
+            s = odds(uu[i]) * f / (odds(un) * c.f_find)
+            sl = (ul_n === nothing || cellrate(ul, i) === nothing) ? s : odds(cellrate(ul, i)) * f / (odds(ul_n) * c.f_find)
+            sh = (uh_n === nothing || cellrate(uh, i) === nothing) ? s : odds(cellrate(uh, i)) * f / (odds(uh_n) * c.f_find)
+            specs[i][:f_find] = f; specs[i][:delta] = (c.delta[1] * sl, c.delta[2] * sh)
         end
     end
     if :conversion in channels && !any(isnothing, u)
