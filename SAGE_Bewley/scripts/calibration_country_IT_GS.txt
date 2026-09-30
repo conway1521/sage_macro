@@ -1,6 +1,6 @@
 # written by calibrate_country.jl IT GS; read by country_config
-phi = 2.86
-beta_spread = 0.129
+phi = 3.85
+beta_spread = 0.110
 beta_bar = 0.9600
-kappa = 2.95
-sigma_m = 1.48
+kappa = 3.50
+sigma_m = 1.50
