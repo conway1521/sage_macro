@@ -19,7 +19,7 @@
 #
 # Sums over the stationary distribution, per state, so they pool across discount
 # types and belonging scales like every other family field. One asset here; the
-# two-asset summaries carry NaN until their version is built.
+# two-asset version is two_asset_welfare_parts in egm2_core.jl.
 
 using SparseArrays, LinearAlgebra
 

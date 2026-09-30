@@ -41,7 +41,6 @@ adjusting, and the grids, plus V and Vb for warm starts.
 function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01,
                              theta_adj::Float64 = 0.01, full::Bool = false, tol::Float64 = 1e-9,
                              maxit::Int = 5000, warm = nothing, trace::Bool = false)
-    p0.pc == 1.0 || error("a consumption tax (pc) is not built for two assets yet")
     # survival enters discounting; the distribution adds the newborns
     p = p0.death > 0 ? update(p0; β = p0.β * (1 - p0.death)) : p0
     a = SAGEBewley.exponential_grid(p.a_min, p.a_max, p.na, p.pexp)
@@ -119,7 +118,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
             Vin[x] = mx == -Inf ? -Inf : mx + theta * log(exp((b0 - mx) / theta) + exp((b1 - mx) / theta))
             P1in[x] = b1 == -Inf ? 0.0 : (b0 == -Inf ? 1.0 : 1 / (1 + exp((b0 - b1) / theta)))
             mu0 = b0 == -Inf ? 0.0 : cin[1][x]^(-p.γ); mu1 = b1 == -Inf ? 0.0 : cin[2][x]^(-p.γ)
-            muin[x] = p.Γ * ((1 - P1in[x]) * mu0 + P1in[x] * mu1)
+            muin[x] = p.Γ * ((1 - P1in[x]) * mu0 + P1in[x] * mu1) / p.pc   # marginal value of a euro: u'(c) / pc
         end
         t1 = time(); t_in += t1 - t0
         # outer: keep or adjust
@@ -275,8 +274,8 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
             es[i, m, s] += wt * ((1 - p1) * ein[1][i, jj, s] + p1 * ein[2][i, jj, s])
             e0s[i, m, s] += wt * (1 - p1) * ein[1][i, jj, s]; e1s[i, m, s] += wt * p1 * ein[2][i, jj, s]
             if haveC
-                c0 = p.R * a[i] + wv[s] * ein[1][i, jj, s] + oth[s][1] - bpin[1][i, jj, s]
-                c1 = p.R * a[i] + wv[s] * ein[2][i, jj, s] + oth[s][2] - bpin[2][i, jj, s]
+                c0 = (p.R * a[i] + wv[s] * ein[1][i, jj, s] + oth[s][1] - bpin[1][i, jj, s]) / p.pc   # real consumption
+                c1 = (p.R * a[i] + wv[s] * ein[2][i, jj, s] + oth[s][2] - bpin[2][i, jj, s]) / p.pc
                 p1 < 1 && (cbar[i, m, s] += wt * (1 - p1) * c0; ybar[i, m, s] += wt * (1 - p1) * (wv[s] * ein[1][i, jj, s] + trs[s]))
                 p1 > 0 && (cbar[i, m, s] += wt * p1 * c1; ybar[i, m, s] += wt * p1 * (wv[s] * ein[2][i, jj, s] + trs[s]))
             end
@@ -297,8 +296,8 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
             es[i, m, s] += wt * ((1 - p1) * e0 + p1 * e1)
             e0s[i, m, s] += wt * (1 - p1) * e0; e1s[i, m, s] += wt * p1 * e1
             if haveC
-                c0 = p.R * be + wv[s] * e0 + oth[s][1] - b0
-                c1 = p.R * be + wv[s] * e1 + oth[s][2] - b1
+                c0 = (p.R * be + wv[s] * e0 + oth[s][1] - b0) / p.pc
+                c1 = (p.R * be + wv[s] * e1 + oth[s][2] - b1) / p.pc
                 p1 < 1 && (cbar[i, m, s] += wt * (1 - p1) * c0; ybar[i, m, s] += wt * (1 - p1) * (wv[s] * e0 + trs[s]))
                 p1 > 0 && (cbar[i, m, s] += wt * p1 * c1; ybar[i, m, s] += wt * p1 * (wv[s] * e1 + trs[s]))
             end
@@ -365,14 +364,23 @@ participation choice d, with its probability wt, next liquid wealth bprime and
 next illiquid node j. The same branches, in the same order, as
 `two_asset_distribution`.
 """
-function each_branch(f, sol, i, m, s)
+each_branch(f, sol, i, m, s) = each_branch_full((wt, d, bp, j, e, be) -> f(wt, d, bp, j), sol, i, m, s)
+
+"""
+    each_branch_full(f, sol, i, m, s)
+
+As `each_branch`, calling f(wt, d, bprime, j, e, be) with also the effort e of
+the branch and its effective liquid wealth be: b itself for a keeper, b plus
+(Rk k - chi0 - k_j) / R for an adjuster.
+"""
+function each_branch_full(f, sol, i, m, s)
     a = sol.a; na = length(a); inn = sol.inner
     pa = sol.Padj[i, m, s]
     for (jj, wk) in ((sol.j0[m], 1 - sol.om[m]), (sol.j0[m] + 1, sol.om[m]))
         wt = (1 - pa) * wk; wt <= 0 && continue
         p1 = inn.P1[i, jj, s]
-        p1 < 1 && f(wt * (1 - p1), 0, inn.bp[1][i, jj, s], jj)
-        p1 > 0 && f(wt * p1, 1, inn.bp[2][i, jj, s], jj)
+        p1 < 1 && f(wt * (1 - p1), 0, inn.bp[1][i, jj, s], jj, inn.e[1][i, jj, s], a[i])
+        p1 > 0 && f(wt * p1, 1, inn.bp[2][i, jj, s], jj, inn.e[2][i, jj, s], a[i])
     end
     pa <= 0 && return
     nk = length(sol.k)
@@ -381,9 +389,75 @@ function each_branch(f, sol, i, m, s)
         be = min(a[i] + sol.shift[m, j], a[end])
         r = clamp(searchsortedlast(a, be), 1, na - 1)
         p1 = clamp(lin_at(a, view(inn.P1, :, j, s), be, r), 0.0, 1.0)
-        p1 < 1 && f(wt * (1 - p1), 0, max(lin_at(a, view(inn.bp[1], :, j, s), be, r), a[1]), j)
-        p1 > 0 && f(wt * p1, 1, max(lin_at(a, view(inn.bp[2], :, j, s), be, r), a[1]), j)
+        p1 < 1 && f(wt * (1 - p1), 0, max(lin_at(a, view(inn.bp[1], :, j, s), be, r), a[1]), j,
+                    max(lin_at(a, view(inn.e[1], :, j, s), be, r), 0.0), be)
+        p1 > 0 && f(wt * p1, 1, max(lin_at(a, view(inn.bp[2], :, j, s), be, r), a[1]), j,
+                    max(lin_at(a, view(inn.e[2], :, j, s), be, r), 0.0), be)
     end
+end
+
+"""
+    two_asset_welfare_parts(p0, sol)
+
+`welfare_parts` for the two-asset solution: the policy evaluation of consumption,
+effort and belonging over (b, k, s), under the branches the distribution follows,
+discounted at beta (1 - death) as the solver does (perpetual youth). The
+propensities are out of a liquid windfall at unchanged illiquid wealth. Saving is
+next liquid wealth plus the net illiquid outlay, k_j + chi0 - Rk k for an
+adjuster and zero for a keeper, so that consumption plus saving is again the
+windfall plus the change in earnings.
+"""
+function two_asset_welfare_parts(p0::SAGEParams, sol)
+    p = p0.death > 0 ? update(p0; β = p0.β * (1 - p0.death)) : p0
+    a = sol.a; kg = sol.k; λ = sol.lambda; z = sol.z_vals; Π = sol.Pi
+    na, nk, ns = length(a), length(kg), length(z)
+    κ = 1.0 + p.commute
+    wv = [(1 + p.subsidy) * p.α[s] * z[s] * p.Z for s in 1:ns]
+    oth = [(-p.lumptax + transfer_at(p, s), -p.lumptax + net_participation(p, p.α[s], z[s]) + transfer_at(p, s)) for s in 1:ns]
+    tfl = [floor_at(p, s) for s in 1:ns]
+    bel = [p.social_strength * p.Λ * p.B[s] * QBAR * belong_at(p, s) for s in 1:ns]
+    idx(i, m, s) = i + (m - 1) * na + (s - 1) * na * nk
+    n = na * nk * ns
+    uc = zeros(n); ue = zeros(n); ub = zeros(n)
+    sbar = zeros(na, nk, ns); lbar = zeros(na, nk, ns)
+    rows = Int[]; cols = Int[]; vals = Float64[]
+    @inbounds for s in 1:ns, m in 1:nk, i in 1:na
+        x = idx(i, m, s)
+        each_branch_full(sol, i, m, s) do wt, d, bp, j, e, be
+            c = max((p.R * be + wv[s] * e + oth[s][d+1] - bp) / p.pc, 1e-10)
+            T = tfl[s] + κ * e + QBAR * d
+            uc[x] += wt * p.Γ * c^(1 - p.γ) / (1 - p.γ)
+            ue[x] -= wt * p.Γ * p.ϕ * T^(1 + p.ψ) / (1 + p.ψ)
+            ub[x] += wt * bel[s] * d
+            sbar[i, m, s] += wt * (bp + p.R * (a[i] - be))     # R (b - be) is the net illiquid outlay
+            lbar[i, m, s] += wt * wv[s] * e
+            k = clamp(searchsortedlast(a, bp), 1, na - 1)
+            wk = clamp((a[k+1] - bp) / (a[k+1] - a[k]), 0.0, 1.0)
+            for s2 in 1:ns
+                pr = Π[s, s2] * wt; pr <= 0 && continue
+                push!(rows, x); push!(cols, idx(k, j, s2)); push!(vals, pr * wk)
+                push!(rows, x); push!(cols, idx(k + 1, j, s2)); push!(vals, pr * (1 - wk))
+            end
+        end
+    end
+    F = lu(sparse(1:n, 1:n, ones(n), n, n) - p.β * sparse(rows, cols, vals, n, n))
+    Vc = F \ uc; Ve = F \ ue; Vb = F \ ub
+    vmass = zeros(ns); vcmass = zeros(ns); vemass = zeros(ns); vbmass = zeros(ns)
+    mpsmass = zeros(ns); mpemass = zeros(ns); mppmass = zeros(ns)
+    @inbounds for s in 1:ns, m in 1:nk, i in 1:na
+        mm = λ[i, m, s]; mm <= 0 && continue
+        x = idx(i, m, s)
+        vmass[s] += mm * sol.V[i, m, s]; vcmass[s] += mm * Vc[x]; vemass[s] += mm * Ve[x]; vbmass[s] += mm * Vb[x]
+        Δ = sol.ybar[i, m, s] / 12
+        if Δ > 0
+            ai = a[i] + Δ / p.R
+            mpsmass[s] += mm * (interp_ext(a, view(sbar, :, m, s), ai) - sbar[i, m, s]) / Δ
+            mpemass[s] += mm * (interp_ext(a, view(lbar, :, m, s), ai) - lbar[i, m, s]) / Δ
+            mppmass[s] += mm * (interp_ext(a, view(sol.P1, :, m, s), ai) - sol.P1[i, m, s])
+        end
+    end
+    (vmass = vmass, vcmass = vcmass, vemass = vemass, vbmass = vbmass,
+     mpsmass = mpsmass, mpemass = mpemass, mppmass = mppmass)
 end
 
 """
@@ -479,7 +553,7 @@ function two_asset_agency_summary(p::SAGEParams, sol)
         cmass[s] += mm * cb[i]
         Δ = ybar[i, m, s] / 12
         if Δ > 0
-            mpc = (interp_ext(a, cb, a[i] + Δ / p.R) - cb[i]) / Δ
+            mpc = p.pc * (interp_ext(a, cb, a[i] + Δ / p.R) - cb[i]) / Δ   # spending share of the windfall
             mpcmass[s] += mm * mpc
             htm && (m == 1 ? (mpchmass[s] += mm * mpc) : (mpcwmass[s] += mm * mpc))
         end
@@ -509,5 +583,5 @@ function two_asset_agency_summary(p::SAGEParams, sol)
     end
     merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = whmass,
            mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = mpcwmass, rmass = rmass, xmass = xmass, cmass = cmass),
-          welfare_parts_nan(ns))
+          two_asset_welfare_parts(p, sol))
 end

@@ -1,0 +1,7 @@
+1. inert illiquid asset against one asset: largest gap in welfare parts and propensities 2.5e-09
+2. FR G+A two assets (2.1 min): MPC 0.1074 + saving 0.8223 - earnings -0.0703 = 1.000000; participation per windfall 0.00000
+   value -41.4317 = consumption -32.8454 + effort -8.6419 + belonging 0.0702 + remainder -0.0146
+   poor hand-to-mouth 0.0322, wealthy 0.1667; MPC of the wealthy hand-to-mouth 0.197
+3. benefits +10%: welfare -0.547% (consumption -0.312, effort -0.237, belonging -0.000, rest +0.000); lower-education -0.374%, higher -0.993%; employed -0.582%, unemployed -0.074%
+DONE
+julia --project=scripts/run_env scripts/test_reporting2.jl FR  1202.67s user 57.99s system 221% cpu 9:30.24 total

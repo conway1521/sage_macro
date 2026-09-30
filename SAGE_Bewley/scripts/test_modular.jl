@@ -204,7 +204,7 @@ reduce_to("G+A, dread as overlay changes no choice",
 # unaffordable, no death, the one-asset liquid grid. Every result, the agency
 # summaries included, must equal the one-asset economy's. EGM only.
 if DEFAULT_SOLVER === :egm
-    AG_FIELDS = (FIELDS..., :A_cond, :mpc, :consumption_drop, :shock_loss, :room, :dread_cost_E, :wealthy_htm)
+    AG_FIELDS = (FIELDS..., :A_cond, :mpc, :consumption_drop, :shock_loss, :room, :dread_cost_E, :wealthy_htm, :mps, :mpe, :mpp)
     inert(c) = SAGEConfig(c; illiquid = true, chi0 = 1e10, death = 0.0, b_max = c.a_max, nb = c.na, nk = 4, k_max = 5.0)
     reduce_to("G, illiquid asset inert  ->  G",
               solve_economy(SAGEConfig(CAL)), solve_economy(inert(SAGEConfig(CAL))); fields = AG_FIELDS, tol = 1e-8)
