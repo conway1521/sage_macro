@@ -1,0 +1,5 @@
+1. tax 2.33%, inert illiquid against one asset: largest gap 9.9e-11 (results), 3.0e-09 (welfare)
+2. FR G+A two assets, EUR 100: emissions 4.364 -> 4.342 (-0.50%); welfare +0.188% (cells +0.408%, -0.379%); hardship +0.0025
+   adding-up under the tax: MPC 0.1108 + saving 0.8188 - earnings -0.0704 = 1.000000
+   valued at uba_central: +7.69 EUR per head, +0.041% of consumption
+DONE
