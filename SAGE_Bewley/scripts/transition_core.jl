@@ -173,3 +173,117 @@ function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80)
      welfare = ce(sum(cs[g].share * (welf[g, 1] - welf[g, 2]) for g in 1:2), sum(cs[g].share * welf[g, 3] for g in 1:2)),
      welfare_cell = Tuple(ce(welf[g, 1] - welf[g, 2], welf[g, 3]) for g in 1:2))
 end
+
+# ------------------------------------------------ the social dimension on --
+# With S on, households differ by their steady-state belonging scale u (the
+# nodes of the family grid): a household of taste m in cell g has scale
+# kappa B_g arg m, with arg = omega + (1 - omega) x participation, the community
+# fabric. Along a transition its scale moves with the fabric, u_t = u arg_t /
+# arg_ss, so each node's path is solved with that scale path and the steady-
+# state node weights (node_weights) integrate the tastes at every date, exactly
+# as the steady state does. The fabric's path is a fixed point: guess it, solve
+# every node backward and forward, aggregate participation (the unemployed rule
+# imposed per node and date), update, damp, repeat. A zero shock returns the
+# steady state exactly.
+
+"One node's path: backward with its scale path, forward from its steady state; per-date sums."
+function node_path(p0::SAGEParams, ss, rel, lump, Πpath, theta)
+    T = length(rel); a = ss.a
+    pols = Vector{Any}(undef, T); V, Va = ss.V, ss.Va
+    for t in T:-1:1
+        pt = update(p0; social_strength = p0.social_strength * rel[t], lumptax = lump[t], Π_override = Πpath[t])
+        pol = egm_step(pt, a, V, Va; theta = theta); pols[t] = pol; V, Va = pol.V, pol.Va
+    end
+    λ = ss.lambda
+    out = zeros(T, 12)   # partE massE partU massU cons effE mE assets htm consU mU  V1(first row only)
+    for t in 1:T
+        pol = pols[t]; z = pol.z; nz = length(z)
+        pt = update(p0; lumptax = lump[t])
+        st = period_stats(pt, a, λ, pol)
+        pE = 0.0; mEs = 0.0; pU = 0.0; mUs = 0.0
+        @inbounds for s in 1:nz, i in 1:length(a)
+            m = λ[i, s]; m <= 0 && continue
+            if z[s] > 0; pE += m * pol.P1[i, s]; mEs += m; else; pU += m * pol.P1[i, s]; mUs += m; end
+        end
+        out[t, :] .= (pE, mEs, pU, mUs, st.cons, st.effE, st.mE, st.assets, st.htm, st.consU, st.mU, 0.0)
+        λ = dist_step(a, λ, pol)
+    end
+    out[1, 12] = sum(ss.lambda .* pols[1].V)
+    out
+end
+
+"""
+    transition_s(c; delta_scale, T = 60, maxit = 40, damp = 0.5, tol = 1e-7)
+
+`transition` with the social dimension on (G+S, G+S+A; E off, one asset). Returns
+the paths of `transition` plus participation and the community fabric, the
+number of fixed-point iterations and the final gap.
+"""
+function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, maxit::Int = 40, damp::Float64 = 0.5, tol::Float64 = 1e-7)
+    c.S || error("transition_s is for S on; use transition")
+    c.E && error("the transition solver covers E off so far")
+    ds = vcat(delta_scale, ones(max(0, T - length(delta_scale))))[1:T]
+    r0 = solve_economy(c)
+    cs = cells_of(c); bs, bw = betas_of(c)
+    cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
+    base_ps = [params_of(cT, cs[g]) for g in 1:2]
+    Πpath = [[begin
+                  cg = SAGEConfig(c; delta = (g == 1 ? (c.delta[1] * ds[t], c.delta[2]) : (c.delta[1], c.delta[2] * ds[t])))
+                  params_of(SAGEConfig(cg; lumptax = cT.lumptax), cells_of(cg)[g])[1].Π_override
+              end for t in 1:T] for g in 1:2]
+    μ = Vector{Vector{Vector{Float64}}}(undef, 2)
+    for g in 1:2
+        Π0 = base_ps[g][1].Π_override
+        v = fill(1.0 / size(Π0, 1), size(Π0, 1)); for _ in 1:20_000; v = vec(v' * Π0); end
+        μ[g] = [v]; for t in 1:T; push!(μ[g], vec(μ[g][end]' * Πpath[g][t])); end
+    end
+    lump = [c.lumptax + sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t])) for g in 1:2) for t in 1:T]
+    argss = c.omega + (1 - c.omega) * r0.rate
+    nw = [node_weights(c, cs[g].B, argss) for g in 1:2]
+    nw = [w ./ sum(w) for w in nw]
+    jobs = [(g, k, j) for g in 1:2 for k in eachindex(bw) for j in eachindex(c.ugrid) if nw[g][j] > 0]
+    sss = pmap(jb -> (p = update(base_ps[jb[1]][jb[2]]; social_strength = c.ugrid[jb[3]], solver = :egm);
+                      solve_participation_logit(p, 1.0; theta = c.theta, full = true)), jobs)
+    ratio = c.unemployed_ratio
+    rel = ones(T); outs = nothing; gap = Inf; it = 0
+    for iter in 1:maxit
+        it = iter
+        outs = pmap(x -> (jb = x[1]; p = update(base_ps[jb[1]][jb[2]]; social_strength = c.ugrid[jb[3]], solver = :egm);
+                          node_path(p, x[2], rel, lump, Πpath[jb[1]], c.theta)), zip(jobs, sss))
+        # participation by cell and date, the rule imposed per node and date
+        rate = zeros(T)
+        for (n, (g, k, j)) in enumerate(jobs)
+            o = outs[n]
+            for t in 1:T
+                pE, mE_, pU, mU_ = o[t, 1], o[t, 2], o[t, 3], o[t, 4]
+                r_ = ratio === nothing ? pE + pU : pE + min(ratio * (mE_ > 0 ? pE / mE_ : 0.0), 1.0) * mU_
+                rate[t] += cs[g].share * bw[k] * nw[g][j] * r_ / (mE_ + mU_)
+            end
+        end
+        newrel = (c.omega .+ (1 - c.omega) .* rate) ./ argss
+        gap = maximum(abs.(newrel .- rel))
+        gap < tol && (rel = newrel; break)
+        rel = (1 - damp) .* rel .+ damp .* newrel
+    end
+    # aggregates with the same weights
+    agg = zeros(T, 12)
+    for (n, (g, k, j)) in enumerate(jobs)
+        agg .+= (cs[g].share * bw[k] * nw[g][j]) .* outs[n]
+    end
+    mass = agg[:, 2] .+ agg[:, 4]
+    participation = (c.omega .* 0 .+ (rel .* argss .- c.omega) ./ (1 - c.omega))
+    # welfare at t = 1 against the steady state (same distribution), from the nodes
+    Wss = 0.0; Vcss = 0.0
+    for (n, (g, k, j)) in enumerate(jobs)
+        wp = welfare_parts(update(base_ps[g][k]; social_strength = c.ugrid[j]), sss[n])
+        wt = cs[g].share * bw[k] * nw[g][j]
+        Wss += wt * sum(wp.vmass); Vcss += wt * sum(wp.vcmass)
+    end
+    γ = base_ps[1][1].γ
+    x = 1 + (agg[1, 12] - Wss) / Vcss
+    (participation = participation, fabric = rel .* argss, unemployment = agg[:, 11] ./ mass, cons = agg[:, 5] ./ mass,
+     effort_employed = agg[:, 6] ./ agg[:, 7], assets = agg[:, 8] ./ mass, htm = agg[:, 9] ./ mass,
+     cons_unemployed_rel = (agg[:, 10] ./ agg[:, 11]) ./ ((agg[:, 5] .- agg[:, 10]) ./ agg[:, 7]),
+     lumptax = lump, delta_scale = ds, iterations = it, gap = gap, steady_state_rate = r0.rate,
+     welfare = x > 0 ? x^(1 / (1 - γ)) - 1 : NaN)
+end

@@ -1,4 +1,4 @@
 # written by calibrate_country.jl FR GA; read by country_config
-phi = 5.08
-beta_spread = 0.006
-beta_bar = 0.9600
+phi = 6.61
+beta_spread = 0.000
+beta_bar = 0.9633
