@@ -1,0 +1,15 @@
+# Official values of a tonne of CO2, for the optional valuation of an emissions
+# change (sage_modular.jl, carbon_value). Never the headline: the E cost side is
+# reported in tonnes. Two kinds, which answer different questions:
+#   damage  the social cost of carbon, the present value of the damage one more tonne does
+#   shadow  the carbon value consistent with meeting a climate target (net zero by 2050)
+# Currency EUR unless stated. price_year is the year of the prices, emission_year
+# the year the tonne is emitted (values rise with it).
+key,code,kind,value,currency,price_year,emission_year,discounting,source,status
+uba_central,DE,damage,350,EUR,2025,2026,"1% pure rate of time preference","Umweltbundesamt, Handbuch Umweltkosten, Methodenkonvention 4.0; umweltbundesamt.de/daten/umwelt-wirtschaft/gesellschaftliche-kosten-von-umweltbelastungen",verified 2026-09-30 on the agency page (replaces Methodenkonvention 3.1: 195 EUR2020 for 2020)
+uba_equal,DE,damage,1000,EUR,2025,2026,"0% pure rate of time preference (equal weight to future generations)","Umweltbundesamt, Handbuch Umweltkosten, Methodenkonvention 4.0",verified 2026-09-30 on the agency page
+epa_central,US,damage,190,USD,2020,2020,"2% near-term Ramsey discount rate","US EPA (2023), Report on the Social Cost of Greenhouse Gases: Estimates Incorporating Recent Scientific Advances, Table ES.1",verified 2026-09-29 from the official report
+quinet_2030,FR,shadow,250,EUR,2018,2030,"target-consistent (net zero 2050)","Quinet (2019), La valeur de l'action pour le climat, France Strategie",verified 2026-09-29 from the official report
+quinet_2050,FR,shadow,775,EUR,2018,2050,"target-consistent (net zero 2050)","Quinet (2019), La valeur de l'action pour le climat, France Strategie",verified 2026-09-29 from the official report
+eib_2030,EU,shadow,250,EUR,2016,2030,"target-consistent (Paris 1.5C)","European Investment Bank (2020), EIB Group Climate Bank Roadmap 2021-2025, Annex 2",verified 2026-09-29 from the official report
+eib_2050,EU,shadow,800,EUR,2016,2050,"target-consistent (Paris 1.5C)","European Investment Bank (2020), EIB Group Climate Bank Roadmap 2021-2025, Annex 2",verified 2026-09-29 from the official report

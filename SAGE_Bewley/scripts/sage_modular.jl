@@ -964,6 +964,32 @@ function footprint_intensity(code; year = "2021")
 end
 
 """
+    carbon_value(rB, rP; code, key = "uba_central", year = "2021")
+
+The optional valuation of the change in household emissions from the baseline
+`rB` to the policy `rP`, at an official carbon value (data/sustainability/
+carbon_values.csv, `key`). Returns the change in tonnes per head, its value in
+euros per head (positive when emissions fall) and that value as a share of
+baseline consumption per head in euros (the official footprint over the
+intensity). The value is a damage avoided for the world, not a gain the
+household enjoys: it sits beside the consumption equivalent of welfare_ce and is
+never added to it. No damage feeds back into the economy (parked in version 2.0).
+"""
+function carbon_value(rB, rP; code, key = "uba_central", year = "2021")
+    v = nothing
+    for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "sustainability", "carbon_values.csv"))
+        (startswith(ln, "#") || startswith(ln, "key,")) && continue
+        f = split(ln, ","); f[1] == key && (v = (value = parse(Float64, f[4]), currency = f[5], kind = f[3], price_year = f[6]))
+    end
+    v === nothing && error("no carbon value $key")
+    eB, eP = emissions(rB; code = code, rB = rB, year = year), emissions(rP; code = code, rB = rB, year = year)
+    cB = eB.total * 1000 / footprint_intensity(code; year = year)     # euros per head
+    d = eP.total - eB.total
+    (tonnes = d, eur = -d * v.value, share = -d * v.value / cB, key = key, kind = v.kind,
+     currency = v.currency, price_year = v.price_year)
+end
+
+"""
     carbon_tax_economy(c, eur_per_tonne; code, rB, thresholds, iters = 4)
 
 The economy with a carbon tax of `eur_per_tonne` on household consumption, at
