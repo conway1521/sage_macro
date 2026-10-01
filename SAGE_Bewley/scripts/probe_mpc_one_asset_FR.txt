@@ -1,0 +1,17 @@
+calibrated                   htm 0.033 | MPC 0.127 (of the htm 0.354) | saving 0.773 | earnings -0.100 | median liquid wealth / median income 0.377 | effort 0.6431
+uniform spread 0.02          htm 0.059 | MPC 0.157 (of the htm 0.328) | saving 0.722 | earnings -0.121 | median liquid wealth / median income 0.236 | effort 0.6446
+uniform spread 0.04          htm 0.119 | MPC 0.190 (of the htm 0.311) | saving 0.664 | earnings -0.146 | median liquid wealth / median income 0.157 | effort 0.6453
+uniform spread 0.06          htm 0.195 | MPC 0.217 (of the htm 0.319) | saving 0.613 | earnings -0.169 | median liquid wealth / median income 0.105 | effort 0.6454
+uniform spread 0.08          htm 0.335 | MPC 0.243 (of the htm 0.327) | saving 0.566 | earnings -0.191 | median liquid wealth / median income 0.065 | effort 0.6454
+uniform spread 0.10          htm 0.465 | MPC 0.271 (of the htm 0.352) | saving 0.511 | earnings -0.218 | median liquid wealth / median income 0.031 | effort 0.6454
+impatient 0.05 at 0.85       htm 0.076 | MPC 0.133 (of the htm 0.418) | saving 0.761 | earnings -0.106 | median liquid wealth / median income 0.416 | effort 0.6423
+impatient 0.05 at 0.70       htm 0.076 | MPC 0.137 (of the htm 0.473) | saving 0.752 | earnings -0.110 | median liquid wealth / median income 0.416 | effort 0.6423
+impatient 0.10 at 0.85       htm 0.124 | MPC 0.150 (of the htm 0.431) | saving 0.729 | earnings -0.121 | median liquid wealth / median income 0.377 | effort 0.6425
+impatient 0.10 at 0.70       htm 0.124 | MPC 0.158 (of the htm 0.498) | saving 0.713 | earnings -0.129 | median liquid wealth / median income 0.377 | effort 0.6425
+impatient 0.20 at 0.85       htm 0.222 | MPC 0.183 (of the htm 0.440) | saving 0.666 | earnings -0.151 | median liquid wealth / median income 0.296 | effort 0.6428
+impatient 0.20 at 0.70       htm 0.222 | MPC 0.200 (of the htm 0.515) | saving 0.634 | earnings -0.167 | median liquid wealth / median income 0.296 | effort 0.6428
+impatient 0.30 at 0.85       htm 0.319 | MPC 0.216 (of the htm 0.444) | saving 0.604 | earnings -0.180 | median liquid wealth / median income 0.216 | effort 0.6431
+impatient 0.30 at 0.70       htm 0.319 | MPC 0.241 (of the htm 0.522) | saving 0.554 | earnings -0.204 | median liquid wealth / median income 0.216 | effort 0.6431
+impatient 0.40 at 0.85       htm 0.416 | MPC 0.249 (of the htm 0.445) | saving 0.541 | earnings -0.210 | median liquid wealth / median income 0.141 | effort 0.6434
+impatient 0.40 at 0.70       htm 0.416 | MPC 0.283 (of the htm 0.525) | saving 0.475 | earnings -0.242 | median liquid wealth / median income 0.141 | effort 0.6434
+DONE

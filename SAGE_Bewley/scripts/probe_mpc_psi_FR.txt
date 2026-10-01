@@ -1,0 +1,8 @@
+psi  2.0 (Frisch 0.50, cap 0.50) calibrated spread  phi     6.60 effort 0.6431 | htm 0.033 | MPC 0.127 (of the htm 0.354) | saving 0.773 | earnings -0.100 | consumption drop on job loss 0.134
+psi  2.0 (Frisch 0.50, cap 0.50) impatient 0.20     phi     6.60 effort 0.6428 | htm 0.222 | MPC 0.200 (of the htm 0.515) | saving 0.634 | earnings -0.167 | consumption drop on job loss 0.169
+psi  4.0 (Frisch 0.25, cap 0.67) calibrated spread  phi    15.87 effort 0.6432 | htm 0.041 | MPC 0.141 (of the htm 0.360) | saving 0.801 | earnings -0.058 | consumption drop on job loss 0.131
+psi  4.0 (Frisch 0.25, cap 0.67) impatient 0.20     phi    15.85 effort 0.6432 | htm 0.228 | MPC 0.241 (of the htm 0.648) | saving 0.654 | earnings -0.105 | consumption drop on job loss 0.167
+psi  8.0 (Frisch 0.12, cap 0.80) calibrated spread  phi    92.35 effort 0.6432 | htm 0.046 | MPC 0.151 (of the htm 0.381) | saving 0.817 | earnings -0.032 | consumption drop on job loss 0.128
+psi  8.0 (Frisch 0.12, cap 0.80) impatient 0.20     phi    92.25 effort 0.6432 | htm 0.230 | MPC 0.273 (of the htm 0.756) | saving 0.666 | earnings -0.061 | consumption drop on job loss 0.165
+psi 16.0 (Frisch 0.06, cap 0.89) calibrated spread  phi  3142.63 effort 0.6432 | htm 0.051 | MPC 0.157 (of the htm 0.398) | saving 0.826 | earnings -0.017 | consumption drop on job loss 0.126
+psi 16.0 (Frisch 0.06, cap 0.89) impatient 0.20     phi  3140.21 effort 0.6432 | htm 0.234 | MPC 0.294 (of the htm 0.824) | saving 0.673 | earnings -0.033 | consumption drop on job loss 0.164

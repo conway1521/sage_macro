@@ -194,6 +194,10 @@ Base.@kwdef struct SAGEConfig
     typology::Symbol = :tl2
     e_channels::Tuple = (:composition, :access, :conversion, :commute, :community)
     epsilon::Float64 = 0.4
+    # inverse Frisch elasticity of effort (2.0: Frisch 0.5, Chetty et al. 2011). With CRRA gamma
+    # it sets the wealth effect on effort, gamma / psi, which caps the MPC of a constrained
+    # household near psi / (psi + gamma) (probe_mpc_one_asset.jl, 2026-10-01)
+    psi::Float64 = 2.0
     country::String = ""
     illiquid::Bool = false
     illiquid_premium::Float64 = 0.0
@@ -299,6 +303,7 @@ function params_of(c::SAGEConfig, cell)
     c.solver === :grid || (ps = [update(p; solver = c.solver) for p in ps])
     cell.τ == 0 || (ps = [update(p; commute = cell.τ) for p in ps])
     c.ctax == 0 || (ps = [update(p; pc = 1 + c.ctax) for p in ps])
+    c.psi == 2.0 || (ps = [update(p; ψ = c.psi) for p in ps])
     if c.illiquid
         c.solver === :egm || error("the illiquid asset needs solver = :egm")
         ps = [update(p; illiquid = true, Rk = p.R + c.illiquid_premium, chi0 = c.chi0, death = c.death,
