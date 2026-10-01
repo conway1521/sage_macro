@@ -1,0 +1,8 @@
+# written by calibrate_two_asset_e.jl DE GE; illiquid asset on, E on (tl2); chi0 from the G calibration (borrowed there), wealthy hand-to-mouth untargeted
+phi = 6.648
+beta_spread = 0.0
+beta_bar = 0.9897
+impatient_share = 0.0495
+beta_low = 0.8693
+chi0 = 0.0134
+illiquid_premium = 0.0216
