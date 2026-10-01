@@ -30,7 +30,7 @@ on:
         description: "On success, start the calibrations that need this one (.github/chain.sh); nothing is committed"
         default: "yes"
       start:
-        description: "G and GA only: starting point 'effective patience,chi0,impatient share,phi', e.g. read off a log (optional)"
+        description: "G and GA only: starting point 'beta_bar,chi0,impatient share,phi' as a log prints them (optional)"
         default: ""
 # A job stops before its six-hour limit (SAGE_TIME_BUDGET_MIN), writes a
 # checkpoint and exits with code 3; this workflow then starts a new run for that

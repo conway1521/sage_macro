@@ -97,8 +97,10 @@ t0 = time()
 # its point after every step to CKPT and starts from it when the file exists.
 # With SAGE_TIME_BUDGET_MIN set, it stops before a step that would not finish
 # inside the budget, with exit code 3; the workflow then starts a new job that
-# resumes. SAGE_START ("effective patience, chi0, impatient share, phi")
-# restarts from a point read off a log.
+# resumes. SAGE_START ("beta_bar, chi0, impatient share, phi", as the log prints
+# them) restarts from a point read off a log. Until 2026-10-01 the first entry
+# was effective patience, which the log does not print: two France GA restarts
+# were given beta_bar there and started 2% too patient.
 const CKPT = joinpath(@__DIR__, "checkpoint_two_asset_$(CODE)_$(CFG).txt")
 const BUDGET = parse(Float64, get(ENV, "SAGE_TIME_BUDGET_MIN", "Inf"))
 write_ckpt(x) = open(io -> println(io, join(string.(x), ",")), CKPT, "w")
@@ -106,7 +108,7 @@ function read_start()
     isfile(CKPT) && return parse.(Float64, split(strip(read(CKPT, String)), ","))
     if haskey(ENV, "SAGE_START") && !isempty(ENV["SAGE_START"])
         v = parse.(Float64, split(ENV["SAGE_START"], ","))
-        return [v[1], log(v[2]), v[3], log(v[4])]
+        return [v[1] * SURV, log(v[2]), v[3], log(v[4])]
     end
     nothing
 end
