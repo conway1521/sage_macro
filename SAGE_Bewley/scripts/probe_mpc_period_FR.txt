@@ -1,0 +1,13 @@
+FR G, household problem at an annual and at a quarterly period (not recalibrated)
+impatient share        period        htm   MPC/yr   MPC/period   effort    liq/inc
+calibrated spread      annual      0.033    0.127        0.127   0.6431      0.318
+calibrated spread      quarterly   0.014    0.130        0.039   0.6434      0.305   (root of the transition matrix off by 1.3e-14)
+0.05 at 0.85           annual      0.076    0.133        0.133   0.6423      0.359
+0.05 at 0.85           quarterly   0.062    0.134        0.042   0.6426      0.345   (root of the transition matrix off by 1.3e-14)
+0.10 at 0.85           annual      0.124    0.150        0.150   0.6425      0.318
+0.10 at 0.85           quarterly   0.111    0.150        0.048   0.6428      0.305   (root of the transition matrix off by 1.3e-14)
+0.20 at 0.85           annual      0.222    0.183        0.183   0.6428      0.246
+0.20 at 0.85           quarterly   0.210    0.182        0.061   0.6431      0.246   (root of the transition matrix off by 1.3e-14)
+0.30 at 0.85           annual      0.319    0.216        0.216   0.6431      0.186
+0.30 at 0.85           quarterly   0.308    0.213        0.074   0.6433      0.186   (root of the transition matrix off by 1.3e-14)
+DONE

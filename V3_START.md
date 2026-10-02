@@ -94,11 +94,13 @@ Full evidence in `research/MPC_EVIDENCE.md`. The numbers that matter:
 | Hand-to-mouth, poor and wealthy | 0.032 and 0.173 | 0.074 and 0.248 | 0.083 and 0.155 | Kaplan, Violante and Weidner (2014), Table 5 |
 | Hand-to-mouth, total | 0.205 | 0.322 | 0.238 | the same, summed |
 
-**Why the model's MPC is low.** Three causes, in the order the evidence supports them:
+**Why the model's MPC is low.** Two causes, and one that was tested and ruled out:
 
 1. **Too few constrained households on one asset.** The one-asset model targets the poor hand-to-mouth share only. If its single asset is read as liquid wealth, the consistent target is the total share. Kaplan and Violante (2022) obtain an annual MPC of 0.15 with a 2.5% hand-to-mouth share and 0.41 to 0.59 once the model is calibrated to liquid wealth or to a 14% share.
 2. **The effort margin.** With separable preferences the ratio of the earnings response to the MPC is about the Frisch elasticity over the elasticity of intertemporal substitution, which is one at the model's values. A constrained household therefore splits a windfall about half into spending and half into working less. `probe_mpc_psi.jl` confirms the cap: the MPC of the hand-to-mouth rises from 0.52 to 0.82 as the Frisch elasticity falls from 0.5 to 0.06. Auclert, Bardóczy and Rognlie (2023) show that the MPC and the earnings response cannot both match the data with freely chosen hours and separable preferences, and recommend taking households off their labour supply curve.
-3. **The annual period.** In a quarterly model a household near the constraint spends a windfall over the following quarters, which an annual model does not capture. The quarterly models in the literature reach the annual figure; with a 22% hand-to-mouth share and nearly inelastic effort the annual model here reaches about 0.29. How much of the remaining gap is the period has not been measured in this model.
+3. **Not the annual period.** `probe_mpc_period.jl` solves the same French household problem at a quarterly period whose four quarters reproduce the annual income and employment process exactly (the fourth root of the transition matrix, to 1e-14), and measures the consumption response over the four quarters after a windfall. The annual MPC is the same at every hand-to-mouth share: 0.130 against 0.127 at the calibration, 0.182 against 0.183 at a 21% share, with effort, wealth and the hand-to-mouth share matching. The higher figures of quarterly models in the literature therefore come from their income process and wealth targets, which this model can adopt at an annual period.
+
+With a 22% hand-to-mouth share and nearly inelastic effort the model reaches about 0.29. The rest of the distance to the data has to come from more households being near the constraint (the impatient share, or the income process), which is what an MPC target would discipline.
 
 The two-asset model does not escape the first two: its fixed cost collapses to the bound, so illiquid wealth is in effect liquid, and it shares the effort margin.
 
@@ -153,7 +155,7 @@ From `SAGE_Bewley/`, `julia --project=scripts/run_env scripts/<name>.jl`, or on 
 |---|---|---|---|
 | Reductions and convergence | `test_modular.jl` (workflow `suite`) | 15 to 60 min on GitHub | nothing |
 | MPC economics | `test_mpc_economics.jl [CODE] [CONFIG]` | 1 min | a one-asset S-off calibration |
-| Why the MPC is low | `probe_mpc_one_asset.jl`, `probe_mpc_psi.jl` | 5 to 10 min | France G |
+| Why the MPC is low | `probe_mpc_one_asset.jl`, `probe_mpc_psi.jl`, `probe_mpc_period.jl` | 5 to 10 min | France G |
 | Reporting layer | `test_reporting.jl`, `test_reporting2.jl` | 2 and 10 min | France G+A, one and two assets |
 | Solver against the reference | `test_egm.jl`, `test_egm2.jl`, `euler_errors.jl` | minutes | nothing |
 | Transitions | `test_transition.jl`, `test_transition_s.jl` | minutes; 2 hours on GitHub with S | France G+A, G+S+A |
@@ -180,7 +182,7 @@ Each changes the calibration, so they are best settled together, before the grid
 |---|---|---|---|
 | D1 | The labour margin, which caps the MPC and inflates the earnings response | (a) hours set by the job, not chosen household by household within the year: the earnings response to a windfall is then zero, and effort still responds to policy on average; (b) a lower Frisch elasticity, 0.25, inside the micro range; (c) preferences with a weak wealth effect | (a), which is the literature's recommendation and keeps effort as a policy margin; (b) as the fallback that needs no new code |
 | D2 | The one-asset hand-to-mouth target | poor share only (as now), or the total share | the total share, with the asset read as liquid wealth |
-| D3 | The period | annual (as now), or quarterly | measure the period's contribution to the MPC in this model first, on France G, then decide |
+| D3 | The period | annual (as now), or quarterly | settled by `probe_mpc_period.jl`: the period does not move the annual MPC. Stay annual |
 | D4 | An MPC target | none (as now), or the country values of section 3 with a band of 0.10, carried by the impatient share on one asset and by the fixed cost on two assets | add it; on two assets it replaces the wealthy hand-to-mouth share as the target that identifies the fixed cost, and frees Germany and Italy from the French value |
 | D5 | Income concept in the net wealth target | gross in the data and disposable in the model (as now), or one concept on both sides | compute the model's gross income for this ratio |
 | D6 | Regional conversion | net of the employment rate (done), or a pay-per-worker measure by region | keep the first, test the second |
@@ -191,9 +193,8 @@ Each changes the calibration, so they are best settled together, before the grid
 
 ## 9. Order of work for version 3
 
-1. Settle D1 to D5.
-2. Measure the period's contribution to the MPC (D3).
-3. Implement the labour margin and the targets; extend `test_mpc_economics.jl` with the untargeted checks of section 3.
-4. HFCS on arrival: coverage, the hand-to-mouth replication, the MPC by country, Italy by region.
-5. Recalibrate the grid once: one asset, then two assets, then E.
-6. Run the corroborations of section 4.
+1. Settle D1, D2, D4 and D5 (D3 is settled).
+2. Implement the labour margin and the targets; extend `test_mpc_economics.jl` with the untargeted checks of section 3.
+3. HFCS on arrival: coverage, the hand-to-mouth replication, the MPC by country, Italy by region.
+4. Recalibrate the grid once: one asset, then two assets, then E.
+5. Run the corroborations of section 4.
