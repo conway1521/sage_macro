@@ -219,7 +219,7 @@ Each changes the calibration, so they are best settled together, before the grid
 
 | | decision | options | recommendation |
 |---|---|---|---|
-| D1 | The labour margin, which caps the MPC and inflates the earnings response | (a) hours set by the job, not chosen household by household within the year: the earnings response to a windfall is then zero, and effort still responds to policy on average; (b) a lower Frisch elasticity, 0.25, inside the micro range; (c) preferences with a weak wealth effect | (a), which is the literature's recommendation and keeps effort as a policy margin; (b) as the fallback that needs no new code |
+| D1 | The labour margin, which caps the MPC and inflates the earnings response (option (a) is built as a switch, section 10) | (a) hours set by the job, not chosen household by household within the year: the earnings response to a windfall is then zero, and effort still responds to policy on average; (b) a lower Frisch elasticity, 0.25, inside the micro range; (c) preferences with a weak wealth effect | (a), which is the literature's recommendation and keeps effort as a policy margin; (b) as the fallback that needs no new code |
 | D2 | The one-asset hand-to-mouth target | poor share only (as now), or the total share | the total share, with the asset read as liquid wealth |
 | D3 | The period | annual (as now), or quarterly | settled by `probe_mpc_period.jl`: the period does not move the annual MPC. Stay annual |
 | D4 | An MPC target | none (as now), or the country values of section 3 with a band of 0.10, carried by the impatient share on one asset and by the fixed cost on two assets | add it; on two assets it replaces the wealthy hand-to-mouth share as the target that identifies the fixed cost, and frees Germany and Italy from the French value |
@@ -237,3 +237,70 @@ Each changes the calibration, so they are best settled together, before the grid
 3. HFCS on arrival: coverage, the hand-to-mouth replication, the MPC by country, Italy by region.
 4. Recalibrate the grid once: one asset, then two assets, then E.
 5. Run the corroborations of section 4.
+
+## 10. Effort set by the job (built 2026-10-02)
+
+`effort_mode = :job` in the configuration (`:free` is unchanged and remains the default). Each state has one level of effort, at which the effort condition holds on average over the households in that state; a household's own wealth does not move its hours. Found by a fixed point around the household solver (`solve_job_effort`, `egm_core.jl`). One asset; the two-asset version is not built.
+
+`test_effort_mode.jl`, France G, six checks hold:
+- the average effort condition holds in every employed state (3e-8);
+- the earnings response to a windfall is exactly zero (minus 0.10 under free effort), and consumption and saving add up to one;
+- a 10% wage subsidy moves effort by minus 2.46% (minus 2.45% under free effort): the policy margin is kept;
+- with effort nearly inelastic the two modes agree.
+
+What it does to the MPC (`probe_mpc_job.jl`, France G, effort not refitted):
+
+| hand-to-mouth share | MPC, free effort | MPC, job effort, impatient group at 0.85 | at 0.70 |
+|---|---|---|---|
+| 0.03 (calibrated) | 0.13 | 0.18 | |
+| 0.13 | 0.15 | 0.22 | 0.25 |
+| 0.22 (France's total is 0.205) | 0.18 | 0.27 | 0.33 |
+| 0.32 (Germany's total is 0.322) | 0.22 | 0.32 | 0.42 |
+| 0.42 | 0.25 | 0.37 | 0.50 |
+
+With job effort and the total hand-to-mouth share the model reaches the lower part of the target bands (France 0.42, Germany 0.51, Italy 0.48, each plus or minus 0.10). How impatient the impatient group is then has a target of its own, the MPC, where today it is fixed at 0.85 by assumption. The cost is visible in the same runs: the consumption drop on job loss rises (0.15 to 0.20 for France) and median liquid wealth falls.
+
+Open: the fixed point takes up to 18 steps; with S on, France G+S+A solves in about three minutes. Transitions hold job effort at its steady-state level for now.
+
+## 11. Parameters by status
+
+A parameter is acceptable in one of four ways: it is measured, it is taken from the literature, it is fitted to a target it owns, or the results do not depend on it. Anything else is free, and a free parameter is a result assumed.
+
+| status | parameters |
+|---|---|
+| Measured, by country | education shares; pay by education (alpha); belonging taste by education (B); separation and job finding; the replacement rate; the reference effort in benefits; the unemployed participation ratio; the median-to-mean income ratio; the income process (rho, eta); the illiquid premium; everything by place in E |
+| From the literature | risk aversion 2; the Frisch elasticity 0.5; patience 0.96 and the return 1.02 on one asset; the dread weight 1.5; the death rate 1/45; the three-month asset-poverty horizon |
+| Fitted to an owned target | the effort scale phi (effort of the employed); the patience spread or impatient share (hand-to-mouth); kappa (overall participation); sigma (the education gap in participation, in G+S+A; inherited in G+S); on two assets, patience (net wealth to income) and the fixed cost (wealthy hand-to-mouth, which does not identify it) |
+| Results do not depend on it (tested) | the logit scale theta; the grids and quadrature, within the convergence rows of the suite |
+| **Free** | **omega**, the private share of the belonging payoff (0.30); **epsilon**, the community elasticity in E (0.4, estimated in sample); **the patience of the impatient group** (0.85); **the time participation takes**, QBAR (0.10 of time); the weight Lambda on belonging, carried from the thesis; the stability gate (a multiplier of at most 5) |
+
+**Omega decides the multiplier, and nothing identifies it** (`probe_omega.jl`, France G+S+A): refitting kappa and sigma to the same two participation targets at each omega, the fit is equally good from 0.15 to 0.90 (root loss 0.0001 to 0.001) and the multiplier runs from 3.2 to 1.03. At zero the targets cannot be met with a stable equilibrium. The multiplier of 1.3 to 1.8 reported so far is therefore the value of omega assumed, 0.30, and no more. Kappa absorbs the difference; sigma does not move.
+
+| omega | kappa | sigma | fit (root loss) | multiplier |
+|---|---|---|---|---|
+| 0.15 | 7.25 | 1.02 | 0.0001 | 3.24 |
+| 0.30 | 5.45 | 1.02 | 0.0002 | 1.75 |
+| 0.50 | 4.10 | 1.02 | 0.0010 | 1.30 |
+| 0.70 | 3.30 | 1.04 | 0.0010 | 1.12 |
+| 0.90 | 2.75 | 1.04 | 0.0011 | 1.03 |
+
+What could give each free parameter a target:
+
+| parameter | a target that would own it |
+|---|---|
+| omega | the dispersion of participation across regions relative to what regional fundamentals explain (the excess-variance approach of Glaeser, Sacerdote and Scheinkman 2003): a larger multiplier spreads regions further apart. The model's regional spread is too small today (0.06 against 0.08 in Germany, 0.05 against 0.31 in Italy), which points to an omega below 0.30. Or a published multiplier for a neighbouring behaviour (1.4 to 2.2), stated as an assumption |
+| epsilon | facilities built before 1990 in France, at a finer geography than three place types |
+| patience of the impatient | the MPC (section 10) |
+| QBAR | the time participants spend, from the time-use surveys already downloaded. On organisational work alone the population spends 2 minutes a day in France and Italy and 7 in Germany, which at the yearly participation rates is roughly one to three hours a week per participant; 0.10 of committed time looks several times larger. To be measured properly before it is changed |
+
+## 12. Each dimension's economics
+
+| dimension | what it claims | what supports it | where it is weak |
+|---|---|---|---|
+| **G** | households save against income and job risk; effort responds to pay | budget, Euler and effort conditions verified in the audit; eight MPC properties hold; the income drop on job loss matches INSEE for France (33% against 31%); the liquidity gradient in the consumption response is reproduced | the MPC level (addressed by job effort, the total hand-to-mouth share and an MPC target); the consumption drop on job loss is too large in Germany and Italy (31%, 40%); liquid-asset poverty rises when insurance improves, so hardship cannot be read as a welfare indicator on one asset |
+| **S** | participation is a choice whose payoff rises with others' participation; one stable equilibrium at the data | the form is Brock and Durlauf's; overall participation and the unemployed gap are matched; the multiplier is inside the published range for neighbouring behaviours; unique equilibrium in every calibrated economy | the multiplier is set by omega, which is free; no direct estimate for volunteering; the unemployed rule rests on twelve-month prevalence while diary data show no gap; with S off there is no participation at all, so S carries the whole level |
+| **A** | pay and protection differ by education, which generates the education gradient in participation and an agency indicator | the education gap in participation is matched in G+S+A and is not produced by S alone (0.02 against 0.09 in France), so A is doing identifiable work; expected income loss has the right country ordering against the OECD | national agency is close to one everywhere, so it discriminates little; the gap is fitted through sigma, a taste dispersion, so part of what is called agency is fitted taste; no consumption-drop benchmark for Germany or Italy |
+| **E** | where people live changes access to work, what work pays, and the payoff to taking part | national aggregates are preserved exactly; reductions hold to 1e-16; agency by region varies plausibly | the untargeted regional fit of participation is weak (0.31 Italy, 0.36 Germany); the community channel rests on one in-sample elasticity; hardship by place is wrong-signed; no state outside the labour force, which is what regional participation follows in the data |
+| **Two assets** | wealth can be large and illiquid, so households can be wealthy and constrained | budgets and the resource identity verified; reduces exactly to one asset | the fixed cost sits at its bound, so illiquid wealth is in effect liquid; Germany's and Italy's wealthy hand-to-mouth are far below the data; not yet a result |
+
+In one line each: G is sound in structure and wrong in one level that now has a fix; S is sound in form and carries one free parameter that decides its headline; A does identifiable work on the education gap and little at the national level; E preserves the national economy but has not yet earned its regional claims; two assets is unfinished.
