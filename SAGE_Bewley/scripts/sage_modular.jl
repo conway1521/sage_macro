@@ -198,6 +198,10 @@ Base.@kwdef struct SAGEConfig
     # it sets the wealth effect on effort, gamma / psi, which caps the MPC of a constrained
     # household near psi / (psi + gamma) (probe_mpc_one_asset.jl, 2026-10-01)
     psi::Float64 = 2.0
+    # :free, effort chosen household by household (as always), or :job, effort set by
+    # the job: one level per state at which the effort condition holds on average
+    # (SAGEParams.job_effort; V3_START.md, decision D1). One asset for now.
+    effort_mode::Symbol = :free
     country::String = ""
     illiquid::Bool = false
     illiquid_premium::Float64 = 0.0
@@ -311,6 +315,7 @@ function params_of(c::SAGEConfig, cell)
     cell.τ == 0 || (ps = [update(p; commute = cell.τ) for p in ps])
     c.ctax == 0 || (ps = [update(p; pc = 1 + c.ctax) for p in ps])
     c.psi == 2.0 || (ps = [update(p; ψ = c.psi) for p in ps])
+    c.effort_mode === :free || (c.effort_mode === :job ? (ps = [update(p; job_effort = true) for p in ps]) : error("effort_mode is :free or :job"))
     if c.illiquid
         c.solver === :egm || error("the illiquid asset needs solver = :egm")
         ps = [update(p; illiquid = true, Rk = p.R + c.illiquid_premium, chi0 = c.chi0, death = c.death,

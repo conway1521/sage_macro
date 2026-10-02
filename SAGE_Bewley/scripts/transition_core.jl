@@ -35,7 +35,7 @@ function egm_step(p::SAGEParams, a, V, Va; theta::Float64)
     D = zeros(na, nz); Dp = zeros(na, nz)
     con_c = (fill(NaN, na, nz), fill(NaN, na, nz)); con_e = (zeros(na, nz), zeros(na, nz))
     for s in 1:nz, d in (0, 1), i in 1:na
-        c, e = egm_constrained(p, p.R * a[i] - a[1] + oth[s][d+1], wv[s], tfl[s], d)
+        c, e = egm_constrained(p, p.R * a[i] - a[1] + oth[s][d+1], wv[s], tfl[s], d; efix = isempty(p.effort_set) ? NaN : p.effort_set[s])
         con_c[d+1][i, s] = c; con_e[d+1][i, s] = e
     end
     EV = V * Π'; EVa = Va * Π'

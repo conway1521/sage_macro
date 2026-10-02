@@ -32,11 +32,16 @@ phi T^psi = w c^-gamma, T = floor + e + QBAR d, solved for e by bisection on
 the monotone gap. Returns (c, e) or (NaN, NaN) when no effort gives positive
 consumption.
 """
-function egm_constrained(p::SAGEParams, cash0::Float64, w::Float64, tfl::Float64, d::Int)
+function egm_constrained(p::SAGEParams, cash0::Float64, w::Float64, tfl::Float64, d::Int; efix::Float64 = NaN)
     κ = 1.0 + p.commute                       # time per unit of work (commuting)
     pc = p.pc                                 # price of consumption (a consumption tax)
     tmax = (1.0 - tfl - QBAR * d) / κ
     tmax < 0 && return (NaN, NaN)
+    if !isnan(efix) && w > 0                  # effort set by the job: only the budget is left
+        efix > tmax && return (NaN, NaN)
+        x = cash0 + w * efix
+        return x > 0 ? (x / pc, efix) : (NaN, NaN)
+    end
     if w <= 0.0
         return cash0 > 0 ? (cash0 / pc, 0.0) : (NaN, NaN)
     end
@@ -69,7 +74,8 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
     na = length(a)
     κ = 1.0 + p.commute
     tmax = (1.0 - tfl - QBAR * d) / κ
-    if tmax < 0
+    efix = (isempty(p.effort_set) || w <= 0) ? NaN : p.effort_set[s]      # effort set by the job, if any
+    if tmax < 0 || (!isnan(efix) && efix > tmax)
         @inbounds for i in 1:na
             cd[i, s] = NaN; ed[i, s] = 0.0; apd[i, s] = a[1]; vd[i, s] = -Inf
         end
@@ -83,7 +89,9 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
         m = p.β * EVas[k] - Dps[k]
         c = (p.pc * m / p.Γ)^(-1 / p.γ)
         e = 0.0
-        if w > 0
+        if !isnan(efix)
+            e = efix
+        elseif w > 0
             T = (w * c^(-p.γ) / (p.ϕ * κ * p.pc))^(1 / p.ψ)
             e = clamp((T - tfl - QBAR * d) / κ, 0.0, tmax)
         end
@@ -195,7 +203,7 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
     con_c = (fill(NaN, na, nz), fill(NaN, na, nz)); con_e = (zeros(na, nz), zeros(na, nz))
     for s in 1:nz, d in (0, 1), i in 1:na
         cash0 = p.R * a[i] - a[1] + oth[s][d+1]
-        c, e = egm_constrained(p, cash0, wv[s], tfl[s], d)
+        c, e = egm_constrained(p, cash0, wv[s], tfl[s], d; efix = isempty(p.effort_set) ? NaN : p.effort_set[s])
         con_c[d+1][i, s] = c; con_e[d+1][i, s] = e
     end
 
@@ -277,6 +285,105 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
                 z_vals = z_vals, iters = iters, theta = theta)
     end
     return QBAR * part, part, meaninc, partbase
+end
+
+"""
+    solve_job_effort(p, Q_agg; theta, full, tol, maxit, warm, etol, emax)
+
+The household problem with effort set by the job (`p.job_effort`): one level of
+effort per state, at which the effort condition holds on average over the
+households in that state,
+
+    (w / pc) E[u'(c)] = phi kappa E[T^psi],     T = floor + kappa e + QBAR d,
+
+the expectations over the stationary distribution in the state and over the
+participation choice. Found as a fixed point around `solve_participation_egm`:
+solve with effort given, read the average marginal utility and participation in
+each state, solve the condition for the effort it calls for, and move there
+(secant steps after a first damped one; consumption rises with effort, so the
+map slopes down and the step is stable). Starts from `warm.effort_set` when the
+previous solution has it (the family builder passes the neighbouring belonging
+scale), else from the state means of freely chosen effort. Returns the usual
+solution plus `effort_set`, the gap left and the iterations.
+"""
+function solve_job_effort(p::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01, full::Bool = false,
+                          tol::Float64 = 1e-9, maxit::Int = 5000, warm = nothing,
+                          etol::Float64 = 1e-8, emax::Int = 40)
+    z_vals, _ = SAGEBewley.income_process(p)
+    nz = p.nz; κ = 1.0 + p.commute
+    wv = [(1 + p.subsidy) * p.α[s] * z_vals[s] * p.Z for s in 1:nz]
+    oth = [(-p.lumptax + transfer_at(p, s), -p.lumptax + net_participation(p, p.α[s], z_vals[s]) + transfer_at(p, s)) for s in 1:nz]
+    tfl = [floor_at(p, s) for s in 1:nz]
+    emp = [wv[s] > 0 for s in 1:nz]
+    pfree = update(p; job_effort = false, effort_set = Float64[])
+    if warm !== nothing && hasproperty(warm, :effort_set) && length(warm.effort_set) == nz
+        e = copy(warm.effort_set); w0 = warm
+    else
+        s0 = solve_participation_egm(pfree, Q_agg; theta = theta, full = true, tol = tol, maxit = maxit, warm = warm)
+        e = zeros(nz)
+        for s in 1:nz
+            emp[s] || continue
+            m = sum(view(s0.lambda, :, s))
+            m > 0 && (e[s] = sum(s0.lambda[i, s] * (s0.P1[i, s] * s0.e_d[2][i, s] + (1 - s0.P1[i, s]) * s0.e_d[1][i, s]) for i in 1:p.na) / m)
+        end
+        w0 = s0
+    end
+    # the effort the condition calls for in each state, given a solution
+    function called_for(sol, e)
+        a = sol.a; out = copy(e)
+        for s in 1:nz
+            emp[s] || continue
+            m = 0.0; mu = 0.0; pb = 0.0
+            @inbounds for i in eachindex(a)
+                l = sol.lambda[i, s]; l <= 0 && continue
+                for d in (0, 1)
+                    pd = d == 1 ? sol.P1[i, s] : 1 - sol.P1[i, s]; pd <= 0 && continue
+                    c = (p.R * a[i] + wv[s] * sol.e_d[d+1][i, s] + oth[s][d+1] - sol.a_d[d+1][i, s]) / p.pc
+                    c > 0 && (mu += l * pd * c^(-p.γ))
+                end
+                m += l; pb += l * sol.P1[i, s]
+            end
+            m > 0 || continue
+            mu /= m; pb /= m
+            target = (wv[s] / p.pc) * mu
+            h(x) = p.ϕ * κ * ((1 - pb) * (tfl[s] + κ * x)^p.ψ + pb * (tfl[s] + κ * x + QBAR)^p.ψ) - target
+            hi = (1.0 - tfl[s] - QBAR) / κ; lo = 0.0
+            if h(lo) >= 0
+                out[s] = lo
+            elseif h(hi) <= 0
+                out[s] = hi
+            else
+                for _ in 1:60
+                    mid = 0.5 * (lo + hi); h(mid) > 0 ? (hi = mid) : (lo = mid)
+                end
+                out[s] = 0.5 * (lo + hi)
+            end
+        end
+        out
+    end
+    sol = nothing; gap = Inf; iters = 0
+    eprev = copy(e); Fprev = zeros(nz); damp = 1 / (1 + p.γ / p.ψ)
+    for k in 1:emax
+        iters = k
+        sol = solve_participation_egm(update(pfree; effort_set = e), Q_agg; theta = theta, full = true, tol = tol, maxit = maxit, warm = w0)
+        F = called_for(sol, e) .- e
+        gap = maximum(abs(F[s]) for s in 1:nz if emp[s])
+        gap < etol && break
+        enew = copy(e)
+        for s in 1:nz
+            emp[s] || continue
+            step = damp * F[s]
+            if k > 1 && abs(e[s] - eprev[s]) > 1e-14
+                sl = (F[s] - Fprev[s]) / (e[s] - eprev[s])
+                sl < -1e-3 && (step = clamp(-F[s] / sl, -0.2, 0.2))
+            end
+            enew[s] = clamp(e[s] + step, 0.0, (1.0 - tfl[s] - QBAR) / κ)
+        end
+        eprev = e; Fprev = F; e = enew; w0 = sol
+    end
+    gap < etol || @warn "solve_job_effort stopped without converging" gap etol iterations = iters
+    full || return sol.Q, sol.rate, sol.meaninc, sol.partbase
+    merge(sol, (effort_set = e, effort_gap = gap, effort_iters = iters))
 end
 
 "The stationary distribution: the Young (2010) lottery over a', mixed over d."

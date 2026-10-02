@@ -220,6 +220,17 @@ Base.@kwdef struct SAGEParams
     # of E's cost side): the budget is pc c + a' = cash. One leaves every solve
     # unchanged. EGM, one asset.
     pc::Float64 = 1.0
+    # EFFORT SET BY THE JOB (2026-10-02; V3_START.md, decision D1). With
+    # `job_effort`, effort is not chosen household by household: each state has
+    # one level of effort, `effort_set`, at which the effort condition holds on
+    # AVERAGE over the households in that state (solve_job_effort, egm_core.jl).
+    # A household's own wealth then does not move its hours, so a windfall is
+    # spent or saved and none of it is taken as leisure, while a change in the
+    # return to work still moves effort for everyone in the state. `effort_set`
+    # empty with `job_effort` true means "find it"; `job_effort` false leaves
+    # every solve unchanged (effort chosen freely). EGM, one asset.
+    job_effort::Bool = false
+    effort_set::Vector{Float64} = Float64[]
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."

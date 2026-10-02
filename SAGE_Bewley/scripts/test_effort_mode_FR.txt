@@ -1,0 +1,20 @@
+1. the effort condition on average, household problems one by one
+   largest relative gap in the average condition, or effort off its set level: 3.4e-08; fixed point gap 9.9e-09 in at most 18 steps
+   -> the average effort condition holds: PASS
+2. the economy under both modes
+   free   effort 0.6431 | htm 0.033 | MPC 0.127 (of the htm 0.354) | saving 0.773 | earnings -0.0995 | adding up 1.000000 | drop on job loss 0.134 | liquid wealth p50 0.194
+   job    effort 0.6450 | htm 0.035 | MPC 0.181 (of the htm 0.424) | saving 0.819 | earnings +0.0000 | adding up 1.000000 | drop on job loss 0.146 | liquid wealth p50 0.170
+   -> the earnings response to a windfall is zero: PASS
+   -> consumption and saving add up: PASS
+   -> the hand-to-mouth spend more of a windfall than under free effort: PASS
+3. effort responds to the return to work
+   10% wage subsidy: effort -2.46% under job (-2.45% under free)
+   -> a wage subsidy moves effort set by the job: PASS
+4. the inelastic limit, psi = 40 (phi rescaled so effort stays near its level)
+   free   effort 0.6429 | htm 0.054 | MPC 0.161 (of the htm 0.414) | saving 0.832 | earnings -0.0072 | adding up 1.000000 | drop on job loss 0.124 | liquid wealth p50 0.256
+   job    effort 0.6431 | htm 0.055 | MPC 0.165 (of the htm 0.422) | saving 0.835 | earnings -0.0000 | adding up 1.000000 | drop on job loss 0.125 | liquid wealth p50 0.253
+   largest difference in effort, MPC and hand-to-mouth: 4.4e-03
+   -> the two modes agree when effort is nearly inelastic: PASS
+
+6 of 6 checks hold
+DONE
