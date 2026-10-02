@@ -140,7 +140,8 @@ Full brief in `research/SAE_LITERATURE.md`.
 **E.**
 - Grounded: civic capital as a persistent local stock, a local supply channel from organisations to volunteering, a quasi-experiment on lost infrastructure, and a rural premium in official volunteering data for France and Germany.
 - Thin: no published elasticity benchmarks epsilon. Non-profit institutions per head in Italy is close to the outcome it explains, and epsilon was estimated on the same regional data, so the correlation of 0.89 with regional volunteering is in sample. The economic channels alone, with no community channel, give 0.67, and that is the untargeted figure.
-- To run: epsilon re-estimated on France with sports facilities built before 1990; the regional prediction on German Länder against the Freiwilligensurvey, where infrastructure did not enter the calibration.
+- Already in hand (`estimate_epsilon_IT.txt`, run before the effort correction and the place-layer fixes, to be redone): Italy's regions prefer an epsilon of 0.5; France by degree of urbanisation, with facilities built before 1990, prefers about 0.3 (rural over cities 1.34 in the model against 1.37 in the data at 0.3, and 1.69 at 0.5). Three places is too few to estimate on.
+- To run: epsilon re-estimated on France with sports facilities built before 1990 at a finer geography; the regional prediction on German Länder against the Freiwilligensurvey, where infrastructure did not enter the calibration.
 
 **Hardship by place** remains the model's one failed prediction: negatively correlated with official regional poverty in Italy on one asset (minus 0.61). The HFCS by Italian region is the test.
 
