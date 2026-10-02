@@ -374,7 +374,17 @@ function impose_unemployed_ratio(nodes, emp, ratio)
     map(nodes) do n
         mE = sum(n.mass[emp]); rE = mE > 0 ? sum(n.part[emp]) / mE : 0.0
         p = copy(n.part); p[.!emp] .= min(ratio * rE, 1.0) .* n.mass[.!emp]
-        merge(n, (part = p, rate = sum(p)))
+        out = merge(n, (part = p, rate = sum(p)))
+        # welfare and the propensity to participate follow the rule too: what
+        # participating while unemployed contributes (reporting_core.jl) is scaled
+        # from the model's rate to the rule's, k times as much
+        haskey(n, :vbumass) || return out
+        mU = sum(n.mass[.!emp]); rU = mU > 0 ? sum(n.part[.!emp]) / mU : 0.0
+        k = rU > 0 ? min(ratio * rE, 1.0) / rU : 1.0
+        merge(out, (vbmass = n.vbmass .- (1 - k) .* n.vbumass, vemass = n.vemass .- (1 - k) .* n.veumass,
+                    vmass = n.vmass .- (1 - k) .* (n.vbumass .+ n.veumass),
+                    mppmass = n.mppmass .- (1 - k) .* n.mppumass,
+                    vbumass = k .* n.vbumass, veumass = k .* n.veumass, mppumass = k .* n.mppumass))
     end
 end
 

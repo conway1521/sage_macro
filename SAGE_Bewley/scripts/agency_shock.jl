@@ -137,7 +137,10 @@ collapse_agency(ds, w) = (pmass = sum(w[i] .* ds[i].pmass for i in eachindex(ds)
                           vbmass   = sum(w[i] .* ds[i].vbmass   for i in eachindex(ds)),
                           mpsmass  = sum(w[i] .* ds[i].mpsmass  for i in eachindex(ds)),
                           mpemass  = sum(w[i] .* ds[i].mpemass  for i in eachindex(ds)),
-                          mppmass  = sum(w[i] .* ds[i].mppmass  for i in eachindex(ds)))
+                          mppmass  = sum(w[i] .* ds[i].mppmass  for i in eachindex(ds)),
+                          vbumass  = sum(w[i] .* ds[i].vbumass  for i in eachindex(ds)),
+                          veumass  = sum(w[i] .* ds[i].veumass  for i in eachindex(ds)),
+                          mppumass = sum(w[i] .* ds[i].mppumass for i in eachindex(ds)))
 collapse_all(ds, w) = merge(collapse(ds, w), collapse_agency(ds, w))
 
 """

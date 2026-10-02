@@ -423,7 +423,7 @@ function two_asset_welfare_parts(p0::SAGEParams, sol)
     bel = [p.social_strength * p.Λ * p.B[s] * QBAR * belong_at(p, s) for s in 1:ns]
     idx(i, m, s) = i + (m - 1) * na + (s - 1) * na * nk
     n = na * nk * ns
-    uc = zeros(n); ue = zeros(n); ub = zeros(n)
+    uc = zeros(n); ue = zeros(n); ub = zeros(n); ubu = zeros(n); ueu = zeros(n)      # the last two: reporting_core.jl
     sbar = zeros(na, nk, ns); lbar = zeros(na, nk, ns)
     rows = Int[]; cols = Int[]; vals = Float64[]
     @inbounds for s in 1:ns, m in 1:nk, i in 1:na
@@ -434,6 +434,10 @@ function two_asset_welfare_parts(p0::SAGEParams, sol)
             uc[x] += wt * p.Γ * c^(1 - p.γ) / (1 - p.γ)
             ue[x] -= wt * p.Γ * p.ϕ * T^(1 + p.ψ) / (1 + p.ψ)
             ub[x] += wt * bel[s] * d
+            if z[s] == 0 && d == 1
+                ubu[x] += wt * bel[s]
+                ueu[x] -= wt * p.Γ * p.ϕ * (T^(1 + p.ψ) - (T - QBAR)^(1 + p.ψ)) / (1 + p.ψ)
+            end
             sbar[i, m, s] += wt * (bp + p.R * (a[i] - be))     # R (b - be) is the net illiquid outlay
             lbar[i, m, s] += wt * wv[s] * e
             k = clamp(searchsortedlast(a, bp), 1, na - 1)
@@ -446,23 +450,27 @@ function two_asset_welfare_parts(p0::SAGEParams, sol)
         end
     end
     F = lu(sparse(1:n, 1:n, ones(n), n, n) - p.β * sparse(rows, cols, vals, n, n))
-    Vc = F \ uc; Ve = F \ ue; Vb = F \ ub
+    Vc = F \ uc; Ve = F \ ue; Vb = F \ ub; Vbu = F \ ubu; Veu = F \ ueu
     vmass = zeros(ns); vcmass = zeros(ns); vemass = zeros(ns); vbmass = zeros(ns)
+    vbumass = zeros(ns); veumass = zeros(ns); mppumass = zeros(ns)
     mpsmass = zeros(ns); mpemass = zeros(ns); mppmass = zeros(ns)
     @inbounds for s in 1:ns, m in 1:nk, i in 1:na
         mm = λ[i, m, s]; mm <= 0 && continue
         x = idx(i, m, s)
         vmass[s] += mm * sol.V[i, m, s]; vcmass[s] += mm * Vc[x]; vemass[s] += mm * Ve[x]; vbmass[s] += mm * Vb[x]
+        vbumass[s] += mm * Vbu[x]; veumass[s] += mm * Veu[x]
         Δ = sol.ybar[i, m, s] / 12
         if Δ > 0
             ai = a[i] + Δ / p.R
             mpsmass[s] += mm * (interp_ext(a, view(sbar, :, m, s), ai) - sbar[i, m, s]) / Δ
             mpemass[s] += mm * (interp_ext(a, view(lbar, :, m, s), ai) - lbar[i, m, s]) / Δ
-            mppmass[s] += mm * (interp_ext(a, view(sol.P1, :, m, s), ai) - sol.P1[i, m, s])
+            dp = mm * (interp_ext(a, view(sol.P1, :, m, s), ai) - sol.P1[i, m, s])
+            mppmass[s] += dp; z[s] == 0 && (mppumass[s] += dp)
         end
     end
     (vmass = vmass, vcmass = vcmass, vemass = vemass, vbmass = vbmass,
-     mpsmass = mpsmass, mpemass = mpemass, mppmass = mppmass)
+     mpsmass = mpsmass, mpemass = mpemass, mppmass = mppmass,
+     vbumass = vbumass, veumass = veumass, mppumass = mppumass)
 end
 
 """

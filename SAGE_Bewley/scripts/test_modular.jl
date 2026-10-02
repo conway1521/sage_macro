@@ -179,7 +179,7 @@ end
 reduce_to("G+A, unemployment: the rule moves only participation",
           solve_economy(SAGEConfig(CAL; A = true)),
           solve_economy(SAGEConfig(CAL; A = true, unemployed_ratio = nothing));
-          fields = Tuple(f for f in FIELDS if f != :rate))
+          fields = Tuple(f for f in FIELDS if !(f in (:rate, :mpp, :welfare_V, :welfare_Ve, :welfare_Vb))))   # the rule moves participation, and with it its belonging, its time and the propensity
 
 # 14. The rule is refused wherever it would be wrong or would do nothing, and
 #     the refusal comes before any household problem is solved.

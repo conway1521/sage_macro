@@ -23,6 +23,16 @@
 
 using SparseArrays, LinearAlgebra
 
+# THE UNEMPLOYED AND THE PARTICIPATION RULE (2026-10-02). Reported participation
+# of the unemployed is set by rule (`unemployed_ratio`: a multiple of the employed
+# rate, from the data), not by their choice in the model. Welfare has to count the
+# belonging and the time of the participation that is reported, so two further
+# policy evaluations isolate what participating WHILE UNEMPLOYED contributes: its
+# belonging (vbumass) and its time cost (veumass). Both are linear in the
+# probability of participating, so `impose_unemployed_ratio` rescales them by the
+# rule's rate over the model's. Until this was added, welfare by employment
+# status counted the unemployed as participating at the model's rate (audit).
+
 """
 Linear interpolation that extrapolates the end segments instead of holding flat.
 For windfall responses: holding flat beyond the top of the grid made households
@@ -42,7 +52,7 @@ function welfare_parts(p::SAGEParams, sol)
     κ = 1.0 + p.commute
     idx(i, s) = (s - 1) * na + i
     n = na * ns
-    uc = zeros(n); ue = zeros(n); ub = zeros(n)
+    uc = zeros(n); ue = zeros(n); ub = zeros(n); ubu = zeros(n); ueu = zeros(n)
     abar = zeros(na, ns); lbar = zeros(na, ns); ybar = zeros(na, ns)
     rows = Int[]; cols = Int[]; vals = Float64[]
     @inbounds for s in 1:ns
@@ -60,6 +70,10 @@ function welfare_parts(p::SAGEParams, sol)
                 uc[x] += w * p.Γ * c^(1 - p.γ) / (1 - p.γ)
                 ue[x] -= w * p.Γ * p.ϕ * T^(1 + p.ψ) / (1 + p.ψ)
                 ub[x] += w * bel * d
+                if z[s] == 0 && d == 1      # participating while unemployed: belonging, and the time it takes
+                    ubu[x] += w * bel
+                    ueu[x] -= w * p.Γ * p.ϕ * (T^(1 + p.ψ) - (T - QBAR)^(1 + p.ψ)) / (1 + p.ψ)
+                end
                 abar[i, s] += w * ap; lbar[i, s] += w * lab; ybar[i, s] += w * (lab + tr)
                 k = clamp(searchsortedlast(a, ap), 1, na - 1)
                 wk = clamp((a[k+1] - ap) / (a[k+1] - a[k]), 0.0, 1.0)
@@ -73,25 +87,30 @@ function welfare_parts(p::SAGEParams, sol)
     end
     M = sparse(1:n, 1:n, ones(n), n, n) - p.β * sparse(rows, cols, vals, n, n)
     F = lu(M)
-    Vc = F \ uc; Ve = F \ ue; Vb = F \ ub
+    Vc = F \ uc; Ve = F \ ue; Vb = F \ ub; Vbu = F \ ubu; Veu = F \ ueu
     vmass = zeros(ns); vcmass = zeros(ns); vemass = zeros(ns); vbmass = zeros(ns)
+    vbumass = zeros(ns); veumass = zeros(ns); mppumass = zeros(ns)
     mpsmass = zeros(ns); mpemass = zeros(ns); mppmass = zeros(ns)
     @inbounds for s in 1:ns, i in 1:na
         m = λ[i, s]; m <= 0 && continue
         x = idx(i, s)
         vmass[s] += m * sol.V[i, s]; vcmass[s] += m * Vc[x]; vemass[s] += m * Ve[x]; vbmass[s] += m * Vb[x]
+        vbumass[s] += m * Vbu[x]; veumass[s] += m * Veu[x]
         Δ = ybar[i, s] / 12
         if Δ > 0
             ai = a[i] + Δ / p.R
             mpsmass[s] += m * (interp_ext(a, view(abar, :, s), ai) - abar[i, s]) / Δ
             mpemass[s] += m * (interp_ext(a, view(lbar, :, s), ai) - lbar[i, s]) / Δ
-            mppmass[s] += m * (interp_ext(a, view(P1, :, s), ai) - P1[i, s])
+            dp = m * (interp_ext(a, view(P1, :, s), ai) - P1[i, s])
+            mppmass[s] += dp; z[s] == 0 && (mppumass[s] += dp)
         end
     end
     (vmass = vmass, vcmass = vcmass, vemass = vemass, vbmass = vbmass,
-     mpsmass = mpsmass, mpemass = mpemass, mppmass = mppmass)
+     mpsmass = mpsmass, mpemass = mpemass, mppmass = mppmass,
+     vbumass = vbumass, veumass = veumass, mppumass = mppumass)
 end
 
 "The same fields, NaN: for summaries whose welfare and propensities are not built yet (two assets)."
 welfare_parts_nan(ns) = (vmass = fill(NaN, ns), vcmass = fill(NaN, ns), vemass = fill(NaN, ns), vbmass = fill(NaN, ns),
-                         mpsmass = fill(NaN, ns), mpemass = fill(NaN, ns), mppmass = fill(NaN, ns))
+                         mpsmass = fill(NaN, ns), mpemass = fill(NaN, ns), mppmass = fill(NaN, ns),
+                         vbumass = fill(NaN, ns), veumass = fill(NaN, ns), mppumass = fill(NaN, ns))
