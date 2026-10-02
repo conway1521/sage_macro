@@ -325,7 +325,7 @@ the population-weighted mean of the places' multipliers, and the gate applies to
 it. The kappa search is global at every sigma.
 """
 function scan_technology_places(cps, fams, w, sigmas, kappas; targets = (0.25, 0.45), aggregate = nothing,
-                                nq = 500, xgrid = 0.0:0.02:60.0, max_mult = Inf)
+                                nq = cps[1].nq, xgrid = 0.0:0.02:60.0, max_mult = Inf)   # the solver's quadrature (500 here put the scan 0.002 off the solve)
     XG = collect(xgrid); gr = range(0.0, 1.0, length = 401); np = length(cps)
     css = [cells_of(cp) for cp in cps]
     cw = [[w[i] * css[i][g].share for i in 1:np] for g in 1:2]

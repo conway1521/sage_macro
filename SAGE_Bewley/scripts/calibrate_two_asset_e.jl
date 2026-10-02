@@ -38,7 +38,10 @@ const WHTM_TARGET = manual[(CODE, "whtm_target")]; const NW_TARGET = manual[(COD
 const TOL = (nw = 0.05, whtm = 0.01, htm = 0.005, e = 0.005)
 const OUTFILE = joinpath(@__DIR__, "calibration_country_$(CODE)_$(CFG)_I.txt")
 const NOTCAL = replace(OUTFILE, r"\.txt$" => ".not_calibrated.txt")
-notcal(msg) = (open(io -> println(io, "# not calibrated; the reason is in the run log"), NOTCAL, "w");
+# a failed run leaves neither an earlier calibration file (it would be uploaded and
+# read as if it were this run's) nor its checkpoint (a rerun would resume the failure)
+notcal(msg) = (isfile(OUTFILE) && rm(OUTFILE); isfile(CKPT) && rm(CKPT);
+               open(io -> println(io, "# not calibrated; the reason is in the run log"), NOTCAL, "w");
                say("\nNOT CALIBRATED: ", msg, " No calibration file written."); exit(2))
 
 const OFFFILE = joinpath(@__DIR__, "calibration_country_$(CODE)_$(OFF)_I.txt")
@@ -136,7 +139,7 @@ u = unpack(x)
 open(OUTFILE, "w") do io
     println(io, "# written by calibrate_two_asset_e.jl $(CODE) $(CFG); illiquid asset on, E on (", off.typology, ")",
             CHI_BORROWED ? "; chi0 from the $(OFF) calibration (borrowed there), wealthy hand-to-mouth untargeted" : "")
-    @printf(io, "phi = %.3f\nbeta_spread = 0.0\nbeta_bar = %.4f\nimpatient_share = %.4f\nbeta_low = %.4f\nchi0 = %.4f\nilliquid_premium = %.4f\n",
+    @printf(io, "phi = %.3f\nbeta_spread = 0.0\nbeta_bar = %.4f\nimpatient_share = %.4f\nbeta_low = %.4f\nchi0 = %.5f\nilliquid_premium = %.4f\n",
             u.phi, u.beta_bar, u.impatient_share, BETA_LOW_EFF / SURV, u.chi0, off.illiquid_premium)
 end
 isfile(NOTCAL) && rm(NOTCAL)

@@ -84,7 +84,7 @@ const LOSS_STD = OWN_GAP ? 0.035 : AGG_TOL
 # multiplier 1/(1 - slope) of at most 5, a map slope of at most 0.8. A numerical
 # rule, not an estimate; the calibrated G+S+A economies sit at 1.3 to 1.9.
 const MULT_MAX = 5.0
-const CELLS0 = cells_of(country_config(CODE; config = "GSA", S = true, A = A_ON))
+const CELLS0 = cells_of(country_config(CODE; config = "GSA", S = true, A = A_ON, missing_ok = true))   # the data table only
 const AGG = CELLS0[1].share * PART[1] + CELLS0[2].share * PART[2]
 const SIGMA_FIX = OWN_GAP ? NaN : country_config(CODE; config = E_ON ? "GSAE" : "GSA", E = E_ON).sigma_m
 
@@ -172,7 +172,7 @@ let fr = SAGEConfig(A = true, unemployment = true, beta_spread = 0.037, unemploy
     @printf("preflight, France G+A through the parallel path (solver %s): worst gap %.1e against the suite: %s\n",
             DEFAULT_SOLVER, gap, gap < ptol ? "HELD" : "FAILED")
     flush(stdout)
-    gap < ptol || exit(3)
+    gap < ptol || exit(4)      # not 3: that is the time budget, which the workflow answers by resuming
 end
 
 # --------------------------------------------------- 1. effort and spread --
@@ -183,7 +183,7 @@ end
 const BB = Ref(0.96)
 # one pass without thresholds for E off (as before); with E on, the full place solve
 _solve_any(cc, thr = nothing; disk = true) = E_ON ? solve_economy(cc) : _solve(cc, thr; disk = disk)
-soff(phi, sp) = _solve_any(country_config(CODE; config = CFG, S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = sp,
+soff(phi, sp) = _solve_any(country_config(CODE; config = CFG, missing_ok = true, S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = sp,
                                       beta_bar = BB[]), nothing; disk = true)
 function fit_phi(sp; lo = 0.5, hi = 40.0, steps = 14, aim = E_TARGET)   # lo was 3.0: Italy's effort target needs less
     for _ in 1:steps
@@ -258,7 +258,7 @@ end
 
 if !S_ON
     say("\n2. the ", CFG, " economy on its own thresholds")
-    r = solve_economy(country_config(CODE; config = CFG, S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = spread,
+    r = solve_economy(country_config(CODE; config = CFG, missing_ok = true, S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = spread,
                                      beta_bar = BB[]))
     @printf("  participation %.4f | agency %.4f | hardship %.4f | hand-to-mouth %.4f (target %.2f) | effort %.4f (target %.4f) | median %.4f\n",
             r.rate, r.A, r.hardship, r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET, r.median_income)
@@ -313,7 +313,7 @@ end
 # belonging scales; the calibration is then re-scanned and solved once on the
 # full grid, and only that economy is checked against the targets and written.
 function scans(phi, spread; ugrid = UGRID_COARSE)
-    c = country_config(CODE; config = CFG, S = true, A = A_ON, E = E_ON, phi = phi, beta_spread = spread, beta_bar = BB[],
+    c = country_config(CODE; config = CFG, missing_ok = true, S = true, A = A_ON, E = E_ON, phi = phi, beta_spread = spread, beta_bar = BB[],
                        ugrid = ugrid)
     E_ON && return scans_places(c)
     t0 = time()
@@ -328,9 +328,9 @@ function scans(phi, spread; ugrid = UGRID_COARSE)
         # 0.80 bound, and a best value on an edge only says the search stopped there.
         sig = OWN_GAP ? collect(SIGMAS) : [SIGMA_FIX]
         kw = OWN_GAP ? (targets = PART,) : (aggregate = AGG,)
-        rows = scan_technology(cr, fi, sig, collect(KAPPAS); kw..., max_mult = MULT_MAX)
+        rows = scan_technology(cr, fi, sig, collect(KAPPAS); kw..., max_mult = MULT_MAX, selected_only = true)   # the crossing the economy selects
         # what the gate costs, reported at the national ratio only (a second scan)
-        free = ρ == RATIO ? scan_technology(cr, fi, sig, collect(KAPPAS); kw...) : NamedTuple[]
+        free = ρ == RATIO ? scan_technology(cr, fi, sig, collect(KAPPAS); kw..., selected_only = true) : NamedTuple[]
         if !isempty(free)
             fb = free[argmin([x.loss for x in free])]
             fb.mult > MULT_MAX && @printf("  ratio %.3f: without the stability gate the best fit would be %.4f at multiplier %.1f (kappa %.2f sigma %.2f)\n",
@@ -367,7 +367,7 @@ end
 
 # ------------------------------------------------------ 4 and 5. solve --
 function solve_at(phi, spread, best; ugrid = UGRID_COARSE)
-    c = country_config(CODE; config = CFG, S = true, A = A_ON, E = E_ON, phi = phi, beta_spread = spread,
+    c = country_config(CODE; config = CFG, missing_ok = true, S = true, A = A_ON, E = E_ON, phi = phi, beta_spread = spread,
                        beta_bar = BB[], kappa = best.κ, sigma_m = best.σ, ugrid = ugrid)
     t0 = time(); r = solve_economy(c)
     @printf("  %s: participation %.4f (cells %.4f, %.4f against %.3f, %.3f; employed %.4f, unemployed %.4f)\n",

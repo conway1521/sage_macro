@@ -41,7 +41,10 @@ const MULT_MAX = 5.0
 const OWN_GAP = A_ON
 const OUTFILE = joinpath(@__DIR__, "calibration_country_$(CODE)_$(CFG)_I.txt")
 const NOTCAL = replace(OUTFILE, r"\.txt$" => ".not_calibrated.txt")
-notcal(msg) = (open(io -> println(io, "# not calibrated; the reason is in the run log"), NOTCAL, "w");
+# a failed run leaves neither an earlier calibration file (it would be uploaded and
+# read as if it were this run's) nor its checkpoint (a rerun would resume the failure)
+notcal(msg) = (isfile(OUTFILE) && rm(OUTFILE); isfile(CKPT) && rm(CKPT);
+               open(io -> println(io, "# not calibrated; the reason is in the run log"), NOTCAL, "w");
                say("\nNOT CALIBRATED: ", msg, " No calibration file written."); exit(2))
 
 isfile(joinpath(@__DIR__, "calibration_country_$(CODE)_$(OFF)_I.txt")) ||
@@ -123,8 +126,8 @@ function scan(x; ugrid = UGRID_COARSE)
     emp = employment_mask(c)
     fi = [impose_unemployed_ratio(f, emp, RATIO) for f in raw]
     cr = SAGEConfig(c; unemployed_ratio = RATIO)
-    rows = OWN_GAP ? scan_technology(cr, fi, collect(0.30:0.02:3.00), collect(2.0:0.05:25.0); targets = PART, max_mult = MULT_MAX) :
-                     scan_technology(cr, fi, [SIGMA_FIX], collect(2.0:0.05:25.0); aggregate = AGG, max_mult = MULT_MAX)
+    rows = OWN_GAP ? scan_technology(cr, fi, collect(0.30:0.02:3.00), collect(2.0:0.05:25.0); targets = PART, max_mult = MULT_MAX, selected_only = true) :
+                     scan_technology(cr, fi, [SIGMA_FIX], collect(2.0:0.05:25.0); aggregate = AGG, max_mult = MULT_MAX, selected_only = true)
     isempty(rows) && notcal("no stable equilibrium with a multiplier of at most 5.")
     best = rows[argmin([r.loss for r in rows])]
     std = OWN_GAP ? 0.035 : 0.005
@@ -168,7 +171,7 @@ say(@sprintf("  validation (not targeted): MPC %.3f (poor htm %.3f, wealthy %.3f
 u = unpack(x)
 open(OUTFILE, "w") do io
     println(io, "# written by calibrate_two_asset_s.jl $(CODE) $(CFG); illiquid asset on", CHI_BORROWED ? "; chi0 from the $(OFF) calibration (borrowed there), wealthy hand-to-mouth untargeted" : "")
-    @printf(io, "phi = %.3f\nbeta_spread = 0.0\nbeta_bar = %.4f\nimpatient_share = %.4f\nbeta_low = %.4f\nchi0 = %.4f\nilliquid_premium = %.4f\nkappa = %.2f\nsigma_m = %.2f\n",
+    @printf(io, "phi = %.3f\nbeta_spread = 0.0\nbeta_bar = %.4f\nimpatient_share = %.4f\nbeta_low = %.4f\nchi0 = %.5f\nilliquid_premium = %.4f\nkappa = %.2f\nsigma_m = %.2f\n",
             u.phi, u.beta_bar, u.impatient_share, BETA_LOW_EFF / SURV, u.chi0, off.illiquid_premium, sc.best.κ, sc.best.σ)
 end
 isfile(NOTCAL) && rm(NOTCAL)

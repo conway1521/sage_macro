@@ -181,6 +181,8 @@ let cm = r.Ntot ./ r.Ntot[end], x = NWGRID
     say(@sprintf("  net wealth: top 10%% share %.3f, Gini %.3f", top, g))
 end
 if !ok
+    # no earlier calibration file and no checkpoint survive a failed run
+    isfile(OUTFILE) && rm(OUTFILE); isfile(CKPT) && rm(CKPT)
     open(io -> println(io, "# not calibrated; the reason is in the run log"), NOTCAL, "w")
     say(@sprintf("\nNOT CALIBRATED: worst target at %.2f of its band after the iteration. No calibration file written.", maximum(abs.(ract(m)))))
     exit(2)
@@ -188,7 +190,7 @@ end
 u = unpack(x)
 open(OUTFILE, "w") do io
     println(io, "# written by calibrate_two_asset.jl $(CODE) $(CFG); illiquid asset on", isempty(CHI_FROM) ? "" : "; chi0 from $(CHI_FROM), wealthy hand-to-mouth untargeted")
-    @printf(io, "phi = %.3f\nbeta_spread = 0.0\nbeta_bar = %.4f\nimpatient_share = %.4f\nbeta_low = %.4f\nchi0 = %.4f\nilliquid_premium = %.4f\n",
+    @printf(io, "phi = %.3f\nbeta_spread = 0.0\nbeta_bar = %.4f\nimpatient_share = %.4f\nbeta_low = %.4f\nchi0 = %.5f\nilliquid_premium = %.4f\n",
             u.phi, u.beta_bar, u.impatient_share, BETA_LOW_EFF / SURV, u.chi0, PREMIUM)
 end
 isfile(NOTCAL) && rm(NOTCAL)

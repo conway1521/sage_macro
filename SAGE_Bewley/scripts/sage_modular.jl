@@ -282,6 +282,13 @@ function betas_of(c::SAGEConfig)
     (b, fill(1 / length(b), length(b)))
 end
 
+"""
+The employed states of a parameter set: positive productivity. Until 2026-10-02
+this was read from the transfer (no benefit means employed), which made everyone
+employed at a zero replacement rate and no one at a negative levy.
+"""
+employed_states(p::SAGEParams) = p.z_vals_override === nothing ? trues(p.nz) : p.z_vals_override .> 0
+
 "Parameter sets for one cell, one per discount type."
 function params_of(c::SAGEConfig, cell)
     bs, _ = betas_of(c)
@@ -292,7 +299,7 @@ function params_of(c::SAGEConfig, cell)
     if c.phi != 14.0 || c.e_ref != E_REF
         ps = [update(p; ϕ = c.phi, transfer = p.transfer .* (c.e_ref / E_REF)) for p in ps]
     end
-    emp = ps[1].transfer .== 0
+    emp = employed_states(ps[1])
     if c.levy_employed != 0
         ps = isempty(ps[1].transfer) ? [update(p; lumptax = p.lumptax + c.levy_employed) for p in ps] :
              [update(p; transfer = [e ? -c.levy_employed : t for (e, t) in zip(emp, p.transfer)]) for p in ps]
@@ -352,7 +359,7 @@ taste_nodes_of(c::SAGEConfig) = taste_nodes_ln(c.sigma_m; n = c.nq)
 "The employed states of a config's state space, true where employed."
 function employment_mask(c::SAGEConfig)
     cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
-    params_of(cT, cells_of(c)[1])[1].transfer .<= 0
+    employed_states(params_of(cT, cells_of(c)[1])[1])
 end
 
 """
@@ -563,9 +570,12 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
         # serial version; only where they run changes.
         jobs = [(g, p0) for g in 1:2 for p0 in params_of(cfgT, cs[g])]
         solve0 = job -> begin
-            s = solve_participation_logit(update(job[2]; social_strength = 0.0), 1.0;
-                                          theta = c.theta, full = true)
-            merge(cell_summary(job[2], s; thresholds = thr), agency_summary(job[2], s))
+            # the summaries read the SAME parameters the household was solved with:
+            # passing the unmodified ones (social_strength at its default of one)
+            # booked a belonging value with S off (audit 2026-10-02)
+            p = update(job[2]; social_strength = 0.0)
+            s = solve_participation_logit(p, 1.0; theta = c.theta, full = true)
+            merge(cell_summary(p, s; thresholds = thr), agency_summary(p, s))
         end
         out = nworkers() > 1 ? pmap(solve0, jobs) : map(solve0, jobs)
         nb = length(bw)
@@ -584,7 +594,7 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
     med_model = cdf_quantile(YGRID, Ypop, 0.5)
     minc = sum(cs[g].share * pooled[g].minc for g in 1:2)
     Wtot = sum(cs[g].share .* vec(sum(pooled[g].W, dims = 1)) for g in 1:2)
-    emp  = params_of(cfgT, cs[1])[1].transfer .<= 0
+    emp  = employed_states(params_of(cfgT, cs[1])[1])
     # Agency: alpha times one minus the expected share of next year's
     # consumption lost to unemployment (agency_shock.jl). The same with income
     # alone leaves out households' own savings; the drop is at the moment of
@@ -619,7 +629,9 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
             rate_U = (m = sum(cs[g].share * sum(pooled[g].mass[.!emp]) for g in 1:2);
                       m <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].part[.!emp]) for g in 1:2) / m),
             A = sum(cs[g].share * Acell[g] for g in 1:2), A_cell = Acell,
-            A_cond = sum(cs[g].share * Acond[g] for g in 1:2), A_cond_cell = Acond,
+            # among the employed, so cells weigh by their employed mass (as consumption_drop does)
+            A_cond = mE <= 0 ? sum(cs[g].share * Acond[g] for g in 1:2) :
+                     sum(cs[g].share * sum(pooled[g].mass[emp]) * Acond[g] for g in 1:2) / mE, A_cond_cell = Acond,
             shock_loss = sum(cs[g].share * pbar[g] for g in 1:2),
             shock_loss_income = sum(cs[g].share * pyb[g] for g in 1:2),
             A_institutions = sum(cs[g].share * cs[g].α * (1 - pyb[g]) for g in 1:2),
@@ -823,10 +835,17 @@ end
 A country's configuration: its labour market, benefit, education gradients,
 benefit reference and participation rule from the data table, then its effort
 scale, discount spread and social technology from `calibration_country_<code>.txt`
-when that file exists. Keyword arguments override both. The dimension switches
-S and A are left at their defaults and set by the caller.
+from the configuration's calibration file. Keyword arguments override both. The
+dimension switches S and A are left at their defaults and set by the caller.
+
+A missing calibration file is an ERROR: without it the configuration would run
+on the engine's defaults (phi 14, sigma 0.4, kappa 10, chi0 0.05) and return a
+plausible-looking economy that was never calibrated (audit 2026-10-02). A
+calibration script that is about to produce the file passes `missing_ok = true`.
+A file marked not calibrated (`.not_calibrated.txt` beside it, newer than it) is
+refused the same way.
 """
-function country_config(code::AbstractString; config::AbstractString = "GSA", kwargs...)
+function country_config(code::AbstractString; config::AbstractString = "GSA", missing_ok::Bool = false, kwargs...)
     r = country_rows()[code]
     num(k) = parse(Float64, r[k])
     al, ah = num("alpha_low"), num("alpha_high")
@@ -849,11 +868,17 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", kw
     cal = illq ? joinpath(@__DIR__, "calibration_country_$(code)_$(config)_I.txt") :
           joinpath(@__DIR__, config == "GSA" ? "calibration_country_$(code).txt" :
                                                "calibration_country_$(code)_$(config).txt")
-    if isfile(cal)
+    marker = replace(cal, r"\.txt$" => ".not_calibrated.txt")
+    stale = isfile(marker) && (!isfile(cal) || mtime(marker) > mtime(cal))
+    if isfile(cal) && !(stale && !missing_ok)
         for ln in eachline(cal)
             t = strip(ln); (isempty(t) || startswith(t, "#")) && continue
             k, v = strip.(split(t, "=")); d[Symbol(k)] = parse(Float64, v)
         end
+    elseif !missing_ok
+        error("no calibration for $code $config" * (illq ? " on two assets" : "") * ": " * basename(cal) *
+              (stale ? " is marked not calibrated" : " does not exist") *
+              ". Calibrate it first, or pass missing_ok = true to run on the engine defaults knowingly.")
     end
     d[:country] = code
     occursin('E', config) && (d[:E] = true)       # GE, GAE, GSE, GSAE
@@ -1042,14 +1067,20 @@ Returns the economy and the recycled amount per head.
 """
 function carbon_tax_economy(c::SAGEConfig, eur_per_tonne; code, thresholds = nothing, iters = 4)
     t = eur_per_tonne * footprint_intensity(code) / 1000
-    rev = 0.0; r = nothing
+    # the economy returned is the one solved with the rebate reported; `gap` is
+    # what the budget is off by (the revenue it raises less the rebate it pays)
+    rev = 0.0; r = nothing; gap = Inf
     for _ in 1:iters
         r = solve_economy(SAGEConfig(c; ctax = t, lumptax = c.lumptax - rev); thresholds = thresholds)
-        rev_new = t * r.consumption
-        abs(rev_new - rev) < 1e-7 && (rev = rev_new; break)
-        rev = rev_new
+        gap = t * r.consumption - rev
+        abs(gap) < 1e-7 && break
+        rev += gap
     end
-    (economy = r, rate = t, recycled = rev)
+    if abs(gap) >= 1e-7
+        r = solve_economy(SAGEConfig(c; ctax = t, lumptax = c.lumptax - rev); thresholds = thresholds)
+        gap = t * r.consumption - rev
+    end
+    (economy = r, rate = t, recycled = rev, gap = gap)
 end
 
 
@@ -1066,9 +1097,13 @@ function time_propensities(c::SAGEConfig; h = 0.01, thresholds = nothing)
     rB = solve_economy(c; thresholds = thresholds)
     thr = [(rB.ypov, rB.abar)]
     rP = solve_economy(SAGEConfig(c; time_bonus = h); thresholds = thr)
-    κ = 1.0
-    work = (rP.mean_effort_employed - rB.mean_effort_employed) / h
-    part = QBAR * (rP.rate - rB.rate) / h
-    (work_employed = work, participation = part, participation_rate_per_h = (rP.rate - rB.rate) / h,
+    # all three for the EMPLOYED: their effort, their participation (rate_E, not
+    # the overall rate that mixed in the unemployed until 2026-10-02), the rest
+    # leisure. Commuting time scales with effort and is counted with work.
+    cs = cells_of(c)
+    κ = 1 + sum(cs[g].share * cs[g].τ for g in 1:2)
+    work = κ * (rP.mean_effort_employed - rB.mean_effort_employed) / h
+    part = QBAR * (rP.rate_E - rB.rate_E) / h
+    (work_employed = work, participation = part, participation_rate_per_h = (rP.rate_E - rB.rate_E) / h,
      leisure_employed = 1 - work - part, welfare = welfare_ce(rB, rP))
 end

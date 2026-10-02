@@ -26,15 +26,28 @@ include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf, Statistics
 
 const TOL = 1e-6
+# Every reduction compares these. Welfare and the propensities were added after
+# the audit of 2026-10-02: a belonging value that was not zero with S off went
+# unseen because no row looked at it.
 const FIELDS = (:rate, :A, :hardship, :income_poor, :asset_poor, :hand_to_mouth,
-                :mean_labour_income, :median_income, :mean_effort_employed, :wealth_p50)
+                :mean_labour_income, :median_income, :mean_effort_employed, :wealth_p50,
+                :mean_income, :consumption, :mpc, :mps, :mpe, :mpp,
+                :welfare_V, :welfare_Vc, :welfare_Ve, :welfare_Vb)
+"A field of an economy; welfare_X reads the welfare tuple."
+function val(r, f::Symbol)
+    n = String(f)
+    startswith(n, "welfare_") ? getfield(r.welfare, Symbol(n[9:end])) : getfield(r, f)
+end
 const RESULTS = NamedTuple[]
 
 "Compare two economies field by field. `anchor` shares one's thresholds with the other."
 function reduce_to(name, a, b; fields = FIELDS, tol = TOL)
     worst = 0.0; worstf = :none
     for f in fields
-        d = abs(getfield(a, f) - getfield(b, f))
+        x, y = val(a, f), val(b, f)
+        # NaN on one side only is a failure (abs(NaN - x) > worst is false, so it
+        # used to pass); NaN on both sides is the same undefined quantity
+        d = (isnan(x) && isnan(y)) ? 0.0 : (isnan(x) || isnan(y)) ? Inf : abs(x - y)
         d > worst && (worst = d; worstf = f)
     end
     ok = worst <= tol
@@ -93,27 +106,53 @@ reduce_to("G+S+A with both switched off  ->  G",
 # 6. Unemployment at zero separation. The four-state process still has the
 #    unemployed states, they are simply unreachable, so this also checks that
 #    nothing leaks through the state space itself.
-reduce_to("G+S+A with unemployment at zero separation  ->  G+S+A",
-          solve_economy(SAGEConfig(S = true, A = true, unemployment = true, delta = (0.0, 0.0))), GSA)
+#    (At exactly zero the parameters are those of the model without unemployment,
+#    so the row compared an economy with itself: audit 2026-10-02. A separation
+#    rate of 1e-12 builds the four-state process and its insurance.)
+reduce_to("G+S+A with unemployment at negligible separation  ->  G+S+A",
+          solve_economy(SAGEConfig(S = true, A = true, unemployment = true, delta = (1e-12, 1e-12))), GSA)
 
 # 7. Discount heterogeneity at zero spread.
-reduce_to("G+S+A with the discount spread at zero  ->  G+S+A",
-          solve_economy(SAGEConfig(S = true, A = true, beta_spread = 0.0, nbeta = 5)), GSA)
+#    Five types a negligible distance apart (zero is the default, one type), and
+#    two patience groups at the same patience.
+reduce_to("G+S+A with a negligible discount spread  ->  G+S+A",
+          solve_economy(SAGEConfig(S = true, A = true, beta_spread = 1e-11, nbeta = 5)), GSA)
+reduce_to("G+A with two patience groups at one patience  ->  G+A",
+          solve_economy(SAGEConfig(A = true, impatient_share = 0.3, beta_low = SAGEConfig().beta_bar)), GA)
 
 # 8. Both extensions off at once, from the fully loaded model.
-reduce_to("G+S+A, unemployment and discount spread both off  ->  G+S+A",
-          solve_economy(SAGEConfig(S = true, A = true, unemployment = true, delta = (0.0, 0.0),
-                                   beta_spread = 0.0)), GSA)
+reduce_to("G+S+A, unemployment and discount spread both negligible  ->  G+S+A",
+          solve_economy(SAGEConfig(S = true, A = true, unemployment = true, delta = (1e-12, 1e-12),
+                                   beta_spread = 1e-11)), GSA)
 
 # 9. The monetary participation cost, which stage 7 rejected on the evidence
 #    but left in the code, must be inert at zero.
-reduce_to("G+S+A with the monetary participation cost at zero  ->  G+S+A",
-          solve_economy(SAGEConfig(S = true, A = true, pcost = 0.0)), GSA)
+reduce_to("G+S+A with a negligible monetary participation cost  ->  G+S+A",
+          solve_economy(SAGEConfig(S = true, A = true, pcost = 1e-12)), GSA)
 
 # 10. Policy instruments inert at zero.
-reduce_to("G+S+A with every policy instrument at zero  ->  G+S+A",
-          solve_economy(SAGEConfig(S = true, A = true, subsidy = 0.0, lumptax = 0.0,
-                                   partcredit = 0.0)), GSA)
+reduce_to("G+S+A with every policy instrument negligible  ->  G+S+A",
+          solve_economy(SAGEConfig(S = true, A = true, subsidy = 1e-12, lumptax = 1e-12,
+                                   partcredit = 1e-12)), GSA)
+
+# 10b. The switches added in version 2, each through its own code path at a
+#      negligible value: the consumption tax, the effort curvature, extra time
+#      and commuting.
+reduce_to("G+A with a negligible consumption tax  ->  G+A",
+          solve_economy(SAGEConfig(A = true, ctax = 1e-12)), GA)
+reduce_to("G+A with the effort curvature moved negligibly  ->  G+A",
+          solve_economy(SAGEConfig(A = true, psi = 2.0 + 1e-11)), GA)
+reduce_to("G+A with negligible extra time  ->  G+A",
+          solve_economy(SAGEConfig(A = true, time_bonus = 1e-12)), GA)
+reduce_to("G+A with negligible commuting  ->  G+A",
+          solve_economy(SAGEConfig(A = true, commute = (1e-12, 1e-12))), GA)
+
+# 10c. With S off there is no belonging payoff, so its part of welfare is zero.
+let vb = max(abs(G.welfare.Vb), abs(GA.welfare.Vb)); ok = vb <= 1e-12
+    push!(RESULTS, (name = "belonging welfare is zero with S off", worst = vb, field = :welfare_Vb, ok = ok))
+    @printf("%-58s %-9.1e %-20s %s\n", "G and G+A: belonging welfare is zero with S off", vb, "welfare_Vb", ok ? "pass" : "FAIL")
+    flush(stdout)
+end
 
 # --------------------------------------------------------------- replication --
 # 11. The same configuration twice. Nothing in the solver may depend on order,
