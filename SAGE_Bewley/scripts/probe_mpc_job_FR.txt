@@ -1,0 +1,11 @@
+calibrated spread          htm 0.035 | MPC 0.181 (of the htm 0.424) | earnings +0.0000 | drop on job loss 0.146 | median liquid wealth / median income 0.330 | effort 0.6450  [0.9 min]
+impatient 0.10 at 0.85     htm 0.127 | MPC 0.217 (of the htm 0.620) | earnings +0.0000 | drop on job loss 0.155 | median liquid wealth / median income 0.328 | effort 0.6446  [0.1 min]
+impatient 0.10 at 0.70     htm 0.127 | MPC 0.250 (of the htm 0.878) | earnings -0.0000 | drop on job loss 0.155 | median liquid wealth / median income 0.328 | effort 0.6446  [0.1 min]
+impatient 0.20 at 0.85     htm 0.224 | MPC 0.267 (of the htm 0.646) | earnings +0.0000 | drop on job loss 0.179 | median liquid wealth / median income 0.260 | effort 0.6447  [0.1 min]
+impatient 0.20 at 0.70     htm 0.224 | MPC 0.333 (of the htm 0.939) | earnings -0.0000 | drop on job loss 0.179 | median liquid wealth / median income 0.260 | effort 0.6447  [0.1 min]
+impatient 0.30 at 0.85     htm 0.321 | MPC 0.318 (of the htm 0.656) | earnings -0.0000 | drop on job loss 0.202 | median liquid wealth / median income 0.193 | effort 0.6448  [0.1 min]
+impatient 0.30 at 0.70     htm 0.321 | MPC 0.416 (of the htm 0.963) | earnings -0.0000 | drop on job loss 0.202 | median liquid wealth / median income 0.193 | effort 0.6448  [0.1 min]
+impatient 0.40 at 0.85     htm 0.418 | MPC 0.369 (of the htm 0.662) | earnings -0.0000 | drop on job loss 0.225 | median liquid wealth / median income 0.126 | effort 0.6448  [0.1 min]
+impatient 0.40 at 0.70     htm 0.418 | MPC 0.500 (of the htm 0.975) | earnings -0.0000 | drop on job loss 0.225 | median liquid wealth / median income 0.126 | effort 0.6448  [0.1 min]
+G+S+A, job effort: participation 0.1945 (employed 0.2007, unemployed 0.1072), multiplier 1.73, MPC 0.140, earnings -0.0000, effort 0.6482  [3.2 min]
+DONE
