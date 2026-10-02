@@ -1,0 +1,199 @@
+# SAGE version 3: starting point
+
+Written 2026-10-02. This is the one state document for the start of version 3. It replaces nothing in `PLAN_MASTER.md`, which keeps the version 2.0 record. It says what was audited, what was wrong and is now fixed, what is still open, what the model should match, what is ready for the HFCS, and what can be run.
+
+Supporting documents, all in the repository:
+
+| document | what it holds |
+|---|---|
+| `audit_2026-10-02/` | five audit reports: household problem, two assets, aggregation and reporting, data and place, calibration. Line numbers in them refer to the code before the fixes below |
+| `research/MPC_EVIDENCE.md` | the evidence on propensities to consume, save and earn, with a verification tag on every number |
+| `research/SAE_LITERATURE.md` | the literature and official data behind S, A and E |
+| `hfcs_protocol/` | the HFCS readiness brief and `hfcs_moments.py` (no data) |
+| `SAGE_Bewley/scripts/README.md` | every script: engine, live, earlier footing |
+
+## 1. Where the model stands
+
+**Sound.** Five independent audits derived the household problem from the code and found it correct:
+- the budget constraint is the same in the solver, the constrained region, the distribution and the summaries;
+- the Euler equation, the effort condition and the envelope condition are right, with the consumption price;
+- discounting, the orientation of the transition matrix and the ordering of states are right;
+- the unemployment insurance budget balances (measured to eight digits);
+- the two-asset budgets, the timing of the illiquid return, the resource identity and the envelope formula are right;
+- pooling across patience types, belonging scales and education cells applies each weight once, as ratios of sums;
+- target ownership in the calibration scripts matches the design, and no value is inherited from the wrong file;
+- every national data value that was re-queried from Eurostat and the OECD matches, and the hand-to-mouth and HFCS figures match their published tables.
+
+**The economics of the propensities has the right shape.** `test_mpc_economics.jl` checks eight properties household by household, and all hold for France G: the MPC falls with liquid wealth (0.25 in the bottom fifth to 0.04 at the top, against a permanent-income benchmark of 0.02), is higher for the hand-to-mouth and the unemployed, falls with the size of the windfall, is larger for a loss than for a gain, falls with patience, and consumption, saving and earnings add up exactly.
+
+**The level is wrong.** The annual MPC is 0.10 to 0.13 against 0.4 to 0.5 in the data, and the earnings response to a windfall is minus 0.10 to minus 0.17 against about minus 0.01. Section 3 sets out why and what to decide.
+
+## 2. Audit ledger
+
+### Fixed on 2026-10-02
+
+| what was wrong | consequence | fix |
+|---|---|---|
+| Net wealth median read as the grid node above it, a step of 3.6 to 4.9% against a 5% band | two-asset calibrations could pass or fail on a grid snap (France G+A and Germany G+S+A missed narrowly) | interpolated quantile in all two-asset calibration scripts |
+| Belonging welfare not zero with S off (summaries read parameters with the belonging weight at its default) | the welfare decomposition was wrong with S off, and the reduction to G failed on that field; total welfare was unaffected | summaries read the parameters the household was solved with |
+| Welfare ignored the participation rule for the unemployed | welfare by employment status counted the unemployed as participating at the model's rate (near one with S on) where the rule reports about 0.13 for France | what participating while unemployed contributes is evaluated separately and scaled to the rule |
+| A missing calibration file gave engine defaults silently | any script asking for an uncalibrated configuration returned a plausible economy that was never fitted | `country_config` raises an error; calibration scripts opt out explicitly |
+| Italy two-asset G+A file predated the effort correction and carried an outdated French fixed cost | a stale calibration was live | removed |
+| Household footprint left out direct emissions (heating, car fuel) | emissions per head 28% too low for France | Eurostat total including households; France 6.0, Germany 7.9, Italy 6.8 tonnes per head in 2021 |
+| Regional job finding normalised with population weights | mean job finding 1 to 5 points below the national figure with E on | weights by the unemployed |
+| Quarterly flow rates used as annual (degree of urbanisation) | the rural to city gap in job finding overstated by half | compounded to a year |
+| Regional conversion netted out unemployment only | low employment loaded into the pay of those in work (Campania against Bolzano 0.61 where about 0.86 remains) | net of the regional employment rate, added to the regional table |
+| Community scaling did not preserve the national mean | national belonging about 1 to 2% low with the community channel | rescaled |
+| Regional table mixed years and filled gaps silently | invisible gaps | the build prints every missing series and every older year |
+| Transitions netted the employed levy into the insurance tax path | a zero shock would not return the steady state with a levy | benefits summed over unemployed states only |
+| S transitions returned unconverged paths without saying so, with participation from a later iterate than the rest | the logged recession run had stopped at its iteration limit | all paths from one iterate; a warning and a `converged` field |
+| Employment read from "receives no benefit" | at a zero replacement rate everyone would be classed as employed, reintroducing the effort error | read from the productivity state |
+| Calibration scans scored any stable equilibrium | a fit could sit on a lower equilibrium than the one the economy selects | the selected equilibrium only |
+| Failed two-asset calibrations left the earlier file and the checkpoint in place | a stale file could be uploaded as if new; a rerun would resume the failure | both removed on failure |
+| The fixed cost written with four decimals | 5% rounding at 0.0011 | five decimals |
+| Preflight failure used the time-budget exit code | a failed preflight would trigger five resumes | its own exit code |
+| Solvers returned silently at the iteration limit, on an accepted stall, or with an infeasible state | no signal of a bad solve | warnings and an error |
+| Poverty comparisons nominal under a consumption tax | the rebate's effect on income poverty overstated | income and wealth deflated |
+| The reduction suite: three rows compared an economy with itself, two were vacuous, NaN passed, welfare and propensities were not compared | the suite covered less than it appeared to | rows now take each switch through its code path at a negligible value; NaN fails; welfare and propensities compared; new rows for the consumption tax, the effort curvature, extra time, commuting and two patience groups |
+| Smaller items | | time propensities on one population; the carbon tax returns the economy solved with the rebate it reports; protection among the employed weighted by employed mass; the place scan uses the solver's quadrature |
+
+The strengthened suite is running on GitHub at the time of writing; its result is recorded in section 7.
+
+### Open, and why each is left
+
+| item | why it is not fixed here |
+|---|---|
+| France's liquid grid top (4) binds: 1.9% of the higher-education cell sits on the top node | a longer grid changes every one-asset calibration; it goes into the version 3 recalibration |
+| The net wealth target divides by gross income in the data and by disposable income in the model | a choice of concept; see decision D5 |
+| The fixed cost of adjusting illiquid wealth is not identified by the wealthy hand-to-mouth share: in the logs it moved sevenfold while the moment stayed within 0.003. At 0.001 it is below the smoothing of the keep-or-adjust choice | the target has to change; see section 3 and decision D1 |
+| The corrections in the two-asset S and E calibrations keep the last point, with no line search | to be rebuilt with the new targets |
+| The illiquid grid is coarse near the median (nodes 50 to 70% apart) and the net wealth grid tops at 80 | a convergence test in nk and a longer grid, with the recalibration |
+| The replacement rate does not vary by place while job finding does | a consistency choice for E |
+| Epsilon was estimated on the Italian volunteering data that is also the regional test | see decision D7 |
+| The carbon value mixes price years and currencies | policies are parked |
+| Transitions do not refuse the two-asset model | to be built or refused when transitions resume |
+| Welfare along a transition does not apply the participation rule | consistent on both sides of the comparison, noted |
+
+### Calibration files after the fixes
+
+| set | state |
+|---|---|
+| One asset, E off (G, G+A, G+S, G+S+A, three countries) | fitted after the effort correction. The fixes above do not move their targeted moments. To be redone in version 3 for the new targets |
+| One asset, E on (G+E, G+A+E, G+S+E, G+S+A+E) | fitted before the place-layer fixes: stale |
+| Two assets, all | fitted before the net wealth interpolation: stale. Present: G and G+E for the three countries, G+A and G+A+E for France and Germany. Absent: Italy G+A and G+A+E, every G+S and G+S+A |
+
+## 3. What the model should match
+
+Full evidence in `research/MPC_EVIDENCE.md`. The numbers that matter:
+
+| moment | France | Germany | Italy | source |
+|---|---|---|---|---|
+| Annual MPC out of a one-month windfall | 0.42 | 0.51 | 0.48 | Drescher, Fessler and Lindner (2020), from the HFCS 2017 wave; self-reported, includes durables |
+| Benchmark from registry data | 0.52 within the year, falling with liquid assets and with prize size | | | Fagereng, Holm and Natvik (2021), Norway |
+| Earnings response in the first year | about minus 0.01, range 0 to minus 0.04 | | | Cesarini and co-authors (2017); Auclert, Bardóczy and Rognlie (2023); no evidence for the three countries |
+| Hand-to-mouth, poor and wealthy | 0.032 and 0.173 | 0.074 and 0.248 | 0.083 and 0.155 | Kaplan, Violante and Weidner (2014), Table 5 |
+| Hand-to-mouth, total | 0.205 | 0.322 | 0.238 | the same, summed |
+
+**Why the model's MPC is low.** Three causes, in the order the evidence supports them:
+
+1. **Too few constrained households on one asset.** The one-asset model targets the poor hand-to-mouth share only. If its single asset is read as liquid wealth, the consistent target is the total share. Kaplan and Violante (2022) obtain an annual MPC of 0.15 with a 2.5% hand-to-mouth share and 0.41 to 0.59 once the model is calibrated to liquid wealth or to a 14% share.
+2. **The effort margin.** With separable preferences the ratio of the earnings response to the MPC is about the Frisch elasticity over the elasticity of intertemporal substitution, which is one at the model's values. A constrained household therefore splits a windfall about half into spending and half into working less. `probe_mpc_psi.jl` confirms the cap: the MPC of the hand-to-mouth rises from 0.52 to 0.82 as the Frisch elasticity falls from 0.5 to 0.06. Auclert, Bardóczy and Rognlie (2023) show that the MPC and the earnings response cannot both match the data with freely chosen hours and separable preferences, and recommend taking households off their labour supply curve.
+3. **The annual period.** In a quarterly model a household near the constraint spends a windfall over the following quarters, which an annual model does not capture. The quarterly models in the literature reach the annual figure; with a 22% hand-to-mouth share and nearly inelastic effort the annual model here reaches about 0.29. How much of the remaining gap is the period has not been measured in this model.
+
+The two-asset model does not escape the first two: its fixed cost collapses to the bound, so illiquid wealth is in effect liquid, and it shares the effort margin.
+
+**Untargeted checks to report** once the level is addressed: the MPC by liquid-wealth quartile (0.62, 0.52, 0.46, 0.46 in Norway), by windfall size, by hand-to-mouth status, a loss against a gain, and how spending is spread over the following years.
+
+## 4. Corroboration of S, A and E
+
+Full brief in `research/SAE_LITERATURE.md`.
+
+**S.**
+- Grounded: the functional form is Brock and Durlauf (2001); the multiplier of 1.3 to 1.8 sits inside the 1.3 to 2.2 reported for group membership, voting and giving; the education gradient in volunteering is in official data.
+- Thin: no direct estimate of a multiplier for volunteering; the selection of the highest equilibrium has no argument in the source paper.
+- Open, with data now collected (`data/validation/timeuse_by_status.csv`): on a diary day the unemployed do organisational work about as often as the full-time employed (France 1.3% against 1.5%, Germany 3.8% against 3.6%, Italy 1.6% against 0.7%, 2010) and about twice as much informal help. The model's rule for the unemployed comes from twelve-month prevalence, which shows a gap in France and Germany. The two measure different things (who takes part at all, against how often), but the choice of counterpart for the model's yearly participation has to be argued.
+
+**A.**
+- Grounded: two official counterparts exist. OECD labour market insecurity (expected earnings loss, 2016): France 3.1%, Germany 1.4%, Italy 8.6%. For France, INSEE reports a 15% consumption drop six months after job loss, with consumption absorbing 58% of the income loss in the lowest liquidity quartile and 17% in the highest.
+- Thin: no verified consumption-drop estimate for Germany or Italy.
+- To run: the model's consumption drop by liquidity quartile against the INSEE figure, and its expected income loss against the OECD values. Both untargeted.
+
+**E.**
+- Grounded: civic capital as a persistent local stock, a local supply channel from organisations to volunteering, a quasi-experiment on lost infrastructure, and a rural premium in official volunteering data for France and Germany.
+- Thin: no published elasticity benchmarks epsilon. Non-profit institutions per head in Italy is close to the outcome it explains, and epsilon was estimated on the same regional data, so the correlation of 0.89 with regional volunteering is in sample. The economic channels alone, with no community channel, give 0.67, and that is the untargeted figure.
+- To run: epsilon re-estimated on France with sports facilities built before 1990; the regional prediction on German Länder against the Freiwilligensurvey, where infrastructure did not enter the calibration.
+
+**Hardship by place** remains the model's one failed prediction: negatively correlated with official regional poverty in Italy on one asset (minus 0.61). The HFCS by Italian region is the test.
+
+## 5. HFCS readiness
+
+`hfcs_protocol/HFCS_READINESS.md` and `hfcs_protocol/hfcs_moments.py`. The script's self-test passes on synthetic data (20 of 20 checks); a self-test cannot catch a wrong variable name, and those marked to confirm are in one dictionary at the top.
+
+On the day the data arrive: put the files in `~/hfcs_secure` (never in the repository, never in a synced folder), run `HFCS_DIR=~/hfcs_secure python3 hfcs_protocol/hfcs_moments.py OUTDIR`, and open `hfcs_coverage.csv` first.
+
+What it will give:
+- hand-to-mouth shares, poor, wealthy and total, under the published definition and the model's, by country and wave;
+- net and liquid wealth over income, the Gini and the top share;
+- liquid-asset poverty and income poverty and their overlap;
+- all of these by education, labour status and place;
+- the self-reported MPC by country, by liquid wealth and by hand-to-mouth status, which is the country target of section 3 and a test of the MPC falling with liquid wealth.
+
+What it cannot give, known in advance:
+- region: 20 regions in Italy (the only country where the regional test can run), the 8 former ZEAT in France, four groups of Länder in Germany; region only from the 2017 wave, degree of urbanisation only from 2021;
+- income is gross only (net for Italy possibly);
+- no cash holdings and no credit limits.
+
+One finding to settle with the data: the published hand-to-mouth shares appear to treat all saving accounts as illiquid. If the wealthy hand-to-mouth share falls sharply when they are counted as liquid, the German and Italian targets the two-asset model cannot reach are partly a classification choice.
+
+## 6. What can be run
+
+From `SAGE_Bewley/`, `julia --project=scripts/run_env scripts/<name>.jl`, or on GitHub through the `probe` workflow. Times are for the laptop unless stated.
+
+| purpose | script | time | needs |
+|---|---|---|---|
+| Reductions and convergence | `test_modular.jl` (workflow `suite`) | 15 to 60 min on GitHub | nothing |
+| MPC economics | `test_mpc_economics.jl [CODE] [CONFIG]` | 1 min | a one-asset S-off calibration |
+| Why the MPC is low | `probe_mpc_one_asset.jl`, `probe_mpc_psi.jl` | 5 to 10 min | France G |
+| Reporting layer | `test_reporting.jl`, `test_reporting2.jl` | 2 and 10 min | France G+A, one and two assets |
+| Solver against the reference | `test_egm.jl`, `test_egm2.jl`, `euler_errors.jl` | minutes | nothing |
+| Transitions | `test_transition.jl`, `test_transition_s.jl` | minutes; 2 hours on GitHub with S | France G+A, G+S+A |
+| Place layer | `test_places.jl`, `test_place_report.jl [CODE] [CONFIG] [I]` | 2 to 75 min | E recalibrated |
+| Regional runs | `run_places_tl2.jl`, `estimate_epsilon.jl` | GitHub | E recalibrated |
+| One-asset calibration | workflow `calibrate` (countries, configs) | 20 min to 5 hours each | chains G+S+A to G+S, G+S+A+E to G+S+E |
+| Two-asset calibration | workflow `calibrate2` | 10 min to 4 hours each | chains G to G+E, G+A to G+S+A and G+A+E, France G+A to Germany and Italy |
+| Policies, equilibria | `policy_tests.jl`, `policy_equilibria.jl`, `report_policies.jl` | GitHub | parked |
+| Carbon | `test_carbon.jl`, `test_carbon2.jl` | 2 and 20 min | parked |
+| Validation data | `data/validation/timeuse_by_status.py`, `data/place/build_tl2.py`, `data/sustainability/footprint_intensity.py` | seconds | network |
+| HFCS moments | `hfcs_protocol/hfcs_moments.py` (`--selftest` today) | seconds | the data |
+
+Not to be run for current results: the 109 scripts listed under "Earlier footings" in `SAGE_Bewley/scripts/README.md`.
+
+## 7. Suite result
+
+To be filled when the run on the fixed code completes.
+
+## 8. Decisions
+
+Each changes the calibration, so they are best settled together, before the grid is run again.
+
+| | decision | options | recommendation |
+|---|---|---|---|
+| D1 | The labour margin, which caps the MPC and inflates the earnings response | (a) hours set by the job, not chosen household by household within the year: the earnings response to a windfall is then zero, and effort still responds to policy on average; (b) a lower Frisch elasticity, 0.25, inside the micro range; (c) preferences with a weak wealth effect | (a), which is the literature's recommendation and keeps effort as a policy margin; (b) as the fallback that needs no new code |
+| D2 | The one-asset hand-to-mouth target | poor share only (as now), or the total share | the total share, with the asset read as liquid wealth |
+| D3 | The period | annual (as now), or quarterly | measure the period's contribution to the MPC in this model first, on France G, then decide |
+| D4 | An MPC target | none (as now), or the country values of section 3 with a band of 0.10, carried by the impatient share on one asset and by the fixed cost on two assets | add it; on two assets it replaces the wealthy hand-to-mouth share as the target that identifies the fixed cost, and frees Germany and Italy from the French value |
+| D5 | Income concept in the net wealth target | gross in the data and disposable in the model (as now), or one concept on both sides | compute the model's gross income for this ratio |
+| D6 | Regional conversion | net of the employment rate (done), or a pay-per-worker measure by region | keep the first, test the second |
+| D7 | Epsilon | the Italian estimate (in sample), or France's facilities built before 1990 | re-estimate on France and treat Italy and Germany as tests |
+| D8 | The rule for the unemployed | twelve-month prevalence (as now), or diary-day participation | keep prevalence, and say why |
+| D9 | Scripts and notes from earlier footings | leave in place with the index (as now), or move to an archive folder | move, after checking the S paper and Paper 3 pipelines still run |
+| D10 | Liquid grid top | 4 (as now), or longer | longer, with a warning on top-node mass |
+
+## 9. Order of work for version 3
+
+1. Settle D1 to D5.
+2. Measure the period's contribution to the MPC (D3).
+3. Implement the labour margin and the targets; extend `test_mpc_economics.jl` with the untargeted checks of section 3.
+4. HFCS on arrival: coverage, the hand-to-mouth replication, the MPC by country, Italy by region.
+5. Recalibrate the grid once: one asset, then two assets, then E.
+6. Run the corroborations of section 4.
