@@ -1,0 +1,8 @@
+# written by calibrate_two_asset_e.jl FR GAE; illiquid asset on, E on (tl2)
+phi = 4.819
+beta_spread = 0.0
+beta_bar = 0.9847
+impatient_share = 0.0021
+beta_low = 0.8693
+chi0 = 0.0010
+illiquid_premium = 0.0354
