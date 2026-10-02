@@ -212,8 +212,13 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
         end
         V, Vn = Vn, V; Vb, Vbn = Vbn, Vb
         iters = it
+        isnan(dist) && error("the two-asset household problem has a state with no feasible choice (value NaN at iteration $it)")
         (dist < tol || stalled) && break
     end
+    # said, not swallowed: running out of iterations, and a stall accepted at more
+    # than a fifth of the smoothing scale (the summaries do not carry `stalled`)
+    iters == maxit && !stalled && @warn "solve_two_asset_egm stopped at maxit without converging" maxit tol
+    stall > 0.2 * theta_adj && @warn "solve_two_asset_egm accepted a stalled iteration" stall theta_adj chi0 = p.chi0
 
     # policies by state, for the distribution and the aggregates
     t2 = time()

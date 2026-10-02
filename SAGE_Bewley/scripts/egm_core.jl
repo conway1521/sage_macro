@@ -255,8 +255,13 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
         end
         V, Vn = Vn, V; Va, Van = Van, Va
         iters = it
+        # a state with no feasible choice (both branches -Inf: an unemployed state
+        # whose benefit net of tax is not positive) makes the log-sum NaN, which
+        # then spreads to every state and never converges; say so at once
+        isnan(dist) && error("the household problem has a state with no feasible choice (value NaN at iteration $it): check benefits net of the lump-sum tax")
         dist < tol && break
     end
+    iters == maxit && @warn "solve_participation_egm stopped at maxit without converging" maxit tol
 
     λ = egm_distribution(a, Π, P1, a_d, na, nz)
     part = 0.0; meaninc = 0.0; partbase = 0.0
