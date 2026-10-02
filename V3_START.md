@@ -139,7 +139,18 @@ Full brief in `research/SAE_LITERATURE.md`.
 
 **E.**
 - Grounded: civic capital as a persistent local stock, a local supply channel from organisations to volunteering, a quasi-experiment on lost infrastructure, and a rural premium in official volunteering data for France and Germany.
-- Thin: no published elasticity benchmarks epsilon. Non-profit institutions per head in Italy is close to the outcome it explains, and epsilon was estimated on the same regional data, so the correlation of 0.89 with regional volunteering is in sample. The economic channels alone, with no community channel, give 0.67, and that is the untargeted figure.
+- Thin: no published elasticity benchmarks epsilon. Non-profit institutions per head in Italy is close to the outcome it explains, and epsilon was estimated on the same regional data, so the fit with the community channel is in sample.
+- Run on 2026-10-02 after the place-layer fixes (`run_places_tl2_DE.txt`, `run_places_tl2_IT.txt`; G+S+A parameters from before the fixes, so provisional):
+
+| regional participation against volunteering | correlation | spread of log participation, model against data |
+|---|---|---|
+| Germany, 16 Länder, economic channels (untargeted in every channel) | 0.36 | 0.059 against 0.084 |
+| Italy, 21 regions, economic channels (untargeted) | 0.31 | 0.045 against 0.309 |
+| Italy, with community, epsilon 0.3 (in sample) | 0.82 | 0.104 against 0.309 |
+| Italy, with community, epsilon 0.5 (in sample) | 0.83 | 0.163 against 0.309 |
+
+  **The untargeted regional fit is weak.** Before the fixes the Italian economic channels gave 0.67. Most of that came from the conversion channel loading the south's low employment rate into the pay of those in work; with the employment rate netted out, the economic channels explain little of Italy's north to south gradient (a seventh of the spread) and a third of Germany's variation. What reproduces the Italian pattern is the community channel, and that is in sample. E's claim on regional participation therefore rests, for now, on one in-sample elasticity.
+- A likely reason, to examine: regional differences in participation in the data follow employment rates (people outside the labour force), and the model has no state outside the labour force.
 - Already in hand (`estimate_epsilon_IT.txt`, run before the effort correction and the place-layer fixes, to be redone): Italy's regions prefer an epsilon of 0.5; France by degree of urbanisation, with facilities built before 1990, prefers about 0.3 (rural over cities 1.34 in the model against 1.37 in the data at 0.3, and 1.69 at 0.5). Three places is too few to estimate on.
 - To run: epsilon re-estimated on France with sports facilities built before 1990 at a finer geography; the regional prediction on German Länder against the Freiwilligensurvey, where infrastructure did not enter the calibration.
 
