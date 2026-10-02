@@ -118,7 +118,24 @@ Full brief in `research/SAE_LITERATURE.md`.
 **A.**
 - Grounded: two official counterparts exist. OECD labour market insecurity (expected earnings loss, 2016): France 3.1%, Germany 1.4%, Italy 8.6%. For France, INSEE reports a 15% consumption drop six months after job loss, with consumption absorbing 58% of the income loss in the lowest liquidity quartile and 17% in the highest.
 - Thin: no verified consumption-drop estimate for Germany or Italy.
-- To run: the model's consumption drop by liquidity quartile against the INSEE figure, and its expected income loss against the OECD values. Both untargeted.
+- Run on 2026-10-02 (`corroborate_agency.jl`, G+A, one asset; benchmarks in `data/validation/agency_benchmarks.csv`), both untargeted:
+
+| France, on job loss | model | INSEE |
+|---|---|---|
+| income falls | 33% | 31% |
+| consumption falls | 9% | 15% at six months |
+| share of the income loss absorbed by consumption | 26% | 35% |
+| the same, lowest quartile of liquid wealth | 63% | 58% |
+| the same, highest quartile | 4% | 17% |
+
+| expected income loss to unemployment | model | OECD labour market insecurity |
+|---|---|---|
+| France | 2.3% | 3.1% |
+| Germany | 1.6% | 1.4% |
+| Italy | 4.6% | 8.6% |
+
+  The income drop and the liquidity gradient are reproduced, and the bottom quartile matches. Households above the bottom quartile smooth too well, the same weakness as the low MPC. The country ordering of expected loss is right, with Italy too low.
+- Open: the consumption drop on job loss is 31% in Germany and 40% in Italy in the model, against 10% in France and 7 to 16% in the literature for other countries. This is too large and needs an explanation before any agency number for those two countries is reported.
 
 **E.**
 - Grounded: civic capital as a persistent local stock, a local supply channel from organisations to volunteering, a quasi-experiment on lost infrastructure, and a rural premium in official volunteering data for France and Germany.
@@ -163,6 +180,7 @@ From `SAGE_Bewley/`, `julia --project=scripts/run_env scripts/<name>.jl`, or on 
 | Regional runs | `run_places_tl2.jl`, `estimate_epsilon.jl` | GitHub | E recalibrated |
 | One-asset calibration | workflow `calibrate` (countries, configs) | 20 min to 5 hours each | chains G+S+A to G+S, G+S+A+E to G+S+E |
 | Two-asset calibration | workflow `calibrate2` | 10 min to 4 hours each | chains G to G+E, G+A to G+S+A and G+A+E, France G+A to Germany and Italy |
+| Agency against INSEE and the OECD | `corroborate_agency.jl [CONFIG]` | 2 min | one-asset G+A, three countries |
 | Policies, equilibria | `policy_tests.jl`, `policy_equilibria.jl`, `report_policies.jl` | GitHub | parked |
 | Carbon | `test_carbon.jl`, `test_carbon2.jl` | 2 and 20 min | parked |
 | Validation data | `data/validation/timeuse_by_status.py`, `data/place/build_tl2.py`, `data/sustainability/footprint_intensity.py` | seconds | network |

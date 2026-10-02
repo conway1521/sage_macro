@@ -1,0 +1,11 @@
+# Official counterparts of the agency indicators (validation only, never an input).
+# Read at source on 2026-10-02 (research/SAE_LITERATURE.md, section 2b).
+indicator,country,value,unit,source
+labour_market_insecurity,FR,3.07,percent of previous earnings,"OECD How's Life? database, dataflow DSD_HSL@DF_HSL_CWB, measure 2_5, 2016 (latest year)"
+labour_market_insecurity,DE,1.42,percent of previous earnings,"OECD How's Life? database, dataflow DSD_HSL@DF_HSL_CWB, measure 2_5, 2016 (latest year)"
+labour_market_insecurity,IT,8.63,percent of previous earnings,"OECD How's Life? database, dataflow DSD_HSL@DF_HSL_CWB, measure 2_5, 2016 (latest year)"
+income_drop_on_job_loss,FR,31,percent,"Bonnet, Olivia, Le Grand, Ragot and Wilner (2025), INSEE Analyses 104; bank-account data, households with six months or more of insured unemployment; INSEE warns the sample is not representative"
+consumption_drop_six_months,FR,15,percent,"Bonnet, Olivia, Le Grand, Ragot and Wilner (2025), INSEE Analyses 104"
+consumption_share_of_income_loss,FR,35,percent over six months,"Bonnet, Olivia, Le Grand, Ragot and Wilner (2025), INSEE Analyses 104, figure 2a"
+consumption_share_of_income_loss_lowest_liquidity_quartile,FR,58,percent over six months,"Bonnet, Olivia, Le Grand, Ragot and Wilner (2025), INSEE Analyses 104, figure 2a"
+consumption_share_of_income_loss_highest_liquidity_quartile,FR,17,percent over six months,"Bonnet, Olivia, Le Grand, Ragot and Wilner (2025), INSEE Analyses 104, figure 2a"

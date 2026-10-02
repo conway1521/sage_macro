@@ -1,0 +1,11 @@
+1. expected income loss to unemployment, percent (model: a year ahead, employed today; OECD: labour market insecurity 2016)
+   FR: model 2.34 | OECD 3.07 | consumption loss expected 0.77, drop if hit 10.3
+2. France, on job loss: income falls 33% (INSEE 31%), consumption 9% (INSEE 15% at six months); consumption absorbs 26% of the income loss (INSEE 35%)
+   by quartile of liquid wealth among the employed: share of the income loss absorbed by consumption
+     quartile 1: 63%   (INSEE lowest: 58%)
+     quartile 2: 27%
+     quartile 3: 9%
+     quartile 4: 4%   (INSEE highest: 17%)
+   DE: model 1.57 | OECD 1.42 | consumption loss expected 1.01, drop if hit 31.4
+   IT: model 4.56 | OECD 8.63 | consumption loss expected 3.31, drop if hit 39.5
+DONE
