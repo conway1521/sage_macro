@@ -190,7 +190,16 @@ Not to be run for current results: the 109 scripts listed under "Earlier footing
 
 ## 7. Suite result
 
-To be filled when the run on the fixed code completes.
+Run 36964671870 on GitHub, on the code with every fix above (2026-10-02): **32 of 32 reductions and 8 of 8 convergence checks pass.**
+
+- Every row now compares welfare (total and its three parts) and the four propensities as well as the indicators.
+- The rows that used to compare an economy with itself take the switch through its own code path at a negligible value: unemployment, the discount spread, two patience groups, the participation cost, the policy instruments, the consumption tax, the effort curvature, extra time and commuting. Largest gap 8e-9.
+- Belonging welfare is exactly zero with S off.
+- The four E reductions and the identical-places reduction hold to 1e-16; the inert illiquid asset to 3e-9.
+
+The regression tests on the same code also pass: the reporting layer (adding-up exactly one, a positive remainder), the transition test, and the place-layer test.
+
+Not covered by any reduction yet: the transitions, the illiquid asset with S on, E with the illiquid asset, the employed levy.
 
 ## 8. Decisions
 
