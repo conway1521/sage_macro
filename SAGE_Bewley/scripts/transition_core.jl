@@ -130,7 +130,10 @@ function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80)
         μ[g] = [v]
         for t in 1:T; push!(μ[g], vec(μ[g][end]' * Πpath[g][t])); end
     end
-    uicost(t) = sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t])) for g in 1:2)
+    # benefits paid, over the UNEMPLOYED states only: the employed states carry minus
+    # the levy when levy_employed is set, which is not an insurance outlay (audit 2026-10-02)
+    unemp = [SAGEBewley.income_process(base_ps[g][1])[1] .== 0 for g in 1:2]
+    uicost(t) = sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2)
     lump = [c.lumptax + uicost(t) for t in 1:T]
     # households
     out = [(cons = zeros(T), effE = zeros(T), mE = zeros(T), assets = zeros(T), htm = zeros(T), consU = zeros(T), mU = zeros(T),
@@ -237,7 +240,8 @@ function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, 
         v = fill(1.0 / size(Π0, 1), size(Π0, 1)); for _ in 1:20_000; v = vec(v' * Π0); end
         μ[g] = [v]; for t in 1:T; push!(μ[g], vec(μ[g][end]' * Πpath[g][t])); end
     end
-    lump = [c.lumptax + sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t])) for g in 1:2) for t in 1:T]
+    unemp = [SAGEBewley.income_process(base_ps[g][1])[1] .== 0 for g in 1:2]      # benefits only, as in `transition`
+    lump = [c.lumptax + sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2) for t in 1:T]
     argss = c.omega + (1 - c.omega) * r0.rate
     nw = [node_weights(c, cs[g].B, argss) for g in 1:2]
     nw = [w ./ sum(w) for w in nw]
@@ -245,9 +249,9 @@ function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, 
     sss = pmap(jb -> (p = update(base_ps[jb[1]][jb[2]]; social_strength = c.ugrid[jb[3]], solver = :egm);
                       solve_participation_logit(p, 1.0; theta = c.theta, full = true)), jobs)
     ratio = c.unemployed_ratio
-    rel = ones(T); outs = nothing; gap = Inf; it = 0
+    rel = ones(T); outs = nothing; gap = Inf; it = 0; rel_used = rel; rate_used = zeros(T)
     for iter in 1:maxit
-        it = iter
+        it = iter; rel_used = rel
         outs = pmap(x -> (jb = x[1]; p = update(base_ps[jb[1]][jb[2]]; social_strength = c.ugrid[jb[3]], solver = :egm);
                           node_path(p, x[2], rel, lump, Πpath[jb[1]], c.theta)), zip(jobs, sss))
         # participation by cell and date, the rule imposed per node and date
@@ -260,9 +264,10 @@ function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, 
                 rate[t] += cs[g].share * bw[k] * nw[g][j] * r_ / (mE_ + mU_)
             end
         end
+        rate_used = rate
         newrel = (c.omega .+ (1 - c.omega) .* rate) ./ argss
         gap = maximum(abs.(newrel .- rel))
-        gap < tol && (rel = newrel; break)
+        gap < tol && break
         rel = (1 - damp) .* rel .+ damp .* newrel
     end
     # aggregates with the same weights
@@ -271,7 +276,11 @@ function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, 
         agg .+= (cs[g].share * bw[k] * nw[g][j]) .* outs[n]
     end
     mass = agg[:, 2] .+ agg[:, 4]
-    participation = (c.omega .* 0 .+ (rel .* argss .- c.omega) ./ (1 - c.omega))
+    # every path below is from the SAME iterate: the households' response to the
+    # fabric `rel_used`, and the participation that response implies. At convergence
+    # the two agree to `tol`; if the iterations ran out they do not, and it is said.
+    gap < tol || @warn "transition_s stopped at maxit without converging" iterations = it gap tol
+    participation = rate_used
     # welfare at t = 1 against the steady state (same distribution), from the nodes
     Wss = 0.0; Vcss = 0.0
     for (n, (g, k, j)) in enumerate(jobs)
@@ -281,7 +290,7 @@ function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, 
     end
     γ = base_ps[1][1].γ
     x = 1 + (agg[1, 12] - Wss) / Vcss
-    (participation = participation, fabric = rel .* argss, unemployment = agg[:, 11] ./ mass, cons = agg[:, 5] ./ mass,
+    (participation = participation, fabric = rel_used .* argss, converged = gap < tol, unemployment = agg[:, 11] ./ mass, cons = agg[:, 5] ./ mass,
      effort_employed = agg[:, 6] ./ agg[:, 7], assets = agg[:, 8] ./ mass, htm = agg[:, 9] ./ mass,
      cons_unemployed_rel = (agg[:, 10] ./ agg[:, 11]) ./ ((agg[:, 5] .- agg[:, 10]) ./ agg[:, 7]),
      lumptax = lump, delta_scale = ds, iterations = it, gap = gap, steady_state_rate = r0.rate,
