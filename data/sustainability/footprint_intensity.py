@@ -3,8 +3,10 @@
 
 Footprint: Eurostat env_ac_ghgfp, greenhouse-gas emission footprints in CO2
 equivalent (the FIGARO inter-country input-output application), final use by
-households (P31_S14), all products, all origins (WORLD): it includes emissions
-embodied in imports, so it covers both "later" and "elsewhere" in the CES frame.
+households (P31_S14), all products plus households' own direct emissions from
+heating and car fuel (nace_r2 TOTAL_HH; TOTAL alone leaves the direct part out,
+about 28% of France's footprint: audit 2026-10-02), all origins (WORLD): it includes
+emissions embodied in imports, so it covers both "later" and "elsewhere" in the CES frame.
 Consumption: Eurostat nama_10_co3_p3, household final consumption expenditure,
 current prices, million euro; population: demo_gind, average population. Intensity = footprint / consumption, kg CO2e per
 euro. National only; place variation needs a regional source (to find).
@@ -29,7 +31,7 @@ pops = {}
 for c in ("FR", "DE", "IT"):
     pops.update(get("demo_gind", f"geo={c}&indic_de=AVG&sinceTimePeriod=2015"))
 for c in ("FR", "DE", "IT"):
-    fp = get("env_ac_ghgfp", f"c_dest={c}&c_orig=WORLD&nace_r2=TOTAL&na_item=P31_S14&unit=THS_T&sinceTimePeriod=2015")
+    fp = get("env_ac_ghgfp", f"c_dest={c}&c_orig=WORLD&nace_r2=TOTAL_HH&na_item=P31_S14&unit=THS_T&sinceTimePeriod=2015")
     cons = get("nama_10_co3_p3", f"geo={c}&coicop=TOTAL&unit=CP_MEUR&sinceTimePeriod=2015")
     for (g, t), v in sorted(fp.items()):
         if (c, t) in cons:
