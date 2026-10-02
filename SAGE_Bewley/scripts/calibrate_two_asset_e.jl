@@ -50,7 +50,7 @@ say("calibrating ", CODE, " ", CFG, " with the illiquid asset over places (", of
     " calibration | targets: net wealth / income ", NW_TARGET, ", wealthy htm ", WHTM_TARGET, CHI_BORROWED ? " (untargeted, chi0 borrowed)" : "",
     ", poor htm ", HTM_TARGET, ", effort ", round(E_TARGET; digits = 4), " | workers ", nworkers())
 
-qmed(x, cm) = (k = findfirst(>=(0.5 * cm[end]), cm); x[k])
+qmed(x, cm) = cdf_quantile(x, cm, 0.5)      # interpolated: the node above the median was up to 5% high, the width of the band (audit 2026-10-02)
 # the parameterisation of calibrate_two_asset.jl: effective patience, log chi0,
 # the impatient share (at effective patience 0.85), log phi
 const SURV = 1 - off.death

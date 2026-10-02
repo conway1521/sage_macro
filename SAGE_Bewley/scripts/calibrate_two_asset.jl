@@ -52,7 +52,7 @@ say("calibrating ", CODE, " ", CFG, " with the illiquid asset | targets: net wea
     ", wealthy htm ", WHTM_TARGET, ", poor htm ", HTM_TARGET, ", effort ", round(E_TARGET; digits = 4),
     " | premium ", PREMIUM, ", death ", round(base.death; digits = 4), " | workers ", nworkers())
 
-qmed(x, cm) = (k = findfirst(>=(0.5 * cm[end]), cm); x[k])
+qmed(x, cm) = cdf_quantile(x, cm, 0.5)      # interpolated: the node above the median was up to 5% high, the width of the band (audit 2026-10-02)
 # parameters in the transformed space the iteration works in. The first is
 # EFFECTIVE patience, beta_bar times survival, bounded by 0.995 so the household
 # problem stays a contraction. A cap on beta_bar itself at 0.998 held effective

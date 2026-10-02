@@ -60,7 +60,7 @@ say("calibrating ", CODE, " ", CFG, " with the illiquid asset, from the ", OFF, 
     OWN_GAP ? "participation by cell $(PART)" : @sprintf("overall participation %.4f with sigma %.2f from G+S+A", AGG, SIGMA_FIX),
     " | workers ", nworkers())
 
-qmed(x, cm) = (k = findfirst(>=(0.5 * cm[end]), cm); x[k])
+qmed(x, cm) = cdf_quantile(x, cm, 0.5)      # interpolated: the node above the median was up to 5% high, the width of the band (audit 2026-10-02)
 # the first parameter is effective patience, beta_bar times survival (calibrate_two_asset.jl)
 const SURV = 1 - off.death
 # two patience groups, as in calibrate_two_asset.jl

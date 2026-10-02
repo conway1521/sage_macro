@@ -9,7 +9,7 @@
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 c = country_config("FR"; config = "GA", S = false, A = true)
-qmed(x, cm) = (k = findfirst(>=(0.5 * cm[end]), cm); x[k])
+qmed(x, cm) = cdf_quantile(x, cm, 0.5)      # interpolated: the node above the median was up to 5% high, the width of the band (audit 2026-10-02)
 for bb in (0.96, 0.975, 0.99), chi in (0.02, 0.1)
     cl = SAGEConfig(c; illiquid = true, illiquid_premium = 0.0354, chi0 = chi, beta_bar = bb)
     t = @elapsed r = solve_economy(cl; cache = false)

@@ -6,7 +6,7 @@
 #   SAGE_WORKERS=4 julia --project=scripts/run_env scripts/probe_twopoint.jl
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
-qmed(x, cm) = (k = findfirst(>=(0.5 * cm[end]), cm); x[k])
+qmed(x, cm) = cdf_quantile(x, cm, 0.5)      # interpolated: the node above the median was up to 5% high, the width of the band (audit 2026-10-02)
 prem = Dict("DE" => 0.0216, "IT" => 0.0215); nwt = Dict("DE" => 2.38, "IT" => 5.51)
 for (code, bh, pi) in (("DE", 0.985, 0.08), ("DE", 0.995, 0.08), ("IT", 0.99, 0.10), ("IT", 0.995, 0.10))
     c = country_config(code; config = "GA", S = false, A = true)
