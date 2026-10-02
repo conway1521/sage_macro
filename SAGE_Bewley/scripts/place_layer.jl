@@ -120,15 +120,15 @@ channel is the same under every typology:
 - **composition:** the tertiary share, scaled so the population-weighted share
   equals the national one in `c`;
 - **access:** job finding scaled by the place's flow into work relative to the
-  population-weighted mean: the quarterly unemployment-to-employment probability
-  where published (degree of urbanisation, lfsi_long_e03), otherwise one minus the
-  long-term share of unemployment (TL2, lfst_r_lfu2ltu, the national table's
-  rule); separation scaled so the place's unemployment rate holds in steady
+  mean over the unemployed: the quarterly unemployment-to-employment probability
+  compounded to a year where published (degree of urbanisation, lfsi_long_e03),
+  otherwise one minus the long-term share of unemployment (TL2, lfst_r_lfu2ltu, the
+  national table's rule); separation scaled so the place's unemployment rate holds in steady
   state, separately for each education cell where the rate by education is
   published (TL2, lfst_r_lfu3rt), otherwise the overall rate. A place without
   flow data keeps national job finding;
-- **conversion:** the place premium in income that education mix and employment
-  do not explain (median equivalised income by urbanisation, ilc_di17;
+- **conversion:** the place premium in income that education mix and the
+  employment rate (TL2; one minus unemployment by urbanisation) do not explain (median equivalised income by urbanisation, ilc_di17;
   household disposable income per head by region, nama_10r_2hhinc), rescaled so
   the national mean is unchanged. A residual, labelled as such;
 - **commuting** (degree of urbanisation only; no regional source): minutes by
@@ -156,11 +156,19 @@ function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (
     end
     u = [latest(d, "unemployment_rate_20_64", p) for (_, p) in pl]
     if :access in channels && !any(isnothing, u)
-        q = typology === :degurba ? [meanyrs(d, "q_unemp_to_emp_25_54", p, 2015:2018) for (_, p) in pl] :
+        # the quarterly probability of moving into work, in percent, compounded to
+        # the year the model's job finding covers (the ratio of quarterly rates
+        # overstated the gap between places: audit 2026-10-02)
+        annual(x) = x === nothing ? nothing : 100 * (1 - (1 - x / 100)^4)
+        q = typology === :degurba ? [annual(meanyrs(d, "q_unemp_to_emp_25_54", p, 2015:2018)) for (_, p) in pl] :
                                     [(l = latest(d, "ltu_share", p); l === nothing ? nothing : 100 - l) for (_, p) in pl]
         have = [x !== nothing for x in q]
-        qn = any(have) ? sum(w[i] * q[i] for i in 1:n if have[i]) / sum(w[have]) : 1.0
         uu = u ./ 100; un = sum(w .* uu)
+        # the national rate is a mean over the UNEMPLOYED, so places weigh by their
+        # unemployed, not by their population (audit 2026-10-02: population weights
+        # put mean job finding 1 to 5 points below the national figure)
+        wu = w .* uu
+        qn = any(have) ? sum(wu[i] * q[i] for i in 1:n if have[i]) / sum(wu[have]) : 1.0
         # unemployment by education cell where published (TL2): regional gaps are
         # mostly a lower-education phenomenon, so each cell's separation follows
         # its own rate relative to its national (population-weighted) rate
@@ -183,7 +191,14 @@ function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (
         inc = [latest(d, key, p) for (_, p) in pl]
         if !any(isnothing, inc)
             t = [get(specs[i], :tertiary, c.share[2]) for i in 1:n]
-            pred = [((1 - t[i]) * c.alpha[1] + t[i] * c.alpha[2]) * (1 - u[i] / 100) for i in 1:n]
+            # income per inhabitant reflects how many work, not only what work pays:
+            # net out the employment rate where it is published (TL2), so that low
+            # employment is not loaded into the pay of those who do work (audit
+            # 2026-10-02: with 1 - u alone, Campania against Bolzano came out at
+            # 0.61 where about 0.86 remains). Otherwise one minus unemployment.
+            er = [latest(d, "employment_rate_20_64", p) for (_, p) in pl]
+            emp = any(isnothing, er) ? [1 - u[i] / 100 for i in 1:n] : er ./ 100
+            pred = [((1 - t[i]) * c.alpha[1] + t[i] * c.alpha[2]) * emp[i] for i in 1:n]
             raw = inc ./ pred; k = sum(w .* pred) / sum(w .* inc)
             for i in 1:n; specs[i][:conv] = raw[i] * k; end
         end
@@ -201,7 +216,9 @@ function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (
         infra = community_infrastructure(code, typology, [p for (_, p) in pl])
         if infra !== nothing
             nat = sum(w .* infra)
-            for i in 1:n; specs[i][:omega] = min(0.95, c.omega * (infra[i] / nat)^epsilon); end
+            rel = [(infra[i] / nat)^epsilon for i in 1:n]
+            rel ./= sum(w .* rel)        # the population-weighted mean of omega stays the national omega
+            for i in 1:n; specs[i][:omega] = min(0.95, c.omega * rel[i]); end
         end
     end
     ([(; sp...) for sp in specs], w)

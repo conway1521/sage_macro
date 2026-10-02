@@ -87,6 +87,8 @@ emit("tertiary_share_25_64", by_geo_year(get("edat_lfse_04", geo=allgeo, sex="T"
                                               unit="PC", sinceTimePeriod=2021)), "edat_lfse_04")
 emit("unemployment_rate_20_64", by_geo_year(get("lfst_r_lfu3rt", geo=allgeo, sex="T", isced11="TOTAL", age="Y20-64",
                                                  unit="PC", sinceTimePeriod=2021)), "lfst_r_lfu3rt")
+emit("employment_rate_20_64", by_geo_year(get("lfst_r_lfe2emprt", geo=allgeo, sex="T", age="Y20-64",
+                                               unit="PC", sinceTimePeriod=2021)), "lfst_r_lfe2emprt")
 emit("ltu_share", by_geo_year(get("lfst_r_lfu2ltu", geo=allgeo, sex="T", isced11="TOTAL", age="Y20-64",
                                   unit="PC_UNE", sinceTimePeriod=2021)), "lfst_r_lfu2ltu", years=2)
 emit("hh_income_per_head", by_geo_year(get("nama_10r_2hhinc", geo=allgeo, unit="EUR_HAB", na_item="B6N",
@@ -127,8 +129,18 @@ with open(os.path.join(HERE, "place_tl2.csv"), "w", newline="") as f:
     w = csv.writer(f)
     w.writerow(["indicator", "country", "place", "year", "value", "source"])
     w.writerows(rows_out)
+# what the model will silently fill with national values, and what is not from
+# the latest year of its indicator: reported, so a gap is never invisible
 for c, regs in REGIONS.items():
     have = {r[0] for r in rows_out if r[1] == c}
-    missing = [(r[0], r[2]) for r in rows_out if False]
+    for ind in sorted(have):
+        got = {r[2]: r[3] for r in rows_out if r[0] == ind and r[1] == c}
+        miss = [g for g in regs if g not in got]
+        newest = max(got.values())
+        old = [f"{g} ({y})" for g, y in sorted(got.items()) if y < newest]
+        if miss:
+            print(f"  MISSING {c} {ind}: {', '.join(miss)} (the model uses the national value)")
+        if old:
+            print(f"  OLDER YEAR {c} {ind} (latest {newest}): {', '.join(old)}")
     counts = {ind: sum(1 for r in rows_out if r[0] == ind and r[1] == c) for ind in sorted(have)}
     print(c, len(regs), "regions |", counts)
