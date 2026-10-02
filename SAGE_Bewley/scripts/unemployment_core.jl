@@ -187,20 +187,24 @@ function cell_summary(p::SAGEParams, sol; thresholds = nothing)
         for d in (0, 1)
             wd = d == 1 ? w * p1 : w * (1 - p1)
             wd <= 0 && continue
-            y = (1 + p.subsidy) * α * zz * p.Z * sol.e_d[d+1][i_a, i_z] +
-                cap - p.lumptax + (d == 1 ? credit : 0.0) + tr
+            # REAL income: divided by the consumption price, as consumption is. With a
+            # consumption tax the thresholds (in baseline prices) were compared with
+            # nominal income and wealth, which overstated what the rebate does for
+            # income poverty (audit 2026-10-02). pc is 1 without the tax.
+            y = ((1 + p.subsidy) * α * zz * p.Z * sol.e_d[d+1][i_a, i_z] +
+                 cap - p.lumptax + (d == 1 ? credit : 0.0) + tr) / p.pc
             ymean += wd * y; ym_s[i_z] += wd * y
             employed && y < ymin_E && (ymin_E = y)
             employed && (eff_E += wd * sol.e_d[d+1][i_a, i_z])
             k = searchsortedfirst(YGRID, y)
             if k <= length(YGRID)
                 Y[k] += wd; Ys[i_z, k] += wd
-                np > 0 && a[i_a] < thr[1][2] && (ypoor[k] += wd)
+                np > 0 && a[i_a] / p.pc < thr[1][2] && (ypoor[k] += wd)
             end
             for q in 1:np
                 y < thr[q][1] || continue
                 jinc[i_z, q] += wd
-                a[i_a] < thr[q][2] && (jboth[i_z, q] += wd)
+                a[i_a] / p.pc < thr[q][2] && (jboth[i_z, q] += wd)
             end
 
         end

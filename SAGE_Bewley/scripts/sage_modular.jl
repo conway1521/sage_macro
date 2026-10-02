@@ -708,7 +708,7 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
     ypov, abar = thr[1]
     hs = map(1:2) do g
         P = pooled[g]; nz = length(P.mass)
-        ast = sum(share_below_interp(agrid, view(P.W, sdx, :), abar) for sdx in 1:nz)
+        ast = sum(share_below_interp(agrid, view(P.W, sdx, :), abar * (1 + c.ctax)) for sdx in 1:nz)   # real wealth below the threshold
         inc = sum(view(P.jinc, :, 1)); both = sum(view(P.jboth, :, 1))
         (inc = inc, asset = ast, both = both, vulnerable = ast - both, union = inc + ast - both)
     end

@@ -510,19 +510,19 @@ function two_asset_cell_summary(p::SAGEParams, sol; thresholds = nothing)
             wd = d == 1 ? w * p1 : w * (1 - p1)
             wd <= 0 && continue
             e = sol.e_d[d+1][i_a, m, i_z]
-            y = (1 + p.subsidy) * α * zz * p.Z * e + cap - p.lumptax + (d == 1 ? credit : 0.0) + tr
+            y = ((1 + p.subsidy) * α * zz * p.Z * e + cap - p.lumptax + (d == 1 ? credit : 0.0) + tr) / p.pc   # real, as in cell_summary
             ymean += wd * y; ym_s[i_z] += wd * y
             employed && y < ymin_E && (ymin_E = y)
             employed && (eff_E += wd * e)
             k = searchsortedfirst(YGRID, y)
             if k <= length(YGRID)
                 Y[k] += wd; Ys[i_z, k] += wd
-                np > 0 && a[i_a] < thr[1][2] && (ypoor[k] += wd)
+                np > 0 && a[i_a] / p.pc < thr[1][2] && (ypoor[k] += wd)
             end
             for q in 1:np
                 y < thr[q][1] || continue
                 jinc[i_z, q] += wd
-                a[i_a] < thr[q][2] && (jboth[i_z, q] += wd)
+                a[i_a] / p.pc < thr[q][2] && (jboth[i_z, q] += wd)
             end
         end
     end
