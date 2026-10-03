@@ -1,0 +1,1094 @@
+indicator,country,place,group,year,value,unit,source,status
+status_rate_relative_to_labour_force,DE,national,students,2019,1.0368,ratio,"Freiwilligensurvey 2019, labour-force rate built with lfsa_eppga and LFS unemployment",DERIVED
+status_rate_relative_to_labour_force,DE,national,retired,2019,0.7099,ratio,"Freiwilligensurvey 2019, labour-force rate built with lfsa_eppga and LFS unemployment",DERIVED
+status_rate_relative_to_labour_force,DE,national,other inactive,2019,0.7681,ratio,"Freiwilligensurvey 2019, labour-force rate built with lfsa_eppga and LFS unemployment",DERIVED
+status_rate_relative_to_labour_force,IT,national,students,2015,1.3438,ratio,ISTAT AVQ 2015,DERIVED
+status_rate_relative_to_labour_force,IT,national,retired,2015,0.8377,ratio,ISTAT AVQ 2015,DERIVED
+status_rate_relative_to_labour_force,IT,national,other inactive,2015,0.6265,ratio,ISTAT AVQ 2015,DERIVED
+inactive_share,DE,DE1,Y_GE15,2015,36.8236,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE1,inactive 15+,2015,29.7095,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE1,inactive 15+,2015,10.9401,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE1,inactive 15+,2015,0.7689,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE1,Y_GE15,2019,34.9898,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE1,inactive 15+,2019,29.686,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE1,inactive 15+,2019,10.3871,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE1,inactive 15+,2019,0.7689,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DE1,survey population,2019,46.1,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DE1,labour force,2019,50.1557,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DE1,inactive 15+,2019,38.5646,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DE1,Y_GE15,2024,35.4682,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE1,inactive 15+,2024,29.8791,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE1,inactive 15+,2024,10.5976,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE1,inactive 15+,2024,0.7689,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE1,Y_GE15,2025,35.5677,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE1,inactive 15+,2025,29.9164,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE1,inactive 15+,2025,10.6406,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE1,inactive 15+,2025,0.7689,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE2,Y_GE15,2015,36.9006,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE2,inactive 15+,2015,29.8137,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE2,inactive 15+,2015,11.0014,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE2,inactive 15+,2015,0.765,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE2,Y_GE15,2019,35.1815,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE2,inactive 15+,2019,29.8099,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE2,inactive 15+,2019,10.4875,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE2,inactive 15+,2019,0.765,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DE2,survey population,2019,41.0,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DE2,labour force,2019,44.6948,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DE2,inactive 15+,2019,34.1926,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DE2,Y_GE15,2024,35.4146,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE2,inactive 15+,2024,29.9542,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE2,inactive 15+,2024,10.6082,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE2,inactive 15+,2024,0.765,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE2,Y_GE15,2025,35.2706,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE2,inactive 15+,2025,29.987,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE2,inactive 15+,2025,10.5766,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE2,inactive 15+,2025,0.765,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE3,Y_GE15,2015,39.1913,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE3,inactive 15+,2015,29.6765,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE3,inactive 15+,2015,11.6306,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE3,inactive 15+,2015,0.7703,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE3,Y_GE15,2019,36.3293,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE3,inactive 15+,2019,29.6253,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE3,inactive 15+,2019,10.7627,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE3,inactive 15+,2019,0.7703,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DE3,survey population,2019,36.9,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DE3,labour force,2019,40.259,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DE3,inactive 15+,2019,31.013,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DE3,Y_GE15,2024,37.25,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE3,inactive 15+,2024,29.5628,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE3,inactive 15+,2024,11.0122,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE3,inactive 15+,2024,0.7703,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE3,Y_GE15,2025,37.4059,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE3,inactive 15+,2025,29.5358,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE3,inactive 15+,2025,11.0481,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE3,inactive 15+,2025,0.7703,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE4,Y_GE15,2015,40.1099,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE4,inactive 15+,2015,29.9241,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE4,inactive 15+,2015,12.0025,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE4,inactive 15+,2015,0.7505,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE4,Y_GE15,2019,39.9179,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE4,inactive 15+,2019,29.8879,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE4,inactive 15+,2019,11.9306,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE4,inactive 15+,2019,0.7505,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DE4,survey population,2019,36.0,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DE4,labour force,2019,39.9822,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DE4,inactive 15+,2019,30.0062,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DE4,Y_GE15,2024,41.8321,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE4,inactive 15+,2024,30.1938,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE4,inactive 15+,2024,12.6307,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE4,inactive 15+,2024,0.7505,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE4,Y_GE15,2025,42.4446,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE4,inactive 15+,2025,30.191,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE4,inactive 15+,2025,12.8145,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE4,inactive 15+,2025,0.7505,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE5,Y_GE15,2015,44.1518,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE5,inactive 15+,2015,29.6646,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE5,inactive 15+,2015,13.0975,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE5,inactive 15+,2015,0.7692,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE5,Y_GE15,2019,40.1026,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE5,inactive 15+,2019,29.4914,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE5,inactive 15+,2019,11.8268,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE5,inactive 15+,2019,0.7692,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DE5,survey population,2019,40.9,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DE5,labour force,2019,45.0713,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DE5,inactive 15+,2019,34.6698,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DE5,Y_GE15,2024,41.0544,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE5,inactive 15+,2024,29.627,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE5,inactive 15+,2024,12.1632,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE5,inactive 15+,2024,0.7692,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE5,Y_GE15,2025,40.7703,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE5,inactive 15+,2025,29.5864,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE5,inactive 15+,2025,12.0625,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE5,inactive 15+,2025,0.7692,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE6,Y_GE15,2015,37.541,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE6,inactive 15+,2015,29.7107,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE6,inactive 15+,2015,11.1537,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE6,inactive 15+,2015,0.7741,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE6,Y_GE15,2019,35.1388,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE6,inactive 15+,2019,29.5544,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE6,inactive 15+,2019,10.3851,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE6,inactive 15+,2019,0.7741,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DE6,survey population,2019,35.6,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DE6,labour force,2019,38.6693,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DE6,inactive 15+,2019,29.9345,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DE6,Y_GE15,2024,35.0514,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE6,inactive 15+,2024,29.5373,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE6,inactive 15+,2024,10.3532,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE6,inactive 15+,2024,0.7741,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE6,Y_GE15,2025,35.2062,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE6,inactive 15+,2025,29.486,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE6,inactive 15+,2025,10.3809,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE6,inactive 15+,2025,0.7741,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE7,Y_GE15,2015,39.4733,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE7,inactive 15+,2015,29.6692,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE7,inactive 15+,2015,11.7114,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE7,inactive 15+,2015,0.7675,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE7,Y_GE15,2019,37.7626,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE7,inactive 15+,2019,29.7006,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE7,inactive 15+,2019,11.2157,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE7,inactive 15+,2019,0.7675,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DE7,survey population,2019,41.4,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DE7,labour force,2019,45.3854,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DE7,inactive 15+,2019,34.8315,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DE7,Y_GE15,2024,38.5769,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE7,inactive 15+,2024,29.781,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE7,inactive 15+,2024,11.4886,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE7,inactive 15+,2024,0.7675,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE7,Y_GE15,2025,38.415,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE7,inactive 15+,2025,29.7985,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE7,inactive 15+,2025,11.4471,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE7,inactive 15+,2025,0.7675,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE8,Y_GE15,2015,42.1815,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE8,inactive 15+,2015,29.8427,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE8,inactive 15+,2015,12.5881,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE8,inactive 15+,2015,0.7482,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE8,Y_GE15,2019,42.4671,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE8,inactive 15+,2019,29.9035,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE8,inactive 15+,2019,12.6992,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE8,inactive 15+,2019,0.7482,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DE8,survey population,2019,37.8,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DE8,labour force,2019,42.3259,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DE8,inactive 15+,2019,31.6685,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DE8,Y_GE15,2024,44.382,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE8,inactive 15+,2024,30.2758,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE8,inactive 15+,2024,13.437,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE8,inactive 15+,2024,0.7482,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE8,Y_GE15,2025,44.5441,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE8,inactive 15+,2025,30.2656,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE8,inactive 15+,2025,13.4815,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE8,inactive 15+,2025,0.7482,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE9,Y_GE15,2015,40.5985,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE9,inactive 15+,2015,29.7476,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE9,inactive 15+,2015,12.0771,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE9,inactive 15+,2015,0.762,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE9,Y_GE15,2019,38.7272,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE9,inactive 15+,2019,29.7278,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE9,inactive 15+,2019,11.5127,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE9,inactive 15+,2019,0.762,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DE9,survey population,2019,39.4,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DE9,labour force,2019,43.3994,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DE9,inactive 15+,2019,33.0723,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DE9,Y_GE15,2024,38.8295,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE9,inactive 15+,2024,29.8901,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE9,inactive 15+,2024,11.6062,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE9,inactive 15+,2024,0.762,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DE9,Y_GE15,2025,38.5593,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DE9,inactive 15+,2025,29.9132,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DE9,inactive 15+,2025,11.5343,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DE9,inactive 15+,2025,0.762,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEA,Y_GE15,2015,42.1681,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEA,inactive 15+,2015,29.66,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEA,inactive 15+,2015,12.5071,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEA,inactive 15+,2015,0.7655,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEA,Y_GE15,2019,39.9919,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEA,inactive 15+,2019,29.6077,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEA,inactive 15+,2019,11.8407,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEA,inactive 15+,2019,0.7655,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DEA,survey population,2019,36.3,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DEA,labour force,2019,40.0559,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DEA,inactive 15+,2019,30.6642,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DEA,Y_GE15,2024,39.4466,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEA,inactive 15+,2024,29.8018,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEA,inactive 15+,2024,11.7558,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEA,inactive 15+,2024,0.7655,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEA,Y_GE15,2025,39.2349,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEA,inactive 15+,2025,29.8159,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEA,inactive 15+,2025,11.6983,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEA,inactive 15+,2025,0.7655,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEB,Y_GE15,2015,40.1675,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEB,inactive 15+,2015,29.6774,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEB,inactive 15+,2015,11.9207,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEB,inactive 15+,2015,0.7593,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEB,Y_GE15,2019,38.1748,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEB,inactive 15+,2019,29.7551,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEB,inactive 15+,2019,11.359,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEB,inactive 15+,2019,0.7593,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DEB,survey population,2019,41.8,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DEB,labour force,2019,46.0303,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DEB,inactive 15+,2019,34.949,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DEB,Y_GE15,2024,38.2023,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEB,inactive 15+,2024,30.0273,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEB,inactive 15+,2024,11.4711,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEB,inactive 15+,2024,0.7593,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEB,Y_GE15,2025,37.5965,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEB,inactive 15+,2025,30.0685,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEB,inactive 15+,2025,11.3047,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEB,inactive 15+,2025,0.7593,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEC,Y_GE15,2015,43.5877,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEC,inactive 15+,2015,29.752,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEC,inactive 15+,2015,12.9682,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEC,inactive 15+,2015,0.7587,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEC,Y_GE15,2019,41.8073,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEC,inactive 15+,2019,29.6852,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEC,inactive 15+,2019,12.4106,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEC,inactive 15+,2019,0.7587,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DEC,survey population,2019,39.0,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DEC,labour force,2019,43.3757,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DEC,inactive 15+,2019,32.9093,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DEC,Y_GE15,2024,42.9394,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEC,inactive 15+,2024,29.9858,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEC,inactive 15+,2024,12.8757,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEC,inactive 15+,2024,0.7587,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEC,Y_GE15,2025,42.4232,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEC,inactive 15+,2025,30.0109,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEC,inactive 15+,2025,12.7316,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEC,inactive 15+,2025,0.7587,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DED,Y_GE15,2015,41.3249,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DED,inactive 15+,2015,29.981,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DED,inactive 15+,2015,12.3896,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DED,inactive 15+,2015,0.7535,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DED,Y_GE15,2019,40.4858,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DED,inactive 15+,2019,29.9524,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DED,inactive 15+,2019,12.1265,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DED,inactive 15+,2019,0.7535,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DED,survey population,2019,34.9,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DED,labour force,2019,38.7684,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DED,inactive 15+,2019,29.2134,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DED,Y_GE15,2024,41.784,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DED,inactive 15+,2024,30.148,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DED,inactive 15+,2024,12.597,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DED,inactive 15+,2024,0.7535,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DED,Y_GE15,2025,41.6434,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DED,inactive 15+,2025,30.1312,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DED,inactive 15+,2025,12.5476,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DED,inactive 15+,2025,0.7535,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEE,Y_GE15,2015,41.695,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEE,inactive 15+,2015,30.0333,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEE,inactive 15+,2015,12.5224,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEE,inactive 15+,2015,0.7492,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEE,Y_GE15,2019,43.1176,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEE,inactive 15+,2019,30.0279,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEE,inactive 15+,2019,12.9473,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEE,inactive 15+,2019,0.7492,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DEE,survey population,2019,37.6,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DEE,labour force,2019,42.1583,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DEE,inactive 15+,2019,31.5865,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DEE,Y_GE15,2024,44.3032,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEE,inactive 15+,2024,30.2112,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEE,inactive 15+,2024,13.3845,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEE,inactive 15+,2024,0.7492,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEE,Y_GE15,2025,44.8519,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEE,inactive 15+,2025,30.1854,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEE,inactive 15+,2025,13.5387,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEE,inactive 15+,2025,0.7492,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEF,Y_GE15,2015,41.3551,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEF,inactive 15+,2015,29.9089,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEF,inactive 15+,2015,12.3689,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEF,inactive 15+,2015,0.7598,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEF,Y_GE15,2019,38.9581,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEF,inactive 15+,2019,29.8315,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEF,inactive 15+,2019,11.6218,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEF,inactive 15+,2019,0.7598,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DEF,survey population,2019,42.6,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DEF,labour force,2019,46.9982,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DEF,inactive 15+,2019,35.7087,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DEF,Y_GE15,2024,39.3585,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEF,inactive 15+,2024,29.8136,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEF,inactive 15+,2024,11.7342,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEF,inactive 15+,2024,0.7598,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEF,Y_GE15,2025,38.8111,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEF,inactive 15+,2025,29.8851,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEF,inactive 15+,2025,11.5987,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEF,inactive 15+,2025,0.7598,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEG,Y_GE15,2015,41.5178,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG,inactive 15+,2015,29.9789,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG,inactive 15+,2015,12.4466,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG,inactive 15+,2015,0.7515,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEG,Y_GE15,2019,40.9587,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG,inactive 15+,2019,29.9598,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG,inactive 15+,2019,12.2711,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG,inactive 15+,2019,0.7515,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,DEG,survey population,2019,40.8,percent,Freiwilligensurvey 2019 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,DE,DEG,labour force,2019,45.4224,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DEG,inactive 15+,2019,34.1369,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DEG,Y_GE15,2024,43.1278,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG,inactive 15+,2024,30.1749,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG,inactive 15+,2024,13.0138,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG,inactive 15+,2024,0.7515,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEG,Y_GE15,2025,43.2379,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG,inactive 15+,2025,30.2243,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG,inactive 15+,2025,13.0684,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG,inactive 15+,2025,0.7515,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,DEG1,Y_GE15,2015,40.0945,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG1,inactive 15+,2015,29.6432,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG1,inactive 15+,2015,11.8853,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG1,inactive 15+,2015,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+P_everyone,DE,DEG1,survey population,2015,23.5,percent,"ilc_scp20 2015, ages 16+",VERIFIED
+p_labour_force_implied_A,DE,DEG1,labour force,2015,19.3884,percent,"(P - s p_I) / (1 - s), method A",DERIVED
+p_labour_force_implied_B,DE,DEG1,labour force,2015,25.9666,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DEG1,inactive 15+,2015,19.8147,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DEG1,Y_GE15,2019,38.0236,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG1,inactive 15+,2019,29.5619,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG1,inactive 15+,2019,11.2405,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG1,inactive 15+,2019,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,DE,DEG1,Y_GE15,2024,37.7956,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG1,inactive 15+,2024,29.6477,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG1,inactive 15+,2024,11.2055,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG1,inactive 15+,2024,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,DE,DEG1,Y_GE15,2025,37.6437,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG1,inactive 15+,2025,29.6612,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG1,inactive 15+,2025,11.1656,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG1,inactive 15+,2025,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,DE,DEG2,Y_GE15,2015,40.401,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG2,inactive 15+,2015,29.8202,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG2,inactive 15+,2015,12.0477,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG2,inactive 15+,2015,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+P_everyone,DE,DEG2,survey population,2015,29.6,percent,"ilc_scp20 2015, ages 16+",VERIFIED
+p_labour_force_implied_A,DE,DEG2,labour force,2015,29.4507,percent,"(P - s p_I) / (1 - s), method A",DERIVED
+p_labour_force_implied_B,DE,DEG2,labour force,2015,32.7331,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DEG2,inactive 15+,2015,24.9781,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DEG2,Y_GE15,2019,38.767,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG2,inactive 15+,2019,29.7954,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG2,inactive 15+,2019,11.5508,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG2,inactive 15+,2019,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,DE,DEG2,Y_GE15,2024,39.3261,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG2,inactive 15+,2024,29.9775,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG2,inactive 15+,2024,11.789,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG2,inactive 15+,2024,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,DE,DEG2,Y_GE15,2025,39.1635,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG2,inactive 15+,2025,29.9878,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG2,inactive 15+,2025,11.7442,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG2,inactive 15+,2025,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,DE,DEG3,Y_GE15,2015,38.3566,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG3,inactive 15+,2015,29.8331,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG3,inactive 15+,2015,11.443,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG3,inactive 15+,2015,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+P_everyone,DE,DEG3,survey population,2015,34.5,percent,"ilc_scp20 2015, ages 16+",VERIFIED
+p_labour_force_implied_A,DE,DEG3,labour force,2015,37.4039,percent,"(P - s p_I) / (1 - s), method A",DERIVED
+p_labour_force_implied_B,DE,DEG3,labour force,2015,37.9485,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,DEG3,inactive 15+,2015,28.9579,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,DEG3,Y_GE15,2019,36.9174,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG3,inactive 15+,2019,29.9111,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG3,inactive 15+,2019,11.0424,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG3,inactive 15+,2019,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,DE,DEG3,Y_GE15,2024,37.7367,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG3,inactive 15+,2024,30.2338,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG3,inactive 15+,2024,11.4092,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG3,inactive 15+,2024,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,DE,DEG3,Y_GE15,2025,37.8269,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,DEG3,inactive 15+,2025,30.2676,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,DEG3,inactive 15+,2025,11.4493,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,DEG3,inactive 15+,2025,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,DE,national,Y_GE15,2015,39.8342,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,national,inactive 15+,2015,29.7587,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,national,inactive 15+,2015,11.8541,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,national,inactive 15+,2015,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,DE,national,survey population,2015,28.6,percent,"ilc_scp19 2015, ages 16+",VERIFIED
+p_labour_force_implied_A,DE,national,labour force,2015,27.8329,percent,"(P - s p_I) / (1 - s), method A",DERIVED
+p_labour_force_implied_B,DE,national,labour force,2015,31.5804,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,DE,national,inactive 15+,2015,24.0984,percent,"rho x p_LF, method B",DERIVED
+inactive_share,DE,national,Y_GE15,2019,38.0836,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,national,inactive 15+,2019,29.7362,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,national,inactive 15+,2019,11.3246,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,national,inactive 15+,2019,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,national,Y_GE15,2024,38.4463,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,national,inactive 15+,2024,29.9022,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,national,inactive 15+,2024,11.4963,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,national,inactive 15+,2024,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,DE,national,Y_GE15,2025,38.3327,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,DE,national,inactive 15+,2025,29.92,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,DE,national,inactive 15+,2025,11.4691,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,DE,national,inactive 15+,2025,0.7631,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,FR,DEG1,Y_GE15,2015,43.0266,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,DEG1,inactive 15+,2015,22.6861,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,DEG1,inactive 15+,2015,9.761,percentage points of P,s x p_I (method A),DERIVED
+P_everyone,FR,DEG1,survey population,2015,20.3,percent,"ilc_scp20 2015, ages 16+",VERIFIED
+p_labour_force_implied_A,FR,DEG1,labour force,2015,18.498,percent,"(P - s p_I) / (1 - s), method A",DERIVED
+inactive_share,FR,DEG1,Y_GE15,2019,43.343,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,DEG1,inactive 15+,2019,22.8057,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,DEG1,inactive 15+,2019,9.8847,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,DEG1,Y_GE15,2024,41.7421,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,DEG1,inactive 15+,2024,22.5522,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,DEG1,inactive 15+,2024,9.4137,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,DEG1,Y_GE15,2025,40.9201,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,DEG1,inactive 15+,2025,22.4789,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,DEG1,inactive 15+,2025,9.1984,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,DEG2,Y_GE15,2015,46.6078,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,DEG2,inactive 15+,2015,22.737,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,DEG2,inactive 15+,2015,10.5972,percentage points of P,s x p_I (method A),DERIVED
+P_everyone,FR,DEG2,survey population,2015,21.4,percent,"ilc_scp20 2015, ages 16+",VERIFIED
+p_labour_force_implied_A,FR,DEG2,labour force,2015,20.2329,percent,"(P - s p_I) / (1 - s), method A",DERIVED
+inactive_share,FR,DEG2,Y_GE15,2019,46.9694,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,DEG2,inactive 15+,2019,22.8037,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,DEG2,inactive 15+,2019,10.7108,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,DEG2,Y_GE15,2024,45.4795,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,DEG2,inactive 15+,2024,22.6925,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,DEG2,inactive 15+,2024,10.3204,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,DEG2,Y_GE15,2025,45.8813,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,DEG2,inactive 15+,2025,22.6224,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,DEG2,inactive 15+,2025,10.3795,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,DEG3,Y_GE15,2015,43.326,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,DEG3,inactive 15+,2015,22.8257,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,DEG3,inactive 15+,2015,9.8894,percentage points of P,s x p_I (method A),DERIVED
+P_everyone,FR,DEG3,survey population,2015,27.7,percent,"ilc_scp20 2015, ages 16+",VERIFIED
+p_labour_force_implied_A,FR,DEG3,labour force,2015,31.4263,percent,"(P - s p_I) / (1 - s), method A",DERIVED
+inactive_share,FR,DEG3,Y_GE15,2019,45.0921,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,DEG3,inactive 15+,2019,22.9681,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,DEG3,inactive 15+,2019,10.3568,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,DEG3,Y_GE15,2024,44.4029,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,DEG3,inactive 15+,2024,22.7851,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,DEG3,inactive 15+,2024,10.1172,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,DEG3,Y_GE15,2025,43.906,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,DEG3,inactive 15+,2025,22.7555,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,DEG3,inactive 15+,2025,9.991,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FR1,Y_GE15,2015,38.6823,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FR1,inactive 15+,2015,22.7407,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FR1,inactive 15+,2015,8.7966,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FR1,Y_GE15,2019,38.4529,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FR1,inactive 15+,2019,22.8177,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FR1,inactive 15+,2019,8.774,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FR1,Y_GE15,2024,37.0359,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FR1,inactive 15+,2024,22.6401,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FR1,inactive 15+,2024,8.385,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FR1,Y_GE15,2025,37.0121,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FR1,inactive 15+,2025,22.5294,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FR1,inactive 15+,2025,8.3386,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRB,Y_GE15,2015,46.4196,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRB,inactive 15+,2015,22.8794,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRB,inactive 15+,2015,10.6205,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRB,Y_GE15,2019,46.0287,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRB,inactive 15+,2019,22.7783,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRB,inactive 15+,2019,10.4846,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRB,Y_GE15,2024,43.8399,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRB,inactive 15+,2024,22.7102,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRB,inactive 15+,2024,9.9561,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRB,Y_GE15,2025,43.9208,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRB,inactive 15+,2025,22.443,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRB,inactive 15+,2025,9.8571,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRC,Y_GE15,2015,45.7066,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRC,inactive 15+,2015,22.6693,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRC,inactive 15+,2015,10.3614,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRC,Y_GE15,2019,46.4523,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRC,inactive 15+,2019,22.8448,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRC,inactive 15+,2019,10.6119,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRC,Y_GE15,2024,46.0262,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRC,inactive 15+,2024,22.6508,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRC,inactive 15+,2024,10.4253,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRC,Y_GE15,2025,46.2325,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRC,inactive 15+,2025,22.5281,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRC,inactive 15+,2025,10.4153,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRD,Y_GE15,2015,44.8374,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRD,inactive 15+,2015,22.7357,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRD,inactive 15+,2015,10.1941,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRD,Y_GE15,2019,46.6947,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRD,inactive 15+,2019,22.9138,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRD,inactive 15+,2019,10.6995,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRD,Y_GE15,2024,45.8868,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRD,inactive 15+,2024,22.6219,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRD,inactive 15+,2024,10.3805,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRD,Y_GE15,2025,44.714,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRD,inactive 15+,2025,22.6442,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRD,inactive 15+,2025,10.1251,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRE,Y_GE15,2015,45.8838,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRE,inactive 15+,2015,22.8841,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRE,inactive 15+,2015,10.5001,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRE,Y_GE15,2019,47.5521,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRE,inactive 15+,2019,23.0555,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRE,inactive 15+,2019,10.9634,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRE,Y_GE15,2024,45.0499,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRE,inactive 15+,2024,22.7574,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRE,inactive 15+,2024,10.2522,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRE,Y_GE15,2025,43.6232,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRE,inactive 15+,2025,22.7539,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRE,inactive 15+,2025,9.926,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRF,Y_GE15,2015,44.0629,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRF,inactive 15+,2015,22.6965,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRF,inactive 15+,2015,10.0007,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRF,Y_GE15,2019,44.7718,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRF,inactive 15+,2019,22.8801,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRF,inactive 15+,2019,10.2438,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRF,Y_GE15,2024,44.7111,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRF,inactive 15+,2024,22.7618,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRF,inactive 15+,2024,10.177,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRF,Y_GE15,2025,44.529,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRF,inactive 15+,2025,22.6704,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRF,inactive 15+,2025,10.0949,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRG,Y_GE15,2015,41.9822,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRG,inactive 15+,2015,22.6537,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRG,inactive 15+,2015,9.5105,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRG,Y_GE15,2019,44.511,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRG,inactive 15+,2019,22.994,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRG,inactive 15+,2019,10.2349,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRG,Y_GE15,2024,42.5815,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRG,inactive 15+,2024,22.6707,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRG,inactive 15+,2024,9.6535,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRG,Y_GE15,2025,42.4119,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRG,inactive 15+,2025,22.7509,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRG,inactive 15+,2025,9.6491,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRH,Y_GE15,2015,44.1015,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRH,inactive 15+,2015,22.4624,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRH,inactive 15+,2015,9.9063,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRH,Y_GE15,2019,46.0344,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRH,inactive 15+,2019,22.9955,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRH,inactive 15+,2019,10.5858,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRH,Y_GE15,2024,43.2848,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRH,inactive 15+,2024,22.8827,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRH,inactive 15+,2024,9.9047,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRH,Y_GE15,2025,44.5954,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRH,inactive 15+,2025,22.8829,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRH,inactive 15+,2025,10.2047,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRI,Y_GE15,2015,45.3042,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRI,inactive 15+,2015,22.7106,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRI,inactive 15+,2015,10.2889,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRI,Y_GE15,2019,46.2453,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRI,inactive 15+,2019,22.8344,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRI,inactive 15+,2019,10.5598,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRI,Y_GE15,2024,45.0875,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRI,inactive 15+,2024,22.6106,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRI,inactive 15+,2024,10.1945,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRI,Y_GE15,2025,44.675,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRI,inactive 15+,2025,22.5798,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRI,inactive 15+,2025,10.0875,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRJ,Y_GE15,2015,47.1958,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRJ,inactive 15+,2015,22.8112,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRJ,inactive 15+,2015,10.7659,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRJ,Y_GE15,2019,47.7823,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRJ,inactive 15+,2019,22.8584,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRJ,inactive 15+,2019,10.9223,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRJ,Y_GE15,2024,45.7371,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRJ,inactive 15+,2024,22.701,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRJ,inactive 15+,2024,10.3828,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRJ,Y_GE15,2025,45.2216,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRJ,inactive 15+,2025,22.5932,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRJ,inactive 15+,2025,10.217,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRK,Y_GE15,2015,42.759,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRK,inactive 15+,2015,22.7488,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRK,inactive 15+,2015,9.7272,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRK,Y_GE15,2019,42.618,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRK,inactive 15+,2019,22.7641,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRK,inactive 15+,2019,9.7016,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRK,Y_GE15,2024,41.5516,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRK,inactive 15+,2024,22.6217,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRK,inactive 15+,2024,9.3997,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRK,Y_GE15,2025,40.9368,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRK,inactive 15+,2025,22.5615,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRK,inactive 15+,2025,9.2359,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRL,Y_GE15,2015,47.3911,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRL,inactive 15+,2015,22.7092,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRL,inactive 15+,2015,10.7621,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRL,Y_GE15,2019,48.2596,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRL,inactive 15+,2019,22.6882,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRL,inactive 15+,2019,10.9492,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRL,Y_GE15,2024,48.0876,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRL,inactive 15+,2024,22.4124,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRL,inactive 15+,2024,10.7776,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRL,Y_GE15,2025,46.5016,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRL,inactive 15+,2025,22.4185,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRL,inactive 15+,2025,10.425,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRM,Y_GE15,2015,59.4842,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRM,inactive 15+,2015,23.2069,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRM,inactive 15+,2015,13.8044,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRM,Y_GE15,2019,51.5901,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRM,inactive 15+,2019,22.7703,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRM,inactive 15+,2019,11.7472,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRM,Y_GE15,2024,48.2341,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRM,inactive 15+,2024,22.6821,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRM,inactive 15+,2024,10.9405,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRM,Y_GE15,2025,49.0897,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRM,inactive 15+,2025,22.403,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRM,inactive 15+,2025,10.9976,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRY,Y_GE15,2015,47.3742,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRY,inactive 15+,2015,22.9199,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRY,inactive 15+,2015,10.8581,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRY,Y_GE15,2019,50.1666,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRY,inactive 15+,2019,22.9752,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRY,inactive 15+,2019,11.5259,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRY,Y_GE15,2024,50.3471,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRY,inactive 15+,2024,22.8534,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRY,inactive 15+,2024,11.506,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,FRY,Y_GE15,2025,50.5837,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,FRY,inactive 15+,2025,22.894,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,FRY,inactive 15+,2025,11.5806,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,national,Y_GE15,2015,44.0201,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,national,inactive 15+,2015,22.7455,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,national,inactive 15+,2015,10.0126,percentage points of P,s x p_I (method A),DERIVED
+P_everyone,FR,national,survey population,2015,23.0,percent,"ilc_scp19 2015, ages 16+",VERIFIED
+p_labour_force_implied_A,FR,national,labour force,2015,23.2002,percent,"(P - s p_I) / (1 - s), method A",DERIVED
+inactive_share,FR,national,Y_GE15,2019,44.7486,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,national,inactive 15+,2019,22.8624,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,national,inactive 15+,2019,10.2306,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,national,Y_GE15,2024,43.4422,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,national,inactive 15+,2024,22.6663,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,national,inactive 15+,2024,9.8467,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,FR,national,Y_GE15,2025,43.0428,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,FR,national,inactive 15+,2025,22.612,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,FR,national,inactive 15+,2025,9.7329,percentage points of P,s x p_I (method A),DERIVED
+inactive_share,IT,DEG1,Y_GE15,2015,50.5173,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,DEG1,inactive 15+,2015,11.4733,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,DEG1,inactive 15+,2015,5.796,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,DEG1,inactive 15+,2015,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+P_everyone,IT,DEG1,survey population,2015,11.4,percent,"ilc_scp20 2015, ages 16+",VERIFIED
+p_labour_force_implied_A,IT,DEG1,labour force,2015,11.3252,percent,"(P - s p_I) / (1 - s), method A",DERIVED
+p_labour_force_implied_B,IT,DEG1,labour force,2015,12.4013,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,DEG1,inactive 15+,2015,10.4193,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,DEG1,Y_GE15,2019,49.4971,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,DEG1,inactive 15+,2019,11.3501,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,DEG1,inactive 15+,2019,5.618,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,DEG1,inactive 15+,2019,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,IT,DEG1,Y_GE15,2024,49.0204,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,DEG1,inactive 15+,2024,11.2453,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,DEG1,inactive 15+,2024,5.5125,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,DEG1,inactive 15+,2024,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,IT,DEG1,Y_GE15,2025,49.3242,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,DEG1,inactive 15+,2025,11.2775,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,DEG1,inactive 15+,2025,5.5625,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,DEG1,inactive 15+,2025,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,IT,DEG2,Y_GE15,2015,51.1173,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,DEG2,inactive 15+,2015,11.6049,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,DEG2,inactive 15+,2015,5.9321,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,DEG2,inactive 15+,2015,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+P_everyone,IT,DEG2,survey population,2015,12.3,percent,"ilc_scp20 2015, ages 16+",VERIFIED
+p_labour_force_implied_A,IT,DEG2,labour force,2015,13.0269,percent,"(P - s p_I) / (1 - s), method A",DERIVED
+p_labour_force_implied_B,IT,DEG2,labour force,2015,13.3943,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,DEG2,inactive 15+,2015,11.2536,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,DEG2,Y_GE15,2019,50.0688,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,DEG2,inactive 15+,2019,11.4807,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,DEG2,inactive 15+,2019,5.7483,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,DEG2,inactive 15+,2019,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,IT,DEG2,Y_GE15,2024,50.5365,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,DEG2,inactive 15+,2024,11.3849,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,DEG2,inactive 15+,2024,5.7535,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,DEG2,inactive 15+,2024,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,IT,DEG2,Y_GE15,2025,50.3484,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,DEG2,inactive 15+,2025,11.371,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,DEG2,inactive 15+,2025,5.7251,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,DEG2,inactive 15+,2025,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,IT,DEG3,Y_GE15,2015,51.5813,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,DEG3,inactive 15+,2015,11.4635,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,DEG3,inactive 15+,2015,5.913,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,DEG3,inactive 15+,2015,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+P_everyone,IT,DEG3,survey population,2015,12.2,percent,"ilc_scp20 2015, ages 16+",VERIFIED
+p_labour_force_implied_A,IT,DEG3,labour force,2015,12.9846,percent,"(P - s p_I) / (1 - s), method A",DERIVED
+p_labour_force_implied_B,IT,DEG3,labour force,2015,13.2961,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,DEG3,inactive 15+,2015,11.1711,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,DEG3,Y_GE15,2019,51.3211,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,DEG3,inactive 15+,2019,11.3556,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,DEG3,inactive 15+,2019,5.8278,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,DEG3,inactive 15+,2019,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,IT,DEG3,Y_GE15,2024,51.4978,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,DEG3,inactive 15+,2024,11.2519,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,DEG3,inactive 15+,2024,5.7945,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,DEG3,inactive 15+,2024,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,IT,DEG3,Y_GE15,2025,51.0187,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,DEG3,inactive 15+,2025,11.1801,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,DEG3,inactive 15+,2025,5.7039,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,DEG3,inactive 15+,2025,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (national mix: no census table by degree of urbanisation) (method B),DERIVED
+inactive_share,IT,ITC1,Y_GE15,2015,47.5029,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC1,inactive 15+,2015,11.1123,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC1,inactive 15+,2015,5.2787,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC1,inactive 15+,2015,0.8532,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITC1,Y_GE15,2019,47.6436,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC1,inactive 15+,2019,11.0191,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC1,inactive 15+,2019,5.2499,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC1,inactive 15+,2019,0.8532,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITC1,Y_GE15,2024,47.3193,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC1,inactive 15+,2024,10.9431,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC1,inactive 15+,2024,5.1782,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC1,inactive 15+,2024,0.8532,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITC1,survey population,2024,9.6,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITC1,labour force,2024,10.3167,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITC1,inactive 15+,2024,8.8021,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITC1,Y_GE15,2025,46.8829,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC1,inactive 15+,2025,10.936,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC1,inactive 15+,2025,5.1271,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC1,inactive 15+,2025,0.8532,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITC2,Y_GE15,2015,44.9726,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC2,inactive 15+,2015,11.212,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC2,inactive 15+,2015,5.0423,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC2,inactive 15+,2015,0.8616,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITC2,Y_GE15,2019,45.3284,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC2,inactive 15+,2019,11.1345,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC2,inactive 15+,2019,5.0471,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC2,inactive 15+,2019,0.8616,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITC2,Y_GE15,2024,44.6512,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC2,inactive 15+,2024,11.0344,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC2,inactive 15+,2024,4.927,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC2,inactive 15+,2024,0.8616,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITC2,survey population,2024,10.83,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITC2,labour force,2024,11.5436,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITC2,inactive 15+,2024,9.9454,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITC2,Y_GE15,2025,44.8468,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC2,inactive 15+,2025,11.0294,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC2,inactive 15+,2025,4.9463,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC2,inactive 15+,2025,0.8616,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITC3,Y_GE15,2015,51.456,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC3,inactive 15+,2015,10.8986,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC3,inactive 15+,2015,5.608,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC3,inactive 15+,2015,0.8391,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITC3,Y_GE15,2019,50.5348,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC3,inactive 15+,2019,10.7988,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC3,inactive 15+,2019,5.4571,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC3,inactive 15+,2019,0.8391,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITC3,Y_GE15,2024,49.8015,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC3,inactive 15+,2024,10.7247,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC3,inactive 15+,2024,5.341,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC3,inactive 15+,2024,0.8391,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITC3,survey population,2024,8.67,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITC3,labour force,2024,9.4252,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITC3,inactive 15+,2024,7.9088,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITC3,Y_GE15,2025,48.9802,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC3,inactive 15+,2025,10.691,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC3,inactive 15+,2025,5.2365,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC3,inactive 15+,2025,0.8391,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITC4,Y_GE15,2015,45.8353,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC4,inactive 15+,2015,11.3742,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC4,inactive 15+,2015,5.2134,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC4,inactive 15+,2015,0.8588,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITC4,Y_GE15,2019,45.033,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC4,inactive 15+,2019,11.2311,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC4,inactive 15+,2019,5.0577,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC4,inactive 15+,2019,0.8588,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITC4,Y_GE15,2024,45.6882,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC4,inactive 15+,2024,11.1986,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC4,inactive 15+,2024,5.1164,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC4,inactive 15+,2024,0.8588,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITC4,survey population,2024,10.33,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITC4,labour force,2024,11.0422,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITC4,inactive 15+,2024,9.4833,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITC4,Y_GE15,2025,46.0503,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITC4,inactive 15+,2025,11.2165,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITC4,inactive 15+,2025,5.1652,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITC4,inactive 15+,2025,0.8588,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF1,Y_GE15,2015,52.5755,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF1,inactive 15+,2015,11.4154,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF1,inactive 15+,2015,6.0017,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF1,inactive 15+,2015,0.8433,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF1,Y_GE15,2019,50.9624,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF1,inactive 15+,2019,11.3072,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF1,inactive 15+,2019,5.7624,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF1,inactive 15+,2019,0.8433,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF1,Y_GE15,2024,51.0261,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF1,inactive 15+,2024,11.2227,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF1,inactive 15+,2024,5.7265,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF1,inactive 15+,2024,0.8433,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITF1,survey population,2024,7.23,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITF1,labour force,2024,7.8582,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITF1,inactive 15+,2024,6.627,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITF1,Y_GE15,2025,50.9355,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF1,inactive 15+,2025,11.2028,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF1,inactive 15+,2025,5.7062,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF1,inactive 15+,2025,0.8433,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF2,Y_GE15,2015,56.6436,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF2,inactive 15+,2015,11.478,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF2,inactive 15+,2015,6.5015,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF2,inactive 15+,2015,0.8365,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF2,Y_GE15,2019,53.6237,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF2,inactive 15+,2019,11.3534,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF2,inactive 15+,2019,6.0881,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF2,inactive 15+,2019,0.8365,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF2,Y_GE15,2024,54.457,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF2,inactive 15+,2024,11.2898,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF2,inactive 15+,2024,6.1481,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF2,inactive 15+,2024,0.8365,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITF2,survey population,2024,6.5,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITF2,labour force,2024,7.1353,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITF2,inactive 15+,2024,5.9687,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITF2,Y_GE15,2025,55.2909,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF2,inactive 15+,2025,11.2833,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF2,inactive 15+,2025,6.2386,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF2,inactive 15+,2025,0.8365,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF3,Y_GE15,2015,60.2616,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF3,inactive 15+,2015,12.179,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF3,inactive 15+,2015,7.3393,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF3,inactive 15+,2015,0.8132,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF3,Y_GE15,2019,58.3132,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF3,inactive 15+,2019,12.0697,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF3,inactive 15+,2019,7.0382,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF3,inactive 15+,2019,0.8132,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF3,Y_GE15,2024,57.6393,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF3,inactive 15+,2024,11.9322,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF3,inactive 15+,2024,6.8776,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF3,inactive 15+,2024,0.8132,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITF3,survey population,2024,4.87,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITF3,labour force,2024,5.4577,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITF3,inactive 15+,2024,4.4381,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITF3,Y_GE15,2025,57.4005,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF3,inactive 15+,2025,11.9134,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF3,inactive 15+,2025,6.8383,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF3,inactive 15+,2025,0.8132,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF4,Y_GE15,2015,58.3743,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF4,inactive 15+,2015,11.8455,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF4,inactive 15+,2015,6.9147,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF4,inactive 15+,2015,0.8184,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF4,Y_GE15,2019,58.4407,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF4,inactive 15+,2019,11.7512,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF4,inactive 15+,2019,6.8675,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF4,inactive 15+,2019,0.8184,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF4,Y_GE15,2024,57.8568,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF4,inactive 15+,2024,11.5652,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF4,inactive 15+,2024,6.6912,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF4,inactive 15+,2024,0.8184,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITF4,survey population,2024,6.27,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITF4,labour force,2024,7.0062,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITF4,inactive 15+,2024,5.7337,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITF4,Y_GE15,2025,57.577,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF4,inactive 15+,2025,11.5302,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF4,inactive 15+,2025,6.6387,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF4,inactive 15+,2025,0.8184,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF5,Y_GE15,2015,56.3448,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF5,inactive 15+,2015,11.6066,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF5,inactive 15+,2015,6.5397,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF5,inactive 15+,2015,0.8343,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF5,Y_GE15,2019,56.8447,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF5,inactive 15+,2019,11.5877,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF5,inactive 15+,2019,6.587,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF5,inactive 15+,2019,0.8343,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF5,Y_GE15,2024,55.3817,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF5,inactive 15+,2024,11.4742,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF5,inactive 15+,2024,6.3546,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF5,inactive 15+,2024,0.8343,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITF5,survey population,2024,8.5,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITF5,labour force,2024,9.3586,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITF5,inactive 15+,2024,7.8083,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITF5,Y_GE15,2025,55.1614,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF5,inactive 15+,2025,11.4449,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF5,inactive 15+,2025,6.3132,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF5,inactive 15+,2025,0.8343,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF6,Y_GE15,2015,60.6291,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF6,inactive 15+,2015,11.8673,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF6,inactive 15+,2015,7.195,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF6,inactive 15+,2015,0.8185,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF6,Y_GE15,2019,58.6276,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF6,inactive 15+,2019,11.7203,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF6,inactive 15+,2019,6.8713,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF6,inactive 15+,2019,0.8185,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITF6,Y_GE15,2024,61.0569,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF6,inactive 15+,2024,11.7124,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF6,inactive 15+,2024,7.1512,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF6,inactive 15+,2024,0.8185,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITF6,survey population,2024,5.77,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITF6,labour force,2024,6.4893,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITF6,inactive 15+,2024,5.3112,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITF6,Y_GE15,2025,61.0141,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITF6,inactive 15+,2025,11.6953,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITF6,inactive 15+,2025,7.1358,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITF6,inactive 15+,2025,0.8185,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITG1,Y_GE15,2015,60.2962,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITG1,inactive 15+,2015,11.9172,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITG1,inactive 15+,2015,7.1856,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITG1,inactive 15+,2015,0.8084,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITG1,Y_GE15,2019,60.0804,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITG1,inactive 15+,2019,11.8459,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITG1,inactive 15+,2019,7.1171,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITG1,inactive 15+,2019,0.8084,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITG1,Y_GE15,2024,59.1159,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITG1,inactive 15+,2024,11.7155,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITG1,inactive 15+,2024,6.9257,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITG1,inactive 15+,2024,0.8084,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITG1,survey population,2024,5.0,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITG1,labour force,2024,5.6387,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITG1,inactive 15+,2024,4.5583,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITG1,Y_GE15,2025,59.0968,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITG1,inactive 15+,2025,11.6914,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITG1,inactive 15+,2025,6.9092,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITG1,inactive 15+,2025,0.8084,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITG2,Y_GE15,2015,53.0651,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITG2,inactive 15+,2015,11.6167,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITG2,inactive 15+,2015,6.1644,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITG2,inactive 15+,2015,0.8239,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITG2,Y_GE15,2019,52.1587,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITG2,inactive 15+,2019,11.4137,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITG2,inactive 15+,2019,5.9533,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITG2,inactive 15+,2019,0.8239,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITG2,Y_GE15,2024,54.0733,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITG2,inactive 15+,2024,11.2599,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITG2,inactive 15+,2024,6.0886,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITG2,inactive 15+,2024,0.8239,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITG2,survey population,2024,7.8,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITG2,labour force,2024,8.6209,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITG2,inactive 15+,2024,7.1028,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITG2,Y_GE15,2025,53.0983,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITG2,inactive 15+,2025,11.2136,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITG2,inactive 15+,2025,5.9542,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITG2,inactive 15+,2025,0.8239,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITH1,Y_GE15,2015,40.8605,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH1,inactive 15+,2015,11.6184,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH1,inactive 15+,2015,4.7473,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH1,inactive 15+,2015,0.8846,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITH1,Y_GE15,2019,39.5322,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH1,inactive 15+,2019,11.3079,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH1,inactive 15+,2019,4.4703,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH1,inactive 15+,2019,0.8846,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITH1,Y_GE15,2024,40.6515,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH1,inactive 15+,2024,11.3333,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH1,inactive 15+,2024,4.6072,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH1,inactive 15+,2024,0.8846,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITH1,survey population,2024,14.7,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITH1,labour force,2024,15.4235,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITH1,inactive 15+,2024,13.6437,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITH1,Y_GE15,2025,41.2129,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH1,inactive 15+,2025,11.3661,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH1,inactive 15+,2025,4.6843,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH1,inactive 15+,2025,0.8846,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITH2,Y_GE15,2015,44.6785,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH2,inactive 15+,2015,11.5559,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH2,inactive 15+,2015,5.163,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH2,inactive 15+,2015,0.876,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITH2,Y_GE15,2019,44.9108,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH2,inactive 15+,2019,11.3809,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH2,inactive 15+,2019,5.1112,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH2,inactive 15+,2019,0.876,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITH2,Y_GE15,2024,44.7402,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH2,inactive 15+,2024,11.2655,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH2,inactive 15+,2024,5.0402,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH2,inactive 15+,2024,0.876,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITH2,survey population,2024,20.1,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITH2,labour force,2024,21.281,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITH2,inactive 15+,2024,18.6413,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITH2,Y_GE15,2025,44.5606,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH2,inactive 15+,2025,11.2564,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH2,inactive 15+,2025,5.0159,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH2,inactive 15+,2025,0.876,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITH3,Y_GE15,2015,47.4212,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH3,inactive 15+,2015,11.4656,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH3,inactive 15+,2015,5.4371,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH3,inactive 15+,2015,0.8542,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITH3,Y_GE15,2019,45.6064,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH3,inactive 15+,2019,11.2532,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH3,inactive 15+,2019,5.1322,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH3,inactive 15+,2019,0.8542,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITH3,Y_GE15,2024,45.5841,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH3,inactive 15+,2024,11.1798,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH3,inactive 15+,2024,5.0962,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH3,inactive 15+,2024,0.8542,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITH3,survey population,2024,11.4,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITH3,labour force,2024,12.2117,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITH3,inactive 15+,2024,10.431,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITH3,Y_GE15,2025,46.2353,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH3,inactive 15+,2025,11.1601,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH3,inactive 15+,2025,5.1599,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH3,inactive 15+,2025,0.8542,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITH4,Y_GE15,2015,49.2797,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH4,inactive 15+,2015,11.1865,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH4,inactive 15+,2015,5.5127,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH4,inactive 15+,2015,0.856,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITH4,Y_GE15,2019,48.6089,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH4,inactive 15+,2019,11.0047,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH4,inactive 15+,2019,5.3493,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH4,inactive 15+,2019,0.856,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITH4,Y_GE15,2024,47.5257,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH4,inactive 15+,2024,10.879,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH4,inactive 15+,2024,5.1703,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH4,inactive 15+,2024,0.856,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITH4,survey population,2024,10.97,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITH4,labour force,2024,11.7759,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITH4,inactive 15+,2024,10.0802,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITH4,Y_GE15,2025,47.4679,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH4,inactive 15+,2025,10.8598,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH4,inactive 15+,2025,5.1549,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH4,inactive 15+,2025,0.856,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITH5,Y_GE15,2015,45.5733,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH5,inactive 15+,2015,11.0776,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH5,inactive 15+,2015,5.0484,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH5,inactive 15+,2015,0.8626,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITH5,Y_GE15,2019,44.1552,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH5,inactive 15+,2019,10.9858,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH5,inactive 15+,2019,4.8508,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH5,inactive 15+,2019,0.8626,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITH5,Y_GE15,2024,45.1203,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH5,inactive 15+,2024,11.0083,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH5,inactive 15+,2024,4.967,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH5,inactive 15+,2024,0.8626,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITH5,survey population,2024,10.5,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITH5,labour force,2024,11.1939,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITH5,inactive 15+,2024,9.656,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITH5,Y_GE15,2025,44.4647,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITH5,inactive 15+,2025,11.0033,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITH5,inactive 15+,2025,4.8926,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITH5,inactive 15+,2025,0.8626,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITI1,Y_GE15,2015,47.2337,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI1,inactive 15+,2015,11.0484,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI1,inactive 15+,2015,5.2186,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI1,inactive 15+,2015,0.8532,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITI1,Y_GE15,2019,47.1933,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI1,inactive 15+,2019,10.999,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI1,inactive 15+,2019,5.1908,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI1,inactive 15+,2019,0.8532,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITI1,Y_GE15,2024,46.0576,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI1,inactive 15+,2024,10.8456,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI1,inactive 15+,2024,4.9952,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI1,inactive 15+,2024,0.8532,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITI1,survey population,2024,9.0,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITI1,labour force,2024,9.6526,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITI1,inactive 15+,2024,8.2357,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITI1,Y_GE15,2025,46.029,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI1,inactive 15+,2025,10.8643,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI1,inactive 15+,2025,5.0007,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI1,inactive 15+,2025,0.8532,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITI2,Y_GE15,2015,48.0595,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI2,inactive 15+,2015,11.0477,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI2,inactive 15+,2015,5.3095,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI2,inactive 15+,2015,0.8547,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITI2,Y_GE15,2019,48.3663,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI2,inactive 15+,2019,11.0007,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI2,inactive 15+,2019,5.3206,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI2,inactive 15+,2019,0.8547,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITI2,Y_GE15,2024,47.8435,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI2,inactive 15+,2024,10.926,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI2,inactive 15+,2024,5.2274,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI2,inactive 15+,2024,0.8547,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITI2,survey population,2024,9.03,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITI2,labour force,2024,9.7046,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITI2,inactive 15+,2024,8.2946,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITI2,Y_GE15,2025,47.339,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI2,inactive 15+,2025,10.8794,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI2,inactive 15+,2025,5.1502,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI2,inactive 15+,2025,0.8547,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITI3,Y_GE15,2015,48.108,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI3,inactive 15+,2015,11.1472,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI3,inactive 15+,2015,5.3627,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI3,inactive 15+,2015,0.8634,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITI3,Y_GE15,2019,47.4841,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI3,inactive 15+,2019,11.0512,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI3,inactive 15+,2019,5.2476,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI3,inactive 15+,2019,0.8634,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITI3,Y_GE15,2024,47.9005,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI3,inactive 15+,2024,11.0145,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI3,inactive 15+,2024,5.276,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI3,inactive 15+,2024,0.8634,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITI3,survey population,2024,8.33,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITI3,labour force,2024,8.9133,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITI3,inactive 15+,2024,7.6955,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITI3,Y_GE15,2025,47.4285,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI3,inactive 15+,2025,11.0226,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI3,inactive 15+,2025,5.2279,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI3,inactive 15+,2025,0.8634,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITI4,Y_GE15,2015,48.0106,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI4,inactive 15+,2015,11.5524,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI4,inactive 15+,2015,5.5464,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI4,inactive 15+,2015,0.8398,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITI4,Y_GE15,2019,47.7391,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI4,inactive 15+,2019,11.4297,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI4,inactive 15+,2019,5.4564,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI4,inactive 15+,2019,0.8398,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,ITI4,Y_GE15,2024,48.1338,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI4,inactive 15+,2024,11.3385,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI4,inactive 15+,2024,5.4577,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI4,inactive 15+,2024,0.8398,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,ITI4,survey population,2024,6.87,percent,ISTAT annual survey (AVQ) 2023-25 (repo volunteering_by_region.csv),FROM REPO (not re-verified here)
+p_labour_force_implied_B,IT,ITI4,labour force,2024,7.4442,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,ITI4,inactive 15+,2024,6.2513,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,ITI4,Y_GE15,2025,48.3449,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,ITI4,inactive 15+,2025,11.3672,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,ITI4,inactive 15+,2025,5.4955,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,ITI4,inactive 15+,2025,0.8398,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,national,Y_GE15,2015,51.0326,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,national,inactive 15+,2015,11.5275,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,national,inactive 15+,2015,5.8828,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,national,inactive 15+,2015,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+P_everyone,IT,national,survey population,2015,12.0,percent,"ilc_scp19 2015, ages 16+",VERIFIED
+p_labour_force_implied_A,IT,national,labour force,2015,12.4925,percent,"(P - s p_I) / (1 - s), method A",DERIVED
+p_labour_force_implied_B,IT,national,labour force,2015,13.0657,percent,"P / (1 - s + s rho), method B",DERIVED
+p_inactive_implied_B,IT,national,inactive 15+,2015,10.9775,percent,"rho x p_LF, method B",DERIVED
+inactive_share,IT,national,Y_GE15,2019,50.1815,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,national,inactive 15+,2019,11.4072,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,national,inactive 15+,2019,5.7243,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,national,inactive 15+,2019,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,national,Y_GE15,2024,50.1615,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,national,inactive 15+,2024,11.3154,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,national,inactive 15+,2024,5.676,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,national,inactive 15+,2024,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED
+inactive_share,IT,national,Y_GE15,2025,50.0944,percent of population aged 15+,"LFS (lfst_r_lfsd2pwc, lfsa_pgauws)",DERIVED
+p_inactive_age_proxy,IT,national,inactive 15+,2025,11.3081,percent,LFS age mix of the inactive x national ilc_scp19 2015 rates by age (method A),DERIVED
+inactive_contribution_age_proxy,IT,national,inactive 15+,2025,5.6647,percentage points of P,s x p_I (method A),DERIVED
+rho_inactive_to_labour_force,IT,national,inactive 15+,2025,0.8402,ratio,national status ratios x Census 2021 mix of the inactive (method B),DERIVED

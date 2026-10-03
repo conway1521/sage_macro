@@ -35,7 +35,7 @@ consumption.
 function egm_constrained(p::SAGEParams, cash0::Float64, w::Float64, tfl::Float64, d::Int; efix::Float64 = NaN)
     κ = 1.0 + p.commute                       # time per unit of work (commuting)
     pc = p.pc                                 # price of consumption (a consumption tax)
-    tmax = (1.0 - tfl - QBAR * d) / κ
+    tmax = (1.0 - tfl - p.qbar * d) / κ
     tmax < 0 && return (NaN, NaN)
     if !isnan(efix) && w > 0                  # effort set by the job: only the budget is left
         efix > tmax && return (NaN, NaN)
@@ -47,7 +47,7 @@ function egm_constrained(p::SAGEParams, cash0::Float64, w::Float64, tfl::Float64
     end
     e_lo = cash0 > 0 ? 0.0 : (1e-12 - cash0) / w
     e_lo > tmax && return (NaN, NaN)
-    g(e) = p.ϕ * κ * (tfl + κ * e + QBAR * d)^p.ψ - (w / pc) * ((cash0 + w * e) / pc)^(-p.γ)
+    g(e) = p.ϕ * κ * (tfl + κ * e + p.qbar * d)^p.ψ - (w / pc) * ((cash0 + w * e) / pc)^(-p.γ)
     g(e_lo) >= 0 && return ((cash0 + w * e_lo) / pc, e_lo)
     g(tmax) <= 0 && return ((cash0 + w * tmax) / pc, tmax)
     lo, hi = e_lo, tmax
@@ -73,7 +73,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
                      con_c, con_e, aend, cend, eend, Ds, Dps)
     na = length(a)
     κ = 1.0 + p.commute
-    tmax = (1.0 - tfl - QBAR * d) / κ
+    tmax = (1.0 - tfl - p.qbar * d) / κ
     efix = (isempty(p.effort_set) || w <= 0) ? NaN : p.effort_set[s]      # effort set by the job, if any
     if tmax < 0 || (!isnan(efix) && efix > tmax)
         @inbounds for i in 1:na
@@ -93,7 +93,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
             e = efix
         elseif w > 0
             T = (w * c^(-p.γ) / (p.ϕ * κ * p.pc))^(1 / p.ψ)
-            e = clamp((T - tfl - QBAR * d) / κ, 0.0, tmax)
+            e = clamp((T - tfl - p.qbar * d) / κ, 0.0, tmax)
         end
         aend[k] = (p.pc * c + a[k] - w * e - other) / p.R
         cend[k] = c; eend[k] = e
@@ -105,7 +105,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
     @inbounds for i in 1:na
         cc = con_c[i, s]; ec = con_e[i, s]
         cd[i, s] = cc; ed[i, s] = ec; apd[i, s] = a[1]
-        vd[i, s] = isnan(cc) ? -Inf : egm_flow(p, cc, tfl + κ * ec + QBAR * d) + belong * d - Ds[1] + p.β * EVs[1]
+        vd[i, s] = isnan(cc) ? -Inf : egm_flow(p, cc, tfl + κ * ec + p.qbar * d) + belong * d - Ds[1] + p.β * EVs[1]
     end
     if monotone
         j = 1
@@ -124,7 +124,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
             # constrained candidate there made the iteration cycle between two
             # approximations of the same point (2026-09-28).
             if c > 0
-                vd[i, s] = egm_flow(p, c, tfl + κ * e + QBAR * d) + belong * d - dread_at(p, s, max(ap, a[1])) +
+                vd[i, s] = egm_flow(p, c, tfl + κ * e + p.qbar * d) + belong * d - dread_at(p, s, max(ap, a[1])) +
                            p.β * SAGEBewley.interp_lin(a, EVs, ap)
                 cd[i, s] = c; ed[i, s] = e; apd[i, s] = max(ap, a[1])
             end
@@ -144,7 +144,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
                 e = eend[k] + t * (eend[k+1] - eend[k])
                 ap = a[k] + t * (a[k+1] - a[k])
                 (c <= 0 || ap < a[1]) && continue
-                v = egm_flow(p, c, tfl + κ * e + QBAR * d) + belong * d - dread_at(p, s, ap) +
+                v = egm_flow(p, c, tfl + κ * e + p.qbar * d) + belong * d - dread_at(p, s, ap) +
                     p.β * SAGEBewley.interp_lin(a, EVs, ap)
                 if v > vd[i, s]
                     vd[i, s] = v; cd[i, s] = c; ed[i, s] = e; apd[i, s] = ap
@@ -160,7 +160,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
             c = cend[km] + t * (cend[km+1] - cend[km]); e = clamp(eend[km] + t * (eend[km+1] - eend[km]), 0.0, tmax)
             ap = min(a[km] + t * (a[km+1] - a[km]), a[end])
             if c > 0
-                v = egm_flow(p, c, tfl + κ * e + QBAR * d) + belong * d - dread_at(p, s, ap) +
+                v = egm_flow(p, c, tfl + κ * e + p.qbar * d) + belong * d - dread_at(p, s, ap) +
                     p.β * SAGEBewley.interp_lin(a, EVs, ap)
                 v > vd[i, s] && (vd[i, s] = v; cd[i, s] = c; ed[i, s] = e; apd[i, s] = ap)
             end
@@ -182,7 +182,7 @@ function apply_floor!(cd, ed, apd, vd, fl, p::SAGEParams, a, EVs, s::Int, d::Int
     @inbounds for i in 1:na; fl[i, s] = false; end
     e = w > 0 ? p.effort_set[s] : 0.0
     κ = 1.0 + p.commute
-    T = tfl + κ * e + QBAR * d
+    T = tfl + κ * e + p.qbar * d
     T > 1.0 && return
     X = p.cfloor                                  # resources guaranteed
     af = (X - w * e - other) / p.R                # assets below which the transfer is paid
@@ -219,7 +219,7 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
     oth = [(-p.lumptax + transfer_at(p, s), -p.lumptax + net_participation(p, p.α[s], z_vals[s]) + transfer_at(p, s))
            for s in 1:nz]
     tfl = [floor_at(p, s) for s in 1:nz]
-    bel = [p.social_strength * p.Λ * p.B[s] * Q_agg * QBAR * belong_at(p, s) for s in 1:nz]
+    bel = [p.social_strength * p.Λ * p.B[s] * Q_agg * p.qbar * belong_at(p, s) for s in 1:nz]
     p.cfloor > 0 && isempty(p.effort_set) && any(>(0), wv) &&
         error("the means-tested floor needs effort set by the job (effort_mode = :job)")
     fl = (falses(na, nz), falses(na, nz))        # grid points on the floor, by branch
@@ -320,11 +320,11 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
         partbase += w_ * p1 * p.α[i_z] * z_vals[i_z]
     end
     if full
-        return (Q = QBAR * part, rate = part, meaninc = meaninc, partbase = partbase,
+        return (Q = p.qbar * part, rate = part, meaninc = meaninc, partbase = partbase,
                 a = a, lambda = λ, P1 = P1, e_d = e_d, a_d = a_d, V = V, Va = Va,
                 z_vals = z_vals, iters = iters, theta = theta, c_d = cd, floor_d = fl)
     end
-    return QBAR * part, part, meaninc, partbase
+    return p.qbar * part, part, meaninc, partbase
 end
 
 """
@@ -387,8 +387,8 @@ function solve_job_effort(p::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01, 
             m > 0 || continue
             mu /= m; pb /= m
             target = (wv[s] / p.pc) * mu
-            h(x) = p.ϕ * κ * ((1 - pb) * (tfl[s] + κ * x)^p.ψ + pb * (tfl[s] + κ * x + QBAR)^p.ψ) - target
-            hi = (1.0 - tfl[s] - QBAR) / κ; lo = 0.0
+            h(x) = p.ϕ * κ * ((1 - pb) * (tfl[s] + κ * x)^p.ψ + pb * (tfl[s] + κ * x + p.qbar)^p.ψ) - target
+            hi = (1.0 - tfl[s] - p.qbar) / κ; lo = 0.0
             if h(lo) >= 0
                 out[s] = lo
             elseif h(hi) <= 0
@@ -418,7 +418,7 @@ function solve_job_effort(p::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01, 
                 sl = (F[s] - Fprev[s]) / (e[s] - eprev[s])
                 sl < -1e-3 && (step = clamp(-F[s] / sl, -0.2, 0.2))
             end
-            enew[s] = clamp(e[s] + step, 0.0, (1.0 - tfl[s] - QBAR) / κ)
+            enew[s] = clamp(e[s] + step, 0.0, (1.0 - tfl[s] - p.qbar) / κ)
         end
         eprev = e; Fprev = F; e = enew; w0 = sol
     end

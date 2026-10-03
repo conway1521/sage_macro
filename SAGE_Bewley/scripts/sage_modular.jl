@@ -209,6 +209,9 @@ Base.@kwdef struct SAGEConfig
     # the means-tested floor on resources (SAGEParams.cfloor), in the model's income units;
     # zero is no floor. Needs effort_mode = :job. Its cost is in the lump-sum tax (floor_tax_of).
     cfloor::Float64 = 0.0
+    # the share of time participating takes (SAGEParams.qbar). 0.10 was assumed until version 3;
+    # the time-use surveys give about 0.04 (data/timeuse/time_and_inactivity.md), 0.02 to 0.07.
+    qbar::Float64 = 0.10
     country::String = ""
     illiquid::Bool = false
     illiquid_premium::Float64 = 0.0
@@ -324,6 +327,7 @@ function params_of(c::SAGEConfig, cell)
     c.psi == 2.0 || (ps = [update(p; ψ = c.psi) for p in ps])
     c.effort_mode === :free || (c.effort_mode === :job ? (ps = [update(p; job_effort = true) for p in ps]) : error("effort_mode is :free or :job"))
     c.cfloor == 0 || (ps = [update(p; cfloor = c.cfloor) for p in ps])
+    c.qbar == 0.10 || (ps = [update(p; qbar = c.qbar) for p in ps])
     if c.illiquid
         c.solver === :egm || error("the illiquid asset needs solver = :egm")
         ps = [update(p; illiquid = true, Rk = p.R + c.illiquid_premium, chi0 = c.chi0, death = c.death,
@@ -949,6 +953,7 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
     if v3
         d[:effort_mode] = :job
         d[:rr] = num("rr_household"); d[:rr_public] = num("rr_public")
+        d[:qbar] = 0.04                       # measured (data/timeuse), not the 0.10 assumed before
         cal = joinpath(@__DIR__, "calibration_v3_$(code)_$(config)" * (illq ? "_I" : "") * ".txt")
     end
     marker = replace(cal, r"\.txt$" => ".not_calibrated.txt")
@@ -1186,7 +1191,7 @@ function time_propensities(c::SAGEConfig; h = 0.01, thresholds = nothing)
     cs = cells_of(c)
     κ = 1 + sum(cs[g].share * cs[g].τ for g in 1:2)
     work = κ * (rP.mean_effort_employed - rB.mean_effort_employed) / h
-    part = QBAR * (rP.rate_E - rB.rate_E) / h
+    part = c.qbar * (rP.rate_E - rB.rate_E) / h
     (work_employed = work, participation = part, participation_rate_per_h = (rP.rate_E - rB.rate_E) / h,
      leisure_employed = 1 - work - part, welfare = welfare_ce(rB, rP))
 end

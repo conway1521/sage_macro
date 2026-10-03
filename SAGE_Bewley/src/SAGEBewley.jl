@@ -237,6 +237,8 @@ Base.@kwdef struct SAGEParams
     # tested on income and on assets. Zero leaves every solve unchanged. With
     # effort set by the job (the transfer would otherwise tax work at 100%).
     cfloor::Float64 = 0.0
+    # The share of time that participating takes (the lump the scripts called QBAR).
+    qbar::Float64 = 0.10
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."

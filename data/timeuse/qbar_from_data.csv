@@ -1,0 +1,220 @@
+indicator,country,place,group,year,value,unit,source,status
+committed_time_employed_FT,FR,national,EMP_FT,2010,450,minutes per day,"Eurostat tus_00selfstat (HETUS, ages 20-74): AC1A+AC3+AC41+AC42",DERIVED
+committed_time_employed_PT,FR,national,EMP_PT,2010,434,minutes per day,"Eurostat tus_00selfstat (HETUS, ages 20-74): AC1A+AC3+AC41+AC42",DERIVED
+part_time_share,FR,national,employed 15-64,2010,0.176,share,Eurostat lfsa_eppga,VERIFIED
+committed_time_employed,FR,national,"employed, FT and PT weighted",2010,447.184,minutes per day,FT and PT weighted by lfsa_eppga,DERIVED
+work_share_replicated,FR,national,"employed, FT and PT weighted",2010,0.64323,share of committed time,replicates build_country_table.py work_share,DERIVED
+time_all_employed_A_AC41,FR,national,"employed, FT and PT weighted",2010,1.25546,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_A_AC41,FR,national,"employed, FT and PT weighted",2010,5.31976,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_A_AC41,FR,national,"employed, FT and PT weighted",2010,0.01189,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_A_AC41,FR,national,"employed, FT and PT weighted",2010,0.00948,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_A_AC41,FR,national,POP 20-74,2010,1.89,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_A_AC41,FR,national,POP 20-74 over employed committed time,2010,0.01742,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+time_all_employed_B_AC41+AC43,FR,national,"employed, FT and PT weighted",2010,4.84736,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_B_AC41+AC43,FR,national,"employed, FT and PT weighted",2010,20.53966,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_B_AC41+AC43,FR,national,"employed, FT and PT weighted",2010,0.04597,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_B_AC41+AC43,FR,national,"employed, FT and PT weighted",2010,0.03957,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_B_AC41+AC43,FR,national,POP 20-74,2010,7.775,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_B_AC41+AC43,FR,national,POP 20-74 over employed committed time,2010,0.07167,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+time_all_employed_C_AC41+AC42+AC43,FR,national,"employed, FT and PT weighted",2010,7.20106,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_C_AC41+AC42+AC43,FR,national,"employed, FT and PT weighted",2010,30.51295,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_C_AC41+AC42+AC43,FR,national,"employed, FT and PT weighted",2010,0.06836,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_C_AC41+AC42+AC43,FR,national,"employed, FT and PT weighted",2010,0.06186,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_C_AC41+AC42+AC43,FR,national,POP 20-74,2010,11.879,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_C_AC41+AC42+AC43,FR,national,POP 20-74 over employed committed time,2010,0.1095,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+qbar_C_union_disjoint,FR,national,"employed, FT and PT weighted",2010,0.03376,share of committed time,"C time / (AC41A + AC42A prevalence, Y25-64): participants = formal or informal volunteers, no overlap (lower bound)",DERIVED
+AC41_days_per_year_per_annual_participant,FR,national,EMP_FT,2010,23.19915,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,FR,national,EMP_FT,2010,5.40254,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,FR,national,EMP_PT,2010,18.55932,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,FR,national,EMP_PT,2010,4.9322,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,FR,national,UNE,2010,20.10593,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,FR,national,UNE,2010,7.16102,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,FR,national,RET,2010,51.15473,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,FR,national,RET,2010,17.51874,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,FR,national,HOME,2010,24.74576,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,FR,national,HOME,2010,8.81356,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,FR,national,EDUC,2010,17.01271,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,FR,national,EDUC,2010,1.53814,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,FR,national,POP,2010,27.08192,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,FR,national,POP,2010,7.79069,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+committed_time_employed_FT,DE,national,EMP_FT,2010,423,minutes per day,"Eurostat tus_00selfstat (HETUS, ages 20-74): AC1A+AC3+AC41+AC42",DERIVED
+committed_time_employed_PT,DE,national,EMP_PT,2010,407,minutes per day,"Eurostat tus_00selfstat (HETUS, ages 20-74): AC1A+AC3+AC41+AC42",DERIVED
+part_time_share,DE,national,employed 15-64,2013,0.267,share,Eurostat lfsa_eppga,VERIFIED
+committed_time_employed,DE,national,"employed, FT and PT weighted",2010,418.728,minutes per day,FT and PT weighted by lfsa_eppga,DERIVED
+work_share_replicated,DE,national,"employed, FT and PT weighted",2010,0.60867,share of committed time,replicates build_country_table.py work_share,DERIVED
+time_all_employed_A_AC41,DE,national,"employed, FT and PT weighted",2010,5.42087,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_A_AC41,DE,national,"employed, FT and PT weighted",2010,19.49954,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_A_AC41,DE,national,"employed, FT and PT weighted",2010,0.0466,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_A_AC41,DE,national,"employed, FT and PT weighted",2010,0.04525,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_A_AC41,DE,national,POP 20-74,2010,7.02,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_A_AC41,DE,national,POP 20-74 over employed committed time,2010,0.0587,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+time_all_employed_B_AC41+AC43,DE,national,"employed, FT and PT weighted",2010,8.01663,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_B_AC41+AC43,DE,national,"employed, FT and PT weighted",2010,28.83681,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_B_AC41+AC43,DE,national,"employed, FT and PT weighted",2010,0.06902,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_B_AC41+AC43,DE,national,"employed, FT and PT weighted",2010,0.06702,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_B_AC41+AC43,DE,national,POP 20-74,2010,10.177,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_B_AC41+AC43,DE,national,POP 20-74 over employed committed time,2010,0.0851,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+time_all_employed_C_AC41+AC42+AC43,DE,national,"employed, FT and PT weighted",2010,13.48189,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_C_AC41+AC42+AC43,DE,national,"employed, FT and PT weighted",2010,48.496,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_C_AC41+AC42+AC43,DE,national,"employed, FT and PT weighted",2010,0.11608,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_C_AC41+AC42+AC43,DE,national,"employed, FT and PT weighted",2010,0.11226,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_C_AC41+AC42+AC43,DE,national,POP 20-74,2010,17.967,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_C_AC41+AC42+AC43,DE,national,POP 20-74 over employed committed time,2010,0.15023,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+qbar_C_union_disjoint,DE,national,"employed, FT and PT weighted",2010,0.08385,share of committed time,"C time / (AC41A + AC42A prevalence, Y25-64): participants = formal or informal volunteers, no overlap (lower bound)",DERIVED
+AC41_days_per_year_per_annual_participant,DE,national,EMP_FT,2010,47.26619,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,DE,national,EMP_FT,2010,19.29496,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,DE,national,EMP_PT,2010,51.20504,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,DE,national,EMP_PT,2010,20.06115,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,DE,national,UNE,2010,49.89209,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,DE,national,UNE,2010,28.97842,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,DE,national,RET,2010,90.73509,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,DE,national,RET,2010,42.26018,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,DE,national,HOME,2010,94.53237,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,DE,national,HOME,2010,38.33094,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,DE,national,EDUC,2010,39.38849,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,DE,national,EDUC,2010,15.43165,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,DE,national,POP,2010,57.50816,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,DE,national,POP,2010,24.57883,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+committed_time_employed_FT,IT,national,EMP_FT,2010,488,minutes per day,"Eurostat tus_00selfstat (HETUS, ages 20-74): AC1A+AC3+AC41+AC42",DERIVED
+committed_time_employed_PT,IT,national,EMP_PT,2010,468,minutes per day,"Eurostat tus_00selfstat (HETUS, ages 20-74): AC1A+AC3+AC41+AC42",DERIVED
+part_time_share,IT,national,employed 15-64,2010,0.148,share,Eurostat lfsa_eppga,VERIFIED
+committed_time_employed,IT,national,"employed, FT and PT weighted",2010,485.04,minutes per day,FT and PT weighted by lfsa_eppga,DERIVED
+work_share_replicated,IT,national,"employed, FT and PT weighted",2010,0.72522,share of committed time,replicates build_country_table.py work_share,DERIVED
+time_all_employed_A_AC41,IT,national,"employed, FT and PT weighted",2010,1.3154,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_A_AC41,IT,national,"employed, FT and PT weighted",2010,10.43971,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_A_AC41,IT,national,"employed, FT and PT weighted",2010,0.02164,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_A_AC41,IT,national,"employed, FT and PT weighted",2010,0.01878,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_A_AC41,IT,national,POP 20-74,2010,2.106,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_A_AC41,IT,national,POP 20-74 over employed committed time,2010,0.03398,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+time_all_employed_B_AC41+AC43,IT,national,"employed, FT and PT weighted",2010,4.60725,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_B_AC41+AC43,IT,national,"employed, FT and PT weighted",2010,36.56546,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_B_AC41+AC43,IT,national,"employed, FT and PT weighted",2010,0.07561,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_B_AC41+AC43,IT,national,"employed, FT and PT weighted",2010,0.07029,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_B_AC41+AC43,IT,national,POP 20-74,2010,7.371,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_B_AC41+AC43,IT,national,POP 20-74 over employed committed time,2010,0.11893,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+time_all_employed_C_AC41+AC42+AC43,IT,national,"employed, FT and PT weighted",2010,7.82579,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_C_AC41+AC42+AC43,IT,national,"employed, FT and PT weighted",2010,62.10946,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_C_AC41+AC42+AC43,IT,national,"employed, FT and PT weighted",2010,0.12853,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_C_AC41+AC42+AC43,IT,national,"employed, FT and PT weighted",2010,0.12665,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_C_AC41+AC42+AC43,IT,national,POP 20-74,2010,15.001,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_C_AC41+AC42+AC43,IT,national,POP 20-74 over employed committed time,2010,0.24205,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+qbar_C_union_disjoint,IT,national,"employed, FT and PT weighted",2010,0.06532,share of committed time,"C time / (AC41A + AC42A prevalence, Y25-64): participants = formal or informal volunteers, no overlap (lower bound)",DERIVED
+AC41_days_per_year_per_annual_participant,IT,national,EMP_FT,2010,20.27778,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,IT,national,EMP_FT,2010,8.94444,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,IT,national,EMP_PT,2010,34.7619,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,IT,national,EMP_PT,2010,19.04762,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,IT,national,UNE,2010,46.34921,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,IT,national,UNE,2010,21.96825,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,IT,national,RET,2010,74.27216,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,IT,national,RET,2010,35.40646,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,IT,national,HOME,2010,46.34921,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,IT,national,HOME,2010,17.26984,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,IT,national,EDUC,2010,34.7619,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,IT,national,EDUC,2010,21.2381,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,IT,national,POP,2010,37.13608,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,IT,national,POP,2010,16.48232,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+committed_time_employed_FT,FR,national,EMP_FT,2000,475,minutes per day,"Eurostat tus_00selfstat (HETUS, ages 20-74): AC1A+AC3+AC41+AC42",DERIVED
+committed_time_employed_PT,FR,national,EMP_PT,2000,501,minutes per day,"Eurostat tus_00selfstat (HETUS, ages 20-74): AC1A+AC3+AC41+AC42",DERIVED
+part_time_share,FR,national,employed 15-64,1999,0.172,share,Eurostat lfsa_eppga,VERIFIED
+committed_time_employed,FR,national,"employed, FT and PT weighted",2000,479.472,minutes per day,FT and PT weighted by lfsa_eppga,DERIVED
+work_share_replicated,FR,national,"employed, FT and PT weighted",2000,0.65484,share of committed time,replicates build_country_table.py work_share,DERIVED
+time_all_employed_A_AC41,FR,national,"employed, FT and PT weighted",2000,0.92676,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_A_AC41,FR,national,"employed, FT and PT weighted",2000,3.92695,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_A_AC41,FR,national,"employed, FT and PT weighted",2000,0.00817,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_A_AC41,FR,national,"employed, FT and PT weighted",2000,0.00884,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_A_AC41,FR,national,POP 20-74,2000,1.212,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_A_AC41,FR,national,POP 20-74 over employed committed time,2000,0.01042,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+time_all_employed_B_AC41+AC43,FR,national,"employed, FT and PT weighted",2000,5.41286,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_B_AC41+AC43,FR,national,"employed, FT and PT weighted",2000,22.93583,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_B_AC41+AC43,FR,national,"employed, FT and PT weighted",2000,0.04782,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_B_AC41+AC43,FR,national,"employed, FT and PT weighted",2000,0.04571,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_B_AC41+AC43,FR,national,POP 20-74,2000,7.212,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_B_AC41+AC43,FR,national,POP 20-74 over employed committed time,2000,0.062,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+time_all_employed_C_AC41+AC42+AC43,FR,national,"employed, FT and PT weighted",2000,11.67959,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_C_AC41+AC42+AC43,FR,national,"employed, FT and PT weighted",2000,49.4898,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_C_AC41+AC42+AC43,FR,national,"employed, FT and PT weighted",2000,0.10326,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_C_AC41+AC42+AC43,FR,national,"employed, FT and PT weighted",2000,0.09873,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_C_AC41+AC42+AC43,FR,national,POP 20-74,2000,16.613,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_C_AC41+AC42+AC43,FR,national,POP 20-74 over employed committed time,2000,0.14282,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+qbar_C_union_disjoint,FR,national,"employed, FT and PT weighted",2000,0.05107,share of committed time,"C time / (AC41A + AC42A prevalence, Y25-64): participants = formal or informal volunteers, no overlap (lower bound)",DERIVED
+AC41_days_per_year_per_annual_participant,FR,national,EMP_FT,2000,15.4661,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,FR,national,EMP_FT,2000,3.68644,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,FR,national,EMP_PT,2000,18.55932,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,FR,national,EMP_PT,2000,5.08475,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,FR,national,UNE,2000,15.4661,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_days_per_year_per_annual_participant,FR,national,RET,2000,30.09102,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,FR,national,RET,2000,8.57388,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,FR,national,HOME,2000,23.19915,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_days_per_year_per_annual_participant,FR,national,EDUC,2000,0.0,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_days_per_year_per_annual_participant,FR,national,POP,2000,18.05461,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,FR,national,POP,2000,4.99593,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+committed_time_employed_FT,DE,national,EMP_FT,2000,441,minutes per day,"Eurostat tus_00selfstat (HETUS, ages 20-74): AC1A+AC3+AC41+AC42",DERIVED
+committed_time_employed_PT,DE,national,EMP_PT,2000,385,minutes per day,"Eurostat tus_00selfstat (HETUS, ages 20-74): AC1A+AC3+AC41+AC42",DERIVED
+part_time_share,DE,national,employed 15-64,2002,0.203,share,Eurostat lfsa_eppga,VERIFIED
+committed_time_employed,DE,national,"employed, FT and PT weighted",2000,429.632,minutes per day,FT and PT weighted by lfsa_eppga,DERIVED
+work_share_replicated,DE,national,"employed, FT and PT weighted",2000,0.60575,share of committed time,replicates build_country_table.py work_share,DERIVED
+time_all_employed_A_AC41,DE,national,"employed, FT and PT weighted",2000,6.82979,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_A_AC41,DE,national,"employed, FT and PT weighted",2000,24.56758,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_A_AC41,DE,national,"employed, FT and PT weighted",2000,0.05778,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_A_AC41,DE,national,"employed, FT and PT weighted",2000,0.05533,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_A_AC41,DE,national,POP 20-74,2000,8.064,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_A_AC41,DE,national,POP 20-74 over employed committed time,2000,0.06572,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+time_all_employed_B_AC41+AC43,DE,national,"employed, FT and PT weighted",2000,10.13278,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_B_AC41+AC43,DE,national,"employed, FT and PT weighted",2000,36.44886,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_B_AC41+AC43,DE,national,"employed, FT and PT weighted",2000,0.08581,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_B_AC41+AC43,DE,national,"employed, FT and PT weighted",2000,0.08385,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_B_AC41+AC43,DE,national,POP 20-74,2000,12.064,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_B_AC41+AC43,DE,national,POP 20-74 over employed committed time,2000,0.09831,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+time_all_employed_C_AC41+AC42+AC43,DE,national,"employed, FT and PT weighted",2000,17.41701,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_C_AC41+AC42+AC43,DE,national,"employed, FT and PT weighted",2000,62.65112,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_C_AC41+AC42+AC43,DE,national,"employed, FT and PT weighted",2000,0.14735,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_C_AC41+AC42+AC43,DE,national,"employed, FT and PT weighted",2000,0.14586,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_C_AC41+AC42+AC43,DE,national,POP 20-74,2000,20.851,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_C_AC41+AC42+AC43,DE,national,POP 20-74 over employed committed time,2000,0.16992,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+qbar_C_union_disjoint,DE,national,"employed, FT and PT weighted",2000,0.10557,share of committed time,"C time / (AC41A + AC42A prevalence, Y25-64): participants = formal or informal volunteers, no overlap (lower bound)",DERIVED
+AC41_days_per_year_per_annual_participant,DE,national,EMP_FT,2000,63.02158,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,DE,national,EMP_FT,2000,22.96403,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,DE,national,EMP_PT,2000,78.77698,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,DE,national,EMP_PT,2000,30.86331,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,DE,national,UNE,2000,65.64748,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,DE,national,UNE,2000,27.33813,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,DE,national,RET,2000,98.40285,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,DE,national,RET,2000,40.97872,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,DE,national,EDUC,2000,32.82374,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_days_per_year_per_annual_participant,DE,national,POP,2000,71.56571,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,DE,national,POP,2000,28.23414,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+committed_time_employed_FT,IT,national,EMP_FT,2000,478,minutes per day,"Eurostat tus_00selfstat (HETUS, ages 20-74): AC1A+AC3+AC41+AC42",DERIVED
+committed_time_employed_PT,IT,national,EMP_PT,2000,464,minutes per day,"Eurostat tus_00selfstat (HETUS, ages 20-74): AC1A+AC3+AC41+AC42",DERIVED
+part_time_share,IT,national,employed 15-64,2003,0.085,share,Eurostat lfsa_eppga,VERIFIED
+committed_time_employed,IT,national,"employed, FT and PT weighted",2000,476.81,minutes per day,FT and PT weighted by lfsa_eppga,DERIVED
+work_share_replicated,IT,national,"employed, FT and PT weighted",2000,0.72668,share of committed time,replicates build_country_table.py work_share,DERIVED
+time_all_employed_A_AC41,IT,national,"employed, FT and PT weighted",2000,1.01546,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_A_AC41,IT,national,"employed, FT and PT weighted",2000,8.05921,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_A_AC41,IT,national,"employed, FT and PT weighted",2000,0.01695,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_A_AC41,IT,national,"employed, FT and PT weighted",2000,0.01806,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_A_AC41,IT,national,POP 20-74,2000,1.628,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_A_AC41,IT,national,POP 20-74 over employed committed time,2000,0.02672,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+time_all_employed_B_AC41+AC43,IT,national,"employed, FT and PT weighted",2000,4.53588,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_B_AC41+AC43,IT,national,"employed, FT and PT weighted",2000,35.99905,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_B_AC41+AC43,IT,national,"employed, FT and PT weighted",2000,0.07561,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_B_AC41+AC43,IT,national,"employed, FT and PT weighted",2000,0.07082,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_B_AC41+AC43,IT,national,POP 20-74,2000,7.725,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_B_AC41+AC43,IT,national,POP 20-74 over employed committed time,2000,0.1268,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+time_all_employed_C_AC41+AC42+AC43,IT,national,"employed, FT and PT weighted",2000,9.21696,"minutes per day, all employed","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+time_per_annual_participant_C_AC41+AC42+AC43,IT,national,"employed, FT and PT weighted",2000,73.15044,minutes per day per twelve-month participant,time of all employed / ilc_scp19 AC41A Y25-64 2015,DERIVED
+qbar_C_AC41+AC42+AC43,IT,national,"employed, FT and PT weighted",2000,0.15368,share of committed time,"time per annual participant / (AC1A+AC3+AC41+AC42), FT and PT weighted",DERIVED
+qbar_published_minutes_C_AC41+AC42+AC43,IT,national,"employed, FT and PT weighted",2000,0.14306,share of committed time,same with the published whole-minute TIME_SP (rounding check),DERIVED
+time_all_persons_C_AC41+AC42+AC43,IT,national,POP 20-74,2000,17.783,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME",DERIVED
+qbar_popbasis_C_AC41+AC42+AC43,IT,national,POP 20-74 over employed committed time,2000,0.29189,share of committed time,POP time / ilc_scp19 AC41A 20-74 (derived) / employed committed time,DERIVED
+qbar_C_union_disjoint,IT,national,"employed, FT and PT weighted",2000,0.07826,share of committed time,"C time / (AC41A + AC42A prevalence, Y25-64): participants = formal or informal volunteers, no overlap (lower bound)",DERIVED
+AC41_days_per_year_per_annual_participant,IT,national,EMP_FT,2000,17.38095,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,IT,national,EMP_FT,2000,7.33333,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,IT,national,EMP_PT,2000,37.65873,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_days_per_year_per_annual_participant,IT,national,UNE,2000,31.86508,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_days_per_year_per_annual_participant,IT,national,RET,2000,65.7023,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,IT,national,RET,2000,27.72097,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,IT,national,HOME,2000,20.27778,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,IT,national,HOME,2000,6.77778,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED
+AC41_days_per_year_per_annual_participant,IT,national,EDUC,2000,31.86508,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_days_per_year_per_annual_participant,IT,national,POP,2000,31.42284,days per year,365 x daily participation rate / twelve-month prevalence (Y25-64; Y20-74 for POP and RET),DERIVED
+AC41_time_per_annual_participant_by_status,IT,national,POP,2000,12.74132,minutes per day per twelve-month participant,status time / national prevalence (no prevalence by labour status exists): indicative only,DERIVED

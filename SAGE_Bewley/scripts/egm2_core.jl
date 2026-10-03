@@ -55,7 +55,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     oth = [(-p.lumptax + transfer_at(p, s), -p.lumptax + net_participation(p, p.α[s], z_vals[s]) + transfer_at(p, s))
            for s in 1:nz]
     tfl = [floor_at(p, s) for s in 1:nz]
-    bel = [p.social_strength * p.Λ * p.B[s] * Q_agg * QBAR * belong_at(p, s) for s in 1:nz]
+    bel = [p.social_strength * p.Λ * p.B[s] * Q_agg * p.qbar * belong_at(p, s) for s in 1:nz]
     D = zeros(na, nz); Dp = zeros(na, nz)
     if p.dread > 0 && !isempty(p.dread_q)
         for s in 1:nz, k in 1:na
@@ -236,8 +236,8 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
         meaninc += w_ * p.α[s] * z_vals[s] * es[i, m, s]
         partbase += w_ * P1s[i, m, s] * p.α[s] * z_vals[s]
     end
-    full || return QBAR * part, part, meaninc, partbase
-    (Q = QBAR * part, rate = part, meaninc = meaninc, partbase = partbase, a = a, k = kg,
+    full || return p.qbar * part, part, meaninc, partbase
+    (Q = p.qbar * part, rate = part, meaninc = meaninc, partbase = partbase, a = a, k = kg,
      lambda = λ, P1 = P1s, e = es, e_d = dist.e_d, cbar = dist.cbar, ybar = dist.ybar, post = dist.post,
      Pi = Π, Padj = Padj, V = V, Vb = Vb, z_vals = z_vals,
      iters = iters, stalled = stall, relax = relax, theta = theta, inner = (c = cin, e = ein, bp = bpin, P1 = P1in), qadj = qadj,
@@ -422,7 +422,7 @@ function two_asset_welfare_parts(p0::SAGEParams, sol)
     wv = [(1 + p.subsidy) * p.α[s] * z[s] * p.Z for s in 1:ns]
     oth = [(-p.lumptax + transfer_at(p, s), -p.lumptax + net_participation(p, p.α[s], z[s]) + transfer_at(p, s)) for s in 1:ns]
     tfl = [floor_at(p, s) for s in 1:ns]
-    bel = [p.social_strength * p.Λ * p.B[s] * QBAR * belong_at(p, s) for s in 1:ns]
+    bel = [p.social_strength * p.Λ * p.B[s] * p.qbar * belong_at(p, s) for s in 1:ns]
     idx(i, m, s) = i + (m - 1) * na + (s - 1) * na * nk
     n = na * nk * ns
     uc = zeros(n); ue = zeros(n); ub = zeros(n); ubu = zeros(n); ueu = zeros(n)      # the last two: reporting_core.jl
@@ -432,13 +432,13 @@ function two_asset_welfare_parts(p0::SAGEParams, sol)
         x = idx(i, m, s)
         each_branch_full(sol, i, m, s) do wt, d, bp, j, e, be
             c = max((p.R * be + wv[s] * e + oth[s][d+1] - bp) / p.pc, 1e-10)
-            T = tfl[s] + κ * e + QBAR * d
+            T = tfl[s] + κ * e + p.qbar * d
             uc[x] += wt * p.Γ * c^(1 - p.γ) / (1 - p.γ)
             ue[x] -= wt * p.Γ * p.ϕ * T^(1 + p.ψ) / (1 + p.ψ)
             ub[x] += wt * bel[s] * d
             if z[s] == 0 && d == 1
                 ubu[x] += wt * bel[s]
-                ueu[x] -= wt * p.Γ * p.ϕ * (T^(1 + p.ψ) - (T - QBAR)^(1 + p.ψ)) / (1 + p.ψ)
+                ueu[x] -= wt * p.Γ * p.ϕ * (T^(1 + p.ψ) - (T - p.qbar)^(1 + p.ψ)) / (1 + p.ψ)
             end
             sbar[i, m, s] += wt * (bp + p.R * (a[i] - be))     # R (b - be) is the net illiquid outlay
             lbar[i, m, s] += wt * wv[s] * e
@@ -505,7 +505,7 @@ function two_asset_cell_summary(p::SAGEParams, sol; thresholds = nothing)
         p1 = P1[i_a, m, i_z]; part[i_z] += w * p1
         α = p.α[i_z]; zz = z[i_z]
         cap = (p.R - 1) * a[i_a]
-        credit = p.partcredit * α * zz * p.Z * QBAR
+        credit = p.partcredit * α * zz * p.Z * p.qbar
         tr = transfer_at(p, i_z)
         employed = zz > 0
         for d in (0, 1)

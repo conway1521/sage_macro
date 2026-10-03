@@ -95,7 +95,7 @@ function cell_distributions(p::SAGEParams, sol)
         wcdf[i_a] += w
         α = p.α[i_z]; zz = z[i_z]
         cap = (p.R - 1) * a[i_a]
-        credit = p.partcredit * α * zz * p.Z * QBAR
+        credit = p.partcredit * α * zz * p.Z * p.qbar
         p1 = P1[i_a, i_z]
         for d in (0, 1)
             wd = d == 1 ? w * p1 : w * (1 - p1)

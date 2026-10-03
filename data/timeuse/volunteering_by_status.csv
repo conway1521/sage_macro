@@ -1,0 +1,398 @@
+indicator,country,place,group,year,value,unit,source,status
+formal_volunteering_12m,DE,national,Y16-24,2015,28.0,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,FR,national,Y16-24,2015,21.8,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,FR,national,Y16-24,2022,16.4,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,IT,national,Y16-24,2015,16.4,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,IT,national,Y16-24,2022,5.1,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,DE,national,Y25-64,2015,27.8,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,FR,national,Y25-64,2015,23.6,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,FR,national,Y25-64,2022,15.7,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,IT,national,Y25-64,2015,12.6,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,IT,national,Y25-64,2022,5.7,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,DE,national,Y65-74,2015,33.6,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,FR,national,Y65-74,2015,27.7,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,FR,national,Y65-74,2022,18.7,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,IT,national,Y65-74,2015,12.1,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,IT,national,Y65-74,2022,6.5,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,DE,national,Y_GE16,2015,28.6,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,FR,national,Y_GE16,2015,23.0,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,FR,national,Y_GE16,2022,15.6,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,IT,national,Y_GE16,2015,12.0,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,IT,national,Y_GE16,2022,5.3,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,DE,national,Y_GE65,2015,31.2,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,FR,national,Y_GE65,2015,22.5,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,FR,national,Y_GE65,2022,15.2,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,IT,national,Y_GE65,2015,8.9,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,IT,national,Y_GE65,2022,4.7,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,DE,national,Y_GE75,2015,28.9,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,FR,national,Y_GE75,2015,17.1,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,FR,national,Y_GE75,2022,11.3,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,IT,national,Y_GE75,2015,6.1,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_12m,IT,national,Y_GE75,2022,3.0,percent,"Eurostat ilc_scp19 (EU-SILC ad hoc module), AC41A",VERIFIED
+formal_volunteering_ratio_to_25_64,FR,national,Y16-24,2015,0.924,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,FR,national,Y65-74,2015,1.174,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,FR,national,Y_GE65,2015,0.953,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,FR,national,Y_GE75,2015,0.725,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,FR,national,Y16-24,2022,1.045,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,FR,national,Y65-74,2022,1.191,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,FR,national,Y_GE65,2022,0.968,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,FR,national,Y_GE75,2022,0.72,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,DE,national,Y16-24,2015,1.007,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,DE,national,Y65-74,2015,1.209,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,DE,national,Y_GE65,2015,1.122,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,DE,national,Y_GE75,2015,1.04,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,IT,national,Y16-24,2015,1.302,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,IT,national,Y65-74,2015,0.96,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,IT,national,Y_GE65,2015,0.706,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,IT,national,Y_GE75,2015,0.484,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,IT,national,Y16-24,2022,0.895,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,IT,national,Y65-74,2022,1.14,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,IT,national,Y_GE65,2022,0.825,ratio,ilc_scp19,DERIVED
+formal_volunteering_ratio_to_25_64,IT,national,Y_GE75,2022,0.526,ratio,ilc_scp19,DERIVED
+volunteering_in_associations_12m,IT,national,employed,2013,11.3,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,employed,2014,11.5,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,employed,2015,11.9,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,employed,2016,12.4,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,employed,2017,12.0,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,employed,2018,11.8,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,employed,2019,11.0,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,employed,2020,10.4,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,employed,2021,8.7,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,employed,2022,9.3,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,employed,2023,9.1,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,employed,2024,9.4,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,employed,2025,10.5,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,"unemployed, with work experience",2013,8.5,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,"unemployed, with work experience",2014,9.4,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,"unemployed, with work experience",2015,10.3,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,"unemployed, with work experience",2016,9.0,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,"unemployed, with work experience",2017,9.6,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,"unemployed, with work experience",2018,9.0,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,"unemployed, with work experience",2019,8.2,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,"unemployed, with work experience",2020,8.9,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,"unemployed, with work experience",2021,6.5,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,"unemployed, with work experience",2022,6.7,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,"unemployed, with work experience",2023,5.7,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,"unemployed, with work experience",2024,6.8,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,"unemployed, with work experience",2025,7.8,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,seeking first job,2013,6.9,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,seeking first job,2014,7.8,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,seeking first job,2015,8.7,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,seeking first job,2016,7.5,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,seeking first job,2017,8.4,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,seeking first job,2018,6.1,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,seeking first job,2019,7.8,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,seeking first job,2020,5.3,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,seeking first job,2021,4.2,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,seeking first job,2022,5.2,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,seeking first job,2023,4.9,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,seeking first job,2024,6.6,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,seeking first job,2025,4.7,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,homemaker,2013,5.8,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,homemaker,2014,6.4,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,homemaker,2015,7.2,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,homemaker,2016,6.6,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,homemaker,2017,6.2,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,homemaker,2018,8.2,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,homemaker,2019,7.1,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,homemaker,2020,5.9,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,homemaker,2021,4.6,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,homemaker,2022,5.0,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,homemaker,2023,4.7,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,homemaker,2024,4.8,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,homemaker,2025,5.4,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,student,2013,12.9,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,student,2014,13.6,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,student,2015,15.4,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,student,2016,15.2,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,student,2017,14.3,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,student,2018,13.0,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,student,2019,13.2,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,student,2020,13.2,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,student,2021,8.2,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,student,2022,10.3,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,student,2023,9.1,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,student,2024,10.2,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,student,2025,11.0,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,retired,2013,8.7,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,retired,2014,9.7,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,retired,2015,9.6,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,retired,2016,9.8,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,retired,2017,9.1,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,retired,2018,9.4,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,retired,2019,9.5,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,retired,2020,8.7,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,retired,2021,7.1,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,retired,2022,8.9,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,retired,2023,7.9,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,retired,2024,8.7,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,retired,2025,9.5,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,other condition,2013,5.2,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,other condition,2014,6.8,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,other condition,2015,7.1,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,other condition,2016,7.1,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,other condition,2017,9.9,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,other condition,2018,11.8,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,other condition,2019,3.2,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,other condition,2020,5.9,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,other condition,2021,5.5,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,other condition,2022,3.7,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,other condition,2023,4.6,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,other condition,2024,5.0,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,other condition,2025,5.9,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,total,2013,9.5,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,total,2014,10.2,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,total,2015,10.7,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,total,2016,10.7,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,total,2017,10.4,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,total,2018,10.5,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,total,2019,9.9,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,total,2020,9.3,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,total,2021,7.4,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,total,2022,8.3,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,total,2023,7.8,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,total,2024,8.4,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,total,2025,9.3,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",VERIFIED
+volunteering_in_associations_12m,IT,national,labour force (employed and unemployed),2013,10.64,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+volunteering_in_associations_12m,IT,national,outside the labour force,2013,8.31,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_inactive_to_labour_force,IT,national,outside the labour force / labour force,2013,0.781,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_unemployed_to_employed,IT,national,unemployed (both kinds) / employed,2013,0.719,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,homemaker and other condition,2013,5.7,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_to_employed,IT,national,homemaker,2013,0.513,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,student,2013,1.142,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,retired,2013,0.77,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,other condition,2013,0.46,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,labour force (employed and unemployed),2014,10.95,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+volunteering_in_associations_12m,IT,national,outside the labour force,2014,9.19,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_inactive_to_labour_force,IT,national,outside the labour force / labour force,2014,0.839,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_unemployed_to_employed,IT,national,unemployed (both kinds) / employed,2014,0.787,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,homemaker and other condition,2014,6.46,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_to_employed,IT,national,homemaker,2014,0.557,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,student,2014,1.183,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,retired,2014,0.843,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,other condition,2014,0.591,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,labour force (employed and unemployed),2015,11.46,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+volunteering_in_associations_12m,IT,national,outside the labour force,2015,9.73,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_inactive_to_labour_force,IT,national,outside the labour force / labour force,2015,0.849,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_unemployed_to_employed,IT,national,unemployed (both kinds) / employed,2015,0.837,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,homemaker and other condition,2015,7.18,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_to_employed,IT,national,homemaker,2015,0.605,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,student,2015,1.294,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,retired,2015,0.807,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,other condition,2015,0.597,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,labour force (employed and unemployed),2016,11.62,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+volunteering_in_associations_12m,IT,national,outside the labour force,2016,9.61,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_inactive_to_labour_force,IT,national,outside the labour force / labour force,2016,0.827,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_unemployed_to_employed,IT,national,unemployed (both kinds) / employed,2016,0.699,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,homemaker and other condition,2016,6.68,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_to_employed,IT,national,homemaker,2016,0.532,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,student,2016,1.226,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,retired,2016,0.79,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,other condition,2016,0.573,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,labour force (employed and unemployed),2017,11.43,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+volunteering_in_associations_12m,IT,national,outside the labour force,2017,9.21,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_inactive_to_labour_force,IT,national,outside the labour force / labour force,2017,0.805,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_unemployed_to_employed,IT,national,unemployed (both kinds) / employed,2017,0.778,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,homemaker and other condition,2017,6.85,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_to_employed,IT,national,homemaker,2017,0.517,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,student,2017,1.192,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,retired,2017,0.758,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,other condition,2017,0.825,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,labour force (employed and unemployed),2018,11.15,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+volunteering_in_associations_12m,IT,national,outside the labour force,2018,9.83,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_inactive_to_labour_force,IT,national,outside the labour force / labour force,2018,0.881,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_unemployed_to_employed,IT,national,unemployed (both kinds) / employed,2018,0.713,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,homemaker and other condition,2018,8.77,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_to_employed,IT,national,homemaker,2018,0.695,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,student,2018,1.102,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,retired,2018,0.797,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,other condition,2018,1.0,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,labour force (employed and unemployed),2019,10.48,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+volunteering_in_associations_12m,IT,national,outside the labour force,2019,9.15,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_inactive_to_labour_force,IT,national,outside the labour force / labour force,2019,0.874,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_unemployed_to_employed,IT,national,unemployed (both kinds) / employed,2019,0.737,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,homemaker and other condition,2019,6.66,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_to_employed,IT,national,homemaker,2019,0.645,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,student,2019,1.2,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,retired,2019,0.864,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,other condition,2019,0.291,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,labour force (employed and unemployed),2020,9.94,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+volunteering_in_associations_12m,IT,national,outside the labour force,2020,8.49,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_inactive_to_labour_force,IT,national,outside the labour force / labour force,2020,0.854,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_unemployed_to_employed,IT,national,unemployed (both kinds) / employed,2020,0.776,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,homemaker and other condition,2020,5.9,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_to_employed,IT,national,homemaker,2020,0.567,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,student,2020,1.269,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,retired,2020,0.837,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,other condition,2020,0.567,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,labour force (employed and unemployed),2021,8.16,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+volunteering_in_associations_12m,IT,national,outside the labour force,2021,6.48,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_inactive_to_labour_force,IT,national,outside the labour force / labour force,2021,0.794,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_unemployed_to_employed,IT,national,unemployed (both kinds) / employed,2021,0.686,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,homemaker and other condition,2021,4.71,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_to_employed,IT,national,homemaker,2021,0.529,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,student,2021,0.943,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,retired,2021,0.816,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,other condition,2021,0.632,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,labour force (employed and unemployed),2022,8.78,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+volunteering_in_associations_12m,IT,national,outside the labour force,2022,7.7,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_inactive_to_labour_force,IT,national,outside the labour force / labour force,2022,0.877,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_unemployed_to_employed,IT,national,unemployed (both kinds) / employed,2022,0.679,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,homemaker and other condition,2022,4.78,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_to_employed,IT,national,homemaker,2022,0.538,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,student,2022,1.108,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,retired,2022,0.957,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,other condition,2022,0.398,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,labour force (employed and unemployed),2023,8.47,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+volunteering_in_associations_12m,IT,national,outside the labour force,2023,7.03,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_inactive_to_labour_force,IT,national,outside the labour force / labour force,2023,0.829,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_unemployed_to_employed,IT,national,unemployed (both kinds) / employed,2023,0.605,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,homemaker and other condition,2023,4.69,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_to_employed,IT,national,homemaker,2023,0.516,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,student,2023,1.0,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,retired,2023,0.868,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,other condition,2023,0.505,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,labour force (employed and unemployed),2024,8.96,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+volunteering_in_associations_12m,IT,national,outside the labour force,2024,7.69,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_inactive_to_labour_force,IT,national,outside the labour force / labour force,2024,0.859,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_unemployed_to_employed,IT,national,unemployed (both kinds) / employed,2024,0.718,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,homemaker and other condition,2024,4.83,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_to_employed,IT,national,homemaker,2024,0.511,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,student,2024,1.085,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,retired,2024,0.926,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,other condition,2024,0.532,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,labour force (employed and unemployed),2025,9.95,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+volunteering_in_associations_12m,IT,national,outside the labour force,2025,8.42,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_inactive_to_labour_force,IT,national,outside the labour force / labour force,2025,0.846,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_unemployed_to_employed,IT,national,unemployed (both kinds) / employed,2025,0.677,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_in_associations_12m,IT,national,homemaker and other condition,2025,5.47,percent,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months): volunteers / persons, persons = THV / HSC",DERIVED
+ratio_to_employed,IT,national,homemaker,2025,0.514,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,student,2025,1.048,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,retired,2025,0.905,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+ratio_to_employed,IT,national,other condition,2025,0.562,ratio,"ISTAT Aspetti della vita quotidiana, SDMX 83_63_DF_DCCV_AVQ_PERSONE_131, DATA_TYPE 15_VOL_ASS (ages 15+, last 12 months)",DERIVED
+volunteering_12m_FWS,DE,national,total,2019,39.7,percent,"Simonson, Kelle, Kausmann and Tesch-Roemer (eds) 2021, Freiwilliges Engagement in Deutschland: Der Deutsche Freiwilligensurvey 2019, DZA Berlin, Abbildung 4-5, p. 75 (ages 14+, last 12 months, weighted, n = 27,705)","VERIFIED (document read, value transcribed)"
+volunteering_12m_FWS,DE,national,employed full-time,2019,43.5,percent,"Simonson, Kelle, Kausmann and Tesch-Roemer (eds) 2021, Freiwilliges Engagement in Deutschland: Der Deutsche Freiwilligensurvey 2019, DZA Berlin, Abbildung 4-5, p. 75 (ages 14+, last 12 months, weighted, n = 27,705)","VERIFIED (document read, value transcribed)"
+volunteering_12m_FWS,DE,national,employed part-time or marginal,2019,50.8,percent,"Simonson, Kelle, Kausmann and Tesch-Roemer (eds) 2021, Freiwilliges Engagement in Deutschland: Der Deutsche Freiwilligensurvey 2019, DZA Berlin, Abbildung 4-5, p. 75 (ages 14+, last 12 months, weighted, n = 27,705)","VERIFIED (document read, value transcribed)"
+volunteering_12m_FWS,DE,national,unemployed,2019,19.0,percent,"Simonson, Kelle, Kausmann and Tesch-Roemer (eds) 2021, Freiwilliges Engagement in Deutschland: Der Deutsche Freiwilligensurvey 2019, DZA Berlin, Abbildung 4-5, p. 75 (ages 14+, last 12 months, weighted, n = 27,705)","VERIFIED (document read, value transcribed)"
+volunteering_12m_FWS,DE,national,retired,2019,31.7,percent,"Simonson, Kelle, Kausmann and Tesch-Roemer (eds) 2021, Freiwilliges Engagement in Deutschland: Der Deutsche Freiwilligensurvey 2019, DZA Berlin, Abbildung 4-5, p. 75 (ages 14+, last 12 months, weighted, n = 27,705)","VERIFIED (document read, value transcribed)"
+volunteering_12m_FWS,DE,national,in education,2019,46.3,percent,"Simonson, Kelle, Kausmann and Tesch-Roemer (eds) 2021, Freiwilliges Engagement in Deutschland: Der Deutsche Freiwilligensurvey 2019, DZA Berlin, Abbildung 4-5, p. 75 (ages 14+, last 12 months, weighted, n = 27,705)","VERIFIED (document read, value transcribed)"
+volunteering_12m_FWS,DE,national,"not employed, other reasons",2019,34.3,percent,"Simonson, Kelle, Kausmann and Tesch-Roemer (eds) 2021, Freiwilliges Engagement in Deutschland: Der Deutsche Freiwilligensurvey 2019, DZA Berlin, Abbildung 4-5, p. 75 (ages 14+, last 12 months, weighted, n = 27,705)","VERIFIED (document read, value transcribed)"
+organised_volunteering_4w,IT,national,total,2013,7.9,percent,"ISTAT 2014, Attivita gratuite a beneficio di altri, Anno 2013 (Statistica report, 23 July 2014), Prospetto 2, p. 4 (ages 14+, FOUR weeks before the interview)","VERIFIED (document read, value transcribed)"
+organised_volunteering_4w,IT,national,employed,2013,9.1,percent,"ISTAT 2014, Attivita gratuite a beneficio di altri, Anno 2013 (Statistica report, 23 July 2014), Prospetto 2, p. 4 (ages 14+, FOUR weeks before the interview)","VERIFIED (document read, value transcribed)"
+organised_volunteering_4w,IT,national,seeking work,2013,6.2,percent,"ISTAT 2014, Attivita gratuite a beneficio di altri, Anno 2013 (Statistica report, 23 July 2014), Prospetto 2, p. 4 (ages 14+, FOUR weeks before the interview)","VERIFIED (document read, value transcribed)"
+organised_volunteering_4w,IT,national,homemaker,2013,5.4,percent,"ISTAT 2014, Attivita gratuite a beneficio di altri, Anno 2013 (Statistica report, 23 July 2014), Prospetto 2, p. 4 (ages 14+, FOUR weeks before the interview)","VERIFIED (document read, value transcribed)"
+organised_volunteering_4w,IT,national,student,2013,9.5,percent,"ISTAT 2014, Attivita gratuite a beneficio di altri, Anno 2013 (Statistica report, 23 July 2014), Prospetto 2, p. 4 (ages 14+, FOUR weeks before the interview)","VERIFIED (document read, value transcribed)"
+organised_volunteering_4w,IT,national,retired,2013,7.9,percent,"ISTAT 2014, Attivita gratuite a beneficio di altri, Anno 2013 (Statistica report, 23 July 2014), Prospetto 2, p. 4 (ages 14+, FOUR weeks before the interview)","VERIFIED (document read, value transcribed)"
+organised_volunteering_4w,IT,national,other condition,2013,5.0,percent,"ISTAT 2014, Attivita gratuite a beneficio di altri, Anno 2013 (Statistica report, 23 July 2014), Prospetto 2, p. 4 (ages 14+, FOUR weeks before the interview)","VERIFIED (document read, value transcribed)"
+organised_volunteering_hours_4w_per_volunteer,IT,national,total,2013,18.6,hours in four weeks,"ISTAT 2014, Attivita gratuite a beneficio di altri, Anno 2013 (Statistica report, 23 July 2014), Prospetto 3, p. 7 (ages 14+, FOUR weeks before the interview)","VERIFIED (document read, value transcribed)"
+organised_volunteering_hours_4w_per_volunteer,IT,national,employed,2013,15.1,hours in four weeks,"ISTAT 2014, Attivita gratuite a beneficio di altri, Anno 2013 (Statistica report, 23 July 2014), Prospetto 3, p. 7 (ages 14+, FOUR weeks before the interview)","VERIFIED (document read, value transcribed)"
+organised_volunteering_hours_4w_per_volunteer,IT,national,seeking work,2013,18.3,hours in four weeks,"ISTAT 2014, Attivita gratuite a beneficio di altri, Anno 2013 (Statistica report, 23 July 2014), Prospetto 3, p. 7 (ages 14+, FOUR weeks before the interview)","VERIFIED (document read, value transcribed)"
+organised_volunteering_hours_4w_per_volunteer,IT,national,homemaker,2013,19.2,hours in four weeks,"ISTAT 2014, Attivita gratuite a beneficio di altri, Anno 2013 (Statistica report, 23 July 2014), Prospetto 3, p. 7 (ages 14+, FOUR weeks before the interview)","VERIFIED (document read, value transcribed)"
+organised_volunteering_hours_4w_per_volunteer,IT,national,student,2013,14.4,hours in four weeks,"ISTAT 2014, Attivita gratuite a beneficio di altri, Anno 2013 (Statistica report, 23 July 2014), Prospetto 3, p. 7 (ages 14+, FOUR weeks before the interview)","VERIFIED (document read, value transcribed)"
+organised_volunteering_hours_4w_per_volunteer,IT,national,retired,2013,28.1,hours in four weeks,"ISTAT 2014, Attivita gratuite a beneficio di altri, Anno 2013 (Statistica report, 23 July 2014), Prospetto 3, p. 7 (ages 14+, FOUR weeks before the interview)","VERIFIED (document read, value transcribed)"
+association_membership,FR,national,employed,2008,35,percent,"Luczak and Nabli 2010, Vie associative: 16 millions d'adherents en 2008, Insee Premiere 1327 (SRCV-SILC 2008, ages 16+), https://www.insee.fr/fr/statistiques/1280946","VERIFIED (document read, value transcribed) via page reader"
+association_membership,FR,national,retired,2008,34,percent,"Luczak and Nabli 2010, Vie associative: 16 millions d'adherents en 2008, Insee Premiere 1327 (SRCV-SILC 2008, ages 16+), https://www.insee.fr/fr/statistiques/1280946","VERIFIED (document read, value transcribed) via page reader"
+association_membership,FR,national,unemployed,2008,17,percent,"Luczak and Nabli 2010, Vie associative: 16 millions d'adherents en 2008, Insee Premiere 1327 (SRCV-SILC 2008, ages 16+), https://www.insee.fr/fr/statistiques/1280946","VERIFIED (document read, value transcribed) via page reader"
+association_membership,FR,national,homemaker,2008,23,percent,"Luczak and Nabli 2010, Vie associative: 16 millions d'adherents en 2008, Insee Premiere 1327 (SRCV-SILC 2008, ages 16+), https://www.insee.fr/fr/statistiques/1280946","VERIFIED (document read, value transcribed) via page reader"
+members_who_volunteer,FR,national,employed,2008,58,percent of members,"Luczak and Nabli 2010, Vie associative: 16 millions d'adherents en 2008, Insee Premiere 1327 (SRCV-SILC 2008, ages 16+), https://www.insee.fr/fr/statistiques/1280946","VERIFIED (document read, value transcribed) via page reader"
+members_who_volunteer,FR,national,unemployed,2008,67,percent of members,"Luczak and Nabli 2010, Vie associative: 16 millions d'adherents en 2008, Insee Premiere 1327 (SRCV-SILC 2008, ages 16+), https://www.insee.fr/fr/statistiques/1280946","VERIFIED (document read, value transcribed) via page reader"
+volunteering_rate_by_activity_status,FR,national,"retired, students, homemakers",,,percent,no official table found; EU-SILC module not published by activity status,"UNVERIFIED, NOT FOUND"
+ratio_to_employed_full_time,DE,national,unemployed,2019,0.437,ratio,"Simonson, Kelle, Kausmann and Tesch-Roemer (eds) 2021, Freiwilliges Engagement in Deutschland: Der Deutsche Freiwilligensurvey 2019, DZA Berlin, Abbildung 4-5, p. 75 (ages 14+, last 12 months, weighted, n = 27,705)",DERIVED
+ratio_to_employed_full_time,DE,national,retired,2019,0.729,ratio,"Simonson, Kelle, Kausmann and Tesch-Roemer (eds) 2021, Freiwilliges Engagement in Deutschland: Der Deutsche Freiwilligensurvey 2019, DZA Berlin, Abbildung 4-5, p. 75 (ages 14+, last 12 months, weighted, n = 27,705)",DERIVED
+ratio_to_employed_full_time,DE,national,in education,2019,1.064,ratio,"Simonson, Kelle, Kausmann and Tesch-Roemer (eds) 2021, Freiwilliges Engagement in Deutschland: Der Deutsche Freiwilligensurvey 2019, DZA Berlin, Abbildung 4-5, p. 75 (ages 14+, last 12 months, weighted, n = 27,705)",DERIVED
+ratio_to_employed_full_time,DE,national,"not employed, other reasons",2019,0.789,ratio,"Simonson, Kelle, Kausmann and Tesch-Roemer (eds) 2021, Freiwilliges Engagement in Deutschland: Der Deutsche Freiwilligensurvey 2019, DZA Berlin, Abbildung 4-5, p. 75 (ages 14+, last 12 months, weighted, n = 27,705)",DERIVED
+ratio_to_employed_full_time,DE,national,employed part-time or marginal,2019,1.168,ratio,"Simonson, Kelle, Kausmann and Tesch-Roemer (eds) 2021, Freiwilliges Engagement in Deutschland: Der Deutsche Freiwilligensurvey 2019, DZA Berlin, Abbildung 4-5, p. 75 (ages 14+, last 12 months, weighted, n = 27,705)",DERIVED
+AC41_daily_participation_rate,DE,national,EDUC,2000,2.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,DE,national,EDUC,2000,0.52,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,DE,national,EMP_FT,2000,4.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_participation_rate,DE,national,EMP_PT,2000,6.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,DE,national,EMP_PT,2000,1.25,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,DE,national,LEAV,2000,5.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,DE,national,LEAV,2000,1.1,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,DE,national,OTH,2000,5.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,DE,national,OTH,2000,1.04,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,DE,national,POP,2000,5.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_participation_rate,DE,national,RET,2000,7.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,DE,national,RET,2000,1.6,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,DE,national,UNE,2000,5.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,DE,national,UNE,2000,1.04,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,DE,national,EDUC,2010,3.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,DE,national,EDUC,2010,0.83,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,DE,national,EMP_FT,2010,3.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_participation_rate,DE,national,EMP_PT,2010,3.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,DE,national,EMP_PT,2010,1.08,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,DE,national,HOME,2010,7.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,DE,national,HOME,2010,2.0,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,DE,national,LEAV,2010,2.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,DE,national,LEAV,2010,0.61,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,DE,national,OTH,2010,3.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,DE,national,OTH,2010,1.0,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,DE,national,POP,2010,4.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_participation_rate,DE,national,RET,2010,7.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,DE,national,RET,2010,1.97,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,DE,national,UNE,2010,3.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,DE,national,UNE,2010,1.06,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,FR,national,EDUC,2000,0.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,FR,national,EDUC,2000,0.0,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,FR,national,EMP_FT,2000,1.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_participation_rate,FR,national,EMP_PT,2000,1.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,FR,national,EMP_PT,2000,1.2,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,FR,national,HOME,2000,1.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,FR,national,HOME,2000,1.5,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,FR,national,LEAV,2000,0.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,FR,national,LEAV,2000,0.0,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,FR,national,OTH,2000,0.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,FR,national,OTH,2000,0.7,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,FR,national,POP,2000,1.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_participation_rate,FR,national,RET,2000,2.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,FR,national,RET,2000,2.0,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,FR,national,UNE,2000,1.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,FR,national,UNE,2000,1.0,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,FR,national,EDUC,2010,1.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,FR,national,EDUC,2010,0.73,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,FR,national,EMP_FT,2010,1.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_participation_rate,FR,national,EMP_PT,2010,1.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,FR,national,EMP_PT,2010,0.8,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,FR,national,HOME,2010,1.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,FR,national,HOME,2010,1.07,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,FR,national,LEAV,2010,1.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,FR,national,LEAV,2010,1.07,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,FR,national,OTH,2010,1.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,FR,national,OTH,2010,0.93,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,FR,national,POP,2010,1.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_participation_rate,FR,national,RET,2010,3.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,FR,national,RET,2010,2.27,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,FR,national,UNE,2010,1.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,FR,national,UNE,2010,0.87,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,IT,national,EDUC,2000,1.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,IT,national,EDUC,2000,1.83,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,IT,national,EMP_FT,2000,0.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_participation_rate,IT,national,EMP_PT,2000,1.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,IT,national,EMP_PT,2000,2.17,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,IT,national,HOME,2000,0.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,IT,national,HOME,2000,1.17,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,IT,national,LEAV,2000,0.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,IT,national,LEAV,2000,1.0,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,IT,national,OTH,2000,1.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,IT,national,OTH,2000,2.0,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,IT,national,POP,2000,1.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_participation_rate,IT,national,RET,2000,2.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,IT,national,RET,2000,3.83,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,IT,national,UNE,2000,1.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,IT,national,UNE,2000,1.83,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,IT,national,EDUC,2010,1.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,IT,national,EDUC,2010,1.71,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,IT,national,EMP_FT,2010,0.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_participation_rate,IT,national,EMP_PT,2010,1.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,IT,national,EMP_PT,2010,1.71,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,IT,national,HOME,2010,1.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,IT,national,HOME,2010,2.29,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,IT,national,LEAV,2010,0.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,IT,national,LEAV,2010,1.29,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,IT,national,OTH,2010,2.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,IT,national,OTH,2010,3.43,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,IT,national,POP,2010,1.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_participation_rate,IT,national,RET,2010,2.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,IT,national,RET,2010,3.71,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED
+AC41_daily_participation_rate,IT,national,UNE,2010,1.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_daily_rate_ratio_to_full_time,IT,national,UNE,2010,2.29,ratio,Eurostat tus_00selfstat: mixes how many take part with how often,DERIVED

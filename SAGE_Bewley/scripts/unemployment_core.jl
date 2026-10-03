@@ -182,7 +182,7 @@ function cell_summary(p::SAGEParams, sol; thresholds = nothing)
         p1 = P1[i_a, i_z]; part[i_z] += w * p1
         α = p.α[i_z]; zz = z[i_z]
         cap = (p.R - 1) * a[i_a]
-        credit = p.partcredit * α * zz * p.Z * QBAR
+        credit = p.partcredit * α * zz * p.Z * p.qbar
         tr = transfer_at(p, i_z)
         employed = zz > 0
         for d in (0, 1)

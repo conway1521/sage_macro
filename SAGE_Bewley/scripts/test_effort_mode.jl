@@ -39,7 +39,7 @@ for g in 1:2, p0 in params_of(cT, cs[g])
             pd = d == 1 ? s.P1[i, st] : 1 - s.P1[i, st]; l = s.lambda[i, st] * pd; l <= 0 && continue
             e = s.e_d[d+1][i, st]
             cc = (p.R * s.a[i] + w * e - p.lumptax + net_participation(p, p.α[st], z[st]) * d + tr - s.a_d[d+1][i, st]) / p.pc
-            lhs += l * (w / p.pc) * cc^(-p.γ); rhs += l * p.ϕ * κ * (tf + κ * e + QBAR * d)^p.ψ; m += l
+            lhs += l * (w / p.pc) * cc^(-p.γ); rhs += l * p.ϕ * κ * (tf + κ * e + p.qbar * d)^p.ψ; m += l
             spread = max(spread, abs(e - s.effort_set[st]))
         end
         global worst = max(worst, abs(lhs / m - rhs / m) / (rhs / m), spread)

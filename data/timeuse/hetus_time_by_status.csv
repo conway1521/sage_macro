@@ -1,0 +1,1051 @@
+indicator,country,place,group,year,value,unit,source,status
+AC1A_TIME_SP,FR,national,POP,2000,180,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,POP,2000,40.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,POP,2000,446,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,FR,national,POP,2000,179.738,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,FR,national,POP,2000,211,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,POP,2000,89.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,POP,2000,236,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,POP,2000,211.22,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,POP,2000,1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,POP,2000,1.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,POP,2000,101,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,FR,national,POP,2000,1.212,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,FR,national,POP,2000,9,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,POP,2000,7.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,POP,2000,119,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,POP,2000,9.401,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,POP,2000,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,POP,2000,5.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,POP,2000,120,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,FR,national,POP,2000,6.0,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,FR,national,EMP_FT,2000,315,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,EMP_FT,2000,66.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,EMP_FT,2000,471,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,FR,national,EMP_FT,2000,315.099,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,FR,national,EMP_FT,2000,153,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,EMP_FT,2000,86.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,EMP_FT,2000,177,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,EMP_FT,2000,153.282,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,EMP_FT,2000,1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,EMP_FT,2000,1.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,EMP_FT,2000,87,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,FR,national,EMP_FT,2000,0.87,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,FR,national,EMP_FT,2000,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,EMP_FT,2000,5.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,EMP_FT,2000,118,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,EMP_FT,2000,6.372,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,EMP_FT,2000,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,EMP_FT,2000,3.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,EMP_FT,2000,120,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,FR,national,EMP_FT,2000,4.44,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,FR,national,EMP_PT,2000,308,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,EMP_PT,2000,72.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,EMP_PT,2000,428,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,FR,national,EMP_PT,2000,308.16,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,FR,national,EMP_PT,2000,186,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,EMP_PT,2000,85.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,EMP_PT,2000,218,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,EMP_PT,2000,185.954,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,EMP_PT,2000,1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,EMP_PT,2000,1.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,EMP_PT,2000,100,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,FR,national,EMP_PT,2000,1.2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,FR,national,EMP_PT,2000,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,EMP_PT,2000,6.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,EMP_PT,2000,96,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,EMP_PT,2000,5.76,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,EMP_PT,2000,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,EMP_PT,2000,4.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,EMP_PT,2000,107,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,FR,national,EMP_PT,2000,4.708,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,FR,national,LEAV,2000,7,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,LEAV,2000,4.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,LEAV,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC3_TIME_SP,FR,national,LEAV,2000,300,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,LEAV,2000,98.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,LEAV,2000,304,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,LEAV,2000,299.44,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,LEAV,2000,0,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,LEAV,2000,0.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,LEAV,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC42_TIME_SP,FR,national,LEAV,2000,1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,LEAV,2000,2.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,LEAV,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC43_TIME_SP,FR,national,LEAV,2000,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,LEAV,2000,2.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,LEAV,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC1A_TIME_SP,FR,national,UNE,2000,17,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,UNE,2000,7.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,UNE,2000,223,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,FR,national,UNE,2000,16.725,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,FR,national,UNE,2000,252,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,UNE,2000,93.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,UNE,2000,270,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,UNE,2000,251.91,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,UNE,2000,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,UNE,2000,1.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,UNE,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC42_TIME_SP,FR,national,UNE,2000,16,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,UNE,2000,12.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,UNE,2000,130,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,UNE,2000,15.73,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,UNE,2000,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,UNE,2000,4.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,UNE,2000,137,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,FR,national,UNE,2000,6.028,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,FR,national,EDUC,2000,24,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,EDUC,2000,12.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,EDUC,2000,187,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,FR,national,EDUC,2000,23.562,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,FR,national,EDUC,2000,82,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,EDUC,2000,72.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,EDUC,2000,113,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,EDUC,2000,82.377,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,EDUC,2000,0,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,EDUC,2000,0.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,EDUC,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC42_TIME_SP,FR,national,EDUC,2000,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,EDUC,2000,5.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,EDUC,2000,79,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,EDUC,2000,4.187,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,EDUC,2000,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,EDUC,2000,2.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,EDUC,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC1A_TIME_SP,FR,national,HOME,2000,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,HOME,2000,1.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,HOME,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC3_TIME_SP,FR,national,HOME,2000,394,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,HOME,2000,99.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,HOME,2000,394,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,HOME,2000,393.606,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,HOME,2000,1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,HOME,2000,1.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,HOME,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC42_TIME_SP,FR,national,HOME,2000,9,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,HOME,2000,9.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,HOME,2000,94,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,HOME,2000,8.93,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,HOME,2000,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,HOME,2000,5.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,HOME,2000,97,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,FR,national,HOME,2000,5.432,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,FR,national,RET,2000,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,RET,2000,2.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,RET,2000,168,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,FR,national,RET,2000,3.864,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,FR,national,RET,2000,281,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,RET,2000,96.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,RET,2000,290,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,RET,2000,280.43,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,RET,2000,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,RET,2000,2.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,RET,2000,104,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,FR,national,RET,2000,2.08,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,FR,national,RET,2000,18,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,RET,2000,13.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,RET,2000,142,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,RET,2000,18.46,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,RET,2000,11,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,RET,2000,9.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,RET,2000,126,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,FR,national,RET,2000,11.34,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,FR,national,OTH,2000,19,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,OTH,2000,4.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,OTH,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC3_TIME_SP,FR,national,OTH,2000,259,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,OTH,2000,92.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,OTH,2000,279,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,OTH,2000,258.633,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,OTH,2000,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,OTH,2000,0.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,OTH,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC42_TIME_SP,FR,national,OTH,2000,8,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,OTH,2000,8.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,OTH,2000,87,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,OTH,2000,7.743,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,OTH,2000,7,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,OTH,2000,5.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,OTH,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC1A_TIME_SP,FR,national,POP,2010,169,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,POP,2010,40.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,POP,2010,418,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,FR,national,POP,2010,168.872,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,FR,national,POP,2010,193,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,POP,2010,88.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,POP,2010,217,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,POP,2010,192.479,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,POP,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,POP,2010,1.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,POP,2010,105,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,FR,national,POP,2010,1.89,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,FR,national,POP,2010,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,POP,2010,3.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,POP,2010,108,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,POP,2010,4.104,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,POP,2010,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,POP,2010,5.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,POP,2010,107,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,FR,national,POP,2010,5.885,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,FR,national,EMP_FT,2010,303,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,EMP_FT,2010,67.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,EMP_FT,2010,450,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,FR,national,EMP_FT,2010,303.3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,FR,national,EMP_FT,2010,144,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,EMP_FT,2010,86.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,EMP_FT,2010,167,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,EMP_FT,2010,144.622,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,EMP_FT,2010,1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,EMP_FT,2010,1.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,EMP_FT,2010,85,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,FR,national,EMP_FT,2010,1.275,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,FR,national,EMP_FT,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,EMP_FT,2010,2.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,EMP_FT,2010,86,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,EMP_FT,2010,2.064,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,EMP_FT,2010,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,EMP_FT,2010,3.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,EMP_FT,2010,99,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,FR,national,EMP_FT,2010,3.465,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,FR,national,EMP_PT,2010,218,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,EMP_PT,2010,61.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,EMP_PT,2010,356,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,FR,national,EMP_PT,2010,217.872,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,FR,national,EMP_PT,2010,211,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,EMP_PT,2010,93.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,EMP_PT,2010,226,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,EMP_PT,2010,211.084,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,EMP_PT,2010,1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,EMP_PT,2010,1.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,EMP_PT,2010,97,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,FR,national,EMP_PT,2010,1.164,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,FR,national,EMP_PT,2010,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,EMP_PT,2010,3.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,EMP_PT,2010,106,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,EMP_PT,2010,3.71,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,EMP_PT,2010,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,EMP_PT,2010,4.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,EMP_PT,2010,91,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,FR,national,EMP_PT,2010,4.186,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,FR,national,LEAV,2010,166,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,LEAV,2010,38.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,LEAV,2010,434,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,FR,national,LEAV,2010,166.222,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,FR,national,LEAV,2010,226,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,LEAV,2010,90.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,LEAV,2010,249,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,LEAV,2010,226.092,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,LEAV,2010,1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,LEAV,2010,1.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,LEAV,2010,69,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,FR,national,LEAV,2010,1.104,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,FR,national,LEAV,2010,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,LEAV,2010,3.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,LEAV,2010,171,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,LEAV,2010,5.814,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,LEAV,2010,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,LEAV,2010,3.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,LEAV,2010,130,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,FR,national,LEAV,2010,4.94,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,FR,national,UNE,2010,31,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,UNE,2010,13.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,UNE,2010,223,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,FR,national,UNE,2010,30.551,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,FR,national,UNE,2010,221,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,UNE,2010,88.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,UNE,2010,250,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,UNE,2010,220.5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,UNE,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,UNE,2010,1.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,UNE,2010,130,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,FR,national,UNE,2010,1.69,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,FR,national,UNE,2010,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,UNE,2010,5.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,UNE,2010,120,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,UNE,2010,6.48,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,UNE,2010,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,UNE,2010,7.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,UNE,2010,83,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,FR,national,UNE,2010,5.81,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,FR,national,EDUC,2010,46,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,EDUC,2010,16.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,EDUC,2010,286,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,FR,national,EDUC,2010,45.76,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,FR,national,EDUC,2010,78,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,EDUC,2010,71.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,EDUC,2010,108,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,EDUC,2010,77.652,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,EDUC,2010,0,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,EDUC,2010,1.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,EDUC,2010,33,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,FR,national,EDUC,2010,0.363,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,FR,national,EDUC,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,EDUC,2010,2.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,EDUC,2010,71,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,EDUC,2010,1.633,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,EDUC,2010,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,EDUC,2010,2.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,EDUC,2010,131,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,FR,national,EDUC,2010,3.144,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,FR,national,HOME,2010,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,HOME,2010,3.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,HOME,2010,97,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,FR,national,HOME,2010,3.298,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,FR,national,HOME,2010,353,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,HOME,2010,98.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,HOME,2010,357,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,HOME,2010,353.073,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,HOME,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,HOME,2010,1.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,HOME,2010,130,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,FR,national,HOME,2010,2.08,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,FR,national,HOME,2010,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,HOME,2010,5.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,HOME,2010,71,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,HOME,2010,4.118,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,HOME,2010,8,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,HOME,2010,8.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,HOME,2010,88,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,FR,national,HOME,2010,7.656,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,FR,national,RET,2010,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,RET,2010,4.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,RET,2010,129,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,FR,national,RET,2010,5.547,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,FR,national,RET,2010,250,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,RET,2010,95.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,RET,2010,261,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,RET,2010,249.516,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,RET,2010,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,RET,2010,3.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,RET,2010,125,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,FR,national,RET,2010,4.25,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,FR,national,RET,2010,8,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,RET,2010,6.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,RET,2010,115,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,RET,2010,7.935,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,RET,2010,12,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,RET,2010,10.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,RET,2010,123,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,FR,national,RET,2010,12.423,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,FR,national,OTH,2010,235,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,FR,national,OTH,2010,53.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,FR,national,OTH,2010,443,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,FR,national,OTH,2010,235.233,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,FR,national,OTH,2010,165,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,FR,national,OTH,2010,81.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,FR,national,OTH,2010,202,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,FR,national,OTH,2010,164.226,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,FR,national,OTH,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,FR,national,OTH,2010,1.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,FR,national,OTH,2010,124,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,FR,national,OTH,2010,1.736,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,FR,national,OTH,2010,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,FR,national,OTH,2010,1.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,FR,national,OTH,2010,172,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,FR,national,OTH,2010,2.752,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,FR,national,OTH,2010,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,FR,national,OTH,2010,4.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,FR,national,OTH,2010,116,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,FR,national,OTH,2010,5.22,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,DE,national,POP,2000,156,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,POP,2000,36.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,POP,2000,425,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,DE,national,POP,2000,155.975,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,DE,national,POP,2000,200,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,POP,2000,92.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,POP,2000,216,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,POP,2000,199.8,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,POP,2000,8,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,POP,2000,5.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,POP,2000,144,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,DE,national,POP,2000,8.064,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,DE,national,POP,2000,9,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,POP,2000,8.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,POP,2000,101,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,DE,national,POP,2000,8.787,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,DE,national,POP,2000,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,POP,2000,5.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,POP,2000,80,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,DE,national,POP,2000,4.0,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,DE,national,EMP_FT,2000,299,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,EMP_FT,2000,66.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,EMP_FT,2000,453,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,DE,national,EMP_FT,2000,299.433,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,DE,national,EMP_FT,2000,129,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,EMP_FT,2000,88.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,EMP_FT,2000,147,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,EMP_FT,2000,129.507,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,EMP_FT,2000,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,EMP_FT,2000,4.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,EMP_FT,2000,133,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,DE,national,EMP_FT,2000,6.384,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,DE,national,EMP_FT,2000,7,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,EMP_FT,2000,6.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,EMP_FT,2000,106,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,DE,national,EMP_FT,2000,6.89,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,DE,national,EMP_FT,2000,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,EMP_FT,2000,3.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,EMP_FT,2000,88,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,DE,national,EMP_FT,2000,2.992,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,DE,national,EMP_PT,2000,124,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,EMP_PT,2000,44.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,EMP_PT,2000,277,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,DE,national,EMP_PT,2000,124.096,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,DE,national,EMP_PT,2000,243,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,EMP_PT,2000,96.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,EMP_PT,2000,252,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,EMP_PT,2000,242.928,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,EMP_PT,2000,9,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,EMP_PT,2000,6.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,EMP_PT,2000,143,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,DE,national,EMP_PT,2000,8.58,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,DE,national,EMP_PT,2000,9,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,EMP_PT,2000,9.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,EMP_PT,2000,92,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,DE,national,EMP_PT,2000,8.832,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,DE,national,EMP_PT,2000,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,EMP_PT,2000,5.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,EMP_PT,2000,78,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,DE,national,EMP_PT,2000,4.524,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,DE,national,LEAV,2000,0,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,LEAV,2000,0.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,LEAV,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC3_TIME_SP,DE,national,LEAV,2000,457,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,LEAV,2000,99.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,LEAV,2000,458,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,LEAV,2000,457.084,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,LEAV,2000,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,LEAV,2000,5.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,LEAV,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC42_TIME_SP,DE,national,LEAV,2000,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,LEAV,2000,7.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,LEAV,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC43_TIME_SP,DE,national,LEAV,2000,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,LEAV,2000,3.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,LEAV,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC1A_TIME_SP,DE,national,UNE,2000,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,UNE,2000,1.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,UNE,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC3_TIME_SP,DE,national,UNE,2000,245,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,UNE,2000,95.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,UNE,2000,256,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,UNE,2000,245.248,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,UNE,2000,8,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,UNE,2000,5.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,UNE,2000,152,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,DE,national,UNE,2000,7.6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,DE,national,UNE,2000,10,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,UNE,2000,7.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,UNE,2000,127,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,DE,national,UNE,2000,9.652,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,DE,national,UNE,2000,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,UNE,2000,2.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,UNE,2000,71,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,DE,national,UNE,2000,1.633,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,DE,national,EDUC,2000,16,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,EDUC,2000,6.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,EDUC,2000,258,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,DE,national,EDUC,2000,15.996,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,DE,national,EDUC,2000,124,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,EDUC,2000,85.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,EDUC,2000,145,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,EDUC,2000,124.265,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,EDUC,2000,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,EDUC,2000,2.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,EDUC,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC42_TIME_SP,DE,national,EDUC,2000,7,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,EDUC,2000,6.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,EDUC,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC43_TIME_SP,DE,national,EDUC,2000,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,EDUC,2000,4.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,EDUC,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC1A_TIME_SP,DE,national,HOME,2000,,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC1A_PTP_RT,DE,national,HOME,2000,,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC1A_PTP_TIME,DE,national,HOME,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC3_TIME_SP,DE,national,HOME,2000,,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC3_PTP_RT,DE,national,HOME,2000,,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC3_PTP_TIME,DE,national,HOME,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC41_TIME_SP,DE,national,HOME,2000,,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC41_PTP_RT,DE,national,HOME,2000,,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC41_PTP_TIME,DE,national,HOME,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC42_TIME_SP,DE,national,HOME,2000,,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC42_PTP_RT,DE,national,HOME,2000,,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC42_PTP_TIME,DE,national,HOME,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC43_TIME_SP,DE,national,HOME,2000,,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC43_PTP_RT,DE,national,HOME,2000,,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC43_PTP_TIME,DE,national,HOME,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC1A_TIME_SP,DE,national,RET,2000,1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,RET,2000,0.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,RET,2000,142,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,DE,national,RET,2000,0.852,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,DE,national,RET,2000,252,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,RET,2000,97.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,RET,2000,259,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,RET,2000,252.007,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,RET,2000,12,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,RET,2000,7.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,RET,2000,152,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,DE,national,RET,2000,11.704,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,DE,national,RET,2000,13,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,RET,2000,12.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,RET,2000,102,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,DE,national,RET,2000,12.954,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,DE,national,RET,2000,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,RET,2000,7.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,RET,2000,79,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,DE,national,RET,2000,6.162,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,DE,national,OTH,2000,14,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,OTH,2000,4.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,OTH,2000,330,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,DE,national,OTH,2000,13.86,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,DE,national,OTH,2000,313,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,OTH,2000,96.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,OTH,2000,325,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,OTH,2000,312.975,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,OTH,2000,8,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,OTH,2000,5.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,OTH,2000,166,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,DE,national,OTH,2000,8.3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,DE,national,OTH,2000,9,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,OTH,2000,10.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,OTH,2000,88,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,DE,national,OTH,2000,9.24,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,DE,national,OTH,2000,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,OTH,2000,6.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,OTH,2000,65,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,DE,national,OTH,2000,4.42,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,DE,national,POP,2010,165,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,POP,2010,39.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,POP,2010,422,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,DE,national,POP,2010,165.424,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,DE,national,POP,2010,182,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,POP,2010,92.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,POP,2010,197,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,POP,2010,182.028,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,POP,2010,7,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,POP,2010,4.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,POP,2010,156,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,DE,national,POP,2010,7.02,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,DE,national,POP,2010,8,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,POP,2010,8.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,POP,2010,95,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,DE,national,POP,2010,7.79,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,DE,national,POP,2010,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,POP,2010,4.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,POP,2010,77,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,DE,national,POP,2010,3.157,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,DE,national,EMP_FT,2010,285,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,EMP_FT,2010,61.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,EMP_FT,2010,466,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,DE,national,EMP_FT,2010,285.192,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,DE,national,EMP_FT,2010,128,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,EMP_FT,2010,88.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,EMP_FT,2010,145,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,EMP_FT,2010,128.615,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,EMP_FT,2010,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,EMP_FT,2010,3.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,EMP_FT,2010,149,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,DE,national,EMP_FT,2010,5.364,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,DE,national,EMP_FT,2010,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,EMP_FT,2010,6.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,EMP_FT,2010,85,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,DE,national,EMP_FT,2010,5.1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,DE,national,EMP_FT,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,EMP_FT,2010,2.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,EMP_FT,2010,91,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,DE,national,EMP_FT,2010,2.093,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,DE,national,EMP_PT,2010,175,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,EMP_PT,2010,54.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,EMP_PT,2010,325,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,DE,national,EMP_PT,2010,175.5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,DE,national,EMP_PT,2010,220,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,EMP_PT,2010,96.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,EMP_PT,2010,229,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,EMP_PT,2010,220.069,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,EMP_PT,2010,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,EMP_PT,2010,3.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,EMP_PT,2010,143,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,DE,national,EMP_PT,2010,5.577,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,DE,national,EMP_PT,2010,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,EMP_PT,2010,7.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,EMP_PT,2010,84,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,DE,national,EMP_PT,2010,6.468,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,DE,national,EMP_PT,2010,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,EMP_PT,2010,5.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,EMP_PT,2010,71,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,DE,national,EMP_PT,2010,3.976,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,DE,national,LEAV,2010,22,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,LEAV,2010,8.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,LEAV,2010,270,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,DE,national,LEAV,2010,22.14,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,DE,national,LEAV,2010,438,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,LEAV,2010,99.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,LEAV,2010,440,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,LEAV,2010,438.24,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,LEAV,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,LEAV,2010,2.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,LEAV,2010,102,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,DE,national,LEAV,2010,2.244,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,DE,national,LEAV,2010,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,LEAV,2010,4.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,LEAV,2010,54,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,DE,national,LEAV,2010,2.592,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,DE,national,LEAV,2010,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,LEAV,2010,5.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,LEAV,2010,78,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,DE,national,LEAV,2010,4.134,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,DE,national,UNE,2010,35,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,UNE,2010,13.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,UNE,2010,254,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,DE,national,UNE,2010,35.052,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,DE,national,UNE,2010,210,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,UNE,2010,95.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,UNE,2010,221,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,UNE,2010,209.95,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,UNE,2010,8,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,UNE,2010,3.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,UNE,2010,212,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,DE,national,UNE,2010,8.056,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,DE,national,UNE,2010,14,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,UNE,2010,13.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,UNE,2010,106,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,DE,national,UNE,2010,13.886,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,DE,national,UNE,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,UNE,2010,2.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,UNE,2010,60,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,DE,national,UNE,2010,1.74,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,DE,national,EDUC,2010,43,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,EDUC,2010,13.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,EDUC,2010,320,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,DE,national,EDUC,2010,42.56,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,DE,national,EDUC,2010,83,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,EDUC,2010,78.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,EDUC,2010,106,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,EDUC,2010,82.998,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,EDUC,2010,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,EDUC,2010,3.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,EDUC,2010,143,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,DE,national,EDUC,2010,4.29,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,DE,national,EDUC,2010,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,EDUC,2010,5.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,EDUC,2010,106,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,DE,national,EDUC,2010,5.512,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,DE,national,EDUC,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,EDUC,2010,2.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,EDUC,2010,71,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,DE,national,EDUC,2010,1.775,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,DE,national,HOME,2010,15,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,HOME,2010,6.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,HOME,2010,233,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,DE,national,HOME,2010,15.145,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,DE,national,HOME,2010,328,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,HOME,2010,99.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,HOME,2010,330,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,HOME,2010,328.35,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,HOME,2010,11,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,HOME,2010,7.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,HOME,2010,148,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,DE,national,HOME,2010,10.656,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,DE,national,HOME,2010,11,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,HOME,2010,11.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,HOME,2010,93,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,DE,national,HOME,2010,10.974,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,DE,national,HOME,2010,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,HOME,2010,6.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,HOME,2010,73,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,DE,national,HOME,2010,4.453,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,DE,national,RET,2010,10,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,RET,2010,4.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,RET,2010,244,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,DE,national,RET,2010,10.004,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,DE,national,RET,2010,228,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,RET,2010,97.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,RET,2010,235,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,RET,2010,228.42,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,RET,2010,12,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,RET,2010,7.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,RET,2010,170,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,DE,national,RET,2010,12.07,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,DE,national,RET,2010,13,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,RET,2010,11.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,RET,2010,111,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,DE,national,RET,2010,13.209,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,DE,national,RET,2010,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,RET,2010,6.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,RET,2010,71,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,DE,national,RET,2010,4.828,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,DE,national,OTH,2010,15,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,DE,national,OTH,2010,5.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,DE,national,OTH,2010,259,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,DE,national,OTH,2010,15.022,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,DE,national,OTH,2010,217,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,DE,national,OTH,2010,96.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,DE,national,OTH,2010,226,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,DE,national,OTH,2010,216.96,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,DE,national,OTH,2010,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,DE,national,OTH,2010,3.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,DE,national,OTH,2010,113,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,DE,national,OTH,2010,4.068,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,DE,national,OTH,2010,8,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,DE,national,OTH,2010,8.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,DE,national,OTH,2010,91,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,DE,national,OTH,2010,8.008,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,DE,national,OTH,2010,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,DE,national,OTH,2010,4.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,DE,national,OTH,2010,98,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,DE,national,OTH,2010,4.704,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,POP,2000,179,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,POP,2000,39.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,POP,2000,459,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,POP,2000,179.01,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,POP,2000,210,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,POP,2000,83.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,POP,2000,253,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,POP,2000,209.99,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,POP,2000,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,POP,2000,1.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,POP,2000,148,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,IT,national,POP,2000,1.628,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,IT,national,POP,2000,10,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,POP,2000,9.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,POP,2000,107,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,POP,2000,10.058,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,POP,2000,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,POP,2000,9.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,POP,2000,67,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,POP,2000,6.097,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,EMP_FT,2000,360,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,EMP_FT,2000,75.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,EMP_FT,2000,477,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,EMP_FT,2000,360.612,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,EMP_FT,2000,113,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,EMP_FT,2000,73.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,EMP_FT,2000,154,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,EMP_FT,2000,112.728,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,EMP_FT,2000,1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,EMP_FT,2000,0.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,EMP_FT,2000,154,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,IT,national,EMP_FT,2000,0.924,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,IT,national,EMP_FT,2000,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,EMP_FT,2000,5.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,EMP_FT,2000,87,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,EMP_FT,2000,4.35,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,EMP_FT,2000,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,EMP_FT,2000,5.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,EMP_FT,2000,65,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,EMP_FT,2000,3.38,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,EMP_PT,2000,205,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,EMP_PT,2000,64.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,EMP_PT,2000,317,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,EMP_PT,2000,205.099,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,EMP_PT,2000,249,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,EMP_PT,2000,89.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,EMP_PT,2000,276,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,EMP_PT,2000,248.124,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,EMP_PT,2000,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,EMP_PT,2000,1.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,EMP_PT,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC42_TIME_SP,IT,national,EMP_PT,2000,8,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,EMP_PT,2000,9.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,EMP_PT,2000,85,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,EMP_PT,2000,8.245,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,EMP_PT,2000,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,EMP_PT,2000,7.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,EMP_PT,2000,68,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,EMP_PT,2000,5.032,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,LEAV,2000,163,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,LEAV,2000,36.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,LEAV,2000,449,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,LEAV,2000,162.987,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,LEAV,2000,207,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,LEAV,2000,85.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,LEAV,2000,241,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,LEAV,2000,206.778,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,LEAV,2000,1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,LEAV,2000,0.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,LEAV,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC42_TIME_SP,IT,national,LEAV,2000,7,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,LEAV,2000,8.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,LEAV,2000,86,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,LEAV,2000,7.052,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,LEAV,2000,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,LEAV,2000,6.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,LEAV,2000,70,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,LEAV,2000,4.34,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,UNE,2000,13,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,UNE,2000,3.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,UNE,2000,334,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,UNE,2000,13.026,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,UNE,2000,228,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,UNE,2000,82.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,UNE,2000,276,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,UNE,2000,228.252,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,UNE,2000,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,UNE,2000,1.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,UNE,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC42_TIME_SP,IT,national,UNE,2000,13,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,UNE,2000,10.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,UNE,2000,127,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,UNE,2000,13.208,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,UNE,2000,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,UNE,2000,5.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,UNE,2000,68,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,UNE,2000,3.944,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,EDUC,2000,14,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,EDUC,2000,4.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,EDUC,2000,312,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,EDUC,2000,14.04,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,EDUC,2000,68,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,EDUC,2000,65.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,EDUC,2000,103,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,EDUC,2000,67.877,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,EDUC,2000,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,EDUC,2000,1.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,EDUC,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC42_TIME_SP,IT,national,EDUC,2000,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,EDUC,2000,3.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,EDUC,2000,70,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,EDUC,2000,2.66,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,EDUC,2000,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,EDUC,2000,5.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,EDUC,2000,80,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,EDUC,2000,4.16,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,HOME,2000,1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,HOME,2000,0.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,HOME,2000,272,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,HOME,2000,1.632,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,HOME,2000,437,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,HOME,2000,99.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,HOME,2000,440,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,HOME,2000,437.36,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,HOME,2000,1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,HOME,2000,0.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,HOME,2000,122,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,IT,national,HOME,2000,0.854,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,IT,national,HOME,2000,15,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,HOME,2000,13.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,HOME,2000,111,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,HOME,2000,15.318,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,HOME,2000,9,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,HOME,2000,13.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,HOME,2000,65,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,HOME,2000,8.84,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,RET,2000,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,RET,2000,1.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,RET,2000,333,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,RET,2000,3.33,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,RET,2000,257,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,RET,2000,93.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,RET,2000,276,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,RET,2000,257.232,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,RET,2000,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,RET,2000,2.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,RET,2000,154,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,IT,national,RET,2000,3.542,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,IT,national,RET,2000,20,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,RET,2000,16.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,RET,2000,122,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,RET,2000,20.374,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,RET,2000,11,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,RET,2000,16.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,RET,2000,66,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,RET,2000,10.626,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,OTH,2000,16,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,OTH,2000,5.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,OTH,2000,326,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,OTH,2000,16.3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,OTH,2000,218,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,OTH,2000,81.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,OTH,2000,269,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,OTH,2000,218.428,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,OTH,2000,1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,OTH,2000,1.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,OTH,2000,,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)","NOT PUBLISHED (suppressed, under 25 observations, or no data)"
+AC42_TIME_SP,IT,national,OTH,2000,12,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,OTH,2000,11.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,OTH,2000,100,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,OTH,2000,11.7,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,OTH,2000,10,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,OTH,2000,14.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,OTH,2000,75,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,OTH,2000,10.5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,POP,2010,190,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,POP,2010,41.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,POP,2010,460,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,POP,2010,190.44,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,POP,2010,205,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,POP,2010,82.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,POP,2010,247,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,POP,2010,204.516,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,POP,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,POP,2010,1.3,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,POP,2010,162,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,IT,national,POP,2010,2.106,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,IT,national,POP,2010,8,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,POP,2010,7.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,POP,2010,109,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,POP,2010,7.63,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,POP,2010,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,POP,2010,8.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,POP,2010,65,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,POP,2010,5.265,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,EMP_FT,2010,373,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,EMP_FT,2010,77.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,EMP_FT,2010,480,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,EMP_FT,2010,372.96,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,EMP_FT,2010,111,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,EMP_FT,2010,73.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,EMP_FT,2010,151,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,EMP_FT,2010,111.438,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,EMP_FT,2010,1,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,EMP_FT,2010,0.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,EMP_FT,2010,161,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,IT,national,EMP_FT,2010,1.127,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,IT,national,EMP_FT,2010,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,EMP_FT,2010,3.5,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,EMP_FT,2010,80,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,EMP_FT,2010,2.8,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,EMP_FT,2010,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,EMP_FT,2010,4.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,EMP_FT,2010,64,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,EMP_FT,2010,3.136,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,EMP_PT,2010,234,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,EMP_PT,2010,70.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,EMP_PT,2010,331,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,EMP_PT,2010,233.686,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,EMP_PT,2010,226,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,EMP_PT,2010,89.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,EMP_PT,2010,252,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,EMP_PT,2010,226.548,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,EMP_PT,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,EMP_PT,2010,1.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,EMP_PT,2010,200,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,IT,national,EMP_PT,2010,2.4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,IT,national,EMP_PT,2010,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,EMP_PT,2010,6.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,EMP_PT,2010,84,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,EMP_PT,2010,5.628,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,EMP_PT,2010,4,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,EMP_PT,2010,7.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,EMP_PT,2010,59,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,EMP_PT,2010,4.189,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,LEAV,2010,134,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,LEAV,2010,31.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,LEAV,2010,422,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,LEAV,2010,134.196,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,LEAV,2010,239,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,LEAV,2010,85.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,LEAV,2010,281,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,LEAV,2010,239.131,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,LEAV,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,LEAV,2010,0.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,LEAV,2010,199,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,IT,national,LEAV,2010,1.791,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,IT,national,LEAV,2010,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,LEAV,2010,6.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,LEAV,2010,79,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,LEAV,2010,5.214,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,LEAV,2010,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,LEAV,2010,4.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,LEAV,2010,71,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,LEAV,2010,3.124,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,UNE,2010,19,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,UNE,2010,4.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,UNE,2010,385,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,UNE,2010,18.865,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,UNE,2010,218,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,UNE,2010,80.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,UNE,2010,271,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,UNE,2010,217.884,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,UNE,2010,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,UNE,2010,1.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,UNE,2010,173,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,IT,national,UNE,2010,2.768,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,IT,national,UNE,2010,6,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,UNE,2010,5.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,UNE,2010,119,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,UNE,2010,6.426,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,UNE,2010,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,UNE,2010,4.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,UNE,2010,65,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,UNE,2010,3.055,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,EDUC,2010,9,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,EDUC,2010,3.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,EDUC,2010,273,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,EDUC,2010,8.736,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,EDUC,2010,63,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,EDUC,2010,60.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,EDUC,2010,104,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,EDUC,2010,63.024,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,EDUC,2010,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,EDUC,2010,1.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,EDUC,2010,223,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,IT,national,EDUC,2010,2.676,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,IT,national,EDUC,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,EDUC,2010,2.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,EDUC,2010,75,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,EDUC,2010,1.575,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,EDUC,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,EDUC,2010,3.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,EDUC,2010,61,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,EDUC,2010,2.318,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,HOME,2010,3,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,HOME,2010,1.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,HOME,2010,322,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,HOME,2010,3.22,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,HOME,2010,422,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,HOME,2010,98.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,HOME,2010,426,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,HOME,2010,421.314,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,HOME,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,HOME,2010,1.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,HOME,2010,136,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,IT,national,HOME,2010,2.176,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,IT,national,HOME,2010,13,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,HOME,2010,10.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,HOME,2010,121,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,HOME,2010,12.826,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,HOME,2010,8,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,HOME,2010,12.8,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,HOME,2010,62,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,HOME,2010,7.936,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,RET,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,RET,2010,0.7,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,RET,2010,290,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,RET,2010,2.03,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,RET,2010,258,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,RET,2010,94.0,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,RET,2010,274,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,RET,2010,257.56,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,RET,2010,5,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,RET,2010,2.6,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,RET,2010,174,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,IT,national,RET,2010,4.524,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,IT,national,RET,2010,18,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,RET,2010,14.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,RET,2010,125,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,RET,2010,17.625,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,RET,2010,10,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,RET,2010,14.1,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,RET,2010,69,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,RET,2010,9.729,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC1A_TIME_SP,IT,national,OTH,2010,15,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_RT,IT,national,OTH,2010,3.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_PTP_TIME,IT,national,OTH,2010,475,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC1A_TIME_SP_precise,IT,national,OTH,2010,15.2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC3_TIME_SP,IT,national,OTH,2010,186,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_RT,IT,national,OTH,2010,76.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_PTP_TIME,IT,national,OTH,2010,241,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC3_TIME_SP_precise,IT,national,OTH,2010,185.329,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC41_TIME_SP,IT,national,OTH,2010,2,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_RT,IT,national,OTH,2010,2.4,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_PTP_TIME,IT,national,OTH,2010,102,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC41_TIME_SP_precise,IT,national,OTH,2010,2.448,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC42_TIME_SP,IT,national,OTH,2010,8,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_RT,IT,national,OTH,2010,6.9,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_PTP_TIME,IT,national,OTH,2010,119,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC42_TIME_SP_precise,IT,national,OTH,2010,8.211,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED
+AC43_TIME_SP,IT,national,OTH,2010,7,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_RT,IT,national,OTH,2010,11.2,percent of persons on a diary day,"Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_PTP_TIME,IT,national,OTH,2010,65,"minutes per day, those doing the activity","Eurostat tus_00selfstat (HETUS, ages 20-74)",VERIFIED
+AC43_TIME_SP_precise,IT,national,OTH,2010,7.28,"minutes per day, all persons","Eurostat tus_00selfstat (HETUS, ages 20-74): PTP_RT x PTP_TIME / 100",DERIVED

@@ -57,7 +57,7 @@ function welfare_parts(p::SAGEParams, sol)
     rows = Int[]; cols = Int[]; vals = Float64[]
     @inbounds for s in 1:ns
         α = p.α[s]; credit = net_participation(p, α, z[s]); tr = transfer_at(p, s); tfl = floor_at(p, s)
-        bel = p.social_strength * p.Λ * p.B[s] * QBAR * belong_at(p, s)
+        bel = p.social_strength * p.Λ * p.B[s] * p.qbar * belong_at(p, s)
         for i in 1:na
             x = idx(i, s)
             for d in (0, 1)
@@ -67,13 +67,13 @@ function welfare_parts(p::SAGEParams, sol)
                 lab = (1 + p.subsidy) * α * e * z[s] * p.Z
                 res = p.R * a[i] + lab - p.lumptax + credit * d + tr          # resources before the floor transfer
                 c = max((res + floor_transfer(p, res) - ap) / p.pc, 1e-10)
-                T = tfl + κ * e + QBAR * d
+                T = tfl + κ * e + p.qbar * d
                 uc[x] += w * p.Γ * c^(1 - p.γ) / (1 - p.γ)
                 ue[x] -= w * p.Γ * p.ϕ * T^(1 + p.ψ) / (1 + p.ψ)
                 ub[x] += w * bel * d
                 if z[s] == 0 && d == 1      # participating while unemployed: belonging, and the time it takes
                     ubu[x] += w * bel
-                    ueu[x] -= w * p.Γ * p.ϕ * (T^(1 + p.ψ) - (T - QBAR)^(1 + p.ψ)) / (1 + p.ψ)
+                    ueu[x] -= w * p.Γ * p.ϕ * (T^(1 + p.ψ) - (T - p.qbar)^(1 + p.ψ)) / (1 + p.ψ)
                 end
                 abar[i, s] += w * ap; lbar[i, s] += w * lab; ybar[i, s] += w * (lab + tr)
                 k = clamp(searchsortedlast(a, ap), 1, na - 1)

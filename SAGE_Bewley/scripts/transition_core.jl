@@ -31,7 +31,7 @@ function egm_step(p::SAGEParams, a, V, Va; theta::Float64)
     wv = [(1 + p.subsidy) * p.α[s] * z_vals[s] * p.Z for s in 1:nz]
     oth = [(-p.lumptax + transfer_at(p, s), -p.lumptax + net_participation(p, p.α[s], z_vals[s]) + transfer_at(p, s)) for s in 1:nz]
     tfl = [floor_at(p, s) for s in 1:nz]
-    bel = [p.social_strength * p.Λ * p.B[s] * QBAR * belong_at(p, s) for s in 1:nz]
+    bel = [p.social_strength * p.Λ * p.B[s] * p.qbar * belong_at(p, s) for s in 1:nz]
     D = zeros(na, nz); Dp = zeros(na, nz)
     con_c = (fill(NaN, na, nz), fill(NaN, na, nz)); con_e = (zeros(na, nz), zeros(na, nz))
     for s in 1:nz, d in (0, 1), i in 1:na

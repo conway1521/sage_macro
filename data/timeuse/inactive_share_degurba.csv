@@ -1,0 +1,769 @@
+indicator,country,place,group,year,value,unit,source,status
+employed_share,DE,DEG1,Y15-64,2015,71.39,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y15-64,2015,74.63,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y15-64,2015,77.02,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y15-64,2015,73.97,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG1,Y15-74,2015,63.36,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y15-74,2015,65.18,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y15-74,2015,67.75,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y15-74,2015,65.09,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG1,Y20-64,2015,75.05,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y20-64,2015,78.93,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y20-64,2015,81.1,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y20-64,2015,77.96,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG1,Y_GE15,2015,56.34,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y_GE15,2015,57.14,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y_GE15,2015,59.52,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y_GE15,2015,57.38,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG1,Y15-64,2019,74.23,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y15-64,2019,77.29,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y15-64,2019,79.72,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y15-64,2019,76.69,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG1,Y15-74,2019,66.94,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y15-74,2019,68.2,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y15-74,2019,70.15,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y15-74,2019,68.18,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG1,Y20-64,2019,77.98,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y20-64,2019,81.52,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y20-64,2019,83.57,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y20-64,2019,80.65,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG1,Y_GE15,2019,59.37,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y_GE15,2019,59.53,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y_GE15,2019,61.78,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y_GE15,2019,59.97,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG1,Y15-64,2024,74.61,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y15-64,2024,77.99,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y15-64,2024,81.13,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y15-64,2024,77.23,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG1,Y15-74,2024,66.94,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y15-74,2024,67.64,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y15-74,2024,69.25,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y15-74,2024,67.68,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG1,Y20-64,2024,78.33,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y20-64,2024,82.04,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y20-64,2024,84.8,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y20-64,2024,81.07,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG1,Y_GE15,2024,59.4,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y_GE15,2024,58.8,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y_GE15,2024,60.97,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y_GE15,2024,59.44,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG1,Y15-64,2025,74.33,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y15-64,2025,78.02,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y15-64,2025,81.26,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y15-64,2025,77.17,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG1,Y15-74,2025,66.73,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y15-74,2025,67.72,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y15-74,2025,69.15,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y15-74,2025,67.62,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG1,Y20-64,2025,78.22,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y20-64,2025,82.19,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y20-64,2025,85.0,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y20-64,2025,81.14,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG1,Y_GE15,2025,59.15,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG2,Y_GE15,2025,58.84,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,DEG3,Y_GE15,2025,60.66,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,DE,TOTAL,Y_GE15,2025,59.31,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG1,Y15-64,2015,62.5,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG2,Y15-64,2015,60.59,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG3,Y15-64,2015,67.89,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,TOTAL,Y15-64,2015,63.81,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG1,Y15-74,2015,55.7,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG2,Y15-74,2015,52.79,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG3,Y15-74,2015,58.72,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,TOTAL,Y15-74,2015,56.01,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG1,Y20-64,2015,68.07,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG2,Y20-64,2015,66.32,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG3,Y20-64,2015,73.81,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,TOTAL,Y20-64,2015,69.54,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG1,Y_GE15,2015,50.36,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG2,Y_GE15,2015,46.95,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG3,Y_GE15,2015,52.37,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,TOTAL,Y_GE15,2015,50.21,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG1,Y15-64,2019,64.1,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG2,Y15-64,2019,64.72,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG3,Y15-64,2019,68.05,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,TOTAL,Y15-64,2019,65.58,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG1,Y15-74,2019,56.44,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG2,Y15-74,2019,54.98,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG3,Y15-74,2019,57.66,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,TOTAL,Y15-74,2019,56.56,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG1,Y20-64,2019,70.07,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG2,Y20-64,2019,70.97,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG3,Y20-64,2019,74.09,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,TOTAL,Y20-64,2019,71.63,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG1,Y_GE15,2019,51.09,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG2,Y_GE15,2019,48.52,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG3,Y_GE15,2019,51.31,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,TOTAL,Y_GE15,2019,50.62,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,FR,DEG1,Y15-64,2024,67.5,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,DEG2,Y15-64,2024,67.62,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,DEG3,Y15-64,2024,71.27,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,TOTAL,Y15-64,2024,68.81,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,DEG1,Y15-74,2024,59.72,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,DEG2,Y15-74,2024,57.56,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,DEG3,Y15-74,2024,59.89,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,TOTAL,Y15-74,2024,59.34,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,DEG1,Y20-64,2024,73.87,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,DEG2,Y20-64,2024,73.52,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,DEG3,Y20-64,2024,77.29,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,TOTAL,Y20-64,2024,74.97,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,DEG1,Y_GE15,2024,53.3,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,DEG2,Y_GE15,2024,50.35,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,DEG3,Y_GE15,2024,52.32,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,TOTAL,Y_GE15,2024,52.35,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+employed_share,FR,DEG1,Y15-64,2025,68.29,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,FR,DEG2,Y15-64,2025,67.42,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,FR,DEG3,Y15-64,2025,71.64,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,FR,TOTAL,Y15-64,2025,69.26,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,FR,DEG1,Y15-74,2025,60.52,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,FR,DEG2,Y15-74,2025,57.29,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,FR,DEG3,Y15-74,2025,60.35,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,FR,TOTAL,Y15-74,2025,59.78,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,FR,DEG1,Y20-64,2025,74.64,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,FR,DEG2,Y20-64,2025,73.2,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,FR,DEG3,Y20-64,2025,77.6,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,FR,TOTAL,Y20-64,2025,75.36,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,FR,DEG1,Y_GE15,2025,53.86,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,FR,DEG2,Y_GE15,2025,49.76,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,FR,DEG3,Y_GE15,2025,52.7,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,FR,TOTAL,Y_GE15,2025,52.57,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+employed_share,IT,DEG1,Y15-64,2015,57.02,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y15-64,2015,56.12,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y15-64,2015,55.62,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y15-64,2015,56.29,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG1,Y15-74,2015,49.75,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y15-74,2015,48.98,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y15-74,2015,48.84,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y15-74,2015,49.2,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG1,Y20-64,2015,61.27,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y20-64,2015,60.47,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y20-64,2015,59.65,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y20-64,2015,60.53,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG1,Y_GE15,2015,43.42,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y_GE15,2015,43.21,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y_GE15,2015,42.64,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y_GE15,2015,43.14,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG1,Y15-64,2019,59.54,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y15-64,2019,59.22,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y15-64,2019,58.31,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y15-64,2019,59.11,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG1,Y15-74,2019,52.07,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y15-74,2019,51.73,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y15-74,2019,50.77,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y15-74,2019,51.61,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG1,Y20-64,2019,64.12,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y20-64,2019,63.82,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y20-64,2019,62.53,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y20-64,2019,63.61,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG1,Y_GE15,2019,45.07,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y_GE15,2019,45.26,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y_GE15,2019,44.02,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y_GE15,2019,44.89,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG1,Y15-64,2024,62.46,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y15-64,2024,61.97,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y15-64,2024,62.24,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y15-64,2024,62.18,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG1,Y15-74,2024,54.77,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y15-74,2024,53.82,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y15-74,2024,53.56,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y15-74,2024,54.11,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG1,Y20-64,2024,67.48,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y20-64,2024,66.8,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y20-64,2024,67.05,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y20-64,2024,67.07,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG1,Y_GE15,2024,46.94,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y_GE15,2024,46.6,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y_GE15,2024,45.86,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y_GE15,2024,46.6,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG1,Y15-64,2025,62.38,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y15-64,2025,62.38,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y15-64,2025,63.34,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y15-64,2025,62.53,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG1,Y15-74,2025,54.83,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y15-74,2025,54.32,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y15-74,2025,54.49,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y15-74,2025,54.52,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG1,Y20-64,2025,67.43,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y20-64,2025,67.44,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y20-64,2025,68.19,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y20-64,2025,67.55,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG1,Y_GE15,2025,46.98,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG2,Y_GE15,2025,46.87,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,DEG3,Y_GE15,2025,46.46,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+employed_share,IT,TOTAL,Y_GE15,2025,46.84,percent of population,"Eurostat lfsa_pgauws (LFS, private households): EMP / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y15-64,2015,24.01,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y15-64,2015,22.09,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y15-64,2015,20.16,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y15-64,2015,22.37,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y15-74,2015,32.61,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y15-74,2015,32.01,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y15-74,2015,29.82,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y15-74,2015,31.74,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y20-64,2015,20.21,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y20-64,2015,17.67,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y20-64,2015,16.01,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y20-64,2015,18.25,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y_GE15,2015,40.09,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y_GE15,2015,40.4,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y_GE15,2015,38.36,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y_GE15,2015,39.83,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y15-64,2019,22.44,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y15-64,2019,20.44,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y15-64,2019,18.55,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y15-64,2019,20.76,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y15-74,2019,30.11,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y15-74,2019,29.84,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y15-74,2019,28.36,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y15-74,2019,29.61,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y20-64,2019,18.63,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y20-64,2019,16.19,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y20-64,2019,14.68,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y20-64,2019,16.77,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y_GE15,2019,38.02,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y_GE15,2019,38.77,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y_GE15,2019,36.92,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y_GE15,2019,38.08,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y15-64,2024,21.77,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y15-64,2024,19.46,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y15-64,2024,17.1,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y15-64,2024,19.94,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y15-74,2024,29.88,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y15-74,2024,30.19,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y15-74,2024,29.28,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y15-74,2024,29.9,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y20-64,2024,17.99,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y20-64,2024,15.43,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y20-64,2024,13.46,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y20-64,2024,16.09,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y_GE15,2024,37.8,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y_GE15,2024,39.33,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y_GE15,2024,37.74,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y_GE15,2024,38.45,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y15-64,2025,21.53,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y15-64,2025,19.24,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y15-64,2025,16.66,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y15-64,2025,19.66,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y15-74,2025,29.63,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y15-74,2025,29.97,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y15-74,2025,29.12,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y15-74,2025,29.68,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y20-64,2025,17.59,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y20-64,2025,15.08,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y20-64,2025,12.96,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y20-64,2025,15.67,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG1,Y_GE15,2025,37.64,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG2,Y_GE15,2025,39.16,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,DEG3,Y_GE15,2025,37.83,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,DE,TOTAL,Y_GE15,2025,38.33,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG1,Y15-64,2015,29.21,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG2,Y15-64,2015,31.03,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG3,Y15-64,2015,26.48,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,TOTAL,Y15-64,2015,28.75,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG1,Y15-74,2015,36.98,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG2,Y15-74,2015,39.96,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG3,Y15-74,2015,36.46,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,TOTAL,Y15-74,2015,37.52,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG1,Y20-64,2015,23.27,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG2,Y20-64,2015,24.92,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG3,Y20-64,2015,20.4,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,TOTAL,Y20-64,2015,22.72,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG1,Y_GE15,2015,43.03,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG2,Y_GE15,2015,46.61,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG3,Y_GE15,2015,43.33,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,TOTAL,Y_GE15,2015,43.99,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG1,Y15-64,2019,28.83,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG2,Y15-64,2019,29.21,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG3,Y15-64,2019,27.13,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,TOTAL,Y15-64,2019,28.33,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG1,Y15-74,2019,37.4,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG2,Y15-74,2019,39.9,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG3,Y15-74,2019,38.29,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,TOTAL,Y15-74,2019,38.24,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG1,Y20-64,2019,22.48,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG2,Y20-64,2019,22.73,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG3,Y20-64,2019,20.87,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,TOTAL,Y20-64,2019,21.98,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG1,Y_GE15,2019,43.34,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG2,Y_GE15,2019,46.97,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG3,Y_GE15,2019,45.09,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,TOTAL,Y_GE15,2019,44.73,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,FR,DEG1,Y15-64,2024,26.15,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,DEG2,Y15-64,2024,26.7,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,DEG3,Y15-64,2024,24.2,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,TOTAL,Y15-64,2024,25.59,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,DEG1,Y15-74,2024,34.71,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,DEG2,Y15-74,2024,37.66,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,DEG3,Y15-74,2024,36.35,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,TOTAL,Y15-74,2024,35.88,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,DEG1,Y20-64,2024,19.64,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,DEG2,Y20-64,2024,20.79,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,DEG3,Y20-64,2024,18.21,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,TOTAL,Y20-64,2024,19.38,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,DEG1,Y_GE15,2024,41.74,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,DEG2,Y_GE15,2024,45.48,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,DEG3,Y_GE15,2024,44.4,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,TOTAL,Y_GE15,2024,43.44,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+inactive_share,FR,DEG1,Y15-64,2025,25.04,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,FR,DEG2,Y15-64,2025,26.61,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,FR,DEG3,Y15-64,2025,23.69,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,FR,TOTAL,Y15-64,2025,24.9,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,FR,DEG1,Y15-74,2025,33.61,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,FR,DEG2,Y15-74,2025,37.69,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,FR,DEG3,Y15-74,2025,35.75,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,FR,TOTAL,Y15-74,2025,35.23,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,FR,DEG1,Y20-64,2025,18.55,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,FR,DEG2,Y20-64,2025,20.83,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,FR,DEG3,Y20-64,2025,17.77,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,FR,TOTAL,Y20-64,2025,18.75,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,FR,DEG1,Y_GE15,2025,40.92,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,FR,DEG2,Y_GE15,2025,45.88,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,FR,DEG3,Y_GE15,2025,43.91,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,FR,TOTAL,Y_GE15,2025,43.04,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+inactive_share,IT,DEG1,Y15-64,2015,34.87,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y15-64,2015,36.39,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y15-64,2015,36.68,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y15-64,2015,35.96,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG1,Y15-74,2015,43.28,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y15-74,2015,44.58,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y15-74,2015,44.51,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y15-74,2015,44.14,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG1,Y20-64,2015,30.31,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y20-64,2015,31.77,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y20-64,2015,32.39,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y20-64,2015,31.44,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG1,Y_GE15,2015,50.52,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y_GE15,2015,51.12,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y_GE15,2015,51.58,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y_GE15,2015,51.03,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG1,Y15-64,2019,33.1,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y15-64,2019,34.53,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y15-64,2019,35.35,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y15-64,2019,34.25,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG1,Y15-74,2019,41.62,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y15-74,2019,42.91,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y15-74,2019,43.84,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y15-74,2019,42.71,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG1,Y20-64,2019,28.19,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y20-64,2019,29.69,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y20-64,2019,30.89,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y20-64,2019,29.49,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG1,Y_GE15,2019,49.5,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y_GE15,2019,50.07,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y_GE15,2019,51.32,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y_GE15,2019,50.18,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG1,Y15-64,2024,32.03,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y15-64,2024,34.13,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y15-64,2024,34.09,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y15-64,2024,33.39,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG1,Y15-74,2024,40.5,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y15-74,2024,42.87,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y15-74,2024,43.35,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y15-74,2024,42.12,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG1,Y20-64,2024,26.76,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y20-64,2024,29.16,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y20-64,2024,29.13,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y20-64,2024,28.32,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG1,Y_GE15,2024,49.02,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y_GE15,2024,50.54,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y_GE15,2024,51.5,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y_GE15,2024,50.16,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG1,Y15-64,2025,32.58,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y15-64,2025,33.83,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y15-64,2025,33.11,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y15-64,2025,33.28,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG1,Y15-74,2025,40.84,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y15-74,2025,42.46,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y15-74,2025,42.55,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y15-74,2025,41.9,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG1,Y20-64,2025,27.29,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y20-64,2025,28.57,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y20-64,2025,28.07,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y20-64,2025,28.04,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG1,Y_GE15,2025,49.32,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG2,Y_GE15,2025,50.35,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,DEG3,Y_GE15,2025,51.02,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+inactive_share,IT,TOTAL,Y_GE15,2025,50.09,percent of population,"Eurostat lfsa_pgauws (LFS, private households): INAC / POP","VERIFIED, ratio DERIVED"
+population,DE,DEG1,Y15-64,2015,19497.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y15-64,2015,21712.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y15-64,2015,11754.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y15-64,2015,52963.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG1,Y15-74,2015,22402.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y15-74,2015,25462.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y15-74,2015,13679.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y15-74,2015,61544.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG1,Y20-64,2015,18212.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y20-64,2015,19928.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y20-64,2015,10788.6,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y20-64,2015,48929.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG1,Y_GE15,2015,25275.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y_GE15,2015,29156.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y_GE15,2015,15638.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y_GE15,2015,70070.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG1,Y15-64,2019,19880.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y15-64,2019,21808.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y15-64,2019,11856.9,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y15-64,2019,53545.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG1,Y15-74,2019,22596.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y15-74,2019,25447.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y15-74,2019,13886.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y15-74,2019,61929.9,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG1,Y20-64,2019,18546.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y20-64,2019,20081.6,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y20-64,2019,10915.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y20-64,2019,49543.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG1,Y_GE15,2019,25574.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y_GE15,2019,29282.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y_GE15,2019,15837.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y_GE15,2019,70694.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG1,Y15-64,2024,20828.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y15-64,2024,22334.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y15-64,2024,9676.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y15-64,2024,52839.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG1,Y15-74,2024,23966.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y15-74,2024,26797.6,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y15-74,2024,11835.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y15-74,2024,62599.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG1,Y20-64,2024,19409.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y20-64,2024,20591.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y20-64,2024,8946.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y20-64,2024,48947.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG1,Y_GE15,2024,27146.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y_GE15,2024,30993.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y_GE15,2024,13515.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y_GE15,2024,71655.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG1,Y15-64,2025,20655.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y15-64,2025,22146.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y15-64,2025,9803.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y15-64,2025,52604.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG1,Y15-74,2025,23862.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y15-74,2025,26655.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y15-74,2025,12058.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y15-74,2025,62576.6,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG1,Y20-64,2025,19194.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y20-64,2025,20377.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y20-64,2025,9055.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y20-64,2025,48626.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG1,Y_GE15,2025,27067.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG2,Y_GE15,2025,30858.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,DEG3,Y_GE15,2025,13823.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,DE,TOTAL,Y_GE15,2025,71748.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG1,Y15-64,2015,17747.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG2,Y15-64,2015,9770.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG3,Y15-64,2015,13439.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,TOTAL,Y15-64,2015,40956.9,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG1,Y15-74,2015,20115.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG2,Y15-74,2015,11330.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG3,Y15-74,2015,15720.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,TOTAL,Y15-74,2015,47165.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG1,Y20-64,2015,16102.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG2,Y20-64,2015,8809.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG3,Y20-64,2015,12164.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,TOTAL,Y20-64,2015,37076.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG1,Y_GE15,2015,22272.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG2,Y_GE15,2015,12751.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG3,Y_GE15,2015,17641.6,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,TOTAL,Y_GE15,2015,52665.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG1,Y15-64,2019,18334.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG2,Y15-64,2019,8458.9,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG3,Y15-64,2019,13936.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,TOTAL,Y15-64,2019,40730.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG1,Y15-74,2019,21142.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG2,Y15-74,2019,10074.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG3,Y15-74,2019,16691.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,TOTAL,Y15-74,2019,47907.6,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG1,Y20-64,2019,16575.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG2,Y20-64,2019,7567.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG3,Y20-64,2019,12547.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,TOTAL,Y20-64,2019,36689.9,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG1,Y_GE15,2019,23392.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG2,Y_GE15,2019,11431.9,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG3,Y_GE15,2019,18775.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,TOTAL,Y_GE15,2019,53599.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,FR,DEG1,Y15-64,2024,18997.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,DEG2,Y15-64,2024,8207.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,DEG3,Y15-64,2024,14097.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,TOTAL,Y15-64,2024,41301.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,DEG1,Y15-74,2024,21878.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,DEG2,Y15-74,2024,9822.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,DEG3,Y15-74,2024,17115.6,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,TOTAL,Y15-74,2024,48816.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,DEG1,Y20-64,2024,17088.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,DEG2,Y20-64,2024,7378.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,DEG3,Y20-64,2024,12677.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,TOTAL,Y20-64,2024,37144.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,DEG1,Y_GE15,2024,24565.6,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,DEG2,Y_GE15,2024,11243.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,DEG3,Y_GE15,2024,19627.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,TOTAL,Y_GE15,2024,55436.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (flag bd)
+population,FR,DEG1,Y15-64,2025,18595.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,FR,DEG2,Y15-64,2025,8639.9,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,FR,DEG3,Y15-64,2025,14325.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,FR,TOTAL,Y15-64,2025,41561.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,FR,DEG1,Y15-74,2025,21363.9,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,FR,DEG2,Y15-74,2025,10342.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,FR,DEG3,Y15-74,2025,17359.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,FR,TOTAL,Y15-74,2025,49066.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,FR,DEG1,Y20-64,2025,16722.9,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,FR,DEG2,Y20-64,2025,7771.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,FR,DEG3,Y20-64,2025,12895.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,FR,TOTAL,Y20-64,2025,37389.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,FR,DEG1,Y_GE15,2025,24045.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,FR,DEG2,Y_GE15,2025,11923.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,FR,DEG3,Y_GE15,2025,19922.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,FR,TOTAL,Y_GE15,2025,55891.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED (definition differs)
+population,IT,DEG1,Y15-64,2015,12722.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y15-64,2015,16862.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y15-64,2015,9449.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y15-64,2015,39034.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG1,Y15-74,2015,14880.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y15-74,2015,19657.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y15-74,2015,10982.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y15-74,2015,45520.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG1,Y20-64,2015,11808.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y20-64,2015,15590.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y20-64,2015,8771.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y20-64,2015,36169.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG1,Y_GE15,2015,17107.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y_GE15,2015,22340.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y_GE15,2015,12622.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y_GE15,2015,52070.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG1,Y15-64,2019,12508.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y15-64,2019,16395.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y15-64,2019,9103.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y15-64,2019,38006.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG1,Y15-74,2019,14715.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y15-74,2019,19211.9,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y15-74,2019,10744.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y15-74,2019,44671.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG1,Y20-64,2019,11575.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y20-64,2019,15134.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y20-64,2019,8439.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y20-64,2019,35149.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG1,Y_GE15,2019,17069.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y_GE15,2019,22032.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y_GE15,2019,12432.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y_GE15,2019,51534.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG1,Y15-64,2024,12996.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y15-64,2024,18386.9,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y15-64,2024,5847.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y15-64,2024,37230.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG1,Y15-74,2024,15312.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y15-74,2024,21780.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y15-74,2024,7019.9,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y15-74,2024,44112.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG1,Y20-64,2024,11981.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y20-64,2024,16961.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y20-64,2024,5389.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y20-64,2024,34332.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG1,Y_GE15,2024,17926.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y_GE15,2024,25209.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y_GE15,2024,8222.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y_GE15,2024,51357.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG1,Y15-64,2025,13097.6,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y15-64,2025,18378.7,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y15-64,2025,5709.8,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y15-64,2025,37186.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG1,Y15-74,2025,15430.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y15-74,2025,21808.4,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y15-74,2025,6876.3,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y15-74,2025,44114.9,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG1,Y20-64,2025,12079.6,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y20-64,2025,16915.5,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y20-64,2025,5281.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y20-64,2025,34276.1,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG1,Y_GE15,2025,18067.2,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG2,Y_GE15,2025,25326.9,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,DEG3,Y_GE15,2025,8089.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+population,IT,TOTAL,Y_GE15,2025,51483.0,thousand persons,"Eurostat lfsa_pgauws (LFS, private households)",VERIFIED
+unemployed_share,DE,DEG1,Y15-64,2015,4.6,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y15-64,2015,3.28,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y15-64,2015,2.82,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y15-64,2015,3.66,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG1,Y15-74,2015,4.02,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y15-74,2015,2.81,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y15-74,2015,2.43,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y15-74,2015,3.17,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG1,Y20-64,2015,4.74,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y20-64,2015,3.4,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y20-64,2015,2.89,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y20-64,2015,3.79,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG1,Y_GE15,2015,3.57,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y_GE15,2015,2.46,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y_GE15,2015,2.12,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y_GE15,2015,2.78,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG1,Y15-64,2019,3.33,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y15-64,2019,2.27,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y15-64,2019,1.73,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y15-64,2019,2.54,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG1,Y15-74,2019,2.95,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y15-74,2019,1.96,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y15-74,2019,1.49,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y15-74,2019,2.22,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG1,Y20-64,2019,3.39,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y20-64,2019,2.29,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y20-64,2019,1.74,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y20-64,2019,2.58,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG1,Y_GE15,2019,2.61,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y_GE15,2019,1.71,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y_GE15,2019,1.3,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y_GE15,2019,1.94,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG1,Y15-64,2024,3.61,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y15-64,2024,2.56,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y15-64,2024,1.77,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y15-64,2024,2.83,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG1,Y15-74,2024,3.18,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y15-74,2024,2.17,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y15-74,2024,1.47,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y15-74,2024,2.42,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG1,Y20-64,2024,3.69,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y20-64,2024,2.53,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y20-64,2024,1.74,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y20-64,2024,2.84,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG1,Y_GE15,2024,2.81,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y_GE15,2024,1.88,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y_GE15,2024,1.29,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y_GE15,2024,2.12,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG1,Y15-64,2025,4.14,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y15-64,2025,2.74,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y15-64,2025,2.08,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y15-64,2025,3.17,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG1,Y15-74,2025,3.64,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y15-74,2025,2.31,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y15-74,2025,1.73,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y15-74,2025,2.7,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG1,Y20-64,2025,4.19,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y20-64,2025,2.74,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y20-64,2025,2.04,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y20-64,2025,3.18,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG1,Y_GE15,2025,3.21,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG2,Y_GE15,2025,2.0,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,DEG3,Y_GE15,2025,1.51,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,DE,TOTAL,Y_GE15,2025,2.36,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG1,Y15-64,2015,8.29,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG2,Y15-64,2015,8.38,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG3,Y15-64,2015,5.63,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,TOTAL,Y15-64,2015,7.44,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG1,Y15-74,2015,7.33,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG2,Y15-74,2015,7.25,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG3,Y15-74,2015,4.83,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,TOTAL,Y15-74,2015,6.48,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG1,Y20-64,2015,8.66,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG2,Y20-64,2015,8.76,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG3,Y20-64,2015,5.78,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,TOTAL,Y20-64,2015,7.74,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG1,Y_GE15,2015,6.62,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG2,Y_GE15,2015,6.44,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG3,Y_GE15,2015,4.3,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,TOTAL,Y_GE15,2015,5.8,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG1,Y15-64,2019,7.07,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG2,Y15-64,2019,6.07,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG3,Y15-64,2019,4.82,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,TOTAL,Y15-64,2019,6.09,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG1,Y15-74,2019,6.16,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG2,Y15-74,2019,5.12,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG3,Y15-74,2019,4.05,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,TOTAL,Y15-74,2019,5.2,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG1,Y20-64,2019,7.45,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG2,Y20-64,2019,6.3,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG3,Y20-64,2019,5.04,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,TOTAL,Y20-64,2019,6.39,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG1,Y_GE15,2019,5.57,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG2,Y_GE15,2019,4.51,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG3,Y_GE15,2019,3.6,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,TOTAL,Y_GE15,2019,4.65,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,FR,DEG1,Y15-64,2024,6.34,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,DEG2,Y15-64,2024,5.68,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,DEG3,Y15-64,2024,4.53,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,TOTAL,Y15-64,2024,5.59,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,DEG1,Y15-74,2024,5.57,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,DEG2,Y15-74,2024,4.78,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,DEG3,Y15-74,2024,3.76,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,TOTAL,Y15-74,2024,4.78,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,DEG1,Y20-64,2024,6.49,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,DEG2,Y20-64,2024,5.68,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,DEG3,Y20-64,2024,4.5,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,TOTAL,Y20-64,2024,5.65,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,DEG1,Y_GE15,2024,4.96,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,DEG2,Y_GE15,2024,4.17,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,DEG3,Y_GE15,2024,3.28,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,TOTAL,Y_GE15,2024,4.21,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: bd), ratio DERIVED"
+unemployed_share,FR,DEG1,Y15-64,2025,6.67,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,FR,DEG2,Y15-64,2025,5.97,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,FR,DEG3,Y15-64,2025,4.67,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,FR,TOTAL,Y15-64,2025,5.84,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,FR,DEG1,Y15-74,2025,5.88,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,FR,DEG2,Y15-74,2025,5.02,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,FR,DEG3,Y15-74,2025,3.9,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,FR,TOTAL,Y15-74,2025,5.0,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,FR,DEG1,Y20-64,2025,6.81,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,FR,DEG2,Y20-64,2025,5.97,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,FR,DEG3,Y20-64,2025,4.63,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,FR,TOTAL,Y20-64,2025,5.88,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,FR,DEG1,Y_GE15,2025,5.22,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,FR,DEG2,Y_GE15,2025,4.36,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,FR,DEG3,Y_GE15,2025,3.4,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,FR,TOTAL,Y_GE15,2025,4.39,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED (Eurostat flags: d), ratio DERIVED"
+unemployed_share,IT,DEG1,Y15-64,2015,8.11,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y15-64,2015,7.49,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y15-64,2015,7.7,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y15-64,2015,7.75,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG1,Y15-74,2015,6.97,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y15-74,2015,6.44,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y15-74,2015,6.65,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y15-74,2015,6.66,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG1,Y20-64,2015,8.42,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y20-64,2015,7.77,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y20-64,2015,7.96,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y20-64,2015,8.03,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG1,Y_GE15,2015,6.06,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y_GE15,2015,5.67,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y_GE15,2015,5.78,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y_GE15,2015,5.83,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG1,Y15-64,2019,7.37,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y15-64,2019,6.25,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y15-64,2019,6.33,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y15-64,2019,6.64,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG1,Y15-74,2019,6.31,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y15-74,2019,5.36,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y15-74,2019,5.39,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y15-74,2019,5.68,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG1,Y20-64,2019,7.69,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y20-64,2019,6.48,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y20-64,2019,6.58,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y20-64,2019,6.9,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG1,Y_GE15,2019,5.44,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y_GE15,2019,4.67,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y_GE15,2019,4.66,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y_GE15,2019,4.92,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG1,Y15-64,2024,5.52,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y15-64,2024,3.9,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y15-64,2024,3.67,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y15-64,2024,4.43,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG1,Y15-74,2024,4.73,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y15-74,2024,3.32,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y15-74,2024,3.09,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y15-74,2024,3.77,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG1,Y20-64,2024,5.76,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y20-64,2024,4.05,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y20-64,2024,3.82,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y20-64,2024,4.61,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG1,Y_GE15,2024,4.04,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y_GE15,2024,2.87,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y_GE15,2024,2.64,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y_GE15,2024,3.24,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG1,Y15-64,2025,5.04,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y15-64,2025,3.79,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y15-64,2025,3.56,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y15-64,2025,4.2,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG1,Y15-74,2025,4.33,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y15-74,2025,3.22,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y15-74,2025,2.97,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y15-74,2025,3.57,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG1,Y20-64,2025,5.28,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y20-64,2025,3.99,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y20-64,2025,3.74,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y20-64,2025,4.41,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG1,Y_GE15,2025,3.7,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG2,Y_GE15,2025,2.78,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,DEG3,Y_GE15,2025,2.52,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"
+unemployed_share,IT,TOTAL,Y_GE15,2025,3.06,percent of population,"Eurostat lfsa_pgauws (LFS, private households): UNE / POP","VERIFIED, ratio DERIVED"

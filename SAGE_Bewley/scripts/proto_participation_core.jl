@@ -32,7 +32,7 @@ transfer_at(p::SAGEParams, i_z::Int) = isempty(p.transfer) ? 0.0 : p.transfer[i_
 # foregone earnings of the time lump, LESS the monetary cost of taking part.
 # Both are paid only when d = 1, so every budget line below multiplies this by
 # the participation indicator. With pcost = 0 it is the stage-6 credit exactly.
-net_participation(p::SAGEParams, α, z) = p.partcredit * α * z * p.Z * QBAR - p.pcost
+net_participation(p::SAGEParams, α, z) = p.partcredit * α * z * p.Z * p.qbar - p.pcost
 
 # State-contingent value of belonging (stage 7): one unless belong_scale is set.
 belong_at(p::SAGEParams, i_z::Int) = isempty(p.belong_scale) ? 1.0 : p.belong_scale[i_z]
@@ -73,7 +73,7 @@ function solve_participation(p::SAGEParams, Q_agg::Float64; continuous::Bool = t
     pair = 0
     for i_z in 1:nz
         z = z_vals[i_z]; α = p.α[i_z]; Bz = p.B[i_z]
-        belong = p.social_strength * p.Λ * Bz * Q_agg * QBAR * belong_at(p, i_z)
+        belong = p.social_strength * p.Λ * Bz * Q_agg * p.qbar * belong_at(p, i_z)
         tr = transfer_at(p, i_z)
         for i_a in 1:na
             res = p.R * a[i_a]; s = sidx(i_a, i_z)
@@ -84,12 +84,12 @@ function solve_participation(p::SAGEParams, Q_agg::Float64; continuous::Bool = t
                 # earnings of the time lump, less the monetary cost (stage 7)
                 credit = net_participation(p, α, z); tfl = floor_at(p, i_z)
                 for d in (0, 1)
-                    tmax = 1.0 - tfl - QBAR * d
+                    tmax = 1.0 - tfl - p.qbar * d
                     for e in e_grid
                         e > tmax && break
                         c = res + (1 + p.subsidy) * α * e * z * p.Z - p.lumptax - anext + credit * d + tr
                         c <= 0 && continue
-                        T = tfl + e + QBAR * d
+                        T = tfl + e + p.qbar * d
                         ut = p.Γ * (c^(1 - p.γ) / (1 - p.γ) -
                                     p.ϕ * T^(1 + p.ψ) / (1 + p.ψ)) + belong * d
                         ut > best && (best = ut; bestd = d; beste = e)
@@ -122,7 +122,7 @@ function solve_participation(p::SAGEParams, Q_agg::Float64; continuous::Bool = t
         EV = Vmat * Π'                                  # EV[k, z] = E[V(a_k, z')|z]
         for i_z in 1:nz
             z = z_vals[i_z]; α = p.α[i_z]; Bz = p.B[i_z]
-            belong = p.social_strength * p.Λ * Bz * Q_agg * QBAR * belong_at(p, i_z)
+            belong = p.social_strength * p.Λ * Bz * Q_agg * p.qbar * belong_at(p, i_z)
             tr = transfer_at(p, i_z)
             evz = view(EV, :, i_z)
             for i_a in 1:na
@@ -130,7 +130,7 @@ function solve_participation(p::SAGEParams, Q_agg::Float64; continuous::Bool = t
                 credit = net_participation(p, α, z); tfl = floor_at(p, i_z)
                 resources = p.R * a[i_a] + (1 + p.subsidy) * α * e * z * p.Z -
                             p.lumptax + credit * d + tr
-                Tt = tfl + e + QBAR * d
+                Tt = tfl + e + p.qbar * d
                 disut = p.Γ * p.ϕ * Tt^(1 + p.ψ) / (1 + p.ψ)
                 hi = min(resources - 1e-10, a[end])
                 if hi <= a[1]
@@ -221,11 +221,11 @@ function solve_participation(p::SAGEParams, Q_agg::Float64; continuous::Bool = t
         meaninc += λ[i_a, i_z] * p.α[i_z] * epol[i_a, i_z] * z_vals[i_z]
     end
     if full
-        return (Q = QBAR * part, rate = part, meaninc = meaninc, partbase = partbase,
+        return (Q = p.qbar * part, rate = part, meaninc = meaninc, partbase = partbase,
                 a = a, lambda = λ, dpol = dpol, epol = epol, anext = anext,
                 astar = astar, z_vals = z_vals, part_nodes = part_nodes)
     end
-    return QBAR * part, part, meaninc, partbase
+    return p.qbar * part, part, meaninc, partbase
 end
 
 # =============================================================================
@@ -279,12 +279,12 @@ function participation_rewards(p::SAGEParams)
             res = p.R * a[i_a]; s = sidx(i_a, i_z)
             for k in 1:na, d in (0, 1)
                 best = -Inf; beste = 0.0
-                tmax = 1.0 - tfl - QBAR * d
+                tmax = 1.0 - tfl - p.qbar * d
                 for e in e_grid
                     e > tmax && break
                     c = res + (1 + p.subsidy) * α * e * z * p.Z - p.lumptax - a[k] + credit * d + tr
                     c <= 0 && continue
-                    T = tfl + e + QBAR * d
+                    T = tfl + e + p.qbar * d
                     ut = p.Γ * (c^(1 - p.γ) / (1 - p.γ) - p.ϕ * T^(1 + p.ψ) / (1 + p.ψ))
                     ut > best && (best = ut; beste = e)
                 end
@@ -324,7 +324,7 @@ function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64
     Ed = rw.Ed
     Rd = (rw.Rd[1], copy(rw.Rd[2]))
     for i_z in 1:nz
-        belong = p.social_strength * p.Λ * p.B[i_z] * Q_agg * QBAR * belong_at(p, i_z)
+        belong = p.social_strength * p.Λ * p.B[i_z] * Q_agg * p.qbar * belong_at(p, i_z)
         belong == 0.0 && continue
         for i_a in 1:na
             s = sidx(i_a, i_z)
@@ -400,7 +400,7 @@ function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64
     a_d = (zeros(na, nz), zeros(na, nz))
     for i_z in 1:nz
         z = z_vals[i_z]; α = p.α[i_z]; Bz = p.B[i_z]
-        belong = p.social_strength * p.Λ * Bz * Q_agg * QBAR * belong_at(p, i_z)
+        belong = p.social_strength * p.Λ * Bz * Q_agg * p.qbar * belong_at(p, i_z)
         credit = net_participation(p, α, z); tfl = floor_at(p, i_z)
         tr = transfer_at(p, i_z)
         evz = view(EV, :, i_z)
@@ -410,7 +410,7 @@ function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64
             ee = Ed[d+1][s, kb]
             e_d[d+1][i_a, i_z] = ee
             resources = p.R * a[i_a] + (1 + p.subsidy) * α * ee * z * p.Z - p.lumptax + credit * d + tr
-            Tt = tfl + ee + QBAR * d
+            Tt = tfl + ee + p.qbar * d
             disut = p.Γ * p.ϕ * Tt^(1 + p.ψ) / (1 + p.ψ)
             hi = min(resources - 1e-10, a[end])
             if hi <= a[1] || Rd[d+1][s, kb] == -Inf
@@ -470,9 +470,9 @@ function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64
         partbase += w * p1 * p.α[i_z] * z_vals[i_z]
     end
     if full
-        return (Q = QBAR * part, rate = part, meaninc = meaninc, partbase = partbase,
+        return (Q = p.qbar * part, rate = part, meaninc = meaninc, partbase = partbase,
                 a = a, lambda = λ, P1 = P1, e_d = e_d, a_d = a_d, V = V,
                 z_vals = z_vals, iters = iters, theta = theta)
     end
-    return QBAR * part, part, meaninc, partbase
+    return p.qbar * part, part, meaninc, partbase
 end

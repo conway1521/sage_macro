@@ -19,7 +19,7 @@ D = Dict("FR" => (liq = 0.059, htm = 0.222, mpc = 0.392), "DE" => (liq = 0.140, 
          "IT" => (liq = 0.272, htm = 0.179, mpc = 0.469))[code]
 E = parse(Float64, country_rows()[code]["effort_target"])
 TOL = [0.005, 0.02, 0.01]          # effort, liquid wealth over income, hand-to-mouth
-base = SAGEConfig(country_config(code; config = cfg, S = false, A = occursin('A', cfg)); effort_mode = :job, nbeta = 5)
+base = SAGEConfig(country_config(code; config = cfg, v3 = true, missing_ok = true, S = false, A = occursin('A', cfg)); nbeta = 5)
 LO = [log(0.5), 0.86, 0.0]; HI = [log(60.0), 0.985, 0.15]
 at(x) = SAGEConfig(base; phi = exp(x[1]), beta_bar = x[2], beta_spread = x[3])
 mom(r) = [r.mean_effort_employed, r.wealth_p50 / r.median_income, r.hand_to_mouth_kvw]
@@ -28,7 +28,7 @@ t0 = time(); ns = Ref(0)
 solve(x) = (ns[] += 1; solve_economy(at(x); cache = false))
 show(tag, x, r, F) = (@printf("%-8s phi %.3f top patience %.4f spread %.4f | effort %.4f liquid/income %.4f htm %.4f | MPC %.3f | worst %.2f band [%d solves, %.1f min]\n",
                               tag, exp(x[1]), x[2], x[3], mom(r)..., r.mpc, maximum(abs.(F)), ns[], (time() - t0) / 60); flush(stdout))
-x = [log(base.phi), 0.94, 0.03]
+x = [log(base.phi), 0.945, 0.02]
 r = solve(x); F = resid(mom(r)); show("start", x, r, F)
 H = [0.05, 0.004, 0.01]
 # Best fit, not an exact solve: top patience and the spread move median liquid
