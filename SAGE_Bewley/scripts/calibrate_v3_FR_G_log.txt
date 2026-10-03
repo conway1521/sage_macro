@@ -1,0 +1,32 @@
+VERSION 3: liquid wealth over income target 0.05904 | self-reported MPC in the survey 0.39186 (not targeted)
+calibrating FR G | effort target 0.643232 | hand-to-mouth target 0.22155 | workers 13
+preflight, France G+A through the parallel path (solver egm): worst gap 9.4e-04 against the suite: HELD
+
+1. effort scale and discount spread, cohesion off, hand-to-mouth aim 0.2216
+    fit  1: phi 7.838, top patience 0.8983, spread 0.0119, eta 0.2396 | effort 0.6447, liquid/income 0.0934, hand-to-mouth 0.1911, S80/S20 4.09 | misses in bands +0.30 +1.14 -1.52 -2.50
+    fit  2: phi 8.205, top patience 0.8858, spread 0.0109, eta 0.2582 | effort 0.6438, liquid/income 0.0825, hand-to-mouth 0.1988, S80/S20 4.53 | misses in bands +0.11 +0.78 -1.14 -0.74
+    fit  3: phi 8.367, top patience 0.8765, spread 0.0068, eta 0.2646 | effort 0.6433, liquid/income 0.0691, hand-to-mouth 0.2238, S80/S20 4.68 | misses in bands +0.01 +0.34 +0.11 -0.17
+    fit  4: phi 8.375, top patience 0.8754, spread 0.0056, eta 0.2652 | effort 0.6433, liquid/income 0.0686, hand-to-mouth 0.2244, S80/S20 4.69 | misses in bands +0.02 +0.32 +0.14 -0.10
+    fit  5: phi 8.379, top patience 0.8747, spread 0.0047, eta 0.2654 | effort 0.6433, liquid/income 0.0683, hand-to-mouth 0.2247, S80/S20 4.70 | misses in bands +0.02 +0.31 +0.16 -0.08
+    fit  6: phi 8.381, top patience 0.8743, spread 0.0039, eta 0.2655 | effort 0.6433, liquid/income 0.0683, hand-to-mouth 0.2246, S80/S20 4.70 | misses in bands +0.02 +0.31 +0.15 -0.07
+    fit  7: phi 8.381, top patience 0.8740, spread 0.0032, eta 0.2655 | effort 0.6434, liquid/income 0.0684, hand-to-mouth 0.2243, S80/S20 4.70 | misses in bands +0.02 +0.31 +0.14 -0.07
+    fit  8: phi 8.381, top patience 0.8737, spread 0.0027, eta 0.2655 | effort 0.6434, liquid/income 0.0685, hand-to-mouth 0.2241, S80/S20 4.70 | misses in bands +0.02 +0.31 +0.13 -0.07
+    fit  9: phi 8.381, top patience 0.8736, spread 0.0023, eta 0.2655 | effort 0.6434, liquid/income 0.0685, hand-to-mouth 0.2239, S80/S20 4.70 | misses in bands +0.03 +0.32 +0.12 -0.07
+    fit 10: phi 8.380, top patience 0.8734, spread 0.0021, eta 0.2655 | effort 0.6434, liquid/income 0.0686, hand-to-mouth 0.2237, S80/S20 4.70 | misses in bands +0.03 +0.32 +0.11 -0.07
+    fit 11: phi 8.380, top patience 0.8733, spread 0.0018, eta 0.2655 | effort 0.6434, liquid/income 0.0686, hand-to-mouth 0.2236, S80/S20 4.70 | misses in bands +0.03 +0.32 +0.10 -0.07
+    fit 12: phi 8.380, top patience 0.8733, spread 0.0017, eta 0.2655 | effort 0.6434, liquid/income 0.0686, hand-to-mouth 0.2235, S80/S20 4.70 | misses in bands +0.03 +0.32 +0.10 -0.07
+    fit 13: phi 8.380, top patience 0.8732, spread 0.0015, eta 0.2655 | effort 0.6434, liquid/income 0.0687, hand-to-mouth 0.2234, S80/S20 4.70 | misses in bands +0.03 +0.32 +0.09 -0.07
+    fit 14: phi 8.380, top patience 0.8732, spread 0.0014, eta 0.2655 | effort 0.6434, liquid/income 0.0687, hand-to-mouth 0.2234, S80/S20 4.70 | misses in bands +0.03 +0.32 +0.09 -0.07
+    fit 15: phi 8.380, top patience 0.8731, spread 0.0014, eta 0.2655 | effort 0.6434, liquid/income 0.0687, hand-to-mouth 0.2233, S80/S20 4.70 | misses in bands +0.03 +0.32 +0.09 -0.07
+    fit 16: phi 8.380, top patience 0.8731, spread 0.0013, eta 0.2655 | effort 0.6434, liquid/income 0.0687, hand-to-mouth 0.2233, S80/S20 4.70 | misses in bands +0.03 +0.32 +0.09 -0.07
+  income distribution: S80/S20 4.70 (official, under 65: 4.72) with eta 0.2655 | Gini 0.299 | in-work poverty 0.172 untargeted (official 0.067) | below half the median 0.076
+  version 3 fit: liquid wealth over income 0.0687 (target 0.0590, band 0.03) | MPC 0.340 untargeted (survey 0.392) | earnings response +0.0000 | drop on job loss 0.219
+  phi 8.38, spread 0.001, mean patience 0.8731: effort 0.6434 (target 0.6432), poor hand-to-mouth 0.2234 (aim 0.2215)  [7.2 min]
+
+2. the G economy on its own thresholds
+  participation 0.0000 | agency 0.9853 | hardship 0.6007 | hand-to-mouth 0.2234 (target 0.22) | effort 0.6434 (target 0.6432) | median 0.4719
+  expected loss to unemployment 0.0147 (income alone 0.0183) | drop on job loss 0.2187 | agency on the old hardship reading 0.3993
+  version 3, untargeted: MPC 0.340 (survey 0.392), of the hand-to-mouth 0.504, earnings response +0.0000 | liquid wealth over income 0.0687 (HFCS 0.0590) | protection if hit 0.7813 | income poverty 0.0760
+wrote calibration_v3_FR_G.txt
+
+DONE FR G in 7.3 min

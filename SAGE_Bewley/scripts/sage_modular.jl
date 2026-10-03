@@ -1082,6 +1082,43 @@ function footprint_intensity(code; year = "2021")
 end
 
 """
+    income_stats(c)
+
+The distribution of disposable income in the economy `c` with S off, household
+by household: the quintile share ratio S80/S20, the Gini, the shares below 50%
+and 60% of the median, and the share of the employed below 60% (in-work
+poverty). For the income process's dispersion, which version 3 fits to the
+official S80/S20 of people under 65 (data/validation/income_distribution.csv).
+"""
+function income_stats(c::SAGEConfig)
+    c0 = SAGEConfig(c; S = false)
+    cs = cells_of(c0); _, bw = betas_of(c0); cT = SAGEConfig(c0; lumptax = c0.lumptax + ui_tax_of(c0))
+    jobs = [(g, k, p) for g in 1:2 for (k, p) in enumerate(params_of(cT, cs[g]))]
+    recs = (nworkers() > 1 ? pmap : map)(jobs) do (g, k, p)
+        p = update(p; social_strength = 0.0)
+        s = solve_participation_logit(p, 1.0; theta = c0.theta, full = true)
+        ys = Float64[]; ws = Float64[]; es = Bool[]
+        for st in eachindex(s.z_vals), i in eachindex(s.a), d in (0, 1)
+            pd = d == 1 ? s.P1[i, st] : 1 - s.P1[i, st]; m = cs[g].share * bw[k] * s.lambda[i, st] * pd; m <= 0 && continue
+            x = p.R * s.a[i] + (1 + p.subsidy) * p.α[st] * s.e_d[d+1][i, st] * s.z_vals[st] * p.Z - p.lumptax +
+                net_participation(p, p.α[st], s.z_vals[st]) * d + transfer_at(p, st)
+            push!(ys, (x + floor_transfer(p, x) - s.a[i]) / p.pc); push!(ws, m); push!(es, s.z_vals[st] > 0)
+        end
+        (ys, ws, es)
+    end
+    ys = reduce(vcat, [r[1] for r in recs]); ws = reduce(vcat, [r[2] for r in recs]); es = reduce(vcat, [r[3] for r in recs])
+    o = sortperm(ys); y = ys[o]; w = ws[o] ./ sum(ws); e = es[o]; cw = cumsum(w)
+    med = y[findfirst(>=(0.5), cw)]
+    # the fifths by interpolation in the cumulative weight, so an atom of income is split and not assigned whole
+    part(lo, hi) = sum(max(0.0, min(cw[i], hi) - max(i > 1 ? cw[i-1] : 0.0, lo)) * y[i] for i in eachindex(y))
+    L = cumsum(w .* y) ./ sum(w .* y)
+    gini = 1 - sum(w[i] * (L[i] + (i > 1 ? L[i-1] : 0.0)) for i in eachindex(y))
+    below(q, sel) = sum(w[i] for i in eachindex(y) if sel[i] && y[i] < q * med; init = 0.0) / sum(w[sel])
+    (s8020 = part(0.8, 1.0) / part(0.0, 0.2), gini = gini, p50 = below(0.5, trues(length(y))), p60 = below(0.6, trues(length(y))),
+     inwork60 = below(0.6, e), median = med)
+end
+
+"""
     carbon_value(rB, rP; code, key = "uba_central", year = "2021")
 
 The optional valuation of the change in household emissions from the baseline

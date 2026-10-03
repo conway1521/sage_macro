@@ -86,6 +86,20 @@ const E_TARGET = num("effort_target")
 const HTM_TARGET = V3 ? hfcs_target("htm_model_narrow_total") : num("htm_target")
 const LIQ_TARGET = V3 ? hfcs_target("liquid_kvw_to_disposable_income_ratio_of_medians") : NaN
 const MPC_DATA = V3 ? hfcs_target("mpc_mean") : NaN
+# The dispersion of the income process (the standard deviation eta of the
+# innovation to its persistent part) is fitted in version 3 to the official
+# income quintile share ratio of people under 65; in-work poverty is the check.
+function incdist(ind; year = "2021")
+    for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "validation", "income_distribution.csv"))
+        f = split(ln, ","); length(f) >= 4 && f[1] == ind && f[2] == CODE && f[3] == year && return parse(Float64, f[4])
+    end
+    error("no $ind for $CODE in $year")
+end
+const S8020_TARGET = V3 ? incdist("s80s20_under65") : NaN
+const INWORK_DATA = V3 ? incdist("inwork_poverty60") : NaN
+const S8020_TOL = 0.25
+const ETA = Ref(NaN)
+v3kw() = V3 && !isnan(ETA[]) ? (eta_z = ETA[],) : ()
 const PART = (num("part_low"), num("part_high"))
 const RATIO = num("ratio")
 # The national ratio exactly, and for the headline configuration the other
@@ -139,7 +153,7 @@ mark_not_calibrated() = open(io -> println(io, "# not calibrated; the reason is 
 # exactly the same inputs: the country's data row, the configuration, the
 # hand-to-mouth aim and the solver's source code.
 const CKDIR = joinpath(@__DIR__, "checkpoints"); isdir(CKDIR) || mkpath(CKDIR)
-const CKKEY = bytes2hex(sha1(string(sort(collect(ROW)), "|", CFG, "|", GAP, "|", SOLVER_DIGEST, V3 ? "|v3|$(HTM_TARGET)|$(LIQ_TARGET)" : "")))[1:16]
+const CKKEY = bytes2hex(sha1(string(sort(collect(ROW)), "|", CFG, "|", GAP, "|", SOLVER_DIGEST, V3 ? "|v3|$(HTM_TARGET)|$(LIQ_TARGET)|$(S8020_TARGET)" : "")))[1:16]
 ckfile(stage) = joinpath(CKDIR, "$(CODE)_$(CFG)_$(stage)_$(CKKEY).txt")
 function ck_read(stage)
     f = ckfile(stage); isfile(f) || return nothing
@@ -181,7 +195,7 @@ timed_scans(args...; kw...) = (t_ = time(); out = scans(args...; kw...); LASTSCA
 function write_cal(phi, spread; kappa = nothing, sigma = nothing)
     open(OUTFILE, "w") do io
         println(io, "# written by calibrate_country.jl $(CODE) $(CFG)", V3 ? ", version 3 (effort set by the job, household replacement rate, liquid-wealth targets from the HFCS)" : "", "; read by country_config")
-        V3 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\n", phi, spread, BB[]) :
+        V3 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\neta_z = %.4f\n", phi, spread, BB[], ETA[]) :
              @printf(io, "phi = %.2f\nbeta_spread = %.3f\nbeta_bar = %.4f\n", phi, spread, BB[])
         kappa === nothing || @printf(io, "kappa = %.2f\nsigma_m = %.2f\n", kappa, sigma)
     end
@@ -210,7 +224,8 @@ end
 const BB = Ref(0.96)
 # one pass without thresholds for E off (as before); with E on, the full place solve
 _solve_any(cc, thr = nothing; disk = true) = E_ON ? solve_economy(cc) : _solve(cc, thr; disk = disk)
-soff(phi, sp) = _solve_any(country_config(CODE; v3 = V3, config = CFG, missing_ok = true, S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = sp,
+cfg_off(phi, sp) = country_config(CODE; v3 = V3, config = CFG, missing_ok = true, v3kw()..., S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = sp, beta_bar = BB[])
+soff(phi, sp) = _solve_any(country_config(CODE; v3 = V3, config = CFG, missing_ok = true, v3kw()..., S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = sp,
                                       beta_bar = BB[]), nothing; disk = true)
 function fit_phi(sp; lo = 0.5, hi = 40.0, steps = 14, aim = E_TARGET)   # lo was 3.0: Italy's effort target needs less
     for _ in 1:steps
@@ -250,42 +265,48 @@ patience, spread) against (effort, liquid wealth over income, hand-to-mouth),
 each miss in units of its tolerance. Top patience stays below 0.975 (beta R
 below one for the most patient type). Returns the point and its moments.
 """
-function fit_v3(aim_e, aim_h; x0 = [log(6.6), 0.945, 0.02], iters = 14)
-    lo = [log(0.5), 0.86, 0.0]; hi = [log(60.0), 0.975, SPREAD_MAX]; H = [0.05, 0.004, 0.01]
-    at(x) = (BB[] = x[2]; soff(exp(x[1]), x[3]))
-    mom(r) = [r.mean_effort_employed, r.wealth_p50 / r.median_income, r.hand_to_mouth_kvw]
-    res(r) = (mom(r) .- [aim_e, LIQ_TARGET, aim_h]) ./ [E_TOL, LIQ_TOL, HTM_TOL]
-    x = clamp.(x0, lo, hi); r = at(x); F = res(r); lam = 0.1
+function fit_v3(aim_e, aim_h; x0 = [log(7.5), 0.90, 0.01, 0.22], iters = 16)
+    lo = [log(0.5), 0.84, 0.0, 0.05]; hi = [log(60.0), 0.975, SPREAD_MAX, 0.40]; H = [0.05, 0.004, 0.01, 0.02]
+    function at(x)
+        BB[] = x[2]; ETA[] = x[4]
+        r = soff(exp(x[1]), x[3]); st = income_stats(cfg_off(exp(x[1]), x[3]))
+        (r = r, st = st, m = [r.mean_effort_employed, r.wealth_p50 / r.median_income, r.hand_to_mouth_kvw, st.s8020])
+    end
+    res(o) = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET]) ./ [E_TOL, LIQ_TOL, HTM_TOL, S8020_TOL]
+    x = clamp.(x0, lo, hi); o = at(x); F = res(o); lam = 0.1
     for it in 1:iters
         maximum(abs.(F)) <= 0.25 && break
-        J = zeros(3, 3)
-        for k in 1:3
+        J = zeros(4, 4)
+        for k in 1:4
             xk = copy(x); h = (xk[k] + H[k] > hi[k]) ? -H[k] : H[k]; xk[k] += h
             J[:, k] = (res(at(xk)) .- F) ./ h
         end
         moved = false
         for _ in 1:6
             A = J' * J; d = -((A + lam * Diagonal(diag(A))) \ (J' * F))
-            xn = clamp.(x .+ d, lo, hi); rn = at(xn); Fn = res(rn)
+            xn = clamp.(x .+ d, lo, hi); on = at(xn); Fn = res(on)
             if sum(abs2, Fn) < sum(abs2, F) - 1e-6
-                x = xn; r = rn; F = Fn; lam = max(lam / 3, 1e-4); moved = true; break
+                x = xn; o = on; F = Fn; lam = max(lam / 3, 1e-4); moved = true; break
             end
             lam *= 4
         end
-        @printf("    fit %2d: phi %.3f, top patience %.4f, spread %.4f | effort %.4f, liquid/income %.4f, hand-to-mouth %.4f | misses in bands %+.2f %+.2f %+.2f\n",
-                it, exp(x[1]), x[2], x[3], mom(r)..., F...); flush(stdout)
+        @printf("    fit %2d: phi %.3f, top patience %.4f, spread %.4f, eta %.4f | effort %.4f, liquid/income %.4f, hand-to-mouth %.4f, S80/S20 %.2f | misses in bands %+.2f %+.2f %+.2f %+.2f\n",
+                it, exp(x[1]), x[2], x[3], x[4], o.m..., F...); flush(stdout)
         moved || break
     end
-    BB[] = x[2]
-    (phi = round(exp(x[1]); digits = 3), bb = round(x[2]; digits = 4), sp = round(x[3]; digits = 4), r = at([log(round(exp(x[1]); digits = 3)), round(x[2]; digits = 4), round(x[3]; digits = 4)]))
+    xr = [log(round(exp(x[1]); digits = 3)), round(x[2]; digits = 4), round(x[3]; digits = 4), round(x[4]; digits = 4)]
+    o = at(xr)
+    (phi = exp(xr[1]), bb = xr[2], sp = xr[3], eta = xr[4], r = o.r, st = o.st)
 end
 say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", round(HTM_TARGET - GAP; digits = 4))
 ck1 = ck_read("stage1")
 if ck1 === nothing && V3
     f3 = fit_v3(E_TARGET, HTM_TARGET - GAP)
-    phi = f3.phi; spread = f3.sp; BB[] = f3.bb; edge = false
+    phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; edge = false
     chk_e, chk_h = f3.r.mean_effort_employed, f3.r.hand_to_mouth_kvw
-    ck_write("stage1", Dict("phi" => phi, "spread" => spread, "edge" => 0.0, "effort" => chk_e, "htm" => chk_h, "bb" => BB[]))
+    ck_write("stage1", Dict("phi" => phi, "spread" => spread, "edge" => 0.0, "effort" => chk_e, "htm" => chk_h, "bb" => BB[], "eta" => ETA[]))
+    @printf("  income distribution: S80/S20 %.2f (official, under 65: %.2f) with eta %.4f | Gini %.3f | in-work poverty %.3f untargeted (official %.3f) | below half the median %.3f\n",
+            f3.st.s8020, S8020_TARGET, ETA[], f3.st.gini, f3.st.inwork60, INWORK_DATA, f3.st.p50)
     @printf("  version 3 fit: liquid wealth over income %.4f (target %.4f, band %.2f) | MPC %.3f untargeted (survey %.3f) | earnings response %+.4f | drop on job loss %.3f\n",
             f3.r.wealth_p50 / f3.r.median_income, LIQ_TARGET, LIQ_TOL, f3.r.mpc, MPC_DATA, f3.r.mpe, f3.r.consumption_drop)
 elseif ck1 === nothing
@@ -302,7 +323,7 @@ elseif ck1 === nothing
                             "effort" => chk_e, "htm" => chk_h, "bb" => BB[]))
 else
     phi, spread, edge = ck1["phi"], ck1["spread"], ck1["edge"] == 1.0
-    chk_e, chk_h = ck1["effort"], ck1["htm"]; BB[] = get(ck1, "bb", 0.96)
+    chk_e, chk_h = ck1["effort"], ck1["htm"]; BB[] = get(ck1, "bb", 0.96); V3 && (ETA[] = ck1["eta"])
     say("  from checkpoint ", basename(ckfile("stage1")))
 end
 @printf("  phi %.2f, spread %.3f, mean patience %.4f%s: effort %.4f (target %.4f), poor hand-to-mouth %.4f (aim %.4f)  [%.1f min]\n",
@@ -327,7 +348,7 @@ end
 
 if !S_ON
     say("\n2. the ", CFG, " economy on its own thresholds")
-    r = solve_economy(country_config(CODE; v3 = V3, config = CFG, missing_ok = true, S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = spread,
+    r = solve_economy(country_config(CODE; v3 = V3, config = CFG, missing_ok = true, v3kw()..., S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = spread,
                                      beta_bar = BB[]))
     @printf("  participation %.4f | agency %.4f | hardship %.4f | hand-to-mouth %.4f (target %.2f) | effort %.4f (target %.4f) | median %.4f\n",
             r.rate, r.A, r.hardship, r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET, r.median_income)
@@ -384,7 +405,7 @@ end
 # belonging scales; the calibration is then re-scanned and solved once on the
 # full grid, and only that economy is checked against the targets and written.
 function scans(phi, spread; ugrid = UGRID_COARSE)
-    c = country_config(CODE; v3 = V3, config = CFG, missing_ok = true, S = true, A = A_ON, E = E_ON, phi = phi, beta_spread = spread, beta_bar = BB[],
+    c = country_config(CODE; v3 = V3, config = CFG, missing_ok = true, v3kw()..., S = true, A = A_ON, E = E_ON, phi = phi, beta_spread = spread, beta_bar = BB[],
                        ugrid = ugrid)
     E_ON && return scans_places(c)
     t0 = time()
@@ -438,7 +459,7 @@ end
 
 # ------------------------------------------------------ 4 and 5. solve --
 function solve_at(phi, spread, best; ugrid = UGRID_COARSE)
-    c = country_config(CODE; v3 = V3, config = CFG, missing_ok = true, S = true, A = A_ON, E = E_ON, phi = phi, beta_spread = spread,
+    c = country_config(CODE; v3 = V3, config = CFG, missing_ok = true, v3kw()..., S = true, A = A_ON, E = E_ON, phi = phi, beta_spread = spread,
                        beta_bar = BB[], kappa = best.κ, sigma_m = best.σ, ugrid = ugrid)
     t0 = time(); r = solve_economy(c)
     @printf("  %s: participation %.4f (cells %.4f, %.4f against %.3f, %.3f; employed %.4f, unemployed %.4f)\n",
@@ -475,16 +496,16 @@ for correction in 1:2
     ck5 = ck_read("stage5_$(correction)")
     if ck5 === nothing
         if V3
-            f3 = fit_v3(E_TARGET - gap_e, HTM_TARGET - gap_h; x0 = [log(phi), BB[], spread], iters = 8)
-            phi = f3.phi; spread = f3.sp; BB[] = f3.bb; edge2 = false
+            f3 = fit_v3(E_TARGET - gap_e, HTM_TARGET - gap_h; x0 = [log(phi), BB[], spread, ETA[]], iters = 8)
+            phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; edge2 = false
         else
             phi = fit_phi(spread; lo = max(0.5, phi - 4), hi = phi + 4, steps = 10, aim = E_TARGET - gap_e)
             fs2 = fit_spread(phi, HTM_TARGET - gap_h)
             spread = fs2.sp; edge2 = fs2.edge; BB[] = fs2.bb
         end
-        ck_write("stage5_$(correction)", Dict("phi" => phi, "spread" => spread, "edge" => Float64(edge2), "bb" => BB[]))
+        ck_write("stage5_$(correction)", Dict("phi" => phi, "spread" => spread, "edge" => Float64(edge2), "bb" => BB[], "eta" => V3 ? ETA[] : NaN))
     else
-        phi, spread, edge2 = ck5["phi"], ck5["spread"], ck5["edge"] == 1.0; BB[] = get(ck5, "bb", 0.96)
+        phi, spread, edge2 = ck5["phi"], ck5["spread"], ck5["edge"] == 1.0; BB[] = get(ck5, "bb", 0.96); V3 && (ETA[] = ck5["eta"])
         say("  from checkpoint ", basename(ckfile("stage5_$(correction)")))
     end
     @printf("  new phi %.2f, spread %.3f, mean patience %.4f%s\n", phi, spread, BB[], edge2 ? " (ON THE GRID EDGE)" : ""); flush(stdout)
