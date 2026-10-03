@@ -393,3 +393,55 @@ The 2010 wave has been revised since the hand-to-mouth paper, which accounts for
 - The literature check (`research/STANDARD_TREATMENTS.md`): effort set by the job is a state-by-state variant of the union rule of Auclert, Rognlie and Straub (2024), where one average condition sets hours for everyone; no published precedent for the state-by-state form was found, so it is presented as this model's variant. The excess-variance strategy for the multiplier is Glaeser, Sacerdote and Scheinkman (1996), not their 2003 paper. Blundell, Pistaferri and Saporta-Eksten (2016) is about permanent wage shocks, not job loss.
 
 **Version 3 runs beside version 2** (`country_config(...; v3 = true)`): effort set by the job, the household replacement rate, participation time 0.04, its own calibration files `calibration_v3_*`. Version 2 is unchanged to the last digit and stays until version 3 is complete.
+
+## 15. The version 3 base, as calibrated (2026-10-03, early hours)
+
+**Specification.** `country_config(...; v3 = true)` and `SAGE_V3=1` for `calibrate_country.jl`.
+
+| piece | version 2 | version 3 |
+|---|---|---|
+| Effort | chosen household by household | set by the job, state by state, where the effort condition holds on average |
+| The single asset | unspecified wealth, patience 0.96 | liquid wealth, narrow definition (HFCS) |
+| Replacement rate | single person (0.653 / 0.456 / 0.374) | household-weighted (0.704 / 0.585 / 0.527), state-paid part taxed (0.476 / 0.361 / 0.291) |
+| Participation time | 0.10 assumed | 0.04 measured |
+| Income process | innovation s.d. 0.10 (hourly wages, persistent part) | fitted to the official income quintile ratio |
+
+| parameter | owns | source of the target |
+|---|---|---|
+| phi | effort of the employed | HETUS |
+| top patience | median liquid wealth over after-tax income | HFCS 2021 |
+| spread of patience | hand-to-mouth share, total, one-week rule | HFCS 2021 |
+| eta (income dispersion) | S80/S20 of disposable income, people under 65 | EU-SILC 2021, `data/validation/income_distribution.csv` |
+
+Top patience and the spread move the two wealth moments along nearly one line (the search's map has one singular value near zero), so the fit is a best fit by damped least squares and the misses are reported in bands. The MPC is not targeted.
+
+**France G** (`calibration_v3_FR_G.txt`: phi 8.38, top patience 0.873, spread 0.001, eta 0.266)
+
+| moment | model | data | |
+|---|---|---|---|
+| Effort of the employed | 0.643 | 0.643 | target |
+| Hand-to-mouth share | 0.223 | 0.222 | target |
+| Median liquid wealth over income | 0.069 | 0.059 | target |
+| S80/S20, under 65 | 4.70 | 4.72 | target |
+| **MPC, one-month windfall** | **0.34** | **0.39** (self-reported, HFCS) | untargeted |
+| MPC of the hand-to-mouth, of the others | 0.50, 0.29 | 0.46, 0.39 | untargeted |
+| Earnings response to a windfall | 0.00 | about minus 0.01 | by construction |
+| Gini of disposable income | 0.299 | 0.296 | untargeted |
+| Below half the median income | 0.076 | 0.097 (HFCS, after tax, persons) | untargeted |
+| Consumption drop on job loss | 0.15 to 0.22 | 0.15 at six months (INSEE) | untargeted |
+| In-work poverty, 60% of the median | 0.17 | 0.067 | untargeted, MISSED |
+| Income drop on job loss | 0.21 | 0.31 (INSEE) | untargeted, low |
+| Share of the income loss absorbed by consumption | 0.66 (0.96 lowest liquidity quartile, 0.25 highest) | 0.35 (0.58, 0.17) | untargeted, too high |
+
+All eight MPC properties hold (`test_mpc_economics_FR_v3.txt`): the MPC falls from 0.50 in the bottom fifth of liquid wealth to 0.15 at the top, with the size of the windfall (0.38 at 2% of annual income, 0.24 at a year's income), is larger for a loss than a gain, 0.70 for the unemployed against 0.32 for the employed.
+
+**What the base now gets right that it did not:** the MPC (0.34 against 0.10), the earnings response (zero against minus 0.10), the income distribution (Gini 0.30 against 0.12), income poverty (7.6% against 0.4%), the consumption drop on job loss in line with the French benchmark.
+
+**What it costs, stated:**
+- patience of 0.87 a year, which is what liquid-wealth calibrations give and is low against the 0.96 of total-wealth calibrations;
+- the economy holds almost no wealth (the 90th percentile of liquid wealth is a third of annual income), so the one-asset model says nothing about wealth; that is the two-asset model's job;
+- households absorb too much of an income loss in consumption, for the same reason;
+- in-work poverty is too high: all income dispersion sits on workers, where in the data much of it comes from people out of work part of the year;
+- all dispersion is persistent risk, with no permanent differences beyond education and no transitory shocks.
+
+**Italy's liquid wealth** is the open misfit in the pilots (0.18 against 0.27 with patience at its bound): Italian deposits sit in sight accounts, so its narrow liquid wealth is high while its hand-to-mouth share is also high, which one patience distribution cannot give.

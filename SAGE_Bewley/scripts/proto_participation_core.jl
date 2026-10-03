@@ -300,7 +300,7 @@ function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64
                                    full::Bool = false, tol::Float64 = 1e-9,
                                    maxit::Int = 5000, rewards = nothing, V0 = nothing)
     if p.job_effort && isempty(p.effort_set)
-        (p.solver === :egm && !p.illiquid) || error("effort set by the job needs solver = :egm and one asset (two assets: not built yet)")
+        (p.solver === :egm && !p.illiquid) || error("effort set by the job, found by the model, needs solver = :egm and one asset; on two assets give the levels (effort_by_cell)")
         return solve_job_effort(p, Q_agg; theta = theta, full = full, tol = tol, maxit = maxit,
                                 warm = V0 isa NamedTuple ? V0 : nothing)
     end

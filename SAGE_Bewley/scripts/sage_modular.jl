@@ -212,6 +212,11 @@ Base.@kwdef struct SAGEConfig
     # the share of time participating takes (SAGEParams.qbar). 0.10 was assumed until version 3;
     # the time-use surveys give about 0.04 (data/timeuse/time_and_inactivity.md), 0.02 to 0.07.
     qbar::Float64 = 0.10
+    # Effort levels given from outside, by education cell and state (empty: found by the
+    # model, as effort_mode says). Used by the two-asset economy of version 3, which takes
+    # the hours the job sets in the one-asset economy of the same country (job_effort_levels):
+    # hours do not depend on how wealth is held, and the two-asset solve needs no fixed point.
+    effort_by_cell::NTuple{2,Vector{Float64}} = (Float64[], Float64[])
     country::String = ""
     illiquid::Bool = false
     illiquid_premium::Float64 = 0.0
@@ -282,8 +287,8 @@ end
 "The effective cell parameters implied by a config: alpha and B per cell."
 function cells_of(c::SAGEConfig)
     αs = c.A ? c.alpha : (c.alpha_off, c.alpha_off)
-    ((α = αs[1], B = c.B[1], share = c.share[1], δ = c.unemployment ? c.delta[1] : 0.0, τ = c.commute[1]),
-     (α = αs[2], B = c.B[2], share = c.share[2], δ = c.unemployment ? c.delta[2] : 0.0, τ = c.commute[2]))
+    ((α = αs[1], B = c.B[1], share = c.share[1], δ = c.unemployment ? c.delta[1] : 0.0, τ = c.commute[1], eset = c.effort_by_cell[1]),
+     (α = αs[2], B = c.B[2], share = c.share[2], δ = c.unemployment ? c.delta[2] : 0.0, τ = c.commute[2], eset = c.effort_by_cell[2]))
 end
 
 "Discount-factor nodes and weights implied by a config."
@@ -326,6 +331,7 @@ function params_of(c::SAGEConfig, cell)
     c.ctax == 0 || (ps = [update(p; pc = 1 + c.ctax) for p in ps])
     c.psi == 2.0 || (ps = [update(p; ψ = c.psi) for p in ps])
     c.effort_mode === :free || (c.effort_mode === :job ? (ps = [update(p; job_effort = true) for p in ps]) : error("effort_mode is :free or :job"))
+    isempty(cell.eset) || (ps = [update(p; job_effort = true, effort_set = cell.eset) for p in ps])
     c.cfloor == 0 || (ps = [update(p; cfloor = c.cfloor) for p in ps])
     c.qbar == 0.10 || (ps = [update(p; qbar = c.qbar) for p in ps])
     if c.illiquid
@@ -959,10 +965,17 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
     marker = replace(cal, r"\.txt$" => ".not_calibrated.txt")
     stale = isfile(marker) && (!isfile(cal) || mtime(marker) > mtime(cal))
     if isfile(cal) && !(stale && !missing_ok)
+        ec = Dict{Int,Vector{Float64}}()
         for ln in eachline(cal)
             t = strip(ln); (isempty(t) || startswith(t, "#")) && continue
-            k, v = strip.(split(t, "=")); d[Symbol(k)] = parse(Float64, v)
+            k, v = strip.(split(t, "="))
+            if startswith(k, "effort_cell")           # effort levels by state, one line per education cell (two assets, version 3)
+                ec[parse(Int, k[end:end])] = parse.(Float64, split(v))
+            else
+                d[Symbol(k)] = parse(Float64, v)
+            end
         end
+        isempty(ec) || (d[:effort_by_cell] = (ec[1], ec[2]))
     elseif !missing_ok
         error("no calibration for $code $config" * (illq ? " on two assets" : "") * ": " * basename(cal) *
               (stale ? " is marked not calibrated" : " does not exist") *
@@ -1079,6 +1092,23 @@ function footprint_intensity(code; year = "2021")
         f = split(ln, ","); (f[1] == code && f[2] == year) && return parse(Float64, f[5])
     end
     error("no intensity for $code in $year")
+end
+
+"""
+    job_effort_levels(c)
+
+The effort the job sets in each state, by education cell, in the economy `c`
+with S off and effort_mode = :job: the levels of each patience type averaged with
+the type weights. For `effort_by_cell` of another configuration.
+"""
+function job_effort_levels(c::SAGEConfig)
+    c0 = SAGEConfig(c; S = false, effort_mode = :job, effort_by_cell = (Float64[], Float64[]))
+    cs = cells_of(c0); _, bw = betas_of(c0); cT = SAGEConfig(c0; lumptax = c0.lumptax + ui_tax_of(c0))
+    Tuple(begin
+              ps = params_of(cT, cs[g])
+              sum(bw[k] .* solve_participation_logit(update(p; social_strength = 0.0), 1.0; theta = c0.theta, full = true).effort_set
+                  for (k, p) in enumerate(ps))
+          end for g in 1:2)
 end
 
 """
