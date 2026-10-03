@@ -75,6 +75,15 @@ function hfcs_target(moment; wave = "2021")
     end
     error("no HFCS target $moment for $CODE in $wave")
 end
+"Standard error of an HFCS moment (five implicates by Rubin's rules, 200 replicate weights)."
+function hfcs_se(moment; wave = "2021")
+    for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
+        startswith(ln, "#") && continue
+        f = split(ln, ",")
+        length(f) >= 7 && f[1] == moment && f[2] == CODE && f[3] == wave && f[4] == "all" && return parse(Float64, f[7])
+    end
+    error("no HFCS standard error for $moment, $CODE, $wave")
+end
 # E ON (2026-09-29): the economy over places (TL2 by default, place_layer.jl).
 # E fits nothing: the national targets are the same as with E off, and the place
 # outcomes are untargeted tests. Every solve below dispatches through
@@ -136,14 +145,15 @@ const SIGMA_FIX = (OWN_GAP || !S_ON) ? NaN : country_config(CODE; v3 = V3, confi
 const GAP = 0.0
 # Switching S on must still hit the G targets, so hand-to-mouth gets one
 # correction when it misses by more than this.
-const HTM_TOL = V3 ? 0.02 : 0.005   # v2: the poor hand-to-mouth targets are 0.03 to 0.14; v3: the total share, 0.18 to 0.23
-# v3, liquid wealth over income. The hand-to-mouth share OWNS the patience parameters: the MPC rests on it,
-# and it is the moment the calibration was agreed to hit. Median liquid wealth stays in the fit at a low
-# weight (its band is 4.5 times the hand-to-mouth band) and is REPORTED with its miss, not required: the two
-# cannot both be met where the spread sits on a bound. Grid of 2026-10-03, equal weights: Germany at spread 0
-# with both too high (0.255 against 0.225, 0.18 against 0.14); Italy at spread 0.15 with both too low (0.13
-# against 0.18, 0.21 against 0.27). France met both under equal weights (its files date from that fit).
-const LIQ_TOL = 0.09
+# Version 3: the two wealth moments stand on an equal footing, each with a band of two standard errors of the
+# survey estimate and a floor (0.02 on the hand-to-mouth share, 0.03 on liquid wealth over income). The floors
+# bind in France and all but bind in Germany (0.022 and 0.03); in Italy the survey is imprecise (standard errors 0.029 and 0.028) and the bands
+# are 0.058 and 0.056. Both moments must be inside their bands for the calibration to stand.
+# History, 2026-10-03: fixed bands of 0.02 and 0.03 left Italy out for misses the survey cannot distinguish
+# from zero; a rule in which the hand-to-mouth share owned patience and liquid wealth was only reported
+# (band 0.09) was run once (GitHub run 37139922996) and is the hand-to-mouth end of the trade-off.
+const HTM_TOL = V3 ? max(0.02, 2 * hfcs_se("htm_model_narrow_total")) : 0.005   # v2: the poor hand-to-mouth targets are 0.03 to 0.14
+const LIQ_TOL = V3 ? max(0.03, 2 * hfcs_se("liquid_kvw_to_disposable_income_ratio_of_medians")) : NaN
 const E_TOL = 0.005          # effort
 const SKIP_GS = get(ENV, "SKIP_GS", "0") == "1"
 const OUTFILE = V3 ? joinpath(@__DIR__, "calibration_v3_$(CODE)_$(CFG).txt") :
@@ -305,6 +315,9 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), 0.90, 0.01, 0.22], iters = 16)
     (phi = exp(xr[1]), bb = xr[2], sp = xr[3], eta = xr[4], r = o.r, st = o.st)
 end
 say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", round(HTM_TARGET - GAP; digits = 4))
+liq_of(r) = r.wealth_p50 / r.median_income
+liq_out(r) = V3 && abs(liq_of(r) - LIQ_TARGET) > LIQ_TOL          # version 3: liquid wealth is required, like the hand-to-mouth share
+liq_note(r) = V3 ? @sprintf(", liquid wealth over income %.4f (target %.4f, band %.3f; hand-to-mouth band %.3f)", liq_of(r), LIQ_TARGET, LIQ_TOL, HTM_TOL) : ""
 ck1 = ck_read("stage1")
 if ck1 === nothing && V3
     f3 = fit_v3(E_TARGET, HTM_TARGET - GAP)
@@ -313,8 +326,8 @@ if ck1 === nothing && V3
     ck_write("stage1", Dict("phi" => phi, "spread" => spread, "edge" => 0.0, "effort" => chk_e, "htm" => chk_h, "bb" => BB[], "eta" => ETA[]))
     @printf("  income distribution: S80/S20 %.2f (official, under 65: %.2f) with eta %.4f | Gini %.3f | in-work poverty %.3f untargeted (official %.3f) | below half the median %.3f\n",
             f3.st.s8020, S8020_TARGET, ETA[], f3.st.gini, f3.st.inwork60, INWORK_DATA, f3.st.p50)
-    @printf("  version 3 fit: liquid wealth over income %.4f (target %.4f, band %.2f) | MPC %.3f untargeted (survey %.3f) | earnings response %+.4f | drop on job loss %.3f\n",
-            f3.r.wealth_p50 / f3.r.median_income, LIQ_TARGET, LIQ_TOL, f3.r.mpc, MPC_DATA, f3.r.mpe, f3.r.consumption_drop)
+    @printf("  version 3 fit: liquid wealth over income %.4f (target %.4f, band %.3f; hand-to-mouth band %.3f) | MPC %.3f untargeted (survey %.3f) | earnings response %+.4f | drop on job loss %.3f\n",
+            f3.r.wealth_p50 / f3.r.median_income, LIQ_TARGET, LIQ_TOL, HTM_TOL, f3.r.mpc, MPC_DATA, f3.r.mpe, f3.r.consumption_drop)
 elseif ck1 === nothing
     phi = fit_phi(0.037)
     fs = fit_spread(phi, HTM_TARGET - GAP)
@@ -362,9 +375,9 @@ if !S_ON
             r.shock_loss, r.shock_loss_income, r.consumption_drop, r.A_hardship)
     V3 && @printf("  version 3, untargeted: MPC %.3f (survey %.3f), of the hand-to-mouth %.3f, earnings response %+.4f | liquid wealth over income %.4f (HFCS %.4f) | protection if hit %.4f | income poverty %.4f\n",
                   r.mpc, MPC_DATA, r.mpc_htm, r.mpe, r.wealth_p50 / r.median_income, LIQ_TARGET, r.A_cond, r.income_poor)
-    if abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL || abs(r.mean_effort_employed - E_TARGET) > E_TOL
-        say(@sprintf("\nNOT CALIBRATED: hand-to-mouth %.4f (target %.4f) or effort %.4f (target %.4f) outside tolerance. No calibration file written.",
-                     r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET))
+    if abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL || abs(r.mean_effort_employed - E_TARGET) > E_TOL || liq_out(r)
+        say(@sprintf("\nNOT CALIBRATED: hand-to-mouth %.4f (target %.4f) or effort %.4f (target %.4f) outside tolerance%s. No calibration file written.",
+                     r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET, liq_note(r)))
         mark_not_calibrated(); exit(2)
     end
     write_cal(phi, spread)
@@ -533,9 +546,9 @@ if S[RATIO] === nothing || S[RATIO].best.loss > LOSS_STD
 end
 best = S[RATIO].best
 r = solve_at(phi, spread, best; ugrid = UGRID_DEFAULT)
-if abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL || abs(r.mean_effort_employed - E_TARGET) > E_TOL
-    say(@sprintf("\nNOT CALIBRATED after two corrections: hand-to-mouth %.4f (target %.4f), effort %.4f (target %.4f). No calibration file written.",
-                 r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET))
+if abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL || abs(r.mean_effort_employed - E_TARGET) > E_TOL || liq_out(r)
+    say(@sprintf("\nNOT CALIBRATED after two corrections: hand-to-mouth %.4f (target %.4f), effort %.4f (target %.4f)%s. No calibration file written.",
+                 r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET, liq_note(r)))
     mark_not_calibrated(); exit(2)
 end
 if 1 / (1 - r.slope) > MULT_MAX
