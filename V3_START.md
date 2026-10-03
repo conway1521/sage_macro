@@ -304,3 +304,41 @@ What could give each free parameter a target:
 | **Two assets** | wealth can be large and illiquid, so households can be wealthy and constrained | budgets and the resource identity verified; reduces exactly to one asset | the fixed cost sits at its bound, so illiquid wealth is in effect liquid; Germany's and Italy's wealthy hand-to-mouth are far below the data; not yet a result |
 
 In one line each: G is sound in structure and wrong in one level that now has a fix; S is sound in form and carries one free parameter that decides its headline; A does identifiable work on the education gap and little at the national level; E preserves the national economy but has not yet earned its regional claims; two assets is unfinished.
+
+## 13. The version 3 build: order and gates (started 2026-10-02, evening)
+
+Agreed with the user: the base is made standard, line by line, and S, A and E are what the model adds. Every step ends in a gate; nothing moves on until its gate holds, and a gate that fails is written here as a failure.
+
+**The base, in standard terms**
+
+| piece | standard treatment | where |
+|---|---|---|
+| Effort | hours set collectively for each type of worker, so that the effort condition holds on average; a household's wealth does not move its hours | built, `effort_mode = :job` |
+| MPC | the single asset read as liquid wealth: the total hand-to-mouth share as target, an impatient group, the MPC as the target of that group's patience | pilot running |
+| Job loss | a means-tested consumption floor (Hubbard, Skinner and Zeldes 1995) and replacement rates at the level of the household | to build |
+| Hardship | asset poverty reported as a measure of buffers; income poverty and the consumption drop on job loss as the hardship indicators | reporting change |
+| Multiplier | omega from the dispersion of participation across regions, or every S result as a band over omega | to build |
+
+**Order**
+
+| step | what | gate |
+|---|---|---|
+| 1 | HFCS moments, FR, DE, IT, five waves, with disposable income (EUROMOD files) | the published figures are reproduced within stated tolerances: hand-to-mouth shares (Kaplan, Violante and Weidner 2014, Table 5, 2010 wave), median net wealth and income (ECB tables), the self-reported MPC (Drescher, Fessler and Lindner 2020), asset poverty (Balestra and Tonkin 2018). Where they are not, the reason is found before any number is used |
+| 2 | Targets table for version 3 from the HFCS: total hand-to-mouth, MPC, median liquid wealth over disposable income, net wealth over disposable income | each target has a source, a wave, a standard error and a model counterpart on the same concept |
+| 3 | Base economics: the consumption floor, household replacement rates, QBAR from time-use data | reductions (floor at zero is no floor); the budget balances; `test_mpc_economics.jl` and `test_effort_mode.jl` hold; the consumption drop in Germany and Italy against the literature's range |
+| 4 | Identification check for every configuration before it is calibrated | each parameter moves its own target most; the owned block is well conditioned; no flat column |
+| 5 | One-asset recalibration: G, G+A, G+S, G+S+A, three countries, then E | all owned targets inside their bands; multiplier gate; the untargeted list below |
+| 6 | Two assets with job effort, the MPC and the liquid and illiquid medians as targets | the same |
+| 7 | S, A, E in depth: omega, the unemployed, the decomposition of the education gap, inactivity by place, epsilon out of sample, hardship indicators by place against the HFCS by region | each claim has an untargeted test |
+| 8 | The suite, the regression tests, and a full pass with every dimension switched on and off | every reduction exact; every configuration solves and reports the full set of indicators |
+
+**Untargeted tests, fixed before recalibrating** (pass bands in brackets)
+
+- MPC falling across liquid-wealth quartiles, and the HFCS's own gradient by liquid wealth (sign and monotone);
+- the earnings response to a windfall (0 to minus 0.04);
+- France: the income drop on job loss (31%), the share of the income loss absorbed by consumption by liquidity quartile (58% lowest, 17% highest; within 15 points);
+- expected income loss against OECD labour market insecurity (country ordering);
+- the consumption drop on job loss (7 to 20%);
+- the net wealth Gini and top 10% share on two assets (HFCS, within 0.05);
+- regional participation against volunteering by region, Germany and Italy, without the community channel (reported, whatever it is);
+- the education gap in participation produced by S alone (reported).

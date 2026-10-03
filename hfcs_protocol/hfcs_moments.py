@@ -72,6 +72,19 @@ WAVE_DIR_TOKENS = {
 }
 # Regular expressions on the lower-case file name. Group 1, when present, is the
 # implicate number.
+# AS DELIVERED (October 2026): one folder per release and format,
+# HFCS_UDB_<wave number>_<version>_<STATA|SAS|ASCII>, wave numbers 1 to 5 for
+# 2010, 2014, 2017, 2021, 2023. The Stata folders are used. When such folders
+# exist they take precedence over the name tokens above (which the self-test
+# and any other layout still use).
+UDB_DIR_PATTERN = r"^hfcs_udb_([1-5])_\d+_stata$"
+UDB_WAVE = {"1": "2010", "2": "2014", "3": "2017", "4": "2021", "5": "2023"}
+# Disposable income simulated by the ECB with EUROMOD on the HFCS (waves 2014 to
+# 2023): files di1 ... di5 in <HFCS_DIR>/<year>/Stata, keyed by country,
+# household and implicate, with DDI2000 (disposable income), DTI2000 (taxes on
+# income), DTW2000 (taxes on wealth) and DSC2000 (social contributions).
+DI_DIR = os.path.join("{year}", "Stata")
+DI_PATTERN = r"^di([1-5])\.dta$"
 FILE_PATTERNS = {
     "D": r"^d([1-5])?\.(csv|dta)$",
     "H": r"^h([1-5])?\.(csv|dta)$",
@@ -123,6 +136,11 @@ VARS = {
     "inc_privtr":   (["DI1700"], "D", C),
     # taxes and social contributions: NON-CORE, listed for Italy (and Finland) only
     "taxes":        (["HNG0710"], "HN", T),
+    # EUROMOD-simulated disposable income and its components (di files, 2014 on)
+    "inc_disp":     (["DDI2000"], "DI", C),
+    "tax_income":   (["DTI2000"], "DI", C),
+    "tax_wealth":   (["DTW2000"], "DI", C),
+    "soc_contrib":  (["DSC2000"], "DI", C),
     # household composition and groups
     "hsize":        (["DH0001"], "D", C),
     "age_rp":       (["DHAGEH1"], "D", C),
@@ -254,6 +272,12 @@ def find_wave_dirs(hfcs_dir):
     if not os.path.isdir(hfcs_dir):
         return found
     for name in sorted(os.listdir(hfcs_dir)):
+        m = re.match(UDB_DIR_PATTERN, name.lower())
+        if m and os.path.isdir(os.path.join(hfcs_dir, name)):
+            found[UDB_WAVE[m.group(1)]] = os.path.join(hfcs_dir, name)
+    if found:
+        return found
+    for name in sorted(os.listdir(hfcs_dir)):
         path = os.path.join(hfcs_dir, name)
         if not os.path.isdir(path):
             continue
@@ -334,7 +358,7 @@ def wanted_columns():
     return names
 
 
-def load_wave(wave_dir, countries, nrep, log):
+def load_wave(wave_dir, countries, nrep, log, di_dir=None):
     """
     Load one wave: a household-by-implicate frame with every available variable
     from the D, H and HN files, and a household-level frame of replicate weights
@@ -368,6 +392,29 @@ def load_wave(wave_dir, countries, nrep, log):
         else:
             new = [c for c in frame.columns if c not in merged.columns]
             merged = merged.merge(frame[[k_c, k_h, k_i] + new], on=[k_c, k_h, k_i], how="left")
+    # disposable income (EUROMOD on the HFCS), where the wave has it
+    if di_dir is not None and os.path.isdir(di_dir):
+        parts = []
+        for fname in sorted(os.listdir(di_dir)):
+            m = re.match(DI_PATTERN, fname.lower())
+            if not m:
+                continue
+            part = read_file(os.path.join(di_dir, fname), wanted, countries)
+            if k_i not in part.columns:
+                part[k_i] = int(m.group(1))
+            parts.append(part)
+        if parts:
+            frame = pd.concat(parts, ignore_index=True)
+            frame[k_c] = frame[k_c].astype(str).str.strip().str.upper()
+            frame[k_h] = frame[k_h].astype(str).str.strip().str.replace(r"\.0$", "", regex=True)
+            frame[k_i] = pd.to_numeric(frame[k_i], errors="coerce").astype(int)
+            new = [c for c in frame.columns if c not in merged.columns]
+            before = len(merged)
+            merged = merged.merge(frame[[k_c, k_h, k_i] + new], on=[k_c, k_h, k_i], how="left")
+            assert len(merged) == before, "the disposable-income merge changed the number of rows"
+            log(f"  DI: {len(parts)} file(s), {len(frame)} rows, matched {int(merged[new[0]].notna().sum()) if new else 0} of {before}")
+    else:
+        log("  no disposable-income (di) files for this wave")
     reps = None
     if "W" in files and nrep > 0:
         reps = read_file(files["W"][0][1], {k_c, k_h}, countries, prefix=REPLICATE_PREFIX, max_prefix=nrep)
@@ -496,6 +543,16 @@ def build_A_wealth_income(df):
     df["inc_net"] = df["inc_gross"] - df["taxes"]        # NaN wherever taxes are not provided
     df["one"] = 1.0
     pos = df["inc_gross"] > 0
+    # Disposable income as simulated by the ECB with EUROMOD (waves 2014 on): the
+    # income concept of the model, whose households see income after taxes.
+    df["inc_dispo"] = df["inc_disp"]
+    posd = df["inc_dispo"] > 0
+    df["liq_broad_ratio_disp"] = np.where(posd, df["liq_broad"] / df["inc_dispo"], np.nan)
+    df["liq_kvw_ratio_disp"] = np.where(posd, df["liq_kvw"] / df["inc_dispo"], np.nan)
+    add_ratio(df, "mean_income_disposable", df["inc_dispo"], df["one"])
+    add_ratio(df, "disposable_over_gross_aggregate", df["inc_dispo"], df["inc_gross"], pos & df["inc_dispo"].notna())
+    add_ratio(df, "income_tax_over_gross_aggregate", df["tax_income"], df["inc_gross"], pos & df["tax_income"].notna())
+    add_ratio(df, "social_contributions_over_gross_aggregate", df["soc_contrib"], df["inc_gross"], pos & df["soc_contrib"].notna())
     add_ratio(df, "mean_networth", df["networth"], df["one"])
     add_ratio(df, "mean_liquid_kvw", df["liq_kvw"], df["one"])
     add_ratio(df, "mean_liquid_broad", df["liq_broad"], df["one"])
@@ -515,7 +572,8 @@ def build_A_wealth_income(df):
             ("median_illiquid_broad", "median", "illiq_broad", None),
             ("median_income_gross", "median", "inc_gross", None),
             ("median_income_labour_transfers", "median", "inc_kvw", None),
-            ("median_income_net", "median", "inc_net", None)]
+            ("median_income_net", "median", "inc_net", None),
+            ("median_income_disposable", "median", "inc_dispo", None)]
 
 
 def htm_flags(liq, illiq, income, periods_per_year, credit_limit_months):
@@ -579,6 +637,12 @@ def build_C_wealth_to_income(df):
             ("dnnla_to_income_median_of_ratio", "median", "dnnla_ratio", None),
             ("liquid_kvw_to_income_median_of_ratio", "median", "liq_kvw_ratio", None),
             ("liquid_broad_to_income_median_of_ratio", "median", "liq_broad_ratio", None),
+            ("networth_to_disposable_income_ratio_of_medians", "ratio_of_medians", "networth", "inc_dispo"),
+            ("liquid_kvw_to_disposable_income_ratio_of_medians", "ratio_of_medians", "liq_kvw", "inc_dispo"),
+            ("liquid_broad_to_disposable_income_ratio_of_medians", "ratio_of_medians", "liq_broad", "inc_dispo"),
+            ("illiquid_broad_to_disposable_income_ratio_of_medians", "ratio_of_medians", "illiq_broad", "inc_dispo"),
+            ("liquid_broad_to_disposable_income_median_of_ratio", "median", "liq_broad_ratio_disp", None),
+            ("liquid_kvw_to_disposable_income_median_of_ratio", "median", "liq_kvw_ratio_disp", None),
             ("networth_gini", "gini", "networth", None),
             ("networth_top10_share", "top10", "networth", None)]
 
@@ -611,6 +675,20 @@ def build_D_poverty(df):
     add_share(df, "asset_poor_oecd_households", asset_poor)
     add_share(df, "hardship_oecd_households", asset_poor & income_poor)
     add_share(df, "income_poor50_households", income_poor)
+    # The same on DISPOSABLE income, the concept of Balestra and Tonkin (2018) and
+    # of the official poverty statistics, where the wave has it.
+    df["inc_disp_eq"] = df["inc_dispo"] / eq
+    medd = by_implicate(df, lambda s: weighted_quantile(s["inc_disp_eq"].values, s["w_persons"].values, 0.5))
+    has = df["inc_disp_eq"].notna()
+    asset_poor_d = df["liq_oecd_eq"] < (ASSET_POVERTY_MONTHS / 12.0) * POVERTY_LINES[0] * medd
+    income_poor_d = df["inc_disp_eq"] < POVERTY_LINES[0] * medd
+    for line in POVERTY_LINES:
+        tag = str(int(round(100 * line)))
+        add_share(df, f"income_poor{tag}_disp_persons", df["inc_disp_eq"] < line * medd, has, persons=True)
+    add_share(df, "asset_poor_disp_persons", asset_poor_d, has, persons=True)
+    add_share(df, "hardship_disp_persons", asset_poor_d & income_poor_d, has, persons=True)
+    add_share(df, "asset_poor_disp_households", asset_poor_d, has)
+    add_share(df, "income_poor50_disp_households", income_poor_d, has)
     return []
 
 
@@ -970,7 +1048,8 @@ def run(hfcs_dir, outdir, waves, countries, nrep, min_cell, log=print):
             log(f"wave {wave}: no folder found, skipped")
             continue
         log(f"wave {wave}: {wave_dirs[wave]}")
-        raw, reps = load_wave(wave_dirs[wave], countries, nrep, log)
+        raw, reps = load_wave(wave_dirs[wave], countries, nrep, log,
+                              di_dir=os.path.join(hfcs_dir, DI_DIR.format(year=wave)))
         ccol = VARS["country"][0][0]
         for country in countries:
             raw_c = raw[raw[ccol] == country]
