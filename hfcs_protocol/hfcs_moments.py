@@ -545,7 +545,12 @@ def build_A_wealth_income(df):
     pos = df["inc_gross"] > 0
     # Disposable income as simulated by the ECB with EUROMOD (waves 2014 on): the
     # income concept of the model, whose households see income after taxes.
-    df["inc_dispo"] = df["inc_disp"]
+    # After-tax income, one measure for the three countries: the EUROMOD figure
+    # where it exists (France and Germany, waves 2014 to 2021), otherwise gross
+    # income less the taxes and social contributions the survey records itself
+    # (Italy, every wave). Missing where neither exists.
+    df["inc_dispo"] = df["inc_disp"].where(df["inc_disp"].notna(), df["inc_net"])
+    add_share(df, "after_tax_income_from_euromod", df["inc_disp"].notna(), df["inc_dispo"].notna())
     posd = df["inc_dispo"] > 0
     df["liq_broad_ratio_disp"] = np.where(posd, df["liq_broad"] / df["inc_dispo"], np.nan)
     df["liq_kvw_ratio_disp"] = np.where(posd, df["liq_kvw"] / df["inc_dispo"], np.nan)

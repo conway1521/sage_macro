@@ -1,0 +1,13 @@
+start    phi 6.600 share 0.200 beta_low 0.750 | effort 0.6447 htm 0.2239 MPC 0.3308 | worst 1.89 band [1 solves, 0.7 min]
+step 1   phi 6.661 share 0.180 beta_low 0.533 | effort 0.6432 htm 0.2049 MPC 0.3166 | worst 2.03 band [5 solves, 1.5 min]
+step 2   phi 6.660 share 0.180 beta_low 0.500 | effort 0.6432 htm 0.2050 MPC 0.3166 | worst 2.03 band [9 solves, 1.9 min]
+step 3   phi 6.660 share 0.180 beta_low 0.500 | effort 0.6432 htm 0.2050 MPC 0.3166 | worst 2.03 band [16 solves, 2.6 min]
+step 4   phi 6.660 share 0.180 beta_low 0.500 | effort 0.6432 htm 0.2050 MPC 0.3166 | worst 2.03 band [23 solves, 3.2 min]
+step 5   phi 6.660 share 0.180 beta_low 0.500 | effort 0.6432 htm 0.2050 MPC 0.3166 | worst 2.03 band [30 solves, 3.9 min]
+step 6   phi 6.660 share 0.180 beta_low 0.500 | effort 0.6432 htm 0.2050 MPC 0.3166 | worst 2.03 band [37 solves, 4.6 min]
+step 7   phi 6.660 share 0.180 beta_low 0.500 | effort 0.6432 htm 0.2050 MPC 0.3166 | worst 2.03 band [44 solves, 5.5 min]
+step 8   phi 6.660 share 0.180 beta_low 0.500 | effort 0.6432 htm 0.2050 MPC 0.3166 | worst 2.03 band [51 solves, 6.3 min]
+
+NOT CALIBRATED: FR G
+untargeted: earnings response -0.0000 | MPC of the hand-to-mouth 0.930 | median liquid wealth / median income 0.272 | consumption drop on job loss 0.174 | poor hand-to-mouth (one week, no illiquid) 0.2050 | protection if hit 0.8265 | income poverty 0.0036, asset poverty 0.3177
+DONE

@@ -41,6 +41,8 @@ adjusting, and the grids, plus V and Vb for warm starts.
 function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01,
                              theta_adj::Float64 = 0.01, full::Bool = false, tol::Float64 = 1e-9,
                              maxit::Int = 5000, warm = nothing, trace::Bool = false)
+    p0.cfloor == 0 || error("the means-tested floor is not built for two assets yet")
+    isempty(p0.effort_set) && p0.job_effort && error("effort set by the job is not built for two assets yet")
     # survival enters discounting; the distribution adds the newborns
     p = p0.death > 0 ? update(p0; β = p0.β * (1 - p0.death)) : p0
     a = SAGEBewley.exponential_grid(p.a_min, p.a_max, p.na, p.pexp)
@@ -534,7 +536,7 @@ function two_asset_cell_summary(p::SAGEParams, sol; thresholds = nothing)
     cumsum!(Y, Y); cumsum!(ypoor, ypoor)
     (W = W, K = K, N = N, mass = mass, part = part, Y = Y, Ys = Ys, ymean = ymean, ym_s = ym_s,
      ymin_E = ymin_E, rate = sol.rate, minc = sol.meaninc, pbase = sol.partbase,
-     jinc = jinc, jboth = jboth, thresholds = thr, eff_E = eff_E, ypoor = ypoor)
+     jinc = jinc, jboth = jboth, thresholds = thr, eff_E = eff_E, ypoor = ypoor, fout = 0.0)
 end
 
 """

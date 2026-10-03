@@ -231,6 +231,12 @@ Base.@kwdef struct SAGEParams
     # every solve unchanged (effort chosen freely). EGM, one asset.
     job_effort::Bool = false
     effort_set::Vector{Float64} = Float64[]
+    # A MEANS-TESTED FLOOR (2026-10-02), as in Hubbard, Skinner and Zeldes (1995): a
+    # transfer tops the household's resources (assets with interest, earnings,
+    # benefits, net of the lump-sum tax) up to `cfloor`, a minimum income scheme
+    # tested on income and on assets. Zero leaves every solve unchanged. With
+    # effort set by the job (the transfer would otherwise tax work at 100%).
+    cfloor::Float64 = 0.0
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."

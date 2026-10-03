@@ -86,7 +86,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
     @inbounds for k in 1:na
         # dread (behavioural mode) falls as savings rise, so it adds to the
         # marginal value of saving: Gamma c^-gamma = beta E V_a - D'(a')
-        m = p.β * EVas[k] - Dps[k]
+        m = max(p.β * EVas[k] - Dps[k], 1e-12)     # zero where every next state is on the floor
         c = (p.pc * m / p.Γ)^(-1 / p.γ)
         e = 0.0
         if !isnan(efix)
@@ -169,6 +169,40 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
 end
 
 """
+The means-tested floor for one state and branch (p.cfloor > 0): every grid point
+whose resources R a + w e + other fall short of the floor is topped up to it, so
+it has the consumption, saving and value of a household with exactly the floor.
+That household's choice is found on the asset grid (it keeps nothing or little:
+saving is taxed away one for one next period while it stays on the floor).
+`fl` marks the points on the floor: their marginal value of assets is zero.
+"""
+function apply_floor!(cd, ed, apd, vd, fl, p::SAGEParams, a, EVs, s::Int, d::Int,
+                      w::Float64, other::Float64, tfl::Float64, belong::Float64, Ds)
+    na = length(a)
+    @inbounds for i in 1:na; fl[i, s] = false; end
+    e = w > 0 ? p.effort_set[s] : 0.0
+    κ = 1.0 + p.commute
+    T = tfl + κ * e + QBAR * d
+    T > 1.0 && return
+    X = p.cfloor                                  # resources guaranteed
+    af = (X - w * e - other) / p.R                # assets below which the transfer is paid
+    af <= a[1] && return
+    best = -Inf; kb = 1
+    @inbounds for k in 1:na
+        c = (X - a[k]) / p.pc
+        c > 1e-10 || break
+        v = egm_flow(p, c, T) + belong * d - Ds[k] + p.β * EVs[k]
+        v > best && (best = v; kb = k)
+    end
+    best == -Inf && return
+    cf = (X - a[kb]) / p.pc
+    @inbounds for i in 1:na
+        a[i] < af || break
+        cd[i, s] = cf; ed[i, s] = e; apd[i, s] = a[kb]; vd[i, s] = best; fl[i, s] = true
+    end
+end
+
+"""
     solve_participation_egm(p, Q_agg; theta, full, tol, maxit, warm)
 
 The household problem by EGM. `warm` is a previous solution (with fields V and
@@ -186,6 +220,9 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
            for s in 1:nz]
     tfl = [floor_at(p, s) for s in 1:nz]
     bel = [p.social_strength * p.Λ * p.B[s] * Q_agg * QBAR * belong_at(p, s) for s in 1:nz]
+    p.cfloor > 0 && isempty(p.effort_set) && any(>(0), wv) &&
+        error("the means-tested floor needs effort set by the job (effort_mode = :job)")
+    fl = (falses(na, nz), falses(na, nz))        # grid points on the floor, by branch
 
     # dread in behavioural mode, at each next-asset node, and its derivative
     D = zeros(na, nz); Dp = zeros(na, nz)
@@ -233,14 +270,17 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
             egm_branch!(cd[d+1], e_d[d+1], a_d[d+1], vd[d+1], p, a, view(EV, :, s), view(EVa, :, s),
                         s, d, wv[s], oth[s][d+1], tfl[s], bel[s], con_c[d+1], con_e[d+1], aend, cend, eend,
                         view(D, :, s), view(Dp, :, s))
+            p.cfloor > 0 && apply_floor!(cd[d+1], e_d[d+1], a_d[d+1], vd[d+1], fl[d+1], p, a, view(EV, :, s), s, d,
+                                         wv[s], oth[s][d+1], tfl[s], bel[s], view(D, :, s))
         end
         @inbounds for i in eachindex(V)
             b0 = vd[1][i]; b1 = vd[2][i]
             m = max(b0, b1)
             Vn[i] = m + theta * log(exp((b0 - m) / theta) + exp((b1 - m) / theta))
             P1[i] = b1 == -Inf ? 0.0 : (b0 == -Inf ? 1.0 : 1 / (1 + exp((b0 - b1) / theta)))
-            mu0 = b0 == -Inf ? 0.0 : cd[1][i]^(-p.γ)
-            mu1 = b1 == -Inf ? 0.0 : cd[2][i]^(-p.γ)
+            # on the floor an extra unit of assets is taken back by the transfer: no marginal value
+            mu0 = (b0 == -Inf || fl[1][i]) ? 0.0 : cd[1][i]^(-p.γ)
+            mu1 = (b1 == -Inf || fl[2][i]) ? 0.0 : cd[2][i]^(-p.γ)
             Van[i] = p.R * p.Γ * ((1 - P1[i]) * mu0 + P1[i] * mu1) / p.pc
         end
         # McQueen-Porteus bounds: with dmin and dmax the smallest and largest
@@ -282,7 +322,7 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
     if full
         return (Q = QBAR * part, rate = part, meaninc = meaninc, partbase = partbase,
                 a = a, lambda = λ, P1 = P1, e_d = e_d, a_d = a_d, V = V, Va = Va,
-                z_vals = z_vals, iters = iters, theta = theta)
+                z_vals = z_vals, iters = iters, theta = theta, c_d = cd, floor_d = fl)
     end
     return QBAR * part, part, meaninc, partbase
 end
@@ -316,10 +356,11 @@ function solve_job_effort(p::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01, 
     tfl = [floor_at(p, s) for s in 1:nz]
     emp = [wv[s] > 0 for s in 1:nz]
     pfree = update(p; job_effort = false, effort_set = Float64[])
+    pstart = update(pfree; cfloor = 0.0)          # the free-effort starting point has no floor
     if warm !== nothing && hasproperty(warm, :effort_set) && length(warm.effort_set) == nz
         e = copy(warm.effort_set); w0 = warm
     else
-        s0 = solve_participation_egm(pfree, Q_agg; theta = theta, full = true, tol = tol, maxit = maxit, warm = warm)
+        s0 = solve_participation_egm(pstart, Q_agg; theta = theta, full = true, tol = tol, maxit = maxit, warm = warm)
         e = zeros(nz)
         for s in 1:nz
             emp[s] || continue
@@ -338,7 +379,7 @@ function solve_job_effort(p::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01, 
                 l = sol.lambda[i, s]; l <= 0 && continue
                 for d in (0, 1)
                     pd = d == 1 ? sol.P1[i, s] : 1 - sol.P1[i, s]; pd <= 0 && continue
-                    c = (p.R * a[i] + wv[s] * sol.e_d[d+1][i, s] + oth[s][d+1] - sol.a_d[d+1][i, s]) / p.pc
+                    c = sol.c_d[d+1][i, s]           # the solver's consumption (it includes the floor transfer)
                     c > 0 && (mu += l * pd * c^(-p.γ))
                 end
                 m += l; pb += l * sol.P1[i, s]

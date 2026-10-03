@@ -1,0 +1,1909 @@
+# Aggregate moments from the Eurosystem Household Finance and Consumption Survey (HFCS), waves 2010 to 2023,
+# France, Germany, Italy. Computed by hfcs_protocol/hfcs_moments.py; definitions in hfcs_protocol/HFCS_READINESS.md.
+# Weighted, five implicates combined by Rubin's rules, standard errors from 200 replicate weights. Cells under 30
+# households are not reported. No household-level data. Source: Eurosystem Household Finance and Consumption Survey.
+moment,country,wave,group_var,group,value,se,n_unweighted
+after_tax_income_from_euromod,DE,2014,all,all,1.0,0.0,4460
+after_tax_income_from_euromod,DE,2017,all,all,1.0,0.0,4942
+after_tax_income_from_euromod,DE,2021,all,all,1.0,0.0,4119
+after_tax_income_from_euromod,FR,2014,all,all,1.0,0.0,12035
+after_tax_income_from_euromod,FR,2017,all,all,1.0,0.0,13685
+after_tax_income_from_euromod,FR,2021,all,all,1.0,0.0,10253
+after_tax_income_from_euromod,IT,2010,all,all,0.0,0.0,7951
+after_tax_income_from_euromod,IT,2014,all,all,0.0,0.0,8156
+after_tax_income_from_euromod,IT,2017,all,all,0.0,0.0,7420
+after_tax_income_from_euromod,IT,2021,all,all,0.0,0.0,6239
+after_tax_income_from_euromod,IT,2023,all,all,0.0,0.0,9641
+asset_poor_disp_persons,DE,2014,all,all,0.38656,0.01099,4460
+asset_poor_disp_persons,DE,2017,all,all,0.38002,0.00986,4942
+asset_poor_disp_persons,DE,2021,all,all,0.32049,0.01208,4119
+asset_poor_disp_persons,FR,2014,all,all,0.36132,0.00678,12035
+asset_poor_disp_persons,FR,2017,all,all,0.38009,0.00667,13685
+asset_poor_disp_persons,FR,2021,all,all,0.33473,0.00816,10253
+asset_poor_disp_persons,IT,2010,all,all,0.36121,0.00792,7951
+asset_poor_disp_persons,IT,2014,all,all,0.3873,0.00914,8156
+asset_poor_disp_persons,IT,2017,all,all,0.36392,0.00961,7420
+asset_poor_disp_persons,IT,2021,all,all,0.34051,0.04526,6239
+asset_poor_disp_persons,IT,2023,all,all,0.33143,0.01334,9641
+asset_poor_disp_persons,FR,2021,degurba,cities,0.36035,0.0114,6692
+asset_poor_disp_persons,FR,2021,degurba,rural,0.24636,0.01532,1914
+asset_poor_disp_persons,FR,2021,degurba,towns and suburbs,0.35548,0.01804,1547
+asset_poor_disp_persons,DE,2014,education,below tertiary,0.47344,0.01508,2351
+asset_poor_disp_persons,DE,2014,education,tertiary,0.20626,0.0152,2064
+asset_poor_disp_persons,DE,2017,education,below tertiary,0.47997,0.01276,2470
+asset_poor_disp_persons,DE,2017,education,tertiary,0.18268,0.01606,2436
+asset_poor_disp_persons,DE,2021,education,below tertiary,0.41069,0.01681,1960
+asset_poor_disp_persons,DE,2021,education,tertiary,0.16633,0.02058,2149
+asset_poor_disp_persons,FR,2014,education,below tertiary,0.43883,0.00907,6772
+asset_poor_disp_persons,FR,2014,education,tertiary,0.189,0.01199,4969
+asset_poor_disp_persons,FR,2017,education,below tertiary,0.46326,0.00895,7567
+asset_poor_disp_persons,FR,2017,education,tertiary,0.21136,0.00947,6115
+asset_poor_disp_persons,FR,2021,education,below tertiary,0.42122,0.01033,5250
+asset_poor_disp_persons,FR,2021,education,tertiary,0.17883,0.01073,5003
+asset_poor_disp_persons,IT,2010,education,below tertiary,0.37821,0.00867,6655
+asset_poor_disp_persons,IT,2010,education,tertiary,0.19535,0.02422,857
+asset_poor_disp_persons,IT,2014,education,below tertiary,0.41607,0.00975,7154
+asset_poor_disp_persons,IT,2014,education,tertiary,0.19923,0.02555,1002
+asset_poor_disp_persons,IT,2017,education,below tertiary,0.38558,0.01038,6547
+asset_poor_disp_persons,IT,2017,education,tertiary,0.22408,0.02534,873
+asset_poor_disp_persons,IT,2021,education,below tertiary,0.37017,0.04974,4400
+asset_poor_disp_persons,IT,2021,education,tertiary,0.20042,0.07584,1839
+asset_poor_disp_persons,IT,2023,education,below tertiary,0.37359,0.01484,7030
+asset_poor_disp_persons,IT,2023,education,tertiary,0.13843,0.02627,2611
+asset_poor_disp_persons,DE,2014,labour,employed,0.39031,0.01545,2694
+asset_poor_disp_persons,DE,2014,labour,other,0.67309,0.04697,155
+asset_poor_disp_persons,DE,2014,labour,retired,0.26746,0.01998,1476
+asset_poor_disp_persons,DE,2014,labour,unemployed,0.84838,0.03927,124
+asset_poor_disp_persons,DE,2017,labour,employed,0.38779,0.01221,2953
+asset_poor_disp_persons,DE,2017,labour,other,0.70178,0.05131,120
+asset_poor_disp_persons,DE,2017,labour,retired,0.26481,0.01714,1754
+asset_poor_disp_persons,DE,2017,labour,unemployed,0.88369,0.0336,105
+asset_poor_disp_persons,DE,2021,labour,employed,0.31974,0.01546,2306
+asset_poor_disp_persons,DE,2021,labour,other,0.61611,0.08403,90
+asset_poor_disp_persons,DE,2021,labour,retired,0.22848,0.01795,1616
+asset_poor_disp_persons,DE,2021,labour,unemployed,0.89649,0.05851,92
+asset_poor_disp_persons,FR,2014,labour,employed,0.34009,0.00934,7039
+asset_poor_disp_persons,FR,2014,labour,other,0.69706,0.03172,454
+asset_poor_disp_persons,FR,2014,labour,retired,0.27145,0.01117,3923
+asset_poor_disp_persons,FR,2014,labour,unemployed,0.75087,0.02772,619
+asset_poor_disp_persons,FR,2017,labour,employed,0.36175,0.00891,8265
+asset_poor_disp_persons,FR,2017,labour,other,0.734,0.02914,454
+asset_poor_disp_persons,FR,2017,labour,retired,0.28289,0.01042,4342
+asset_poor_disp_persons,FR,2017,labour,unemployed,0.75597,0.02219,624
+asset_poor_disp_persons,FR,2021,labour,employed,0.31387,0.00963,6238
+asset_poor_disp_persons,FR,2021,labour,other,0.71132,0.03425,283
+asset_poor_disp_persons,FR,2021,labour,retired,0.24656,0.01271,3338
+asset_poor_disp_persons,FR,2021,labour,unemployed,0.73193,0.03177,394
+asset_poor_disp_persons,IT,2010,labour,employed,0.36891,0.01014,4073
+asset_poor_disp_persons,IT,2010,labour,other,0.55205,0.08522,121
+asset_poor_disp_persons,IT,2010,labour,retired,0.28684,0.01217,3564
+asset_poor_disp_persons,IT,2010,labour,unemployed,0.89116,0.02945,193
+asset_poor_disp_persons,IT,2014,labour,employed,0.39258,0.01233,3841
+asset_poor_disp_persons,IT,2014,labour,other,0.59597,0.0236,913
+asset_poor_disp_persons,IT,2014,labour,retired,0.24184,0.0131,3158
+asset_poor_disp_persons,IT,2014,labour,unemployed,0.87978,0.02823,244
+asset_poor_disp_persons,IT,2017,labour,employed,0.35939,0.01413,3378
+asset_poor_disp_persons,IT,2017,labour,other,0.57902,0.03202,931
+asset_poor_disp_persons,IT,2017,labour,retired,0.23953,0.01385,2850
+asset_poor_disp_persons,IT,2017,labour,unemployed,0.78354,0.04902,261
+asset_poor_disp_persons,IT,2021,labour,employed,0.32768,0.06261,3397
+asset_poor_disp_persons,IT,2021,labour,other,0.59587,0.06555,502
+asset_poor_disp_persons,IT,2021,labour,retired,0.25503,0.04891,2200
+asset_poor_disp_persons,IT,2021,labour,unemployed,0.82781,0.04003,140
+asset_poor_disp_persons,IT,2023,labour,employed,0.32087,0.01741,4852
+asset_poor_disp_persons,IT,2023,labour,other,0.59872,0.04752,819
+asset_poor_disp_persons,IT,2023,labour,retired,0.2407,0.01891,3719
+asset_poor_disp_persons,IT,2023,labour,unemployed,0.86695,0.03828,251
+asset_poor_disp_persons,IT,2017,macro_region,IT Centre,0.26654,0.01501,1605
+asset_poor_disp_persons,IT,2017,macro_region,IT North,0.29707,0.01276,3196
+asset_poor_disp_persons,IT,2017,macro_region,IT South and Islands,0.50739,0.02027,2619
+asset_poor_disp_persons,IT,2021,macro_region,IT Centre,0.27303,0.1484,1310
+asset_poor_disp_persons,IT,2021,macro_region,IT North,0.24794,0.03737,2741
+asset_poor_disp_persons,IT,2021,macro_region,IT South and Islands,0.5049,0.04129,2188
+asset_poor_disp_persons,IT,2023,macro_region,IT Centre,0.29041,0.03466,1511
+asset_poor_disp_persons,IT,2023,macro_region,IT North,0.22826,0.01695,3768
+asset_poor_disp_persons,IT,2023,macro_region,IT South and Islands,0.49071,0.02432,4362
+asset_poor_disp_persons,DE,2017,region,DENW,0.37506,0.02649,774
+asset_poor_disp_persons,DE,2017,region,DEOS,0.45859,0.02649,896
+asset_poor_disp_persons,DE,2017,region,DESW,0.29516,0.0185,1965
+asset_poor_disp_persons,DE,2017,region,DEWW,0.43893,0.02328,1307
+asset_poor_disp_persons,DE,2021,region,DENW,0.30086,0.03369,670
+asset_poor_disp_persons,DE,2021,region,DEOS,0.40063,0.02874,832
+asset_poor_disp_persons,DE,2021,region,DESW,0.25276,0.02541,1615
+asset_poor_disp_persons,DE,2021,region,DEWW,0.36087,0.03088,1002
+asset_poor_disp_persons,FR,2017,region,FR0,0.70703,0.04038,326
+asset_poor_disp_persons,FR,2017,region,FR1,0.39355,0.02295,2599
+asset_poor_disp_persons,FR,2017,region,FR2,0.40542,0.01761,2190
+asset_poor_disp_persons,FR,2017,region,FR3,0.43979,0.03276,859
+asset_poor_disp_persons,FR,2017,region,FR4,0.37322,0.02626,1043
+asset_poor_disp_persons,FR,2017,region,FR5,0.29567,0.01833,1996
+asset_poor_disp_persons,FR,2017,region,FR6,0.31747,0.02312,1470
+asset_poor_disp_persons,FR,2017,region,FR7,0.33858,0.02032,1660
+asset_poor_disp_persons,FR,2017,region,FR8,0.42113,0.02053,1542
+asset_poor_disp_persons,FR,2021,region,FR0,0.62108,0.05617,251
+asset_poor_disp_persons,FR,2021,region,FR1,0.32586,0.01891,2259
+asset_poor_disp_persons,FR,2021,region,FR2,0.34113,0.02155,1542
+asset_poor_disp_persons,FR,2021,region,FR3,0.391,0.03664,627
+asset_poor_disp_persons,FR,2021,region,FR4,0.29396,0.02927,772
+asset_poor_disp_persons,FR,2021,region,FR5,0.28504,0.01941,1473
+asset_poor_disp_persons,FR,2021,region,FR6,0.30113,0.02403,1023
+asset_poor_disp_persons,FR,2021,region,FR7,0.2866,0.02273,1254
+asset_poor_disp_persons,FR,2021,region,FR8,0.40846,0.02842,1052
+asset_poor_disp_persons,IT,2017,region,IT1,0.27428,0.0389,639
+asset_poor_disp_persons,IT,2017,region,IT10,0.36708,0.05518,248
+asset_poor_disp_persons,IT,2017,region,IT11,0.10739,0.03063,340
+asset_poor_disp_persons,IT,2017,region,IT12,0.34469,0.03637,479
+asset_poor_disp_persons,IT,2017,region,IT13,0.22659,0.07305,195
+asset_poor_disp_persons,IT,2017,region,IT14,0.27523,0.05917,101
+asset_poor_disp_persons,IT,2017,region,IT15,0.65596,0.0308,688
+asset_poor_disp_persons,IT,2017,region,IT16,0.36899,0.03401,438
+asset_poor_disp_persons,IT,2017,region,IT17,0.42485,0.07358,119
+asset_poor_disp_persons,IT,2017,region,IT18,0.48557,0.08256,195
+asset_poor_disp_persons,IT,2017,region,IT19,0.54668,0.05091,569
+asset_poor_disp_persons,IT,2017,region,IT2,0.43076,0.09976,36
+asset_poor_disp_persons,IT,2017,region,IT20,0.64593,0.03299,314
+asset_poor_disp_persons,IT,2017,region,IT3,0.29039,0.01989,823
+asset_poor_disp_persons,IT,2017,region,IT4,0.20386,0.04356,219
+asset_poor_disp_persons,IT,2017,region,IT5,0.3178,0.03852,453
+asset_poor_disp_persons,IT,2017,region,IT6,0.34034,0.052,176
+asset_poor_disp_persons,IT,2017,region,IT7,0.27797,0.03782,279
+asset_poor_disp_persons,IT,2017,region,IT8,0.34559,0.03192,571
+asset_poor_disp_persons,IT,2017,region,IT9,0.20439,0.0157,538
+asset_poor_disp_persons,IT,2021,region,IT1,0.31961,0.11613,418
+asset_poor_disp_persons,IT,2021,region,IT10,0.30011,0.04164,240
+asset_poor_disp_persons,IT,2021,region,IT11,0.29314,0.15378,203
+asset_poor_disp_persons,IT,2021,region,IT12,0.36377,0.17589,468
+asset_poor_disp_persons,IT,2021,region,IT13,0.16491,0.12637,140
+asset_poor_disp_persons,IT,2021,region,IT14,0.43286,0.23697,74
+asset_poor_disp_persons,IT,2021,region,IT15,0.7263,0.0995,535
+asset_poor_disp_persons,IT,2021,region,IT16,0.45539,0.08584,406
+asset_poor_disp_persons,IT,2021,region,IT17,0.38258,0.11675,68
+asset_poor_disp_persons,IT,2021,region,IT18,0.15115,0.06631,133
+asset_poor_disp_persons,IT,2021,region,IT19,0.6119,0.07305,503
+asset_poor_disp_persons,IT,2021,region,IT20,0.41997,0.05999,329
+asset_poor_disp_persons,IT,2021,region,IT3,0.25324,0.0788,738
+asset_poor_disp_persons,IT,2021,region,IT4,0.16643,0.06907,288
+asset_poor_disp_persons,IT,2021,region,IT5,0.20693,0.0519,461
+asset_poor_disp_persons,IT,2021,region,IT6,0.17764,0.07196,144
+asset_poor_disp_persons,IT,2021,region,IT7,0.34833,0.1915,185
+asset_poor_disp_persons,IT,2021,region,IT8,0.22174,0.10144,479
+asset_poor_disp_persons,IT,2021,region,IT9,0.13721,0.03539,399
+asset_poor_disp_persons,IT,2023,region,IT1,0.30708,0.03199,609
+asset_poor_disp_persons,IT,2023,region,IT10,0.33194,0.07072,289
+asset_poor_disp_persons,IT,2023,region,IT11,0.19112,0.03458,281
+asset_poor_disp_persons,IT,2023,region,IT12,0.34517,0.07307,508
+asset_poor_disp_persons,IT,2023,region,IT13,0.20613,0.12406,273
+asset_poor_disp_persons,IT,2023,region,IT14,0.45279,0.02995,139
+asset_poor_disp_persons,IT,2023,region,IT15,0.6368,0.03443,964
+asset_poor_disp_persons,IT,2023,region,IT16,0.39952,0.05328,913
+asset_poor_disp_persons,IT,2023,region,IT17,0.53668,0.12223,136
+asset_poor_disp_persons,IT,2023,region,IT18,0.19127,0.07135,266
+asset_poor_disp_persons,IT,2023,region,IT19,0.57359,0.04289,1126
+asset_poor_disp_persons,IT,2023,region,IT2,0.31256,0.01258,48
+asset_poor_disp_persons,IT,2023,region,IT20,0.46575,0.06344,545
+asset_poor_disp_persons,IT,2023,region,IT3,0.25415,0.02449,937
+asset_poor_disp_persons,IT,2023,region,IT4,0.13896,0.06889,390
+asset_poor_disp_persons,IT,2023,region,IT5,0.21836,0.04935,625
+asset_poor_disp_persons,IT,2023,region,IT6,0.15142,0.02343,198
+asset_poor_disp_persons,IT,2023,region,IT7,0.25659,0.09165,234
+asset_poor_disp_persons,IT,2023,region,IT8,0.14998,0.0397,727
+asset_poor_disp_persons,IT,2023,region,IT9,0.27078,0.04589,433
+asset_poor_oecd_persons,DE,2010,all,all,0.3685,0.01351,3565
+asset_poor_oecd_persons,DE,2014,all,all,0.42549,0.0126,4461
+asset_poor_oecd_persons,DE,2017,all,all,0.41787,0.01008,4942
+asset_poor_oecd_persons,DE,2021,all,all,0.36694,0.01323,4119
+asset_poor_oecd_persons,DE,2023,all,all,0.39139,0.01221,3985
+asset_poor_oecd_persons,FR,2010,all,all,0.3925,0.00729,15006
+asset_poor_oecd_persons,FR,2014,all,all,0.3948,0.00682,12035
+asset_poor_oecd_persons,FR,2017,all,all,0.41244,0.00696,13685
+asset_poor_oecd_persons,FR,2021,all,all,0.36494,0.00826,10253
+asset_poor_oecd_persons,FR,2023,all,all,0.33724,0.00751,11941
+asset_poor_oecd_persons,IT,2010,all,all,0.39563,0.00786,7951
+asset_poor_oecd_persons,IT,2014,all,all,0.42379,0.01035,8156
+asset_poor_oecd_persons,IT,2017,all,all,0.40497,0.00926,7420
+asset_poor_oecd_persons,IT,2021,all,all,0.38672,0.04323,6239
+asset_poor_oecd_persons,IT,2023,all,all,0.36649,0.01187,9641
+consumption_to_income_aggregate,DE,2014,all,all,0.1847,0.00428,4440
+consumption_to_income_aggregate,DE,2017,all,all,0.18801,0.00372,4912
+consumption_to_income_aggregate,DE,2021,all,all,0.16207,0.00377,4101
+consumption_to_income_aggregate,DE,2023,all,all,0.25892,0.00696,3961
+consumption_to_income_aggregate,FR,2014,all,all,0.36351,0.00374,10760
+consumption_to_income_aggregate,FR,2017,all,all,0.29989,0.00261,13633
+consumption_to_income_aggregate,FR,2021,all,all,0.31223,0.00293,10210
+consumption_to_income_aggregate,FR,2023,all,all,0.35545,0.00389,11880
+consumption_to_income_aggregate,IT,2014,all,all,0.43043,0.00392,8037
+consumption_to_income_aggregate,IT,2017,all,all,0.44717,0.00527,7284
+consumption_to_income_aggregate,IT,2021,all,all,0.36596,0.01104,6209
+consumption_to_income_aggregate,IT,2023,all,all,0.396,0.00779,9512
+credit_constrained,DE,2010,all,all,0.0761,0.00939,3565
+credit_constrained,DE,2014,all,all,0.06477,0.00563,4461
+credit_constrained,DE,2017,all,all,0.05746,0.00523,4942
+credit_constrained,DE,2021,all,all,0.06084,0.00663,4119
+credit_constrained,DE,2023,all,all,0.06036,0.00705,3985
+credit_constrained,FR,2010,all,all,0.1162,0.00444,14963
+credit_constrained,FR,2014,all,all,0.1024,0.00448,12035
+credit_constrained,FR,2017,all,all,0.09848,0.00416,13685
+credit_constrained,FR,2021,all,all,0.08681,0.00509,10253
+credit_constrained,FR,2023,all,all,0.08504,0.00425,11941
+credit_constrained,IT,2017,all,all,0.03305,0.00331,6763
+credit_constrained,IT,2021,all,all,0.0487,0.00945,5903
+credit_constrained,IT,2023,all,all,0.0252,0.00343,9641
+disposable_over_gross_aggregate,DE,2014,all,all,0.72637,0.003,4440
+disposable_over_gross_aggregate,DE,2017,all,all,0.71111,0.0026,4912
+disposable_over_gross_aggregate,DE,2021,all,all,0.70119,0.00321,4101
+disposable_over_gross_aggregate,FR,2014,all,all,0.7523,0.00141,11976
+disposable_over_gross_aggregate,FR,2017,all,all,0.7576,0.00166,13633
+disposable_over_gross_aggregate,FR,2021,all,all,0.77919,0.00211,10210
+disposable_over_gross_aggregate,IT,2010,all,all,0.75247,0.00249,7904
+disposable_over_gross_aggregate,IT,2014,all,all,0.7553,0.00281,8037
+disposable_over_gross_aggregate,IT,2017,all,all,0.74856,0.00302,7284
+disposable_over_gross_aggregate,IT,2021,all,all,0.74387,0.0054,6209
+disposable_over_gross_aggregate,IT,2023,all,all,0.73844,0.00402,9512
+hardship_disp_persons,DE,2014,all,all,0.08001,0.0069,4460
+hardship_disp_persons,DE,2017,all,all,0.0834,0.00733,4942
+hardship_disp_persons,DE,2021,all,all,0.07342,0.00899,4119
+hardship_disp_persons,FR,2014,all,all,0.05865,0.00378,12035
+hardship_disp_persons,FR,2017,all,all,0.07806,0.00422,13685
+hardship_disp_persons,FR,2021,all,all,0.06435,0.00496,10253
+hardship_disp_persons,IT,2010,all,all,0.09099,0.00435,7951
+hardship_disp_persons,IT,2014,all,all,0.11815,0.00536,8156
+hardship_disp_persons,IT,2017,all,all,0.11734,0.00612,7420
+hardship_disp_persons,IT,2021,all,all,0.10727,0.01434,6239
+hardship_disp_persons,IT,2023,all,all,0.10729,0.00759,9641
+hardship_disp_persons,IT,2017,macro_region,IT Centre,0.0636,0.00891,1605
+hardship_disp_persons,IT,2017,macro_region,IT North,0.06749,0.00892,3196
+hardship_disp_persons,IT,2017,macro_region,IT South and Islands,0.21369,0.01454,2619
+hardship_disp_persons,IT,2021,macro_region,IT Centre,0.06822,0.02224,1310
+hardship_disp_persons,IT,2021,macro_region,IT North,0.04111,0.01081,2741
+hardship_disp_persons,IT,2021,macro_region,IT South and Islands,0.21945,0.03331,2188
+hardship_disp_persons,IT,2023,macro_region,IT Centre,0.08632,0.02084,1511
+hardship_disp_persons,IT,2023,macro_region,IT North,0.04016,0.00841,3768
+hardship_disp_persons,IT,2023,macro_region,IT South and Islands,0.20758,0.01639,4362
+hardship_disp_persons,DE,2017,region,DENW,0.06614,0.01382,774
+hardship_disp_persons,DE,2017,region,DEOS,0.09213,0.01615,896
+hardship_disp_persons,DE,2017,region,DESW,0.06835,0.01047,1965
+hardship_disp_persons,DE,2017,region,DEWW,0.10729,0.01747,1307
+hardship_disp_persons,DE,2021,region,DENW,0.06954,0.0145,670
+hardship_disp_persons,DE,2021,region,DEOS,0.08596,0.02724,832
+hardship_disp_persons,DE,2021,region,DESW,0.06203,0.01379,1615
+hardship_disp_persons,DE,2021,region,DEWW,0.08125,0.02048,1002
+hardship_disp_persons,FR,2017,region,FR0,0.30199,0.03896,326
+hardship_disp_persons,FR,2017,region,FR1,0.09467,0.0132,2599
+hardship_disp_persons,FR,2017,region,FR2,0.07205,0.00982,2190
+hardship_disp_persons,FR,2017,region,FR3,0.09258,0.0178,859
+hardship_disp_persons,FR,2017,region,FR4,0.07237,0.01709,1043
+hardship_disp_persons,FR,2017,region,FR5,0.04534,0.00792,1996
+hardship_disp_persons,FR,2017,region,FR6,0.06382,0.0133,1470
+hardship_disp_persons,FR,2017,region,FR7,0.05324,0.01004,1660
+hardship_disp_persons,FR,2017,region,FR8,0.08162,0.01156,1542
+hardship_disp_persons,FR,2021,region,FR0,0.2464,0.03172,251
+hardship_disp_persons,FR,2021,region,FR1,0.06024,0.01318,2259
+hardship_disp_persons,FR,2021,region,FR2,0.04343,0.00957,1542
+hardship_disp_persons,FR,2021,region,FR3,0.11645,0.02524,627
+hardship_disp_persons,FR,2021,region,FR4,0.04424,0.01654,772
+hardship_disp_persons,FR,2021,region,FR5,0.04551,0.00851,1473
+hardship_disp_persons,FR,2021,region,FR6,0.05635,0.01093,1023
+hardship_disp_persons,FR,2021,region,FR7,0.05459,0.01286,1254
+hardship_disp_persons,FR,2021,region,FR8,0.07789,0.01449,1052
+hardship_disp_persons,IT,2017,region,IT1,0.05677,0.01831,639
+hardship_disp_persons,IT,2017,region,IT10,0.07155,0.02409,248
+hardship_disp_persons,IT,2017,region,IT11,0.02922,0.0128,340
+hardship_disp_persons,IT,2017,region,IT12,0.09193,0.01786,479
+hardship_disp_persons,IT,2017,region,IT13,0.0374,0.01582,195
+hardship_disp_persons,IT,2017,region,IT14,0.08677,0.03265,101
+hardship_disp_persons,IT,2017,region,IT15,0.33134,0.03307,688
+hardship_disp_persons,IT,2017,region,IT16,0.11808,0.03831,438
+hardship_disp_persons,IT,2017,region,IT17,0.21424,0.03665,119
+hardship_disp_persons,IT,2017,region,IT18,0.21232,0.02825,195
+hardship_disp_persons,IT,2017,region,IT19,0.22369,0.02398,569
+hardship_disp_persons,IT,2017,region,IT2,0.04609,0.01821,36
+hardship_disp_persons,IT,2017,region,IT20,0.17388,0.03055,314
+hardship_disp_persons,IT,2017,region,IT3,0.07556,0.0204,823
+hardship_disp_persons,IT,2017,region,IT4,0.03358,0.01761,219
+hardship_disp_persons,IT,2017,region,IT5,0.0686,0.03062,453
+hardship_disp_persons,IT,2017,region,IT6,0.10667,0.04951,176
+hardship_disp_persons,IT,2017,region,IT7,0.05218,0.02205,279
+hardship_disp_persons,IT,2017,region,IT8,0.07418,0.02575,571
+hardship_disp_persons,IT,2017,region,IT9,0.03753,0.00808,538
+hardship_disp_persons,IT,2021,region,IT1,0.04546,0.03935,418
+hardship_disp_persons,IT,2021,region,IT10,0.12141,0.06033,240
+hardship_disp_persons,IT,2021,region,IT11,0.02162,0.00807,203
+hardship_disp_persons,IT,2021,region,IT12,0.09717,0.03841,468
+hardship_disp_persons,IT,2021,region,IT13,0.0133,0.00168,140
+hardship_disp_persons,IT,2021,region,IT14,0.19829,0.10727,74
+hardship_disp_persons,IT,2021,region,IT15,0.30616,0.06573,535
+hardship_disp_persons,IT,2021,region,IT16,0.23839,0.08368,406
+hardship_disp_persons,IT,2021,region,IT17,0.22344,0.16606,68
+hardship_disp_persons,IT,2021,region,IT18,0.00734,0.00164,133
+hardship_disp_persons,IT,2021,region,IT19,0.30589,0.07136,503
+hardship_disp_persons,IT,2021,region,IT20,0.10513,0.02784,329
+hardship_disp_persons,IT,2021,region,IT3,0.03704,0.01299,738
+hardship_disp_persons,IT,2021,region,IT4,0.0205,0.01624,288
+hardship_disp_persons,IT,2021,region,IT5,0.02879,0.01611,461
+hardship_disp_persons,IT,2021,region,IT6,0.09205,0.06311,144
+hardship_disp_persons,IT,2021,region,IT7,0.03435,0.01403,185
+hardship_disp_persons,IT,2021,region,IT8,0.04872,0.08896,479
+hardship_disp_persons,IT,2021,region,IT9,0.02749,0.01386,399
+hardship_disp_persons,IT,2023,region,IT1,0.05928,0.03442,609
+hardship_disp_persons,IT,2023,region,IT10,0.07233,0.0385,289
+hardship_disp_persons,IT,2023,region,IT11,0.07118,0.03763,281
+hardship_disp_persons,IT,2023,region,IT12,0.12711,0.03963,508
+hardship_disp_persons,IT,2023,region,IT13,0.05636,0.01346,273
+hardship_disp_persons,IT,2023,region,IT14,0.17582,0.10596,139
+hardship_disp_persons,IT,2023,region,IT15,0.28587,0.04098,964
+hardship_disp_persons,IT,2023,region,IT16,0.15001,0.03301,913
+hardship_disp_persons,IT,2023,region,IT17,0.35891,0.0486,136
+hardship_disp_persons,IT,2023,region,IT18,0.08997,0.05383,266
+hardship_disp_persons,IT,2023,region,IT19,0.26439,0.03587,1126
+hardship_disp_persons,IT,2023,region,IT2,0.08681,0.07609,48
+hardship_disp_persons,IT,2023,region,IT20,0.11391,0.04793,545
+hardship_disp_persons,IT,2023,region,IT3,0.05926,0.01619,937
+hardship_disp_persons,IT,2023,region,IT4,0.02212,0.01267,390
+hardship_disp_persons,IT,2023,region,IT5,0.02556,0.01383,625
+hardship_disp_persons,IT,2023,region,IT6,0.02727,0.0214,198
+hardship_disp_persons,IT,2023,region,IT7,0.0073,0.00206,234
+hardship_disp_persons,IT,2023,region,IT8,0.02139,0.01448,727
+hardship_disp_persons,IT,2023,region,IT9,0.05698,0.02274,433
+hardship_oecd_persons,DE,2010,all,all,0.09589,0.00719,3565
+hardship_oecd_persons,DE,2014,all,all,0.11422,0.00753,4461
+hardship_oecd_persons,DE,2017,all,all,0.1234,0.00847,4942
+hardship_oecd_persons,DE,2021,all,all,0.09699,0.00899,4119
+hardship_oecd_persons,DE,2023,all,all,0.10412,0.01146,3985
+hardship_oecd_persons,FR,2010,all,all,0.06526,0.00347,15006
+hardship_oecd_persons,FR,2014,all,all,0.08259,0.00424,12035
+hardship_oecd_persons,FR,2017,all,all,0.10524,0.00512,13685
+hardship_oecd_persons,FR,2021,all,all,0.09296,0.00594,10253
+hardship_oecd_persons,FR,2023,all,all,0.07587,0.00428,11941
+hardship_oecd_persons,IT,2010,all,all,0.11878,0.005,7951
+hardship_oecd_persons,IT,2014,all,all,0.14851,0.00612,8156
+hardship_oecd_persons,IT,2017,all,all,0.14764,0.00673,7420
+hardship_oecd_persons,IT,2021,all,all,0.14238,0.01668,6239
+hardship_oecd_persons,IT,2023,all,all,0.13113,0.00763,9641
+home_ownership_rate,DE,2010,all,all,0.44208,6e-05,3565
+home_ownership_rate,DE,2014,all,all,0.44344,0.00026,4461
+home_ownership_rate,DE,2017,all,all,0.43872,0.00131,4942
+home_ownership_rate,DE,2021,all,all,0.44504,0.00018,4119
+home_ownership_rate,DE,2023,all,all,0.418,0.00111,3985
+home_ownership_rate,FR,2010,all,all,0.55234,0.00591,15006
+home_ownership_rate,FR,2014,all,all,0.57583,0.00553,12035
+home_ownership_rate,FR,2017,all,all,0.57863,0.00864,13685
+home_ownership_rate,FR,2021,all,all,0.57491,0.00885,10253
+home_ownership_rate,FR,2023,all,all,0.57192,0.006,11941
+home_ownership_rate,IT,2010,all,all,0.68719,0.00721,7951
+home_ownership_rate,IT,2014,all,all,0.68247,0.00688,8156
+home_ownership_rate,IT,2017,all,all,0.68453,0.00668,7420
+home_ownership_rate,IT,2021,all,all,0.73153,0.03397,6239
+home_ownership_rate,IT,2023,all,all,0.74546,0.0107,9641
+htm_kvw_poor,DE,2010,all,all,0.07915,0.00636,3256
+htm_kvw_poor,DE,2014,all,all,0.09905,0.00712,4094
+htm_kvw_poor,DE,2017,all,all,0.08519,0.00594,4467
+htm_kvw_poor,DE,2021,all,all,0.06927,0.00744,3567
+htm_kvw_poor,DE,2023,all,all,0.07443,0.00874,3385
+htm_kvw_poor,FR,2010,all,all,0.02991,0.00266,13330
+htm_kvw_poor,FR,2014,all,all,0.03049,0.00254,10828
+htm_kvw_poor,FR,2017,all,all,0.03897,0.0029,12296
+htm_kvw_poor,FR,2021,all,all,0.03393,0.00298,9351
+htm_kvw_poor,FR,2023,all,all,0.03073,0.00272,10808
+htm_kvw_poor,IT,2010,all,all,0.08384,0.00527,6668
+htm_kvw_poor,IT,2014,all,all,0.10056,0.00521,6676
+htm_kvw_poor,IT,2017,all,all,0.09115,0.00631,5916
+htm_kvw_poor,IT,2021,all,all,0.06929,0.03517,4947
+htm_kvw_poor,IT,2023,all,all,0.05804,0.00654,7689
+htm_kvw_total,DE,2010,all,all,0.30505,0.0124,3256
+htm_kvw_total,DE,2014,all,all,0.29559,0.01036,4094
+htm_kvw_total,DE,2017,all,all,0.26845,0.00981,4467
+htm_kvw_total,DE,2021,all,all,0.19037,0.01117,3567
+htm_kvw_total,DE,2023,all,all,0.1976,0.01058,3385
+htm_kvw_total,FR,2010,all,all,0.18828,0.00626,13330
+htm_kvw_total,FR,2014,all,all,0.2138,0.0059,10828
+htm_kvw_total,FR,2017,all,all,0.23729,0.00611,12296
+htm_kvw_total,FR,2021,all,all,0.20602,0.00695,9351
+htm_kvw_total,FR,2023,all,all,0.19861,0.00579,10808
+htm_kvw_total,IT,2010,all,all,0.23432,0.00686,6668
+htm_kvw_total,IT,2014,all,all,0.24282,0.00725,6676
+htm_kvw_total,IT,2017,all,all,0.2172,0.00743,5916
+htm_kvw_total,IT,2021,all,all,0.16385,0.03346,4947
+htm_kvw_total,IT,2023,all,all,0.13816,0.01048,7689
+htm_kvw_total,DE,2010,education,below tertiary,0.36818,0.017,1698
+htm_kvw_total,DE,2010,education,tertiary,0.18556,0.01786,1230
+htm_kvw_total,DE,2014,education,below tertiary,0.34879,0.01396,2132
+htm_kvw_total,DE,2014,education,tertiary,0.18386,0.01511,1919
+htm_kvw_total,DE,2017,education,below tertiary,0.33271,0.01297,2202
+htm_kvw_total,DE,2017,education,tertiary,0.14473,0.01291,2237
+htm_kvw_total,DE,2021,education,below tertiary,0.25161,0.01503,1684
+htm_kvw_total,DE,2021,education,tertiary,0.08685,0.01451,1875
+htm_kvw_total,DE,2023,education,below tertiary,0.24365,0.01561,1519
+htm_kvw_total,DE,2023,education,tertiary,0.12347,0.01424,1852
+htm_kvw_total,FR,2010,education,below tertiary,0.21384,0.00736,9471
+htm_kvw_total,FR,2010,education,tertiary,0.11384,0.01067,3859
+htm_kvw_total,FR,2014,education,below tertiary,0.24612,0.00765,5956
+htm_kvw_total,FR,2014,education,tertiary,0.13872,0.00969,4656
+htm_kvw_total,FR,2017,education,below tertiary,0.2679,0.00762,6583
+htm_kvw_total,FR,2017,education,tertiary,0.17235,0.0089,5710
+htm_kvw_total,FR,2021,education,below tertiary,0.24258,0.00927,4659
+htm_kvw_total,FR,2021,education,tertiary,0.13822,0.00891,4692
+htm_kvw_total,FR,2023,education,below tertiary,0.24109,0.00825,5287
+htm_kvw_total,FR,2023,education,tertiary,0.13216,0.00731,5521
+htm_kvw_total,IT,2010,education,below tertiary,0.24168,0.00768,5672
+htm_kvw_total,IT,2010,education,tertiary,0.08019,0.01095,743
+htm_kvw_total,IT,2014,education,below tertiary,0.26709,0.00817,5808
+htm_kvw_total,IT,2014,education,tertiary,0.093,0.01071,868
+htm_kvw_total,IT,2017,education,below tertiary,0.24084,0.00794,5161
+htm_kvw_total,IT,2017,education,tertiary,0.07445,0.0152,755
+htm_kvw_total,IT,2021,education,below tertiary,0.18195,0.0391,3505
+htm_kvw_total,IT,2021,education,tertiary,0.08161,0.03357,1442
+htm_kvw_total,IT,2023,education,below tertiary,0.15645,0.01162,5622
+htm_kvw_total,IT,2023,education,tertiary,0.05253,0.024,2067
+htm_kvw_wealthy,DE,2010,all,all,0.2259,0.01251,3256
+htm_kvw_wealthy,DE,2014,all,all,0.19654,0.00988,4094
+htm_kvw_wealthy,DE,2017,all,all,0.18326,0.00836,4467
+htm_kvw_wealthy,DE,2021,all,all,0.1211,0.00888,3567
+htm_kvw_wealthy,DE,2023,all,all,0.12317,0.00924,3385
+htm_kvw_wealthy,FR,2010,all,all,0.15836,0.00599,13330
+htm_kvw_wealthy,FR,2014,all,all,0.18331,0.00582,10828
+htm_kvw_wealthy,FR,2017,all,all,0.19833,0.00539,12296
+htm_kvw_wealthy,FR,2021,all,all,0.17209,0.00638,9351
+htm_kvw_wealthy,FR,2023,all,all,0.16788,0.0053,10808
+htm_kvw_wealthy,IT,2010,all,all,0.15047,0.00531,6668
+htm_kvw_wealthy,IT,2014,all,all,0.14226,0.00538,6676
+htm_kvw_wealthy,IT,2017,all,all,0.12604,0.00611,5916
+htm_kvw_wealthy,IT,2021,all,all,0.09456,0.01182,4947
+htm_kvw_wealthy,IT,2023,all,all,0.08012,0.00835,7689
+htm_model_broad_poor,DE,2010,all,all,0.07979,0.00669,3565
+htm_model_broad_poor,DE,2014,all,all,0.08916,0.00598,4461
+htm_model_broad_poor,DE,2017,all,all,0.07482,0.00511,4942
+htm_model_broad_poor,DE,2021,all,all,0.05247,0.00726,4119
+htm_model_broad_poor,DE,2023,all,all,0.04925,0.00617,3985
+htm_model_broad_poor,FR,2010,all,all,0.01257,0.00189,15006
+htm_model_broad_poor,FR,2014,all,all,0.00847,0.00111,12035
+htm_model_broad_poor,FR,2017,all,all,0.01049,0.00129,13685
+htm_model_broad_poor,FR,2021,all,all,0.00909,0.00222,10253
+htm_model_broad_poor,FR,2023,all,all,0.00608,0.00106,11941
+htm_model_broad_poor,IT,2010,all,all,0.02125,0.00245,7951
+htm_model_broad_poor,IT,2014,all,all,0.02812,0.00244,8156
+htm_model_broad_poor,IT,2017,all,all,0.02859,0.00332,7420
+htm_model_broad_poor,IT,2021,all,all,0.01989,0.00479,6239
+htm_model_broad_poor,IT,2023,all,all,0.0156,0.00286,9641
+htm_model_broad_total,DE,2010,all,all,0.18358,0.00986,3565
+htm_model_broad_total,DE,2014,all,all,0.21479,0.00879,4461
+htm_model_broad_total,DE,2017,all,all,0.20326,0.0076,4942
+htm_model_broad_total,DE,2021,all,all,0.14554,0.00902,4119
+htm_model_broad_total,DE,2023,all,all,0.15494,0.00953,3985
+htm_model_broad_total,FR,2010,all,all,0.10675,0.00435,15006
+htm_model_broad_total,FR,2014,all,all,0.12013,0.00445,12035
+htm_model_broad_total,FR,2017,all,all,0.1334,0.00483,13685
+htm_model_broad_total,FR,2021,all,all,0.1138,0.00586,10253
+htm_model_broad_total,FR,2023,all,all,0.09953,0.00439,11941
+htm_model_broad_total,IT,2010,all,all,0.20128,0.00571,7951
+htm_model_broad_total,IT,2014,all,all,0.20432,0.00643,8156
+htm_model_broad_total,IT,2017,all,all,0.19168,0.00677,7420
+htm_model_broad_total,IT,2021,all,all,0.14093,0.02852,6239
+htm_model_broad_total,IT,2023,all,all,0.1264,0.00846,9641
+htm_model_broad_total,FR,2021,degurba,cities,0.12758,0.00829,6692
+htm_model_broad_total,FR,2021,degurba,rural,0.07981,0.00959,1914
+htm_model_broad_total,FR,2021,degurba,towns and suburbs,0.10446,0.01241,1547
+htm_model_broad_total,FR,2023,degurba,cities,0.11742,0.00569,7361
+htm_model_broad_total,FR,2023,degurba,rural,0.07042,0.00835,2426
+htm_model_broad_total,FR,2023,degurba,towns and suburbs,0.06879,0.00918,2154
+htm_model_broad_total,DE,2010,education,below tertiary,0.23582,0.01289,1889
+htm_model_broad_total,DE,2010,education,tertiary,0.08045,0.01227,1317
+htm_model_broad_total,DE,2014,education,below tertiary,0.2591,0.01222,2352
+htm_model_broad_total,DE,2014,education,tertiary,0.11814,0.01259,2064
+htm_model_broad_total,DE,2017,education,below tertiary,0.26407,0.0105,2470
+htm_model_broad_total,DE,2017,education,tertiary,0.0792,0.00867,2436
+htm_model_broad_total,DE,2021,education,below tertiary,0.18953,0.01334,1960
+htm_model_broad_total,DE,2021,education,tertiary,0.06683,0.0117,2149
+htm_model_broad_total,DE,2023,education,below tertiary,0.20574,0.01298,1783
+htm_model_broad_total,DE,2023,education,tertiary,0.07287,0.0131,2180
+htm_model_broad_total,FR,2010,education,below tertiary,0.12487,0.00508,10833
+htm_model_broad_total,FR,2010,education,tertiary,0.04816,0.00735,4173
+htm_model_broad_total,FR,2014,education,below tertiary,0.14666,0.00579,6772
+htm_model_broad_total,FR,2014,education,tertiary,0.05355,0.00535,4969
+htm_model_broad_total,FR,2017,education,below tertiary,0.16187,0.00589,7567
+htm_model_broad_total,FR,2017,education,tertiary,0.06635,0.00573,6115
+htm_model_broad_total,FR,2021,education,below tertiary,0.14288,0.0075,5250
+htm_model_broad_total,FR,2021,education,tertiary,0.05378,0.00713,5003
+htm_model_broad_total,FR,2023,education,below tertiary,0.13295,0.00621,6023
+htm_model_broad_total,FR,2023,education,tertiary,0.04186,0.00452,5918
+htm_model_broad_total,IT,2010,education,below tertiary,0.20498,0.00625,6655
+htm_model_broad_total,IT,2010,education,tertiary,0.09563,0.01367,857
+htm_model_broad_total,IT,2014,education,below tertiary,0.22261,0.00732,7154
+htm_model_broad_total,IT,2014,education,tertiary,0.08631,0.00985,1002
+htm_model_broad_total,IT,2017,education,below tertiary,0.20848,0.00725,6547
+htm_model_broad_total,IT,2017,education,tertiary,0.08225,0.01421,873
+htm_model_broad_total,IT,2021,education,below tertiary,0.15099,0.03274,4400
+htm_model_broad_total,IT,2021,education,tertiary,0.0923,0.03058,1839
+htm_model_broad_total,IT,2023,education,below tertiary,0.14166,0.00962,7030
+htm_model_broad_total,IT,2023,education,tertiary,0.05026,0.02186,2611
+htm_model_broad_total,DE,2010,labour,employed,0.18091,0.01446,2038
+htm_model_broad_total,DE,2010,labour,other,0.32253,0.0463,170
+htm_model_broad_total,DE,2010,labour,retired,0.09663,0.01528,1195
+htm_model_broad_total,DE,2010,labour,unemployed,0.61114,0.0541,147
+htm_model_broad_total,DE,2014,labour,employed,0.22407,0.01136,2694
+htm_model_broad_total,DE,2014,labour,other,0.29623,0.05149,155
+htm_model_broad_total,DE,2014,labour,retired,0.13725,0.01567,1477
+htm_model_broad_total,DE,2014,labour,unemployed,0.63009,0.05299,124
+htm_model_broad_total,DE,2017,labour,employed,0.21079,0.0099,2953
+htm_model_broad_total,DE,2017,labour,other,0.38649,0.05563,120
+htm_model_broad_total,DE,2017,labour,retired,0.12614,0.01226,1754
+htm_model_broad_total,DE,2017,labour,unemployed,0.65522,0.05784,105
+htm_model_broad_total,DE,2021,labour,employed,0.14757,0.01221,2306
+htm_model_broad_total,DE,2021,labour,other,0.28491,0.06908,90
+htm_model_broad_total,DE,2021,labour,retired,0.0902,0.01358,1616
+htm_model_broad_total,DE,2021,labour,unemployed,0.61396,0.10946,92
+htm_model_broad_total,DE,2023,labour,employed,0.17195,0.01284,2148
+htm_model_broad_total,DE,2023,labour,other,0.27534,0.06271,111
+htm_model_broad_total,DE,2023,labour,retired,0.07806,0.01186,1642
+htm_model_broad_total,DE,2023,labour,unemployed,0.46595,0.08686,75
+htm_model_broad_total,FR,2010,labour,employed,0.09881,0.00618,7682
+htm_model_broad_total,FR,2010,labour,other,0.19631,0.02322,686
+htm_model_broad_total,FR,2010,labour,retired,0.06868,0.00645,5858
+htm_model_broad_total,FR,2010,labour,unemployed,0.34143,0.03066,780
+htm_model_broad_total,FR,2014,labour,employed,0.11372,0.00615,7039
+htm_model_broad_total,FR,2014,labour,other,0.28496,0.02774,454
+htm_model_broad_total,FR,2014,labour,retired,0.07281,0.00546,3923
+htm_model_broad_total,FR,2014,labour,unemployed,0.34592,0.02365,619
+htm_model_broad_total,FR,2017,labour,employed,0.12033,0.00614,8265
+htm_model_broad_total,FR,2017,labour,other,0.31562,0.02824,454
+htm_model_broad_total,FR,2017,labour,retired,0.08895,0.00592,4342
+htm_model_broad_total,FR,2017,labour,unemployed,0.36715,0.03072,624
+htm_model_broad_total,FR,2021,labour,employed,0.09828,0.00778,6238
+htm_model_broad_total,FR,2021,labour,other,0.28936,0.03814,283
+htm_model_broad_total,FR,2021,labour,retired,0.07006,0.007,3338
+htm_model_broad_total,FR,2021,labour,unemployed,0.41001,0.036,394
+htm_model_broad_total,FR,2023,labour,employed,0.09459,0.00573,6922
+htm_model_broad_total,FR,2023,labour,other,0.23627,0.03156,359
+htm_model_broad_total,FR,2023,labour,retired,0.05874,0.00598,4304
+htm_model_broad_total,FR,2023,labour,unemployed,0.32027,0.03351,356
+htm_model_broad_total,IT,2010,labour,employed,0.193,0.0083,4073
+htm_model_broad_total,IT,2010,labour,other,0.37607,0.06296,121
+htm_model_broad_total,IT,2010,labour,retired,0.18268,0.0078,3564
+htm_model_broad_total,IT,2010,labour,unemployed,0.60988,0.04997,193
+htm_model_broad_total,IT,2014,labour,employed,0.19055,0.00834,3841
+htm_model_broad_total,IT,2014,labour,other,0.36703,0.01762,913
+htm_model_broad_total,IT,2014,labour,retired,0.12365,0.00784,3158
+htm_model_broad_total,IT,2014,labour,unemployed,0.69088,0.03521,244
+htm_model_broad_total,IT,2017,labour,employed,0.17079,0.00991,3378
+htm_model_broad_total,IT,2017,labour,other,0.35632,0.02583,931
+htm_model_broad_total,IT,2017,labour,retired,0.12036,0.00735,2850
+htm_model_broad_total,IT,2017,labour,unemployed,0.61763,0.04516,261
+htm_model_broad_total,IT,2021,labour,employed,0.13365,0.04822,3397
+htm_model_broad_total,IT,2021,labour,other,0.27424,0.05255,502
+htm_model_broad_total,IT,2021,labour,retired,0.06911,0.01525,2200
+htm_model_broad_total,IT,2021,labour,unemployed,0.58147,0.08506,140
+htm_model_broad_total,IT,2023,labour,employed,0.11081,0.01089,4852
+htm_model_broad_total,IT,2023,labour,other,0.27392,0.02899,819
+htm_model_broad_total,IT,2023,labour,retired,0.07854,0.01004,3719
+htm_model_broad_total,IT,2023,labour,unemployed,0.55991,0.0783,251
+htm_model_broad_total,IT,2017,macro_region,IT Centre,0.15941,0.01362,1605
+htm_model_broad_total,IT,2017,macro_region,IT North,0.12626,0.00842,3196
+htm_model_broad_total,IT,2017,macro_region,IT South and Islands,0.30904,0.01351,2619
+htm_model_broad_total,IT,2021,macro_region,IT Centre,0.10145,0.10532,1310
+htm_model_broad_total,IT,2021,macro_region,IT North,0.08623,0.0135,2741
+htm_model_broad_total,IT,2021,macro_region,IT South and Islands,0.24533,0.02798,2188
+htm_model_broad_total,IT,2023,macro_region,IT Centre,0.12646,0.0227,1511
+htm_model_broad_total,IT,2023,macro_region,IT North,0.06734,0.00984,3768
+htm_model_broad_total,IT,2023,macro_region,IT South and Islands,0.21332,0.01756,4362
+htm_model_broad_total,DE,2017,region,DENW,0.17958,0.01875,774
+htm_model_broad_total,DE,2017,region,DEOS,0.24606,0.01913,896
+htm_model_broad_total,DE,2017,region,DESW,0.14789,0.0132,1965
+htm_model_broad_total,DE,2017,region,DEWW,0.25621,0.01748,1307
+htm_model_broad_total,DE,2021,region,DENW,0.15038,0.02603,670
+htm_model_broad_total,DE,2021,region,DEOS,0.15138,0.01779,832
+htm_model_broad_total,DE,2021,region,DESW,0.11779,0.01636,1615
+htm_model_broad_total,DE,2021,region,DEWW,0.17462,0.01915,1002
+htm_model_broad_total,DE,2023,region,DENW,0.13997,0.02318,630
+htm_model_broad_total,DE,2023,region,DEOS,0.17069,0.02479,930
+htm_model_broad_total,DE,2023,region,DESW,0.12161,0.01774,1481
+htm_model_broad_total,DE,2023,region,DEWW,0.19665,0.02307,944
+htm_model_broad_total,FR,2017,region,FR0,0.34978,0.05287,326
+htm_model_broad_total,FR,2017,region,FR1,0.1557,0.01791,2599
+htm_model_broad_total,FR,2017,region,FR2,0.1285,0.01125,2190
+htm_model_broad_total,FR,2017,region,FR3,0.15798,0.02016,859
+htm_model_broad_total,FR,2017,region,FR4,0.13861,0.01602,1043
+htm_model_broad_total,FR,2017,region,FR5,0.103,0.01145,1996
+htm_model_broad_total,FR,2017,region,FR6,0.10878,0.01249,1470
+htm_model_broad_total,FR,2017,region,FR7,0.10591,0.01154,1660
+htm_model_broad_total,FR,2017,region,FR8,0.13252,0.01184,1542
+htm_model_broad_total,FR,2021,region,FR0,0.22664,0.0395,251
+htm_model_broad_total,FR,2021,region,FR1,0.13989,0.01466,2259
+htm_model_broad_total,FR,2021,region,FR2,0.12416,0.01163,1542
+htm_model_broad_total,FR,2021,region,FR3,0.11927,0.02055,627
+htm_model_broad_total,FR,2021,region,FR4,0.11331,0.01966,772
+htm_model_broad_total,FR,2021,region,FR5,0.08117,0.00956,1473
+htm_model_broad_total,FR,2021,region,FR6,0.09588,0.01633,1023
+htm_model_broad_total,FR,2021,region,FR7,0.10002,0.01975,1254
+htm_model_broad_total,FR,2021,region,FR8,0.10462,0.01717,1052
+htm_model_broad_total,FR,2023,region,FR0,0.26462,0.03668,311
+htm_model_broad_total,FR,2023,region,FR1,0.13831,0.01353,2281
+htm_model_broad_total,FR,2023,region,FR2,0.09433,0.00987,2010
+htm_model_broad_total,FR,2023,region,FR3,0.13859,0.01793,725
+htm_model_broad_total,FR,2023,region,FR4,0.124,0.02127,950
+htm_model_broad_total,FR,2023,region,FR5,0.06541,0.00845,1746
+htm_model_broad_total,FR,2023,region,FR6,0.05801,0.01023,1270
+htm_model_broad_total,FR,2023,region,FR7,0.07079,0.01119,1452
+htm_model_broad_total,FR,2023,region,FR8,0.09023,0.0117,1196
+htm_model_broad_total,IT,2017,region,IT1,0.12787,0.02749,639
+htm_model_broad_total,IT,2017,region,IT10,0.23642,0.0352,248
+htm_model_broad_total,IT,2017,region,IT11,0.04733,0.01311,340
+htm_model_broad_total,IT,2017,region,IT12,0.22713,0.03297,479
+htm_model_broad_total,IT,2017,region,IT13,0.15336,0.02553,195
+htm_model_broad_total,IT,2017,region,IT14,0.10717,0.03569,101
+htm_model_broad_total,IT,2017,region,IT15,0.41303,0.02185,688
+htm_model_broad_total,IT,2017,region,IT16,0.21539,0.02021,438
+htm_model_broad_total,IT,2017,region,IT17,0.26247,0.07411,119
+htm_model_broad_total,IT,2017,region,IT18,0.39494,0.0599,195
+htm_model_broad_total,IT,2017,region,IT19,0.26165,0.03066,569
+htm_model_broad_total,IT,2017,region,IT2,0.45952,0.14682,36
+htm_model_broad_total,IT,2017,region,IT20,0.45571,0.0275,314
+htm_model_broad_total,IT,2017,region,IT3,0.11233,0.0122,823
+htm_model_broad_total,IT,2017,region,IT4,0.05533,0.01657,219
+htm_model_broad_total,IT,2017,region,IT5,0.11719,0.01492,453
+htm_model_broad_total,IT,2017,region,IT6,0.16641,0.04253,176
+htm_model_broad_total,IT,2017,region,IT7,0.14204,0.02847,279
+htm_model_broad_total,IT,2017,region,IT8,0.13643,0.01617,571
+htm_model_broad_total,IT,2017,region,IT9,0.09433,0.01591,538
+htm_model_broad_total,IT,2021,region,IT1,0.11799,0.02407,418
+htm_model_broad_total,IT,2021,region,IT10,0.11536,0.10014,240
+htm_model_broad_total,IT,2021,region,IT11,0.08201,0.12461,203
+htm_model_broad_total,IT,2021,region,IT12,0.12978,0.15725,468
+htm_model_broad_total,IT,2021,region,IT13,0.03769,0.00633,140
+htm_model_broad_total,IT,2021,region,IT14,0.17384,0.0238,74
+htm_model_broad_total,IT,2021,region,IT15,0.36178,0.05648,535
+htm_model_broad_total,IT,2021,region,IT16,0.17497,0.09012,406
+htm_model_broad_total,IT,2021,region,IT17,0.16757,0.09049,68
+htm_model_broad_total,IT,2021,region,IT18,0.07814,0.04286,133
+htm_model_broad_total,IT,2021,region,IT19,0.35758,0.05478,503
+htm_model_broad_total,IT,2021,region,IT20,0.18591,0.05188,329
+htm_model_broad_total,IT,2021,region,IT3,0.06285,0.01482,738
+htm_model_broad_total,IT,2021,region,IT4,0.06631,0.04053,288
+htm_model_broad_total,IT,2021,region,IT5,0.07782,0.01334,461
+htm_model_broad_total,IT,2021,region,IT6,0.13544,0.13248,144
+htm_model_broad_total,IT,2021,region,IT7,0.13684,0.06139,185
+htm_model_broad_total,IT,2021,region,IT8,0.06505,0.07062,479
+htm_model_broad_total,IT,2021,region,IT9,0.06382,0.03667,399
+htm_model_broad_total,IT,2023,region,IT1,0.08211,0.04213,609
+htm_model_broad_total,IT,2023,region,IT10,0.13074,0.04661,289
+htm_model_broad_total,IT,2023,region,IT11,0.05861,0.05481,281
+htm_model_broad_total,IT,2023,region,IT12,0.20304,0.04497,508
+htm_model_broad_total,IT,2023,region,IT13,0.14577,0.14568,273
+htm_model_broad_total,IT,2023,region,IT14,0.10304,0.10895,139
+htm_model_broad_total,IT,2023,region,IT15,0.2756,0.04446,964
+htm_model_broad_total,IT,2023,region,IT16,0.17042,0.0344,913
+htm_model_broad_total,IT,2023,region,IT17,0.20588,0.06552,136
+htm_model_broad_total,IT,2023,region,IT18,0.03972,0.0307,266
+htm_model_broad_total,IT,2023,region,IT19,0.31677,0.03169,1126
+htm_model_broad_total,IT,2023,region,IT2,0.03843,0.00421,48
+htm_model_broad_total,IT,2023,region,IT20,0.1649,0.03551,545
+htm_model_broad_total,IT,2023,region,IT3,0.08278,0.01758,937
+htm_model_broad_total,IT,2023,region,IT4,0.02498,0.01211,390
+htm_model_broad_total,IT,2023,region,IT5,0.05207,0.02305,625
+htm_model_broad_total,IT,2023,region,IT6,0.04127,0.01521,198
+htm_model_broad_total,IT,2023,region,IT7,0.08979,0.04177,234
+htm_model_broad_total,IT,2023,region,IT8,0.06787,0.01591,727
+htm_model_broad_total,IT,2023,region,IT9,0.08743,0.0297,433
+htm_model_broad_wealthy,DE,2010,all,all,0.1038,0.0085,3565
+htm_model_broad_wealthy,DE,2014,all,all,0.12562,0.00726,4461
+htm_model_broad_wealthy,DE,2017,all,all,0.12844,0.00671,4942
+htm_model_broad_wealthy,DE,2021,all,all,0.09307,0.00772,4119
+htm_model_broad_wealthy,DE,2023,all,all,0.10569,0.0088,3985
+htm_model_broad_wealthy,FR,2010,all,all,0.09418,0.00421,15006
+htm_model_broad_wealthy,FR,2014,all,all,0.11154,0.00429,12035
+htm_model_broad_wealthy,FR,2017,all,all,0.12291,0.0049,13685
+htm_model_broad_wealthy,FR,2021,all,all,0.10471,0.00513,10253
+htm_model_broad_wealthy,FR,2023,all,all,0.09345,0.00422,11941
+htm_model_broad_wealthy,IT,2010,all,all,0.18003,0.00527,7951
+htm_model_broad_wealthy,IT,2014,all,all,0.17621,0.00613,8156
+htm_model_broad_wealthy,IT,2017,all,all,0.16309,0.00587,7420
+htm_model_broad_wealthy,IT,2021,all,all,0.12104,0.02897,6239
+htm_model_broad_wealthy,IT,2023,all,all,0.1108,0.00857,9641
+htm_model_narrow_poor,DE,2010,all,all,0.08914,0.00645,3565
+htm_model_narrow_poor,DE,2014,all,all,0.10717,0.00721,4461
+htm_model_narrow_poor,DE,2017,all,all,0.09583,0.00553,4942
+htm_model_narrow_poor,DE,2021,all,all,0.07387,0.00711,4119
+htm_model_narrow_poor,DE,2023,all,all,0.08078,0.00763,3985
+htm_model_narrow_poor,FR,2010,all,all,0.0342,0.00267,15006
+htm_model_narrow_poor,FR,2014,all,all,0.03508,0.00257,12035
+htm_model_narrow_poor,FR,2017,all,all,0.04113,0.00288,13685
+htm_model_narrow_poor,FR,2021,all,all,0.03766,0.00318,10253
+htm_model_narrow_poor,FR,2023,all,all,0.0323,0.00265,11941
+htm_model_narrow_poor,IT,2010,all,all,0.0853,0.00465,7951
+htm_model_narrow_poor,IT,2014,all,all,0.10048,0.00478,8156
+htm_model_narrow_poor,IT,2017,all,all,0.08758,0.00555,7420
+htm_model_narrow_poor,IT,2021,all,all,0.06529,0.02987,6239
+htm_model_narrow_poor,IT,2023,all,all,0.05507,0.00589,9641
+htm_model_narrow_total,DE,2010,all,all,0.34713,0.01343,3565
+htm_model_narrow_total,DE,2014,all,all,0.35277,0.01086,4461
+htm_model_narrow_total,DE,2017,all,all,0.32273,0.00872,4942
+htm_model_narrow_total,DE,2021,all,all,0.22491,0.01111,4119
+htm_model_narrow_total,DE,2023,all,all,0.22594,0.00928,3985
+htm_model_narrow_total,FR,2010,all,all,0.21024,0.00609,15006
+htm_model_narrow_total,FR,2014,all,all,0.23749,0.0057,12035
+htm_model_narrow_total,FR,2017,all,all,0.25976,0.00625,13685
+htm_model_narrow_total,FR,2021,all,all,0.22155,0.00685,10253
+htm_model_narrow_total,FR,2023,all,all,0.21601,0.00582,11941
+htm_model_narrow_total,IT,2010,all,all,0.26405,0.00605,7951
+htm_model_narrow_total,IT,2014,all,all,0.26738,0.00698,8156
+htm_model_narrow_total,IT,2017,all,all,0.24227,0.00711,7420
+htm_model_narrow_total,IT,2021,all,all,0.17885,0.02896,6239
+htm_model_narrow_total,IT,2023,all,all,0.15189,0.00966,9641
+htm_model_narrow_total,FR,2021,degurba,cities,0.24391,0.00943,6692
+htm_model_narrow_total,FR,2021,degurba,rural,0.15424,0.01232,1914
+htm_model_narrow_total,FR,2021,degurba,towns and suburbs,0.21721,0.01709,1547
+htm_model_narrow_total,FR,2023,degurba,cities,0.22561,0.00714,7361
+htm_model_narrow_total,FR,2023,degurba,rural,0.18979,0.0127,2426
+htm_model_narrow_total,FR,2023,degurba,towns and suburbs,0.21067,0.01504,2154
+htm_model_narrow_total,DE,2010,education,below tertiary,0.41401,0.01679,1889
+htm_model_narrow_total,DE,2010,education,tertiary,0.214,0.01813,1317
+htm_model_narrow_total,DE,2014,education,below tertiary,0.40496,0.01413,2352
+htm_model_narrow_total,DE,2014,education,tertiary,0.23864,0.01772,2064
+htm_model_narrow_total,DE,2017,education,below tertiary,0.39732,0.01146,2470
+htm_model_narrow_total,DE,2017,education,tertiary,0.17296,0.01373,2436
+htm_model_narrow_total,DE,2021,education,below tertiary,0.28492,0.01482,1960
+htm_model_narrow_total,DE,2021,education,tertiary,0.11788,0.0151,2149
+htm_model_narrow_total,DE,2023,education,below tertiary,0.27809,0.01289,1783
+htm_model_narrow_total,DE,2023,education,tertiary,0.14153,0.01405,2180
+htm_model_narrow_total,FR,2010,education,below tertiary,0.23562,0.00726,10833
+htm_model_narrow_total,FR,2010,education,tertiary,0.1282,0.01074,4173
+htm_model_narrow_total,FR,2014,education,below tertiary,0.26708,0.00713,6772
+htm_model_narrow_total,FR,2014,education,tertiary,0.16305,0.00977,4969
+htm_model_narrow_total,FR,2017,education,below tertiary,0.28873,0.0075,7567
+htm_model_narrow_total,FR,2017,education,tertiary,0.19133,0.00902,6115
+htm_model_narrow_total,FR,2021,education,below tertiary,0.25577,0.00889,5250
+htm_model_narrow_total,FR,2021,education,tertiary,0.15091,0.0092,5003
+htm_model_narrow_total,FR,2023,education,below tertiary,0.25715,0.00784,6023
+htm_model_narrow_total,FR,2023,education,tertiary,0.14501,0.00738,5918
+htm_model_narrow_total,IT,2010,education,below tertiary,0.26436,0.00705,6655
+htm_model_narrow_total,IT,2010,education,tertiary,0.10466,0.01447,857
+htm_model_narrow_total,IT,2014,education,below tertiary,0.29357,0.00794,7154
+htm_model_narrow_total,IT,2014,education,tertiary,0.09837,0.01072,1002
+htm_model_narrow_total,IT,2017,education,below tertiary,0.26558,0.0078,6547
+htm_model_narrow_total,IT,2017,education,tertiary,0.09047,0.01455,873
+htm_model_narrow_total,IT,2021,education,below tertiary,0.19629,0.03351,4400
+htm_model_narrow_total,IT,2021,education,tertiary,0.0946,0.0305,1839
+htm_model_narrow_total,IT,2023,education,below tertiary,0.17049,0.01139,7030
+htm_model_narrow_total,IT,2023,education,tertiary,0.05906,0.02271,2611
+htm_model_narrow_total,DE,2010,labour,employed,0.36582,0.0178,2038
+htm_model_narrow_total,DE,2010,labour,other,0.39025,0.05042,170
+htm_model_narrow_total,DE,2010,labour,retired,0.25388,0.02365,1195
+htm_model_narrow_total,DE,2010,labour,unemployed,0.67225,0.05362,147
+htm_model_narrow_total,DE,2014,labour,employed,0.37462,0.01423,2694
+htm_model_narrow_total,DE,2014,labour,other,0.37434,0.05197,155
+htm_model_narrow_total,DE,2014,labour,retired,0.26378,0.01923,1477
+htm_model_narrow_total,DE,2014,labour,unemployed,0.6966,0.05302,124
+htm_model_narrow_total,DE,2017,labour,employed,0.34256,0.01132,2953
+htm_model_narrow_total,DE,2017,labour,other,0.43296,0.06146,120
+htm_model_narrow_total,DE,2017,labour,retired,0.23357,0.01534,1754
+htm_model_narrow_total,DE,2017,labour,unemployed,0.68372,0.05594,105
+htm_model_narrow_total,DE,2021,labour,employed,0.23617,0.01455,2306
+htm_model_narrow_total,DE,2021,labour,other,0.30814,0.07057,90
+htm_model_narrow_total,DE,2021,labour,retired,0.15815,0.01646,1616
+htm_model_narrow_total,DE,2021,labour,unemployed,0.65588,0.10885,92
+htm_model_narrow_total,DE,2023,labour,employed,0.25047,0.01266,2148
+htm_model_narrow_total,DE,2023,labour,other,0.33895,0.05924,111
+htm_model_narrow_total,DE,2023,labour,retired,0.13326,0.01589,1642
+htm_model_narrow_total,DE,2023,labour,unemployed,0.51353,0.08622,75
+htm_model_narrow_total,FR,2010,labour,employed,0.2216,0.00848,7682
+htm_model_narrow_total,FR,2010,labour,other,0.30107,0.02728,686
+htm_model_narrow_total,FR,2010,labour,retired,0.13666,0.00852,5858
+htm_model_narrow_total,FR,2010,labour,unemployed,0.4759,0.03032,780
+htm_model_narrow_total,FR,2014,labour,employed,0.2542,0.0079,7039
+htm_model_narrow_total,FR,2014,labour,other,0.37286,0.02962,454
+htm_model_narrow_total,FR,2014,labour,retired,0.14989,0.00784,3923
+htm_model_narrow_total,FR,2014,labour,unemployed,0.50741,0.0258,619
+htm_model_narrow_total,FR,2017,labour,employed,0.26574,0.00819,8265
+htm_model_narrow_total,FR,2017,labour,other,0.4262,0.03097,454
+htm_model_narrow_total,FR,2017,labour,retired,0.18605,0.00886,4342
+htm_model_narrow_total,FR,2017,labour,unemployed,0.51283,0.02986,624
+htm_model_narrow_total,FR,2021,labour,employed,0.23023,0.00961,6238
+htm_model_narrow_total,FR,2021,labour,other,0.38956,0.03827,283
+htm_model_narrow_total,FR,2021,labour,retired,0.14053,0.00952,3338
+htm_model_narrow_total,FR,2021,labour,unemployed,0.54087,0.03702,394
+htm_model_narrow_total,FR,2023,labour,employed,0.22297,0.00762,6922
+htm_model_narrow_total,FR,2023,labour,other,0.38673,0.03758,359
+htm_model_narrow_total,FR,2023,labour,retired,0.14559,0.00832,4304
+htm_model_narrow_total,FR,2023,labour,unemployed,0.47419,0.03185,356
+htm_model_narrow_total,IT,2010,labour,employed,0.21845,0.00871,4073
+htm_model_narrow_total,IT,2010,labour,other,0.49955,0.06664,121
+htm_model_narrow_total,IT,2010,labour,retired,0.29901,0.00958,3564
+htm_model_narrow_total,IT,2010,labour,unemployed,0.658,0.04951,193
+htm_model_narrow_total,IT,2014,labour,employed,0.22218,0.00887,3841
+htm_model_narrow_total,IT,2014,labour,other,0.53114,0.01955,913
+htm_model_narrow_total,IT,2014,labour,retired,0.21701,0.01018,3158
+htm_model_narrow_total,IT,2014,labour,unemployed,0.71384,0.03364,244
+htm_model_narrow_total,IT,2017,labour,employed,0.19698,0.01032,3378
+htm_model_narrow_total,IT,2017,labour,other,0.49838,0.02675,931
+htm_model_narrow_total,IT,2017,labour,retired,0.18608,0.00798,2850
+htm_model_narrow_total,IT,2017,labour,unemployed,0.66457,0.04217,261
+htm_model_narrow_total,IT,2021,labour,employed,0.14185,0.0483,3397
+htm_model_narrow_total,IT,2021,labour,other,0.41386,0.06068,502
+htm_model_narrow_total,IT,2021,labour,retired,0.12368,0.0291,2200
+htm_model_narrow_total,IT,2021,labour,unemployed,0.66563,0.07729,140
+htm_model_narrow_total,IT,2023,labour,employed,0.12063,0.01128,4852
+htm_model_narrow_total,IT,2023,labour,other,0.36627,0.02985,819
+htm_model_narrow_total,IT,2023,labour,retired,0.11299,0.01219,3719
+htm_model_narrow_total,IT,2023,labour,unemployed,0.60089,0.07388,251
+htm_model_narrow_total,IT,2017,macro_region,IT Centre,0.21349,0.01502,1605
+htm_model_narrow_total,IT,2017,macro_region,IT North,0.13731,0.00884,3196
+htm_model_narrow_total,IT,2017,macro_region,IT South and Islands,0.41584,0.01518,2619
+htm_model_narrow_total,IT,2021,macro_region,IT Centre,0.15068,0.10301,1310
+htm_model_narrow_total,IT,2021,macro_region,IT North,0.09629,0.01385,2741
+htm_model_narrow_total,IT,2021,macro_region,IT South and Islands,0.31629,0.03333,2188
+htm_model_narrow_total,IT,2023,macro_region,IT Centre,0.14957,0.02306,1511
+htm_model_narrow_total,IT,2023,macro_region,IT North,0.07557,0.01108,3768
+htm_model_narrow_total,IT,2023,macro_region,IT South and Islands,0.26571,0.01937,4362
+htm_model_narrow_total,DE,2017,region,DENW,0.32565,0.02852,774
+htm_model_narrow_total,DE,2017,region,DEOS,0.34934,0.02064,896
+htm_model_narrow_total,DE,2017,region,DESW,0.25902,0.01551,1965
+htm_model_narrow_total,DE,2017,region,DEWW,0.38279,0.01731,1307
+htm_model_narrow_total,DE,2021,region,DENW,0.2513,0.03153,670
+htm_model_narrow_total,DE,2021,region,DEOS,0.21036,0.01942,832
+htm_model_narrow_total,DE,2021,region,DESW,0.19345,0.01921,1615
+htm_model_narrow_total,DE,2021,region,DEWW,0.2614,0.02206,1002
+htm_model_narrow_total,DE,2023,region,DENW,0.21178,0.02668,630
+htm_model_narrow_total,DE,2023,region,DEOS,0.24644,0.02463,930
+htm_model_narrow_total,DE,2023,region,DESW,0.17757,0.01932,1481
+htm_model_narrow_total,DE,2023,region,DEWW,0.28361,0.02402,944
+htm_model_narrow_total,FR,2017,region,FR0,0.5128,0.04975,326
+htm_model_narrow_total,FR,2017,region,FR1,0.29083,0.02215,2599
+htm_model_narrow_total,FR,2017,region,FR2,0.25016,0.01321,2190
+htm_model_narrow_total,FR,2017,region,FR3,0.30236,0.02559,859
+htm_model_narrow_total,FR,2017,region,FR4,0.24953,0.0187,1043
+htm_model_narrow_total,FR,2017,region,FR5,0.22976,0.01444,1996
+htm_model_narrow_total,FR,2017,region,FR6,0.23097,0.01775,1470
+htm_model_narrow_total,FR,2017,region,FR7,0.23109,0.01634,1660
+htm_model_narrow_total,FR,2017,region,FR8,0.2507,0.0151,1542
+htm_model_narrow_total,FR,2021,region,FR0,0.40935,0.04141,251
+htm_model_narrow_total,FR,2021,region,FR1,0.26756,0.01729,2259
+htm_model_narrow_total,FR,2021,region,FR2,0.24032,0.01466,1542
+htm_model_narrow_total,FR,2021,region,FR3,0.20563,0.02434,627
+htm_model_narrow_total,FR,2021,region,FR4,0.22223,0.02295,772
+htm_model_narrow_total,FR,2021,region,FR5,0.17427,0.01378,1473
+htm_model_narrow_total,FR,2021,region,FR6,0.19915,0.0219,1023
+htm_model_narrow_total,FR,2021,region,FR7,0.17131,0.02043,1254
+htm_model_narrow_total,FR,2021,region,FR8,0.22958,0.02504,1052
+htm_model_narrow_total,FR,2023,region,FR0,0.48788,0.03477,311
+htm_model_narrow_total,FR,2023,region,FR1,0.25014,0.0159,2281
+htm_model_narrow_total,FR,2023,region,FR2,0.21459,0.01482,2010
+htm_model_narrow_total,FR,2023,region,FR3,0.28333,0.02283,725
+htm_model_narrow_total,FR,2023,region,FR4,0.21847,0.02276,950
+htm_model_narrow_total,FR,2023,region,FR5,0.1789,0.01383,1746
+htm_model_narrow_total,FR,2023,region,FR6,0.17334,0.01628,1270
+htm_model_narrow_total,FR,2023,region,FR7,0.17616,0.01538,1452
+htm_model_narrow_total,FR,2023,region,FR8,0.20247,0.0172,1196
+htm_model_narrow_total,IT,2017,region,IT1,0.15075,0.02696,639
+htm_model_narrow_total,IT,2017,region,IT10,0.26034,0.03899,248
+htm_model_narrow_total,IT,2017,region,IT11,0.13945,0.03555,340
+htm_model_narrow_total,IT,2017,region,IT12,0.28805,0.03126,479
+htm_model_narrow_total,IT,2017,region,IT13,0.29568,0.03745,195
+htm_model_narrow_total,IT,2017,region,IT14,0.21025,0.05536,101
+htm_model_narrow_total,IT,2017,region,IT15,0.4924,0.02649,688
+htm_model_narrow_total,IT,2017,region,IT16,0.2867,0.0338,438
+htm_model_narrow_total,IT,2017,region,IT17,0.47308,0.05408,119
+htm_model_narrow_total,IT,2017,region,IT18,0.5881,0.05067,195
+htm_model_narrow_total,IT,2017,region,IT19,0.35244,0.03347,569
+htm_model_narrow_total,IT,2017,region,IT2,0.45952,0.14682,36
+htm_model_narrow_total,IT,2017,region,IT20,0.51903,0.03105,314
+htm_model_narrow_total,IT,2017,region,IT3,0.11743,0.01194,823
+htm_model_narrow_total,IT,2017,region,IT4,0.05673,0.01591,219
+htm_model_narrow_total,IT,2017,region,IT5,0.13652,0.01747,453
+htm_model_narrow_total,IT,2017,region,IT6,0.17916,0.0479,176
+htm_model_narrow_total,IT,2017,region,IT7,0.15463,0.03446,279
+htm_model_narrow_total,IT,2017,region,IT8,0.13989,0.0169,571
+htm_model_narrow_total,IT,2017,region,IT9,0.12144,0.01486,538
+htm_model_narrow_total,IT,2021,region,IT1,0.12588,0.0274,418
+htm_model_narrow_total,IT,2021,region,IT10,0.13268,0.09933,240
+htm_model_narrow_total,IT,2021,region,IT11,0.12545,0.1224,203
+htm_model_narrow_total,IT,2021,region,IT12,0.1972,0.15227,468
+htm_model_narrow_total,IT,2021,region,IT13,0.13698,0.0989,140
+htm_model_narrow_total,IT,2021,region,IT14,0.33965,0.04533,74
+htm_model_narrow_total,IT,2021,region,IT15,0.41762,0.05582,535
+htm_model_narrow_total,IT,2021,region,IT16,0.21612,0.09442,406
+htm_model_narrow_total,IT,2021,region,IT17,0.24827,0.17672,68
+htm_model_narrow_total,IT,2021,region,IT18,0.22813,0.13346,133
+htm_model_narrow_total,IT,2021,region,IT19,0.40281,0.05547,503
+htm_model_narrow_total,IT,2021,region,IT20,0.2742,0.07618,329
+htm_model_narrow_total,IT,2021,region,IT3,0.06416,0.01467,738
+htm_model_narrow_total,IT,2021,region,IT4,0.07633,0.0412,288
+htm_model_narrow_total,IT,2021,region,IT5,0.11065,0.01328,461
+htm_model_narrow_total,IT,2021,region,IT6,0.14238,0.13129,144
+htm_model_narrow_total,IT,2021,region,IT7,0.1547,0.06245,185
+htm_model_narrow_total,IT,2021,region,IT8,0.06965,0.07082,479
+htm_model_narrow_total,IT,2021,region,IT9,0.0978,0.03788,399
+htm_model_narrow_total,IT,2023,region,IT1,0.09781,0.04395,609
+htm_model_narrow_total,IT,2023,region,IT10,0.16467,0.05652,289
+htm_model_narrow_total,IT,2023,region,IT11,0.08837,0.04647,281
+htm_model_narrow_total,IT,2023,region,IT12,0.21452,0.04776,508
+htm_model_narrow_total,IT,2023,region,IT13,0.26751,0.08123,273
+htm_model_narrow_total,IT,2023,region,IT14,0.08295,0.09266,139
+htm_model_narrow_total,IT,2023,region,IT15,0.31788,0.04251,964
+htm_model_narrow_total,IT,2023,region,IT16,0.22458,0.04356,913
+htm_model_narrow_total,IT,2023,region,IT17,0.21585,0.06477,136
+htm_model_narrow_total,IT,2023,region,IT18,0.13681,0.05778,266
+htm_model_narrow_total,IT,2023,region,IT19,0.35026,0.03268,1126
+htm_model_narrow_total,IT,2023,region,IT2,0.03843,0.00421,48
+htm_model_narrow_total,IT,2023,region,IT20,0.24042,0.04664,545
+htm_model_narrow_total,IT,2023,region,IT3,0.08506,0.01906,937
+htm_model_narrow_total,IT,2023,region,IT4,0.02498,0.01211,390
+htm_model_narrow_total,IT,2023,region,IT5,0.05484,0.02307,625
+htm_model_narrow_total,IT,2023,region,IT6,0.06236,0.03904,198
+htm_model_narrow_total,IT,2023,region,IT7,0.12938,0.04604,234
+htm_model_narrow_total,IT,2023,region,IT8,0.06948,0.01607,727
+htm_model_narrow_total,IT,2023,region,IT9,0.11412,0.03307,433
+htm_model_narrow_wealthy,DE,2010,all,all,0.25799,0.01304,3565
+htm_model_narrow_wealthy,DE,2014,all,all,0.24559,0.00987,4461
+htm_model_narrow_wealthy,DE,2017,all,all,0.2269,0.0079,4942
+htm_model_narrow_wealthy,DE,2021,all,all,0.15104,0.00893,4119
+htm_model_narrow_wealthy,DE,2023,all,all,0.14516,0.00927,3985
+htm_model_narrow_wealthy,FR,2010,all,all,0.17605,0.00578,15006
+htm_model_narrow_wealthy,FR,2014,all,all,0.20241,0.00542,12035
+htm_model_narrow_wealthy,FR,2017,all,all,0.21862,0.00532,13685
+htm_model_narrow_wealthy,FR,2021,all,all,0.18389,0.00635,10253
+htm_model_narrow_wealthy,FR,2023,all,all,0.18372,0.00543,11941
+htm_model_narrow_wealthy,IT,2010,all,all,0.17875,0.00568,7951
+htm_model_narrow_wealthy,IT,2014,all,all,0.1669,0.00523,8156
+htm_model_narrow_wealthy,IT,2017,all,all,0.15469,0.00576,7420
+htm_model_narrow_wealthy,IT,2021,all,all,0.11357,0.01317,6239
+htm_model_narrow_wealthy,IT,2023,all,all,0.09681,0.00808,9641
+illiquid_broad_to_disposable_income_ratio_of_medians,DE,2014,all,all,1.24212,0.09025,4460
+illiquid_broad_to_disposable_income_ratio_of_medians,DE,2017,all,all,1.33834,0.07403,4942
+illiquid_broad_to_disposable_income_ratio_of_medians,DE,2021,all,all,1.58403,0.14831,4119
+illiquid_broad_to_disposable_income_ratio_of_medians,FR,2014,all,all,3.80871,0.1312,11953
+illiquid_broad_to_disposable_income_ratio_of_medians,FR,2017,all,all,3.82947,0.17201,13685
+illiquid_broad_to_disposable_income_ratio_of_medians,FR,2021,all,all,4.06797,0.14143,10253
+illiquid_broad_to_disposable_income_ratio_of_medians,IT,2010,all,all,7.52921,0.14309,7951
+illiquid_broad_to_disposable_income_ratio_of_medians,IT,2014,all,all,6.5518,0.16001,8156
+illiquid_broad_to_disposable_income_ratio_of_medians,IT,2017,all,all,6.04447,0.14024,7420
+illiquid_broad_to_disposable_income_ratio_of_medians,IT,2021,all,all,6.10175,0.54063,6239
+illiquid_broad_to_disposable_income_ratio_of_medians,IT,2023,all,all,6.05511,0.1988,9641
+illiquid_to_liquid_broad_ratio_of_medians,DE,2010,all,all,3.51042,0.31153,3565
+illiquid_to_liquid_broad_ratio_of_medians,DE,2014,all,all,4.84469,0.40265,4461
+illiquid_to_liquid_broad_ratio_of_medians,DE,2017,all,all,4.85675,0.31807,4942
+illiquid_to_liquid_broad_ratio_of_medians,DE,2021,all,all,3.58067,0.38126,4119
+illiquid_to_liquid_broad_ratio_of_medians,DE,2023,all,all,3.25676,0.27166,3985
+illiquid_to_liquid_broad_ratio_of_medians,FR,2010,all,all,14.04407,0.52997,15006
+illiquid_to_liquid_broad_ratio_of_medians,FR,2014,all,all,12.13775,0.55902,11953
+illiquid_to_liquid_broad_ratio_of_medians,FR,2017,all,all,13.1569,0.64364,13685
+illiquid_to_liquid_broad_ratio_of_medians,FR,2021,all,all,10.69383,0.52852,10253
+illiquid_to_liquid_broad_ratio_of_medians,FR,2023,all,all,8.43618,0.34295,11941
+illiquid_to_liquid_broad_ratio_of_medians,IT,2010,all,all,26.66667,1.34094,7951
+illiquid_to_liquid_broad_ratio_of_medians,IT,2014,all,all,24.79323,1.03104,8156
+illiquid_to_liquid_broad_ratio_of_medians,IT,2017,all,all,22.0,1.0136,7420
+illiquid_to_liquid_broad_ratio_of_medians,IT,2021,all,all,19.28571,2.08562,6239
+illiquid_to_liquid_broad_ratio_of_medians,IT,2023,all,all,16.16667,1.08698,9641
+income_poor50_disp_persons,DE,2014,all,all,0.11426,0.00797,4460
+income_poor50_disp_persons,DE,2017,all,all,0.12085,0.00746,4942
+income_poor50_disp_persons,DE,2021,all,all,0.10898,0.01025,4119
+income_poor50_disp_persons,FR,2014,all,all,0.08661,0.00448,12035
+income_poor50_disp_persons,FR,2017,all,all,0.11342,0.00499,13685
+income_poor50_disp_persons,FR,2021,all,all,0.09739,0.00483,10253
+income_poor50_disp_persons,IT,2010,all,all,0.12174,0.00547,7951
+income_poor50_disp_persons,IT,2014,all,all,0.14175,0.00555,8156
+income_poor50_disp_persons,IT,2017,all,all,0.14104,0.00626,7420
+income_poor50_disp_persons,IT,2021,all,all,0.14522,0.01488,6239
+income_poor50_disp_persons,IT,2023,all,all,0.14409,0.00923,9641
+income_poor50_disp_persons,FR,2021,degurba,cities,0.11136,0.00691,6692
+income_poor50_disp_persons,FR,2021,degurba,rural,0.06101,0.00764,1914
+income_poor50_disp_persons,FR,2021,degurba,towns and suburbs,0.09521,0.01064,1547
+income_poor50_disp_persons,DE,2014,education,below tertiary,0.14272,0.01077,2351
+income_poor50_disp_persons,DE,2014,education,tertiary,0.05197,0.00745,2064
+income_poor50_disp_persons,DE,2017,education,below tertiary,0.15061,0.01085,2470
+income_poor50_disp_persons,DE,2017,education,tertiary,0.05987,0.00964,2436
+income_poor50_disp_persons,DE,2021,education,below tertiary,0.13621,0.01418,1960
+income_poor50_disp_persons,DE,2021,education,tertiary,0.06109,0.01064,2149
+income_poor50_disp_persons,FR,2014,education,below tertiary,0.1049,0.00666,6772
+income_poor50_disp_persons,FR,2014,education,tertiary,0.04945,0.00498,4969
+income_poor50_disp_persons,FR,2017,education,below tertiary,0.13419,0.00689,7567
+income_poor50_disp_persons,FR,2017,education,tertiary,0.07129,0.0065,6115
+income_poor50_disp_persons,FR,2021,education,below tertiary,0.11998,0.00683,5250
+income_poor50_disp_persons,FR,2021,education,tertiary,0.05668,0.00593,5003
+income_poor50_disp_persons,IT,2010,education,below tertiary,0.13124,0.00609,6655
+income_poor50_disp_persons,IT,2010,education,tertiary,0.01921,0.00554,857
+income_poor50_disp_persons,IT,2014,education,below tertiary,0.15697,0.00629,7154
+income_poor50_disp_persons,IT,2014,education,tertiary,0.04225,0.01051,1002
+income_poor50_disp_persons,IT,2017,education,below tertiary,0.15873,0.00692,6547
+income_poor50_disp_persons,IT,2017,education,tertiary,0.02683,0.00772,873
+income_poor50_disp_persons,IT,2021,education,below tertiary,0.16728,0.01852,4400
+income_poor50_disp_persons,IT,2021,education,tertiary,0.04105,0.01836,1839
+income_poor50_disp_persons,IT,2023,education,below tertiary,0.1646,0.0108,7030
+income_poor50_disp_persons,IT,2023,education,tertiary,0.05017,0.01224,2611
+income_poor50_disp_persons,DE,2014,labour,employed,0.07926,0.00913,2694
+income_poor50_disp_persons,DE,2014,labour,other,0.46315,0.06553,155
+income_poor50_disp_persons,DE,2014,labour,retired,0.12693,0.0153,1476
+income_poor50_disp_persons,DE,2014,labour,unemployed,0.4949,0.05728,124
+income_poor50_disp_persons,DE,2017,labour,employed,0.09685,0.00973,2953
+income_poor50_disp_persons,DE,2017,labour,other,0.52596,0.06355,120
+income_poor50_disp_persons,DE,2017,labour,retired,0.11122,0.01212,1754
+income_poor50_disp_persons,DE,2017,labour,unemployed,0.51847,0.0772,105
+income_poor50_disp_persons,DE,2021,labour,employed,0.08038,0.01142,2306
+income_poor50_disp_persons,DE,2021,labour,other,0.54306,0.08946,90
+income_poor50_disp_persons,DE,2021,labour,retired,0.12264,0.01557,1616
+income_poor50_disp_persons,DE,2021,labour,unemployed,0.37298,0.12572,92
+income_poor50_disp_persons,FR,2014,labour,employed,0.06865,0.00555,7039
+income_poor50_disp_persons,FR,2014,labour,other,0.33622,0.0369,454
+income_poor50_disp_persons,FR,2014,labour,retired,0.02854,0.00378,3923
+income_poor50_disp_persons,FR,2014,labour,unemployed,0.36471,0.0256,619
+income_poor50_disp_persons,FR,2017,labour,employed,0.09819,0.00546,8265
+income_poor50_disp_persons,FR,2017,labour,other,0.41694,0.03299,454
+income_poor50_disp_persons,FR,2017,labour,retired,0.03907,0.00477,4342
+income_poor50_disp_persons,FR,2017,labour,unemployed,0.39325,0.02822,624
+income_poor50_disp_persons,FR,2021,labour,employed,0.08333,0.00562,6238
+income_poor50_disp_persons,FR,2021,labour,other,0.40893,0.04634,283
+income_poor50_disp_persons,FR,2021,labour,retired,0.0393,0.0054,3338
+income_poor50_disp_persons,FR,2021,labour,unemployed,0.31038,0.03303,394
+income_poor50_disp_persons,IT,2010,labour,employed,0.09941,0.00754,4073
+income_poor50_disp_persons,IT,2010,labour,other,0.5719,0.08543,121
+income_poor50_disp_persons,IT,2010,labour,retired,0.08787,0.00756,3564
+income_poor50_disp_persons,IT,2010,labour,unemployed,0.8141,0.04047,193
+income_poor50_disp_persons,IT,2014,labour,employed,0.10619,0.00702,3841
+income_poor50_disp_persons,IT,2014,labour,other,0.43195,0.03019,913
+income_poor50_disp_persons,IT,2014,labour,retired,0.04699,0.00592,3158
+income_poor50_disp_persons,IT,2014,labour,unemployed,0.85377,0.0329,244
+income_poor50_disp_persons,IT,2017,labour,employed,0.10443,0.0086,3378
+income_poor50_disp_persons,IT,2017,labour,other,0.40678,0.02934,931
+income_poor50_disp_persons,IT,2017,labour,retired,0.04856,0.00599,2850
+income_poor50_disp_persons,IT,2017,labour,unemployed,0.79615,0.04188,261
+income_poor50_disp_persons,IT,2021,labour,employed,0.11901,0.01868,3397
+income_poor50_disp_persons,IT,2021,labour,other,0.44242,0.05582,502
+income_poor50_disp_persons,IT,2021,labour,retired,0.06028,0.01683,2200
+income_poor50_disp_persons,IT,2021,labour,unemployed,0.86739,0.04707,140
+income_poor50_disp_persons,IT,2023,labour,employed,0.1105,0.00995,4852
+income_poor50_disp_persons,IT,2023,labour,other,0.54642,0.04901,819
+income_poor50_disp_persons,IT,2023,labour,retired,0.06844,0.00847,3719
+income_poor50_disp_persons,IT,2023,labour,unemployed,0.84383,0.06272,251
+income_poor50_disp_persons,IT,2017,macro_region,IT Centre,0.08131,0.01034,1605
+income_poor50_disp_persons,IT,2017,macro_region,IT North,0.07835,0.00887,3196
+income_poor50_disp_persons,IT,2017,macro_region,IT South and Islands,0.25777,0.01433,2619
+income_poor50_disp_persons,IT,2021,macro_region,IT Centre,0.09619,0.02229,1310
+income_poor50_disp_persons,IT,2021,macro_region,IT North,0.05849,0.01094,2741
+income_poor50_disp_persons,IT,2021,macro_region,IT South and Islands,0.291,0.03147,2188
+income_poor50_disp_persons,IT,2023,macro_region,IT Centre,0.13784,0.02435,1511
+income_poor50_disp_persons,IT,2023,macro_region,IT North,0.06439,0.01202,3768
+income_poor50_disp_persons,IT,2023,macro_region,IT South and Islands,0.25222,0.01885,4362
+income_poor50_disp_persons,DE,2017,region,DENW,0.11082,0.01798,774
+income_poor50_disp_persons,DE,2017,region,DEOS,0.13785,0.01711,896
+income_poor50_disp_persons,DE,2017,region,DESW,0.09501,0.01158,1965
+income_poor50_disp_persons,DE,2017,region,DEWW,0.14877,0.01756,1307
+income_poor50_disp_persons,DE,2021,region,DENW,0.11457,0.01898,670
+income_poor50_disp_persons,DE,2021,region,DEOS,0.12681,0.02668,832
+income_poor50_disp_persons,DE,2021,region,DESW,0.09441,0.01411,1615
+income_poor50_disp_persons,DE,2021,region,DEWW,0.11134,0.0244,1002
+income_poor50_disp_persons,FR,2017,region,FR0,0.35995,0.04309,326
+income_poor50_disp_persons,FR,2017,region,FR1,0.12632,0.01369,2599
+income_poor50_disp_persons,FR,2017,region,FR2,0.10358,0.01238,2190
+income_poor50_disp_persons,FR,2017,region,FR3,0.12668,0.02035,859
+income_poor50_disp_persons,FR,2017,region,FR4,0.1085,0.01783,1043
+income_poor50_disp_persons,FR,2017,region,FR5,0.07828,0.01163,1996
+income_poor50_disp_persons,FR,2017,region,FR6,0.1027,0.01573,1470
+income_poor50_disp_persons,FR,2017,region,FR7,0.08385,0.01107,1660
+income_poor50_disp_persons,FR,2017,region,FR8,0.12757,0.01418,1542
+income_poor50_disp_persons,FR,2021,region,FR0,0.29168,0.0215,251
+income_poor50_disp_persons,FR,2021,region,FR1,0.0893,0.01394,2259
+income_poor50_disp_persons,FR,2021,region,FR2,0.07102,0.01063,1542
+income_poor50_disp_persons,FR,2021,region,FR3,0.14659,0.02688,627
+income_poor50_disp_persons,FR,2021,region,FR4,0.07903,0.0181,772
+income_poor50_disp_persons,FR,2021,region,FR5,0.08234,0.01026,1473
+income_poor50_disp_persons,FR,2021,region,FR6,0.10481,0.01369,1023
+income_poor50_disp_persons,FR,2021,region,FR7,0.07877,0.01316,1254
+income_poor50_disp_persons,FR,2021,region,FR8,0.11422,0.0158,1052
+income_poor50_disp_persons,IT,2017,region,IT1,0.06791,0.01915,639
+income_poor50_disp_persons,IT,2017,region,IT10,0.07856,0.02272,248
+income_poor50_disp_persons,IT,2017,region,IT11,0.04802,0.01292,340
+income_poor50_disp_persons,IT,2017,region,IT12,0.10697,0.01813,479
+income_poor50_disp_persons,IT,2017,region,IT13,0.05727,0.01513,195
+income_poor50_disp_persons,IT,2017,region,IT14,0.10742,0.04455,101
+income_poor50_disp_persons,IT,2017,region,IT15,0.36536,0.03791,688
+income_poor50_disp_persons,IT,2017,region,IT16,0.18357,0.03595,438
+income_poor50_disp_persons,IT,2017,region,IT17,0.30809,0.05064,119
+income_poor50_disp_persons,IT,2017,region,IT18,0.24723,0.02518,195
+income_poor50_disp_persons,IT,2017,region,IT19,0.27241,0.02036,569
+income_poor50_disp_persons,IT,2017,region,IT2,0.04609,0.01821,36
+income_poor50_disp_persons,IT,2017,region,IT20,0.18117,0.0284,314
+income_poor50_disp_persons,IT,2017,region,IT3,0.08824,0.02126,823
+income_poor50_disp_persons,IT,2017,region,IT4,0.04473,0.02032,219
+income_poor50_disp_persons,IT,2017,region,IT5,0.09033,0.03138,453
+income_poor50_disp_persons,IT,2017,region,IT6,0.11013,0.04912,176
+income_poor50_disp_persons,IT,2017,region,IT7,0.06059,0.02386,279
+income_poor50_disp_persons,IT,2017,region,IT8,0.07749,0.02573,571
+income_poor50_disp_persons,IT,2017,region,IT9,0.06279,0.02083,538
+income_poor50_disp_persons,IT,2021,region,IT1,0.063,0.04435,418
+income_poor50_disp_persons,IT,2021,region,IT10,0.16181,0.05475,240
+income_poor50_disp_persons,IT,2021,region,IT11,0.06401,0.01697,203
+income_poor50_disp_persons,IT,2021,region,IT12,0.13691,0.04168,468
+income_poor50_disp_persons,IT,2021,region,IT13,0.11021,0.03897,140
+income_poor50_disp_persons,IT,2021,region,IT14,0.34864,0.07787,74
+income_poor50_disp_persons,IT,2021,region,IT15,0.33145,0.06462,535
+income_poor50_disp_persons,IT,2021,region,IT16,0.33549,0.08379,406
+income_poor50_disp_persons,IT,2021,region,IT17,0.38208,0.19453,68
+income_poor50_disp_persons,IT,2021,region,IT18,0.13908,0.06617,133
+income_poor50_disp_persons,IT,2021,region,IT19,0.36183,0.05647,503
+income_poor50_disp_persons,IT,2021,region,IT20,0.14559,0.02512,329
+income_poor50_disp_persons,IT,2021,region,IT3,0.04935,0.01258,738
+income_poor50_disp_persons,IT,2021,region,IT4,0.03989,0.01774,288
+income_poor50_disp_persons,IT,2021,region,IT5,0.05665,0.01879,461
+income_poor50_disp_persons,IT,2021,region,IT6,0.11412,0.0658,144
+income_poor50_disp_persons,IT,2021,region,IT7,0.04891,0.01509,185
+income_poor50_disp_persons,IT,2021,region,IT8,0.06554,0.0885,479
+income_poor50_disp_persons,IT,2021,region,IT9,0.032,0.01391,399
+income_poor50_disp_persons,IT,2023,region,IT1,0.07932,0.03535,609
+income_poor50_disp_persons,IT,2023,region,IT10,0.16107,0.07348,289
+income_poor50_disp_persons,IT,2023,region,IT11,0.10374,0.03603,281
+income_poor50_disp_persons,IT,2023,region,IT12,0.19089,0.04899,508
+income_poor50_disp_persons,IT,2023,region,IT13,0.08763,0.02499,273
+income_poor50_disp_persons,IT,2023,region,IT14,0.31331,0.04702,139
+income_poor50_disp_persons,IT,2023,region,IT15,0.32403,0.03648,964
+income_poor50_disp_persons,IT,2023,region,IT16,0.20184,0.03554,913
+income_poor50_disp_persons,IT,2023,region,IT17,0.3647,0.04912,136
+income_poor50_disp_persons,IT,2023,region,IT18,0.15746,0.06024,266
+income_poor50_disp_persons,IT,2023,region,IT19,0.31028,0.04407,1126
+income_poor50_disp_persons,IT,2023,region,IT2,0.09165,0.0762,48
+income_poor50_disp_persons,IT,2023,region,IT20,0.14597,0.05115,545
+income_poor50_disp_persons,IT,2023,region,IT3,0.07984,0.01436,937
+income_poor50_disp_persons,IT,2023,region,IT4,0.03239,0.0129,390
+income_poor50_disp_persons,IT,2023,region,IT5,0.03491,0.01422,625
+income_poor50_disp_persons,IT,2023,region,IT6,0.04844,0.0348,198
+income_poor50_disp_persons,IT,2023,region,IT7,0.08632,0.06531,234
+income_poor50_disp_persons,IT,2023,region,IT8,0.05353,0.03649,727
+income_poor50_disp_persons,IT,2023,region,IT9,0.08979,0.03255,433
+income_poor60_disp_persons,DE,2014,all,all,0.18624,0.01038,4460
+income_poor60_disp_persons,DE,2017,all,all,0.19476,0.0092,4942
+income_poor60_disp_persons,DE,2021,all,all,0.17043,0.01232,4119
+income_poor60_disp_persons,FR,2014,all,all,0.14528,0.00515,12035
+income_poor60_disp_persons,FR,2017,all,all,0.16843,0.00592,13685
+income_poor60_disp_persons,FR,2021,all,all,0.15633,0.00688,10253
+income_poor60_disp_persons,IT,2010,all,all,0.18784,0.00686,7951
+income_poor60_disp_persons,IT,2014,all,all,0.20955,0.00604,8156
+income_poor60_disp_persons,IT,2017,all,all,0.20863,0.00716,7420
+income_poor60_disp_persons,IT,2021,all,all,0.20903,0.01876,6239
+income_poor60_disp_persons,IT,2023,all,all,0.22403,0.01026,9641
+liquid_broad_to_disposable_income_ratio_of_medians,DE,2014,all,all,0.25647,0.01742,4460
+liquid_broad_to_disposable_income_ratio_of_medians,DE,2017,all,all,0.27559,0.01338,4942
+liquid_broad_to_disposable_income_ratio_of_medians,DE,2021,all,all,0.44236,0.02332,4119
+liquid_broad_to_disposable_income_ratio_of_medians,FR,2014,all,all,0.31379,0.00957,12035
+liquid_broad_to_disposable_income_ratio_of_medians,FR,2017,all,all,0.29106,0.01034,13685
+liquid_broad_to_disposable_income_ratio_of_medians,FR,2021,all,all,0.3804,0.01681,10253
+liquid_broad_to_disposable_income_ratio_of_medians,IT,2010,all,all,0.28235,0.0145,7951
+liquid_broad_to_disposable_income_ratio_of_medians,IT,2014,all,all,0.26426,0.01257,8156
+liquid_broad_to_disposable_income_ratio_of_medians,IT,2017,all,all,0.27475,0.0135,7420
+liquid_broad_to_disposable_income_ratio_of_medians,IT,2021,all,all,0.31639,0.03814,6239
+liquid_broad_to_disposable_income_ratio_of_medians,IT,2023,all,all,0.37454,0.02772,9641
+liquid_broad_to_income_ratio_of_medians,DE,2010,all,all,0.26459,0.02016,3565
+liquid_broad_to_income_ratio_of_medians,DE,2014,all,all,0.20025,0.01371,4460
+liquid_broad_to_income_ratio_of_medians,DE,2017,all,all,0.20703,0.01008,4942
+liquid_broad_to_income_ratio_of_medians,DE,2021,all,all,0.33515,0.01825,4119
+liquid_broad_to_income_ratio_of_medians,DE,2023,all,all,0.3156,0.01701,3985
+liquid_broad_to_income_ratio_of_medians,FR,2010,all,all,0.24194,0.00672,15006
+liquid_broad_to_income_ratio_of_medians,FR,2014,all,all,0.2551,0.00808,12035
+liquid_broad_to_income_ratio_of_medians,FR,2017,all,all,0.23747,0.0085,13685
+liquid_broad_to_income_ratio_of_medians,FR,2021,all,all,0.31983,0.01377,10253
+liquid_broad_to_income_ratio_of_medians,FR,2023,all,all,0.39961,0.01374,11941
+liquid_broad_to_income_ratio_of_medians,IT,2010,all,all,0.22849,0.01156,7951
+liquid_broad_to_income_ratio_of_medians,IT,2014,all,all,0.21296,0.00986,8156
+liquid_broad_to_income_ratio_of_medians,IT,2017,all,all,0.2237,0.01068,7420
+liquid_broad_to_income_ratio_of_medians,IT,2021,all,all,0.25508,0.03087,6239
+liquid_broad_to_income_ratio_of_medians,IT,2023,all,all,0.30353,0.02315,9641
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2014,all,all,0.05122,0.00517,4460
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2017,all,all,0.06997,0.00144,4942
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2021,all,all,0.13974,0.01153,4119
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2014,all,all,0.054,0.00124,12035
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2017,all,all,0.04758,0.00164,13685
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,all,all,0.05904,0.00202,10253
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2010,all,all,0.24823,0.00492,7951
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2014,all,all,0.20946,0.00785,8156
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2017,all,all,0.23432,0.00849,7420
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,all,all,0.2718,0.02794,6239
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,all,all,0.30733,0.0144,9641
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2014,education,below tertiary,0.04046,0.00368,2351
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2014,education,tertiary,0.09059,0.01301,2064
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2017,education,below tertiary,0.04085,0.0039,2470
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2017,education,tertiary,0.14208,0.01129,2436
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2021,education,below tertiary,0.07487,0.00748,1960
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2021,education,tertiary,0.27883,0.02732,2149
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2014,education,below tertiary,0.04587,0.00057,6772
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2014,education,tertiary,0.07667,0.00416,4969
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2017,education,below tertiary,0.04455,0.00104,7567
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2017,education,tertiary,0.0645,0.00247,6115
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,education,below tertiary,0.04583,0.00158,5250
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,education,tertiary,0.07438,0.00433,5003
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2010,education,below tertiary,0.234,0.01245,6655
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2010,education,tertiary,0.3801,0.04982,857
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2014,education,below tertiary,0.17687,0.00888,7154
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2014,education,tertiary,0.31648,0.02645,1002
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2017,education,below tertiary,0.20558,0.01269,6547
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2017,education,tertiary,0.3513,0.04006,873
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,education,below tertiary,0.25661,0.03907,4400
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,education,tertiary,0.41923,0.08989,1839
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,education,below tertiary,0.26457,0.01385,7030
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,education,tertiary,0.5309,0.06299,2611
+liquid_kvw_to_income_ratio_of_medians,DE,2010,all,all,0.04215,0.00453,3565
+liquid_kvw_to_income_ratio_of_medians,DE,2014,all,all,0.03999,0.00405,4460
+liquid_kvw_to_income_ratio_of_medians,DE,2017,all,all,0.05257,0.00106,4942
+liquid_kvw_to_income_ratio_of_medians,DE,2021,all,all,0.10587,0.00905,4119
+liquid_kvw_to_income_ratio_of_medians,DE,2023,all,all,0.10455,0.00793,3985
+liquid_kvw_to_income_ratio_of_medians,FR,2010,all,all,0.05034,0.00139,15006
+liquid_kvw_to_income_ratio_of_medians,FR,2014,all,all,0.0439,0.00104,12035
+liquid_kvw_to_income_ratio_of_medians,FR,2017,all,all,0.03882,0.00134,13685
+liquid_kvw_to_income_ratio_of_medians,FR,2021,all,all,0.04963,0.00167,10253
+liquid_kvw_to_income_ratio_of_medians,FR,2023,all,all,0.04669,0.00181,11941
+liquid_kvw_to_income_ratio_of_medians,IT,2010,all,all,0.20088,0.00407,7951
+liquid_kvw_to_income_ratio_of_medians,IT,2014,all,all,0.1688,0.0061,8156
+liquid_kvw_to_income_ratio_of_medians,IT,2017,all,all,0.19078,0.00668,7420
+liquid_kvw_to_income_ratio_of_medians,IT,2021,all,all,0.21913,0.02288,6239
+liquid_kvw_to_income_ratio_of_medians,IT,2023,all,all,0.24907,0.01216,9641
+median_income_disposable,DE,2014,all,all,27685.088,579.23913,4460
+median_income_disposable,DE,2017,all,all,30155.272,562.16782,4942
+median_income_disposable,DE,2021,all,all,33910.552,692.43464,4119
+median_income_disposable,FR,2014,all,all,25494.72,192.60878,12035
+median_income_disposable,FR,2017,all,all,26606.0,347.13869,13685
+median_income_disposable,FR,2021,all,all,26287.856,298.29995,10253
+median_income_disposable,IT,2010,all,all,21250.57895,206.54082,7951
+median_income_disposable,IT,2014,all,all,20147.12166,204.51597,8156
+median_income_disposable,IT,2017,all,all,20018.31261,129.12499,7420
+median_income_disposable,IT,2021,all,all,22124.79094,1033.21484,6239
+median_income_disposable,IT,2023,all,all,24029.28934,392.42349,9641
+median_income_gross,DE,2010,all,all,32543.0,731.18861,3565
+median_income_gross,DE,2014,all,all,35458.0,693.26654,4460
+median_income_gross,DE,2017,all,all,40140.0,724.7385,4942
+median_income_gross,DE,2021,all,all,44760.0,1128.08104,4119
+median_income_gross,DE,2023,all,all,50350.0,1001.36124,3985
+median_income_gross,FR,2010,all,all,29214.0,281.89925,15006
+median_income_gross,FR,2014,all,all,31360.0,289.67821,12035
+median_income_gross,FR,2017,all,all,32610.0,435.05596,13685
+median_income_gross,FR,2021,all,all,31267.0,512.89237,10253
+median_income_gross,FR,2023,all,all,36150.0,379.40666,11941
+median_income_gross,IT,2010,all,all,26259.8,347.68706,7951
+median_income_gross,IT,2014,all,all,25000.47637,365.16011,8156
+median_income_gross,IT,2017,all,all,24586.75182,316.62919,7420
+median_income_gross,IT,2021,all,all,27442.09513,1342.2618,6239
+median_income_gross,IT,2023,all,all,29650.85856,597.48037,9641
+median_liquid_broad,DE,2010,all,all,8610.0,691.63687,3565
+median_liquid_broad,DE,2014,all,all,7100.0,498.48188,4461
+median_liquid_broad,DE,2017,all,all,8310.0,402.2113,4942
+median_liquid_broad,DE,2021,all,all,15000.0,748.77871,4119
+median_liquid_broad,DE,2023,all,all,15890.0,862.95339,3985
+median_liquid_broad,FR,2010,all,all,7068.0,200.33375,15006
+median_liquid_broad,FR,2014,all,all,8000.0,244.74795,12035
+median_liquid_broad,FR,2017,all,all,7744.0,299.04892,13685
+median_liquid_broad,FR,2021,all,all,10000.0,486.20389,10253
+median_liquid_broad,FR,2023,all,all,14446.0,504.97191,11941
+median_liquid_broad,IT,2010,all,all,6000.0,307.30794,7951
+median_liquid_broad,IT,2014,all,all,5324.03367,270.66704,8156
+median_liquid_broad,IT,2017,all,all,5500.0,277.27855,7420
+median_liquid_broad,IT,2021,all,all,7000.0,708.50815,6239
+median_liquid_broad,IT,2023,all,all,9000.0,634.34052,9641
+median_liquid_broad,IT,2017,macro_region,IT Centre,8000.0,678.58859,1605
+median_liquid_broad,IT,2017,macro_region,IT North,7000.0,325.96475,3196
+median_liquid_broad,IT,2017,macro_region,IT South and Islands,3000.0,296.45888,2619
+median_liquid_broad,IT,2021,macro_region,IT Centre,8236.9243,1630.74612,1310
+median_liquid_broad,IT,2021,macro_region,IT North,13000.0,2013.52096,2741
+median_liquid_broad,IT,2021,macro_region,IT South and Islands,3000.0,407.13568,2188
+median_liquid_broad,IT,2023,macro_region,IT Centre,10000.0,1006.60702,1511
+median_liquid_broad,IT,2023,macro_region,IT North,16772.40106,1468.44224,3768
+median_liquid_broad,IT,2023,macro_region,IT South and Islands,3846.78006,578.03618,4362
+median_liquid_broad,DE,2017,region,DENW,8182.0,1351.87712,774
+median_liquid_broad,DE,2017,region,DEOS,4700.0,785.84831,896
+median_liquid_broad,DE,2017,region,DESW,15180.0,1998.1228,1965
+median_liquid_broad,DE,2017,region,DEWW,6480.0,932.98482,1307
+median_liquid_broad,DE,2021,region,DENW,13800.0,2299.57551,670
+median_liquid_broad,DE,2021,region,DEOS,10000.0,1106.03742,832
+median_liquid_broad,DE,2021,region,DESW,26000.0,2318.10534,1615
+median_liquid_broad,DE,2021,region,DEWW,12800.0,1558.57787,1002
+median_liquid_broad,DE,2023,region,DENW,15570.0,3295.26196,630
+median_liquid_broad,DE,2023,region,DEOS,10000.0,1501.15442,930
+median_liquid_broad,DE,2023,region,DESW,26660.0,3422.41936,1481
+median_liquid_broad,DE,2023,region,DEWW,11520.0,1728.68194,944
+median_liquid_broad,FR,2017,region,FR0,600.0,216.64264,326
+median_liquid_broad,FR,2017,region,FR1,8200.0,904.61918,2599
+median_liquid_broad,FR,2017,region,FR2,6618.0,667.96808,2190
+median_liquid_broad,FR,2017,region,FR3,5130.0,761.77268,859
+median_liquid_broad,FR,2017,region,FR4,8685.0,902.09705,1043
+median_liquid_broad,FR,2017,region,FR5,9615.0,663.06517,1996
+median_liquid_broad,FR,2017,region,FR6,8542.0,938.44779,1470
+median_liquid_broad,FR,2017,region,FR7,9583.0,804.32553,1660
+median_liquid_broad,FR,2017,region,FR8,6560.0,812.30318,1542
+median_liquid_broad,FR,2021,region,FR0,1828.0,354.71831,251
+median_liquid_broad,FR,2021,region,FR1,11200.0,1269.38211,2259
+median_liquid_broad,FR,2021,region,FR2,9000.0,1087.69122,1542
+median_liquid_broad,FR,2021,region,FR3,6600.0,1426.52594,627
+median_liquid_broad,FR,2021,region,FR4,12848.0,1946.87903,772
+median_liquid_broad,FR,2021,region,FR5,13600.0,1631.65834,1473
+median_liquid_broad,FR,2021,region,FR6,11150.0,1610.59704,1023
+median_liquid_broad,FR,2021,region,FR7,12000.0,1430.66658,1254
+median_liquid_broad,FR,2021,region,FR8,6736.0,1396.81702,1052
+median_liquid_broad,FR,2023,region,FR0,2817.0,966.70711,311
+median_liquid_broad,FR,2023,region,FR1,17700.0,2134.47364,2281
+median_liquid_broad,FR,2023,region,FR2,11862.0,1183.17542,2010
+median_liquid_broad,FR,2023,region,FR3,10100.0,1170.69896,725
+median_liquid_broad,FR,2023,region,FR4,15016.0,2198.20527,950
+median_liquid_broad,FR,2023,region,FR5,18600.0,1595.16119,1746
+median_liquid_broad,FR,2023,region,FR6,16374.0,1997.87352,1270
+median_liquid_broad,FR,2023,region,FR7,18500.0,1889.88243,1452
+median_liquid_broad,FR,2023,region,FR8,10567.0,1235.11419,1196
+median_liquid_broad,IT,2017,region,IT1,6419.44558,1483.82194,639
+median_liquid_broad,IT,2017,region,IT10,5000.0,1067.57184,248
+median_liquid_broad,IT,2017,region,IT11,15000.0,1832.32338,340
+median_liquid_broad,IT,2017,region,IT12,5593.04576,936.82646,479
+median_liquid_broad,IT,2017,region,IT13,15036.91975,3335.3029,195
+median_liquid_broad,IT,2017,region,IT14,6039.15689,843.45475,101
+median_liquid_broad,IT,2017,region,IT15,1000.0,190.25192,688
+median_liquid_broad,IT,2017,region,IT16,5257.16898,785.4621,438
+median_liquid_broad,IT,2017,region,IT17,4300.32033,1710.94256,119
+median_liquid_broad,IT,2017,region,IT18,3000.0,1425.94829,195
+median_liquid_broad,IT,2017,region,IT19,2951.97463,638.13658,569
+median_liquid_broad,IT,2017,region,IT2,2942.34998,1745.61393,36
+median_liquid_broad,IT,2017,region,IT20,800.0,267.76067,314
+median_liquid_broad,IT,2017,region,IT3,8000.0,959.94233,823
+median_liquid_broad,IT,2017,region,IT4,7000.0,1594.53673,219
+median_liquid_broad,IT,2017,region,IT5,9000.0,1648.36886,453
+median_liquid_broad,IT,2017,region,IT6,9716.12377,2122.18838,176
+median_liquid_broad,IT,2017,region,IT7,5347.60573,617.60192,279
+median_liquid_broad,IT,2017,region,IT8,6000.0,1006.08189,571
+median_liquid_broad,IT,2017,region,IT9,10000.0,1476.25456,538
+median_liquid_broad,IT,2021,region,IT1,10562.014,2445.70059,418
+median_liquid_broad,IT,2021,region,IT10,8000.0,8533.09286,240
+median_liquid_broad,IT,2021,region,IT11,9000.0,2922.01025,203
+median_liquid_broad,IT,2021,region,IT12,7000.0,2267.86889,468
+median_liquid_broad,IT,2021,region,IT13,12000.0,3671.41557,140
+median_liquid_broad,IT,2021,region,IT14,2701.582,1912.02631,74
+median_liquid_broad,IT,2021,region,IT15,1000.0,182.3585,535
+median_liquid_broad,IT,2021,region,IT16,4500.0,880.97076,406
+median_liquid_broad,IT,2021,region,IT17,3000.0,1129.56515,68
+median_liquid_broad,IT,2021,region,IT18,10000.0,1551.48429,133
+median_liquid_broad,IT,2021,region,IT19,1600.0,648.66697,503
+median_liquid_broad,IT,2021,region,IT20,3500.0,795.65783,329
+median_liquid_broad,IT,2021,region,IT3,13033.748,3799.53009,738
+median_liquid_broad,IT,2021,region,IT4,15000.0,15737.47246,288
+median_liquid_broad,IT,2021,region,IT5,16000.0,5052.56882,461
+median_liquid_broad,IT,2021,region,IT6,15000.0,7828.18536,144
+median_liquid_broad,IT,2021,region,IT7,10000.0,4830.63474,185
+median_liquid_broad,IT,2021,region,IT8,16456.133,7651.35027,479
+median_liquid_broad,IT,2021,region,IT9,10000.0,2648.20782,399
+median_liquid_broad,IT,2023,region,IT1,15000.0,3127.98583,609
+median_liquid_broad,IT,2023,region,IT10,7000.0,814.13023,289
+median_liquid_broad,IT,2023,region,IT11,11796.18064,1520.76765,281
+median_liquid_broad,IT,2023,region,IT12,8021.0,1843.3838,508
+median_liquid_broad,IT,2023,region,IT13,7030.02385,2482.33975,273
+median_liquid_broad,IT,2023,region,IT14,5000.0,865.9979,139
+median_liquid_broad,IT,2023,region,IT15,1800.0,174.95167,964
+median_liquid_broad,IT,2023,region,IT16,5000.0,844.44766,913
+median_liquid_broad,IT,2023,region,IT17,2794.97148,918.95747,136
+median_liquid_broad,IT,2023,region,IT18,9000.0,915.3169,266
+median_liquid_broad,IT,2023,region,IT19,2000.0,717.17626,1126
+median_liquid_broad,IT,2023,region,IT2,5000.0,1253.07411,48
+median_liquid_broad,IT,2023,region,IT20,4000.0,922.12878,545
+median_liquid_broad,IT,2023,region,IT3,19000.0,1953.88819,937
+median_liquid_broad,IT,2023,region,IT4,14900.0,1808.00376,390
+median_liquid_broad,IT,2023,region,IT5,15000.0,2094.12183,625
+median_liquid_broad,IT,2023,region,IT6,16500.0,5503.8105,198
+median_liquid_broad,IT,2023,region,IT7,13000.0,4103.81733,234
+median_liquid_broad,IT,2023,region,IT8,30997.19258,4191.04929,727
+median_liquid_broad,IT,2023,region,IT9,10000.0,1937.30593,433
+median_liquid_kvw,DE,2010,all,all,1371.5,150.01215,3565
+median_liquid_kvw,DE,2014,all,all,1417.9,144.63301,4461
+median_liquid_kvw,DE,2017,all,all,2110.0,17.35864,4942
+median_liquid_kvw,DE,2021,all,all,4738.5,381.79726,4119
+median_liquid_kvw,DE,2023,all,all,5264.0,401.18207,3985
+median_liquid_kvw,FR,2010,all,all,1470.519,39.84399,15006
+median_liquid_kvw,FR,2014,all,all,1376.775,32.07922,12035
+median_liquid_kvw,FR,2017,all,all,1266.0,46.33699,13685
+median_liquid_kvw,FR,2021,all,all,1551.905,59.55834,10253
+median_liquid_kvw,FR,2023,all,all,1688.0,67.21389,11941
+median_liquid_kvw,IT,2010,all,all,5275.0,100.20812,7951
+median_liquid_kvw,IT,2014,all,all,4220.0,162.53552,8156
+median_liquid_kvw,IT,2017,all,all,4690.72365,174.95888,7420
+median_liquid_kvw,IT,2021,all,all,6013.5,543.05297,6239
+median_liquid_kvw,IT,2023,all,all,7385.0,317.06607,9641
+median_networth,DE,2010,all,all,51358.0,3133.36007,3565
+median_networth,DE,2014,all,all,60790.0,3723.87383,4461
+median_networth,DE,2017,all,all,70780.0,3277.01574,4942
+median_networth,DE,2021,all,all,106652.4,5695.58133,4119
+median_networth,DE,2023,all,all,103260.0,6886.42946,3985
+median_networth,FR,2010,all,all,115687.0,3539.27202,15006
+median_networth,FR,2014,all,all,113630.0,3728.83151,11953
+median_networth,FR,2017,all,all,120863.0,5329.40039,13685
+median_networth,FR,2021,all,all,125673.0,5597.74398,10253
+median_networth,FR,2023,all,all,149000.0,3959.11137,11941
+median_networth,IT,2010,all,all,173386.78532,3745.50091,7951
+median_networth,IT,2014,all,all,147000.0,3532.34458,8156
+median_networth,IT,2017,all,all,132265.75984,3059.14663,7420
+median_networth,IT,2021,all,all,151000.0,10692.56046,6239
+median_networth,IT,2023,all,all,162757.28275,4393.86646,9641
+median_networth,IT,2017,macro_region,IT Centre,164000.0,7474.36653,1605
+median_networth,IT,2017,macro_region,IT North,155004.76741,5220.73811,3196
+median_networth,IT,2017,macro_region,IT South and Islands,98000.0,4924.67009,2619
+median_networth,IT,2021,macro_region,IT Centre,173600.0,43358.63274,1310
+median_networth,IT,2021,macro_region,IT North,186127.0454,20285.6736,2741
+median_networth,IT,2021,macro_region,IT South and Islands,107000.0,8845.56607,2188
+median_networth,IT,2023,macro_region,IT Centre,178497.88664,6463.01787,1511
+median_networth,IT,2023,macro_region,IT North,198633.76879,7592.73937,3768
+median_networth,IT,2023,macro_region,IT South and Islands,123200.0,5986.19422,4362
+median_networth,DE,2017,region,DENW,76000.0,13776.74912,774
+median_networth,DE,2017,region,DEOS,23490.0,3803.65211,896
+median_networth,DE,2017,region,DESW,139450.0,15787.26324,1965
+median_networth,DE,2017,region,DEWW,60900.0,10145.00435,1307
+median_networth,DE,2021,region,DENW,120766.0,27104.00436,670
+median_networth,DE,2021,region,DEOS,43740.0,9097.19384,832
+median_networth,DE,2021,region,DESW,185940.0,19579.26397,1615
+median_networth,DE,2021,region,DEWW,77550.0,18187.43784,1002
+median_networth,DE,2023,region,DENW,129128.0,25346.18493,630
+median_networth,DE,2023,region,DEOS,35940.0,10355.90146,930
+median_networth,DE,2023,region,DESW,186898.0,20836.29889,1481
+median_networth,DE,2023,region,DEWW,88474.0,19398.26515,944
+median_networth,FR,2017,region,FR0,100457.25,16817.11789,326
+median_networth,FR,2017,region,FR1,123496.0,23901.794,2599
+median_networth,FR,2017,region,FR2,106917.0,8726.81554,2190
+median_networth,FR,2017,region,FR3,71477.0,16142.34507,859
+median_networth,FR,2017,region,FR4,101414.3,13345.96612,1043
+median_networth,FR,2017,region,FR5,141808.0,9072.24543,1996
+median_networth,FR,2017,region,FR6,131408.0,13817.19826,1470
+median_networth,FR,2017,region,FR7,138421.0,14575.0255,1660
+median_networth,FR,2017,region,FR8,133760.0,20603.18125,1542
+median_networth,FR,2021,region,FR0,74366.0,21094.7052,251
+median_networth,FR,2021,region,FR1,130238.0,18946.5641,2259
+median_networth,FR,2021,region,FR2,116527.0,6428.45539,1542
+median_networth,FR,2021,region,FR3,82501.0,15999.61291,627
+median_networth,FR,2021,region,FR4,120287.0,12963.85636,772
+median_networth,FR,2021,region,FR5,161908.0,12480.15528,1473
+median_networth,FR,2021,region,FR6,149024.0,11724.32372,1023
+median_networth,FR,2021,region,FR7,138920.0,13938.05683,1254
+median_networth,FR,2021,region,FR8,124250.0,22657.90119,1052
+median_networth,FR,2023,region,FR0,71686.0,21237.79522,311
+median_networth,FR,2023,region,FR1,143846.0,21182.78649,2281
+median_networth,FR,2023,region,FR2,127204.0,9543.18121,2010
+median_networth,FR,2023,region,FR3,105618.0,16234.95308,725
+median_networth,FR,2023,region,FR4,135816.0,15126.54906,950
+median_networth,FR,2023,region,FR5,186722.0,10716.99745,1746
+median_networth,FR,2023,region,FR6,173695.0,13193.14368,1270
+median_networth,FR,2023,region,FR7,170240.0,20390.91986,1452
+median_networth,FR,2023,region,FR8,163700.0,16217.01389,1196
+median_networth,IT,2017,region,IT1,133000.0,11509.57214,639
+median_networth,IT,2017,region,IT10,164999.58015,23798.40922,248
+median_networth,IT,2017,region,IT11,147492.39677,9386.89536,340
+median_networth,IT,2017,region,IT12,142000.0,14342.41025,479
+median_networth,IT,2017,region,IT13,154395.87938,11084.41068,195
+median_networth,IT,2017,region,IT14,78576.02705,18355.95672,101
+median_networth,IT,2017,region,IT15,102000.0,14614.59176,688
+median_networth,IT,2017,region,IT16,98000.0,10413.62268,438
+median_networth,IT,2017,region,IT17,85931.16497,9553.17627,119
+median_networth,IT,2017,region,IT18,84000.0,20905.44991,195
+median_networth,IT,2017,region,IT19,90000.0,8540.91841,569
+median_networth,IT,2017,region,IT2,130300.0,20500.66354,36
+median_networth,IT,2017,region,IT20,122500.0,12513.30834,314
+median_networth,IT,2017,region,IT3,158087.10944,9406.24781,823
+median_networth,IT,2017,region,IT4,245500.0,38527.11369,219
+median_networth,IT,2017,region,IT5,127000.0,13761.86576,453
+median_networth,IT,2017,region,IT6,152986.23908,17242.44262,176
+median_networth,IT,2017,region,IT7,169797.96637,17021.09192,279
+median_networth,IT,2017,region,IT8,148550.0,16830.62867,571
+median_networth,IT,2017,region,IT9,201968.64763,7783.94657,538
+median_networth,IT,2021,region,IT1,158750.801,64414.71692,418
+median_networth,IT,2021,region,IT10,127500.0,57554.3234,240
+median_networth,IT,2021,region,IT11,139888.50715,70057.23514,203
+median_networth,IT,2021,region,IT12,134500.0,51460.45116,468
+median_networth,IT,2021,region,IT13,130000.0,37456.80601,140
+median_networth,IT,2021,region,IT14,121700.0,53771.72161,74
+median_networth,IT,2021,region,IT15,97700.0,40612.02376,535
+median_networth,IT,2021,region,IT16,103900.0,18972.15932,406
+median_networth,IT,2021,region,IT17,116500.0,23604.61721,68
+median_networth,IT,2021,region,IT18,114000.0,26177.28865,133
+median_networth,IT,2021,region,IT19,87000.0,10692.71158,503
+median_networth,IT,2021,region,IT20,145000.0,27662.97127,329
+median_networth,IT,2021,region,IT3,201664.328,35201.92612,738
+median_networth,IT,2021,region,IT4,260000.0,61617.76422,288
+median_networth,IT,2021,region,IT5,170300.0,41428.65356,461
+median_networth,IT,2021,region,IT6,200400.0,29829.06103,144
+median_networth,IT,2021,region,IT7,219000.0,38493.9214,185
+median_networth,IT,2021,region,IT8,155100.0,45211.41563,479
+median_networth,IT,2021,region,IT9,216321.2388,48643.1079,399
+median_networth,IT,2023,region,IT1,193750.0,18363.38839,609
+median_networth,IT,2023,region,IT10,144976.84657,19433.17749,289
+median_networth,IT,2023,region,IT11,151443.28866,18731.46627,281
+median_networth,IT,2023,region,IT12,179000.0,16852.13215,508
+median_networth,IT,2023,region,IT13,137000.0,38578.52101,273
+median_networth,IT,2023,region,IT14,165000.0,159204.48512,139
+median_networth,IT,2023,region,IT15,107000.0,20381.58025,964
+median_networth,IT,2023,region,IT16,139000.0,7489.7262,913
+median_networth,IT,2023,region,IT17,73500.0,11830.3409,136
+median_networth,IT,2023,region,IT18,112000.0,11400.58895,266
+median_networth,IT,2023,region,IT19,115300.0,9891.19081,1126
+median_networth,IT,2023,region,IT2,142000.0,10014.39483,48
+median_networth,IT,2023,region,IT20,140629.24427,17306.24085,545
+median_networth,IT,2023,region,IT3,200392.14636,11649.63121,937
+median_networth,IT,2023,region,IT4,328000.0,41059.24626,390
+median_networth,IT,2023,region,IT5,154500.0,12193.19009,625
+median_networth,IT,2023,region,IT6,161000.0,11946.40835,198
+median_networth,IT,2023,region,IT7,216331.0,52101.77406,234
+median_networth,IT,2023,region,IT8,200000.0,11064.21663,727
+median_networth,IT,2023,region,IT9,204720.94878,19330.08076,433
+mpc_mean,DE,2017,all,all,0.51298,0.00848,4940
+mpc_mean,DE,2021,all,all,0.46794,0.01065,4116
+mpc_mean,DE,2023,all,all,0.46298,0.00961,3984
+mpc_mean,FR,2017,all,all,0.41901,0.00473,13685
+mpc_mean,FR,2021,all,all,0.39186,0.0061,10253
+mpc_mean,FR,2023,all,all,0.39471,0.00504,11941
+mpc_mean,IT,2017,all,all,0.48086,0.00641,7420
+mpc_mean,IT,2021,all,all,0.46931,0.01883,6239
+mpc_mean,IT,2023,all,all,0.43895,0.00873,9641
+mpc_mean,FR,2021,degurba,cities,0.39394,0.00774,6692
+mpc_mean,FR,2021,degurba,rural,0.39655,0.0125,1914
+mpc_mean,FR,2021,degurba,towns and suburbs,0.38363,0.01466,1547
+mpc_mean,FR,2023,degurba,cities,0.39637,0.00651,7361
+mpc_mean,FR,2023,degurba,rural,0.39703,0.01055,2426
+mpc_mean,FR,2023,degurba,towns and suburbs,0.38656,0.01091,2154
+mpc_mean,DE,2017,education,below tertiary,0.51611,0.01008,2469
+mpc_mean,DE,2017,education,tertiary,0.5064,0.01254,2435
+mpc_mean,DE,2021,education,below tertiary,0.46883,0.01351,1958
+mpc_mean,DE,2021,education,tertiary,0.46548,0.01405,2148
+mpc_mean,DE,2023,education,below tertiary,0.48202,0.01373,1782
+mpc_mean,DE,2023,education,tertiary,0.43437,0.01372,2180
+mpc_mean,FR,2017,education,below tertiary,0.42732,0.00616,7567
+mpc_mean,FR,2017,education,tertiary,0.3995,0.00709,6115
+mpc_mean,FR,2021,education,below tertiary,0.39769,0.00751,5250
+mpc_mean,FR,2021,education,tertiary,0.37982,0.00851,5003
+mpc_mean,FR,2023,education,below tertiary,0.40066,0.00674,6023
+mpc_mean,FR,2023,education,tertiary,0.38445,0.00753,5918
+mpc_mean,IT,2017,education,below tertiary,0.48713,0.00658,6547
+mpc_mean,IT,2017,education,tertiary,0.44005,0.01611,873
+mpc_mean,IT,2021,education,below tertiary,0.46726,0.02235,4400
+mpc_mean,IT,2021,education,tertiary,0.47921,0.02294,1839
+mpc_mean,IT,2023,education,below tertiary,0.44378,0.00972,7030
+mpc_mean,IT,2023,education,tertiary,0.41487,0.01715,2611
+mpc_mean,DE,2017,htm_status,not HtM,0.50711,0.00823,3619
+mpc_mean,DE,2017,htm_status,poor HtM,0.56711,0.032,216
+mpc_mean,DE,2017,htm_status,wealthy HtM,0.51234,0.02327,620
+mpc_mean,DE,2021,htm_status,not HtM,0.46158,0.0119,3104
+mpc_mean,DE,2021,htm_status,poor HtM,0.59852,0.04167,133
+mpc_mean,DE,2021,htm_status,wealthy HtM,0.46321,0.03098,320
+mpc_mean,DE,2023,htm_status,not HtM,0.44232,0.0115,2891
+mpc_mean,DE,2023,htm_status,poor HtM,0.54631,0.04272,146
+mpc_mean,DE,2023,htm_status,wealthy HtM,0.48071,0.03233,339
+mpc_mean,FR,2017,htm_status,not HtM,0.42405,0.00565,10019
+mpc_mean,FR,2017,htm_status,poor HtM,0.38104,0.02556,289
+mpc_mean,FR,2017,htm_status,wealthy HtM,0.35296,0.0101,1988
+mpc_mean,FR,2021,htm_status,not HtM,0.38857,0.00745,7910
+mpc_mean,FR,2021,htm_status,poor HtM,0.46393,0.03636,168
+mpc_mean,FR,2021,htm_status,wealthy HtM,0.31419,0.01334,1273
+mpc_mean,FR,2023,htm_status,not HtM,0.38478,0.00575,9309
+mpc_mean,FR,2023,htm_status,poor HtM,0.44002,0.04114,158
+mpc_mean,FR,2023,htm_status,wealthy HtM,0.34353,0.01191,1341
+mpc_mean,IT,2017,htm_status,not HtM,0.46421,0.00874,4561
+mpc_mean,IT,2017,htm_status,poor HtM,0.62852,0.02295,518
+mpc_mean,IT,2017,htm_status,wealthy HtM,0.52934,0.02366,837
+mpc_mean,IT,2021,htm_status,not HtM,0.45732,0.01947,4278
+mpc_mean,IT,2021,htm_status,poor HtM,0.6322,0.08381,230
+mpc_mean,IT,2021,htm_status,wealthy HtM,0.50703,0.0435,439
+mpc_mean,IT,2023,htm_status,not HtM,0.42933,0.0093,6636
+mpc_mean,IT,2023,htm_status,poor HtM,0.58813,0.0316,411
+mpc_mean,IT,2023,htm_status,wealthy HtM,0.50552,0.02295,642
+mpc_mean,DE,2017,labour,employed,0.49386,0.01032,2952
+mpc_mean,DE,2017,labour,other,0.59372,0.05091,120
+mpc_mean,DE,2017,labour,retired,0.54499,0.01633,1753
+mpc_mean,DE,2017,labour,unemployed,0.53721,0.04905,105
+mpc_mean,DE,2021,labour,employed,0.45776,0.01368,2304
+mpc_mean,DE,2021,labour,other,0.50618,0.04608,90
+mpc_mean,DE,2021,labour,retired,0.47654,0.0167,1615
+mpc_mean,DE,2021,labour,unemployed,0.60851,0.05573,92
+mpc_mean,DE,2023,labour,employed,0.44322,0.01205,2148
+mpc_mean,DE,2023,labour,other,0.48405,0.05285,111
+mpc_mean,DE,2023,labour,retired,0.51,0.01783,1641
+mpc_mean,DE,2023,labour,unemployed,0.42569,0.07001,75
+mpc_mean,FR,2017,labour,employed,0.35292,0.00627,8265
+mpc_mean,FR,2017,labour,other,0.37155,0.02436,454
+mpc_mean,FR,2017,labour,retired,0.53181,0.00834,4342
+mpc_mean,FR,2017,labour,unemployed,0.37031,0.01569,624
+mpc_mean,FR,2021,labour,employed,0.32091,0.00745,6238
+mpc_mean,FR,2021,labour,other,0.42766,0.03269,283
+mpc_mean,FR,2021,labour,retired,0.49746,0.0111,3338
+mpc_mean,FR,2021,labour,unemployed,0.33599,0.02399,394
+mpc_mean,FR,2023,labour,employed,0.32711,0.00595,6922
+mpc_mean,FR,2023,labour,other,0.41094,0.03644,359
+mpc_mean,FR,2023,labour,retired,0.50947,0.01007,4304
+mpc_mean,FR,2023,labour,unemployed,0.35478,0.02819,356
+mpc_mean,IT,2017,labour,employed,0.49316,0.00903,3378
+mpc_mean,IT,2017,labour,other,0.51096,0.01664,931
+mpc_mean,IT,2017,labour,retired,0.4203,0.00921,2850
+mpc_mean,IT,2017,labour,unemployed,0.68722,0.02503,261
+mpc_mean,IT,2021,labour,employed,0.4764,0.02886,3397
+mpc_mean,IT,2021,labour,other,0.49979,0.02843,502
+mpc_mean,IT,2021,labour,retired,0.43056,0.02612,2200
+mpc_mean,IT,2021,labour,unemployed,0.63575,0.10266,140
+mpc_mean,IT,2023,labour,employed,0.4536,0.01089,4852
+mpc_mean,IT,2023,labour,other,0.48534,0.02967,819
+mpc_mean,IT,2023,labour,retired,0.39152,0.01664,3719
+mpc_mean,IT,2023,labour,unemployed,0.52077,0.03602,251
+mpc_mean,DE,2017,liquid_quintile,Q1,0.5522,0.0185,662
+mpc_mean,DE,2017,liquid_quintile,Q2,0.50668,0.02118,674
+mpc_mean,DE,2017,liquid_quintile,Q3,0.52667,0.01709,836
+mpc_mean,DE,2017,liquid_quintile,Q4,0.50957,0.01767,1024
+mpc_mean,DE,2017,liquid_quintile,Q5,0.46971,0.01478,1670
+mpc_mean,DE,2021,liquid_quintile,Q1,0.5004,0.02234,548
+mpc_mean,DE,2021,liquid_quintile,Q2,0.46814,0.02478,541
+mpc_mean,DE,2021,liquid_quintile,Q3,0.45279,0.02051,756
+mpc_mean,DE,2021,liquid_quintile,Q4,0.47227,0.01933,901
+mpc_mean,DE,2021,liquid_quintile,Q5,0.44372,0.01851,1370
+mpc_mean,DE,2023,liquid_quintile,Q1,0.51228,0.02389,545
+mpc_mean,DE,2023,liquid_quintile,Q2,0.50573,0.02201,550
+mpc_mean,DE,2023,liquid_quintile,Q3,0.44689,0.024,689
+mpc_mean,DE,2023,liquid_quintile,Q4,0.41721,0.02005,940
+mpc_mean,DE,2023,liquid_quintile,Q5,0.43228,0.02106,1212
+mpc_mean,FR,2017,liquid_quintile,Q1,0.34549,0.0108,1909
+mpc_mean,FR,2017,liquid_quintile,Q2,0.3892,0.01097,1875
+mpc_mean,FR,2017,liquid_quintile,Q3,0.40977,0.00999,2289
+mpc_mean,FR,2017,liquid_quintile,Q4,0.45569,0.00973,2915
+mpc_mean,FR,2017,liquid_quintile,Q5,0.49658,0.00963,4697
+mpc_mean,FR,2021,liquid_quintile,Q1,0.34469,0.01365,1358
+mpc_mean,FR,2021,liquid_quintile,Q2,0.35461,0.01201,1625
+mpc_mean,FR,2021,liquid_quintile,Q3,0.37829,0.0145,1469
+mpc_mean,FR,2021,liquid_quintile,Q4,0.41004,0.01103,2276
+mpc_mean,FR,2021,liquid_quintile,Q5,0.47769,0.01207,3525
+mpc_mean,FR,2023,liquid_quintile,Q1,0.35863,0.01288,1435
+mpc_mean,FR,2023,liquid_quintile,Q2,0.37089,0.01325,1624
+mpc_mean,FR,2023,liquid_quintile,Q3,0.36416,0.01026,2051
+mpc_mean,FR,2023,liquid_quintile,Q4,0.40821,0.01171,2631
+mpc_mean,FR,2023,liquid_quintile,Q5,0.47266,0.01034,4200
+mpc_mean,IT,2017,liquid_quintile,Q1,0.55588,0.01373,1695
+mpc_mean,IT,2017,liquid_quintile,Q2,0.51202,0.01388,1313
+mpc_mean,IT,2017,liquid_quintile,Q3,0.47635,0.01392,1409
+mpc_mean,IT,2017,liquid_quintile,Q4,0.43694,0.015,1445
+mpc_mean,IT,2017,liquid_quintile,Q5,0.41862,0.01348,1558
+mpc_mean,IT,2021,liquid_quintile,Q1,0.52839,0.05459,1028
+mpc_mean,IT,2021,liquid_quintile,Q2,0.5033,0.02953,976
+mpc_mean,IT,2021,liquid_quintile,Q3,0.46038,0.04142,1188
+mpc_mean,IT,2021,liquid_quintile,Q4,0.4536,0.03159,1101
+mpc_mean,IT,2021,liquid_quintile,Q5,0.39822,0.02281,1946
+mpc_mean,IT,2023,liquid_quintile,Q1,0.52433,0.015,1864
+mpc_mean,IT,2023,liquid_quintile,Q2,0.44902,0.01569,1542
+mpc_mean,IT,2023,liquid_quintile,Q3,0.41232,0.01806,1711
+mpc_mean,IT,2023,liquid_quintile,Q4,0.40427,0.0178,1828
+mpc_mean,IT,2023,liquid_quintile,Q5,0.39847,0.01634,2696
+mpc_mean,IT,2017,macro_region,IT Centre,0.45617,0.00999,1605
+mpc_mean,IT,2017,macro_region,IT North,0.46767,0.01104,3196
+mpc_mean,IT,2017,macro_region,IT South and Islands,0.51618,0.01049,2619
+mpc_mean,IT,2021,macro_region,IT Centre,0.46122,0.05683,1310
+mpc_mean,IT,2021,macro_region,IT North,0.42954,0.02496,2741
+mpc_mean,IT,2021,macro_region,IT South and Islands,0.532,0.01437,2188
+mpc_mean,IT,2023,macro_region,IT Centre,0.43151,0.01508,1511
+mpc_mean,IT,2023,macro_region,IT North,0.40142,0.01294,3768
+mpc_mean,IT,2023,macro_region,IT South and Islands,0.49887,0.01179,4362
+mpc_mean,DE,2017,region,DENW,0.54173,0.01948,773
+mpc_mean,DE,2017,region,DEOS,0.53492,0.01757,896
+mpc_mean,DE,2017,region,DESW,0.48977,0.01353,1964
+mpc_mean,DE,2017,region,DEWW,0.50899,0.01713,1307
+mpc_mean,DE,2021,region,DENW,0.52492,0.02624,669
+mpc_mean,DE,2021,region,DEOS,0.48851,0.02022,832
+mpc_mean,DE,2021,region,DESW,0.45437,0.01793,1615
+mpc_mean,DE,2021,region,DEWW,0.43577,0.01741,1000
+mpc_mean,DE,2023,region,DENW,0.44317,0.02284,630
+mpc_mean,DE,2023,region,DEOS,0.49082,0.01829,930
+mpc_mean,DE,2023,region,DESW,0.42483,0.01475,1481
+mpc_mean,DE,2023,region,DEWW,0.50493,0.02008,943
+mpc_mean,FR,2017,region,FR0,0.43575,0.02447,326
+mpc_mean,FR,2017,region,FR1,0.42745,0.01159,2599
+mpc_mean,FR,2017,region,FR2,0.41155,0.01213,2190
+mpc_mean,FR,2017,region,FR3,0.37669,0.01672,859
+mpc_mean,FR,2017,region,FR4,0.40972,0.01582,1043
+mpc_mean,FR,2017,region,FR5,0.41344,0.01269,1996
+mpc_mean,FR,2017,region,FR6,0.43622,0.01467,1470
+mpc_mean,FR,2017,region,FR7,0.40071,0.01456,1660
+mpc_mean,FR,2017,region,FR8,0.45088,0.016,1542
+mpc_mean,FR,2021,region,FR0,0.37901,0.03096,251
+mpc_mean,FR,2021,region,FR1,0.38467,0.01388,2259
+mpc_mean,FR,2021,region,FR2,0.39282,0.0142,1542
+mpc_mean,FR,2021,region,FR3,0.40182,0.02409,627
+mpc_mean,FR,2021,region,FR4,0.38626,0.01968,772
+mpc_mean,FR,2021,region,FR5,0.3614,0.01404,1473
+mpc_mean,FR,2021,region,FR6,0.39916,0.01827,1023
+mpc_mean,FR,2021,region,FR7,0.40685,0.01738,1254
+mpc_mean,FR,2021,region,FR8,0.41278,0.02083,1052
+mpc_mean,FR,2023,region,FR0,0.38198,0.02902,311
+mpc_mean,FR,2023,region,FR1,0.38211,0.0134,2281
+mpc_mean,FR,2023,region,FR2,0.3866,0.01306,2010
+mpc_mean,FR,2023,region,FR3,0.38122,0.02011,725
+mpc_mean,FR,2023,region,FR4,0.39858,0.0225,950
+mpc_mean,FR,2023,region,FR5,0.40342,0.0115,1746
+mpc_mean,FR,2023,region,FR6,0.38255,0.01432,1270
+mpc_mean,FR,2023,region,FR7,0.40528,0.01581,1452
+mpc_mean,FR,2023,region,FR8,0.42082,0.01746,1196
+mpc_mean,IT,2017,region,IT1,0.60689,0.02163,639
+mpc_mean,IT,2017,region,IT10,0.46232,0.03396,248
+mpc_mean,IT,2017,region,IT11,0.4321,0.01926,340
+mpc_mean,IT,2017,region,IT12,0.46629,0.01606,479
+mpc_mean,IT,2017,region,IT13,0.52815,0.04697,195
+mpc_mean,IT,2017,region,IT14,0.34225,0.05404,101
+mpc_mean,IT,2017,region,IT15,0.54643,0.01907,688
+mpc_mean,IT,2017,region,IT16,0.57652,0.01406,438
+mpc_mean,IT,2017,region,IT17,0.30267,0.05632,119
+mpc_mean,IT,2017,region,IT18,0.54064,0.01622,195
+mpc_mean,IT,2017,region,IT19,0.55544,0.02085,569
+mpc_mean,IT,2017,region,IT2,0.51939,0.09986,36
+mpc_mean,IT,2017,region,IT20,0.45376,0.04114,314
+mpc_mean,IT,2017,region,IT3,0.41597,0.0221,823
+mpc_mean,IT,2017,region,IT4,0.51317,0.0356,219
+mpc_mean,IT,2017,region,IT5,0.30137,0.02216,453
+mpc_mean,IT,2017,region,IT6,0.41719,0.05893,176
+mpc_mean,IT,2017,region,IT7,0.57816,0.017,279
+mpc_mean,IT,2017,region,IT8,0.42798,0.02461,571
+mpc_mean,IT,2017,region,IT9,0.45297,0.01715,538
+mpc_mean,IT,2021,region,IT1,0.54896,0.03949,418
+mpc_mean,IT,2021,region,IT10,0.42031,0.11415,240
+mpc_mean,IT,2021,region,IT11,0.44767,0.04805,203
+mpc_mean,IT,2021,region,IT12,0.47206,0.08593,468
+mpc_mean,IT,2021,region,IT13,0.34109,0.03731,140
+mpc_mean,IT,2021,region,IT14,0.38111,0.04127,74
+mpc_mean,IT,2021,region,IT15,0.58505,0.02144,535
+mpc_mean,IT,2021,region,IT16,0.57635,0.03709,406
+mpc_mean,IT,2021,region,IT17,0.52879,0.04789,68
+mpc_mean,IT,2021,region,IT18,0.50759,0.04335,133
+mpc_mean,IT,2021,region,IT19,0.49677,0.0351,503
+mpc_mean,IT,2021,region,IT20,0.61002,0.03948,329
+mpc_mean,IT,2021,region,IT3,0.40062,0.03393,738
+mpc_mean,IT,2021,region,IT4,0.38488,0.11789,288
+mpc_mean,IT,2021,region,IT5,0.37661,0.0444,461
+mpc_mean,IT,2021,region,IT6,0.3609,0.03833,144
+mpc_mean,IT,2021,region,IT7,0.3854,0.08624,185
+mpc_mean,IT,2021,region,IT8,0.47231,0.03061,479
+mpc_mean,IT,2021,region,IT9,0.46098,0.03803,399
+mpc_mean,IT,2023,region,IT1,0.41678,0.02362,609
+mpc_mean,IT,2023,region,IT10,0.40192,0.04597,289
+mpc_mean,IT,2023,region,IT11,0.3838,0.04263,281
+mpc_mean,IT,2023,region,IT12,0.46626,0.02444,508
+mpc_mean,IT,2023,region,IT13,0.30791,0.06041,273
+mpc_mean,IT,2023,region,IT14,0.37688,0.07262,139
+mpc_mean,IT,2023,region,IT15,0.50647,0.02368,964
+mpc_mean,IT,2023,region,IT16,0.58652,0.02026,913
+mpc_mean,IT,2023,region,IT17,0.38487,0.04904,136
+mpc_mean,IT,2023,region,IT18,0.42747,0.0357,266
+mpc_mean,IT,2023,region,IT19,0.46004,0.03792,1126
+mpc_mean,IT,2023,region,IT2,0.42695,0.07671,48
+mpc_mean,IT,2023,region,IT20,0.59704,0.02985,545
+mpc_mean,IT,2023,region,IT3,0.38373,0.03481,937
+mpc_mean,IT,2023,region,IT4,0.39151,0.04413,390
+mpc_mean,IT,2023,region,IT5,0.31565,0.03484,625
+mpc_mean,IT,2023,region,IT6,0.37473,0.05595,198
+mpc_mean,IT,2023,region,IT7,0.42154,0.03594,234
+mpc_mean,IT,2023,region,IT8,0.48701,0.01778,727
+mpc_mean,IT,2023,region,IT9,0.43768,0.02065,433
+mpc_median,DE,2017,all,all,0.5,0.0,4940
+mpc_median,DE,2021,all,all,0.5,0.0,4116
+mpc_median,DE,2023,all,all,0.5,0.0,3984
+mpc_median,FR,2017,all,all,0.5,0.0,13685
+mpc_median,FR,2021,all,all,0.5,0.04938,10253
+mpc_median,FR,2023,all,all,0.5,0.02735,11941
+mpc_median,IT,2017,all,all,0.5,0.0,7420
+mpc_median,IT,2021,all,all,0.5,0.0,6239
+mpc_median,IT,2023,all,all,0.5,0.0,9641
+mpc_share_all,DE,2017,all,all,0.28125,0.00933,4940
+mpc_share_all,DE,2021,all,all,0.23428,0.01146,4116
+mpc_share_all,DE,2023,all,all,0.24955,0.01079,3984
+mpc_share_all,FR,2017,all,all,0.22962,0.0054,13685
+mpc_share_all,FR,2021,all,all,0.20931,0.00598,10253
+mpc_share_all,FR,2023,all,all,0.20473,0.0057,11941
+mpc_share_all,IT,2017,all,all,0.17894,0.00708,7420
+mpc_share_all,IT,2021,all,all,0.10358,0.01084,6239
+mpc_share_all,IT,2023,all,all,0.1168,0.00816,9641
+mpc_share_half,DE,2017,all,all,0.24475,0.00871,4940
+mpc_share_half,DE,2021,all,all,0.26568,0.0104,4116
+mpc_share_half,DE,2023,all,all,0.24312,0.01109,3984
+mpc_share_half,FR,2017,all,all,0.26658,0.00526,13685
+mpc_share_half,FR,2021,all,all,0.26333,0.00653,10253
+mpc_share_half,FR,2023,all,all,0.26472,0.00593,11941
+mpc_share_half,IT,2017,all,all,0.27122,0.00868,7420
+mpc_share_half,IT,2021,all,all,0.31356,0.02081,6239
+mpc_share_half,IT,2023,all,all,0.3144,0.01221,9641
+mpc_share_zero,DE,2017,all,all,0.22734,0.00999,4940
+mpc_share_zero,DE,2021,all,all,0.21886,0.01122,4116
+mpc_share_zero,DE,2023,all,all,0.23869,0.01075,3984
+mpc_share_zero,FR,2017,all,all,0.35755,0.00635,13685
+mpc_share_zero,FR,2021,all,all,0.38872,0.00783,10253
+mpc_share_zero,FR,2023,all,all,0.37896,0.00681,11941
+mpc_share_zero,IT,2017,all,all,0.2273,0.00746,7420
+mpc_share_zero,IT,2021,all,all,0.16711,0.023,6239
+mpc_share_zero,IT,2023,all,all,0.21943,0.01108,9641
+networth_gini,DE,2010,all,all,0.75786,0.0142,3565
+networth_gini,DE,2014,all,all,0.76151,0.01027,4461
+networth_gini,DE,2017,all,all,0.7387,0.00922,4942
+networth_gini,DE,2021,all,all,0.72723,0.00833,4119
+networth_gini,DE,2023,all,all,0.72483,0.01077,3985
+networth_gini,FR,2010,all,all,0.6791,0.00836,15006
+networth_gini,FR,2014,all,all,0.68707,0.00695,11953
+networth_gini,FR,2017,all,all,0.67543,0.00697,13685
+networth_gini,FR,2021,all,all,0.67573,0.00617,10253
+networth_gini,FR,2023,all,all,0.67872,0.00523,11941
+networth_gini,IT,2010,all,all,0.60962,0.00828,7951
+networth_gini,IT,2014,all,all,0.6025,0.00659,8156
+networth_gini,IT,2017,all,all,0.60636,0.00743,7420
+networth_gini,IT,2021,all,all,0.63953,0.02985,6239
+networth_gini,IT,2023,all,all,0.64644,0.01844,9641
+networth_to_disposable_income_ratio_of_medians,DE,2014,all,all,2.19584,0.13303,4460
+networth_to_disposable_income_ratio_of_medians,DE,2017,all,all,2.34732,0.10987,4942
+networth_to_disposable_income_ratio_of_medians,DE,2021,all,all,3.14532,0.18327,4119
+networth_to_disposable_income_ratio_of_medians,FR,2014,all,all,4.457,0.14978,11953
+networth_to_disposable_income_ratio_of_medians,FR,2017,all,all,4.5427,0.17721,13685
+networth_to_disposable_income_ratio_of_medians,FR,2021,all,all,4.78065,0.18882,10253
+networth_to_disposable_income_ratio_of_medians,IT,2010,all,all,8.15916,0.16858,7951
+networth_to_disposable_income_ratio_of_medians,IT,2014,all,all,7.29633,0.16254,8156
+networth_to_disposable_income_ratio_of_medians,IT,2017,all,all,6.60724,0.15104,7420
+networth_to_disposable_income_ratio_of_medians,IT,2021,all,all,6.82492,0.61437,6239
+networth_to_disposable_income_ratio_of_medians,IT,2023,all,all,6.77329,0.20323,9641
+networth_to_disposable_income_ratio_of_medians,DE,2014,education,below tertiary,1.31002,0.1183,2351
+networth_to_disposable_income_ratio_of_medians,DE,2014,education,tertiary,3.81505,0.28477,2064
+networth_to_disposable_income_ratio_of_medians,DE,2017,education,below tertiary,1.34434,0.13348,2470
+networth_to_disposable_income_ratio_of_medians,DE,2017,education,tertiary,4.15176,0.22233,2436
+networth_to_disposable_income_ratio_of_medians,DE,2021,education,below tertiary,1.83243,0.14512,1960
+networth_to_disposable_income_ratio_of_medians,DE,2021,education,tertiary,4.7511,0.41307,2149
+networth_to_disposable_income_ratio_of_medians,FR,2014,education,below tertiary,4.23491,0.13891,6743
+networth_to_disposable_income_ratio_of_medians,FR,2014,education,tertiary,5.13226,0.28606,4917
+networth_to_disposable_income_ratio_of_medians,FR,2017,education,below tertiary,4.03006,0.16439,7567
+networth_to_disposable_income_ratio_of_medians,FR,2017,education,tertiary,5.01477,0.22256,6115
+networth_to_disposable_income_ratio_of_medians,FR,2021,education,below tertiary,4.44933,0.23433,5250
+networth_to_disposable_income_ratio_of_medians,FR,2021,education,tertiary,5.44453,0.20245,5003
+networth_to_disposable_income_ratio_of_medians,IT,2010,education,below tertiary,8.17963,0.16743,6655
+networth_to_disposable_income_ratio_of_medians,IT,2010,education,tertiary,9.30288,0.46364,857
+networth_to_disposable_income_ratio_of_medians,IT,2014,education,below tertiary,6.89941,0.17015,7154
+networth_to_disposable_income_ratio_of_medians,IT,2014,education,tertiary,8.13247,0.32578,1002
+networth_to_disposable_income_ratio_of_medians,IT,2017,education,below tertiary,6.49146,0.18142,6547
+networth_to_disposable_income_ratio_of_medians,IT,2017,education,tertiary,7.18702,0.442,873
+networth_to_disposable_income_ratio_of_medians,IT,2021,education,below tertiary,6.42121,0.68346,4400
+networth_to_disposable_income_ratio_of_medians,IT,2021,education,tertiary,7.42224,0.91084,1839
+networth_to_disposable_income_ratio_of_medians,IT,2023,education,below tertiary,6.57651,0.23552,7030
+networth_to_disposable_income_ratio_of_medians,IT,2023,education,tertiary,7.50146,0.53616,2611
+networth_to_income_ratio_of_medians,DE,2010,all,all,1.57832,0.09451,3565
+networth_to_income_ratio_of_medians,DE,2014,all,all,1.7145,0.10456,4460
+networth_to_income_ratio_of_medians,DE,2017,all,all,1.76339,0.08235,4942
+networth_to_income_ratio_of_medians,DE,2021,all,all,2.38298,0.14375,4119
+networth_to_income_ratio_of_medians,DE,2023,all,all,2.05078,0.13477,3985
+networth_to_income_ratio_of_medians,FR,2010,all,all,3.95998,0.11913,15006
+networth_to_income_ratio_of_medians,FR,2014,all,all,3.62341,0.12044,11953
+networth_to_income_ratio_of_medians,FR,2017,all,all,3.70632,0.14411,13685
+networth_to_income_ratio_of_medians,FR,2021,all,all,4.01935,0.15118,10253
+networth_to_income_ratio_of_medians,FR,2023,all,all,4.12172,0.10851,11941
+networth_to_income_ratio_of_medians,IT,2010,all,all,6.60275,0.14608,7951
+networth_to_income_ratio_of_medians,IT,2014,all,all,5.87989,0.13679,8156
+networth_to_income_ratio_of_medians,IT,2017,all,all,5.37955,0.12322,7420
+networth_to_income_ratio_of_medians,IT,2021,all,all,5.5025,0.49988,6239
+networth_to_income_ratio_of_medians,IT,2023,all,all,5.48913,0.17634,9641
+networth_top10_share,DE,2010,all,all,0.59175,0.02299,3565
+networth_top10_share,DE,2014,all,all,0.59759,0.01746,4461
+networth_top10_share,DE,2017,all,all,0.55371,0.01419,4942
+networth_top10_share,DE,2021,all,all,0.55555,0.01489,4119
+networth_top10_share,DE,2023,all,all,0.53651,0.01645,3985
+networth_top10_share,FR,2010,all,all,0.49971,0.01254,15006
+networth_top10_share,FR,2014,all,all,0.52233,0.01042,11953
+networth_top10_share,FR,2017,all,all,0.4949,0.00854,13685
+networth_top10_share,FR,2021,all,all,0.49935,0.0086,10253
+networth_top10_share,FR,2023,all,all,0.50688,0.00764,11941
+networth_top10_share,IT,2010,all,all,0.44848,0.01115,7951
+networth_top10_share,IT,2014,all,all,0.42805,0.00772,8156
+networth_top10_share,IT,2017,all,all,0.43379,0.00979,7420
+networth_top10_share,IT,2021,all,all,0.49543,0.04201,6239
+networth_top10_share,IT,2023,all,all,0.51299,0.02594,9641
+share_any_illiquid,DE,2010,all,all,0.70933,0.01037,3565
+share_any_illiquid,DE,2014,all,all,0.70014,0.00706,4461
+share_any_illiquid,DE,2017,all,all,0.68078,0.00683,4942
+share_any_illiquid,DE,2021,all,all,0.66902,0.00971,4119
+share_any_illiquid,DE,2023,all,all,0.65266,0.00964,3985
+share_any_illiquid,FR,2010,all,all,0.71698,0.0056,15006
+share_any_illiquid,FR,2014,all,all,0.73455,0.0054,12035
+share_any_illiquid,FR,2017,all,all,0.72757,0.00705,13685
+share_any_illiquid,FR,2021,all,all,0.72518,0.00786,10253
+share_any_illiquid,FR,2023,all,all,0.72466,0.00615,11941
+share_any_illiquid,IT,2010,all,all,0.76676,0.00642,7951
+share_any_illiquid,IT,2014,all,all,0.74726,0.00685,8156
+share_any_illiquid,IT,2017,all,all,0.7362,0.00733,7420
+share_any_illiquid,IT,2021,all,all,0.78693,0.03541,6239
+share_any_illiquid,IT,2023,all,all,0.7938,0.01029,9641
+share_with_mortgage,DE,2010,all,all,0.2148,0.00729,3565
+share_with_mortgage,DE,2014,all,all,0.20356,0.00795,4461
+share_with_mortgage,DE,2017,all,all,0.20879,0.00706,4942
+share_with_mortgage,DE,2021,all,all,0.18018,0.00716,4119
+share_with_mortgage,DE,2023,all,all,0.17765,0.0075,3985
+share_with_mortgage,FR,2010,all,all,0.24387,0.00528,15006
+share_with_mortgage,FR,2014,all,all,0.24513,0.0053,12035
+share_with_mortgage,FR,2017,all,all,0.25695,0.00512,13685
+share_with_mortgage,FR,2021,all,all,0.26129,0.00545,10253
+share_with_mortgage,FR,2023,all,all,0.27206,0.0048,11941
+share_with_mortgage,IT,2010,all,all,0.10768,0.00494,7951
+share_with_mortgage,IT,2014,all,all,0.10173,0.00511,8156
+share_with_mortgage,IT,2017,all,all,0.08903,0.00538,7420
+share_with_mortgage,IT,2021,all,all,0.10893,0.01382,6239
+share_with_mortgage,IT,2023,all,all,0.12422,0.00728,9641

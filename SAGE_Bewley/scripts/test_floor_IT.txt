@@ -1,0 +1,71 @@
+1. a floor no one reaches
+   largest difference 0.0e+00
+   -> a floor no one reaches changes nothing: PASS
+2 and 3. the floor as a share of a year's reference earnings (e_ref = 0.725221)
+   no floor     tax for the floor 0.00000 | outlay 0.00000 | gap +0.0e+00 | effort 0.7264 | htm 0.084 | MPC 0.272 | drop on job loss 0.435 | income poor 0.056 | asset poor 0.245 | liquid p50 0.160
+   floor 0.20   tax for the floor 0.00002 | outlay 0.00002 | gap +1.0e-13 | effort 0.7264 | htm 0.091 | MPC 0.274 | drop on job loss 0.435 | income poor 0.056 | asset poor 0.252 | liquid p50 0.159
+      From worker 9:	┌ Warning: solve_participation_egm stopped at maxit without converging
+      From worker 9:	│   maxit = 5000
+      From worker 9:	│   tol = 1.0e-9
+      From worker 9:	└ @ Main ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/egm_core.jl:312
+   floor 0.30   tax for the floor 0.00070 | outlay 0.00070 | gap +1.3e-12 | effort 0.7265 | htm 0.246 | MPC 0.318 | drop on job loss 0.448 | income poor 0.057 | asset poor 0.359 | liquid p50 0.125
+      From worker 2:	┌ Warning: solve_participation_egm stopped at maxit without converging
+      From worker 2:	│   maxit = 5000
+      From worker 2:	│   tol = 1.0e-9
+      From worker 2:	└ @ Main ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/egm_core.jl:312
+      From worker 5:	┌ Warning: solve_participation_egm stopped at maxit without converging
+      From worker 5:	│   maxit = 5000
+      From worker 5:	│   tol = 1.0e-9
+      From worker 5:	└ @ Main ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/egm_core.jl:312
+      From worker 11:	┌ Warning: solve_participation_egm stopped at maxit without converging
+      From worker 11:	│   maxit = 5000
+      From worker 11:	│   tol = 1.0e-9
+      From worker 11:	└ @ Main ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/egm_core.jl:312
+      From worker 13:	┌ Warning: solve_participation_egm stopped at maxit without converging
+      From worker 13:	│   maxit = 5000
+      From worker 13:	│   tol = 1.0e-9
+      From worker 13:	└ @ Main ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/egm_core.jl:312
+   floor 0.40   tax for the floor 0.00344 | outlay 0.00344 | gap +2.9e-11 | effort 0.7279 | htm 0.527 | MPC 0.472 | drop on job loss 0.449 | income poor 0.058 | asset poor 0.612 | liquid p50 0.000
+   -> the budget balances at every floor: PASS
+   -> the consumption drop on job loss falls as the floor rises: FAIL
+   -> liquid buffers fall as the floor rises (asset poverty rises): PASS
+   floor 0.2176: lowest resources of any household 0.2176; share of households on the floor 0.0184
+   -> no household's resources end below the floor: PASS
+4. with S on
+      From worker 4:	┌ Warning: solve_participation_egm stopped at maxit without converging
+      From worker 4:	│   maxit = 5000
+      From worker 4:	│   tol = 1.0e-9
+      From worker 4:	└ @ Main ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/egm_core.jl:312
+      From worker 5:	┌ Warning: solve_participation_egm stopped at maxit without converging
+      From worker 5:	│   maxit = 5000
+      From worker 5:	│   tol = 1.0e-9
+      From worker 5:	└ @ Main ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/egm_core.jl:312
+      From worker 5:	┌ Warning: solve_participation_egm stopped at maxit without converging
+      From worker 5:	│   maxit = 5000
+      From worker 5:	│   tol = 1.0e-9
+      From worker 5:	└ @ Main ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/egm_core.jl:312
+      From worker 5:	┌ Warning: solve_participation_egm stopped at maxit without converging
+      From worker 5:	│   maxit = 5000
+      From worker 5:	│   tol = 1.0e-9
+      From worker 5:	└ @ Main ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/egm_core.jl:312
+      From worker 5:	┌ Warning: solve_participation_egm stopped at maxit without converging
+      From worker 5:	│   maxit = 5000
+      From worker 5:	│   tol = 1.0e-9
+      From worker 5:	└ @ Main ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/egm_core.jl:312
+      From worker 5:	┌ Warning: solve_participation_egm stopped at maxit without converging
+      From worker 5:	│   maxit = 5000
+      From worker 5:	│   tol = 1.0e-9
+      From worker 5:	└ @ Main ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/egm_core.jl:312
+      From worker 5:	┌ Warning: solve_participation_egm stopped at maxit without converging
+      From worker 5:	│   maxit = 5000
+      From worker 5:	│   tol = 1.0e-9
+      From worker 5:	└ @ Main ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/egm_core.jl:312
+      From worker 5:	┌ Warning: solve_participation_egm stopped at maxit without converging
+      From worker 5:	│   maxit = 5000
+      From worker 5:	│   tol = 1.0e-9
+      From worker 5:	└ @ Main ~/Desktop/UNI/Paris 8/extra_papers/SAGE/SAGE_Bewley/scripts/egm_core.jl:312
+   G+S+A with the floor: participation 0.1221, outlay 0.00099, budget gap +7.8e-06 (0.001% of mean income)  [3.4 min]
+   -> the budget gap with S on is below 0.05% of mean income: PASS
+
+5 of 6 checks hold: FAILED the consumption drop on job loss falls as the floor rises
+DONE

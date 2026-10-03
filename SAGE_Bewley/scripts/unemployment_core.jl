@@ -110,7 +110,7 @@ feasibility check.
 function collapse(ds, w)
     n = length(ds); length(w) == n || error("weights do not match")
     acc(fld) = sum(w[i] .* getfield(ds[i], fld) for i in 1:n)
-    (W = acc(:W), K = acc(:K), N = acc(:N), mass = acc(:mass), part = acc(:part), Y = acc(:Y), Ys = acc(:Ys),
+    (W = acc(:W), K = acc(:K), N = acc(:N), mass = acc(:mass), part = acc(:part), Y = acc(:Y), Ys = acc(:Ys), fout = acc(:fout),
      ym_s = acc(:ym_s), jinc = acc(:jinc), jboth = acc(:jboth), ymean = acc(:ymean),
      rate = acc(:rate), minc = acc(:minc), pbase = acc(:pbase), eff_E = acc(:eff_E),
      ypoor = acc(:ypoor),
@@ -174,6 +174,7 @@ function cell_summary(p::SAGEParams, sol; thresholds = nothing)
     # 2018, Figure 6.2: 68 percent asset-poor in the bottom income quintile,
     # 43 in the second highest, 27 in the top), so it tests the SHAPE of the
     # joint distribution rather than any level.
+    fout = 0.0          # outlay on the means-tested floor, per head
     @inbounds for i_z in 1:nz, i_a in 1:na
         w = λ[i_a, i_z]
         w <= 0 && continue
@@ -191,8 +192,11 @@ function cell_summary(p::SAGEParams, sol; thresholds = nothing)
             # consumption tax the thresholds (in baseline prices) were compared with
             # nominal income and wealth, which overstated what the rebate does for
             # income poverty (audit 2026-10-02). pc is 1 without the tax.
-            y = ((1 + p.subsidy) * α * zz * p.Z * sol.e_d[d+1][i_a, i_z] +
-                 cap - p.lumptax + (d == 1 ? credit : 0.0) + tr) / p.pc
+            ynom = (1 + p.subsidy) * α * zz * p.Z * sol.e_d[d+1][i_a, i_z] +
+                   cap - p.lumptax + (d == 1 ? credit : 0.0) + tr
+            ft = floor_transfer(p, ynom + a[i_a])       # resources: income plus the assets carried in
+            fout += wd * ft
+            y = (ynom + ft) / p.pc
             ymean += wd * y; ym_s[i_z] += wd * y
             employed && y < ymin_E && (ymin_E = y)
             employed && (eff_E += wd * sol.e_d[d+1][i_a, i_z])
@@ -216,7 +220,7 @@ function cell_summary(p::SAGEParams, sol; thresholds = nothing)
     cumsum!(Y, Y); cumsum!(ypoor, ypoor)
     (W = W, K = zeros(nz, 1), N = zeros(nz, 1), mass = mass, part = part, Y = Y, Ys = Ys, ymean = ymean, ym_s = ym_s,
      ymin_E = ymin_E, rate = sol.rate, minc = sol.meaninc, pbase = sol.partbase,
-     jinc = jinc, jboth = jboth, thresholds = thr, eff_E = eff_E, ypoor = ypoor)
+     jinc = jinc, jboth = jboth, thresholds = thr, eff_E = eff_E, ypoor = ypoor, fout = fout)
 end
 
 # ----------------------------------------------------------- categories --

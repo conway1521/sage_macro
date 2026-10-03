@@ -40,6 +40,9 @@ belong_at(p::SAGEParams, i_z::Int) = isempty(p.belong_scale) ? 1.0 : p.belong_sc
 # Committed time before any choice (stage 8): zero unless time_floor is set.
 floor_at(p::SAGEParams, i_z::Int) = isempty(p.time_floor) ? 0.0 : p.time_floor[i_z]
 
+"The means-tested transfer at resources `x` (before the transfer): what tops them up to the floor."
+@inline floor_transfer(p::SAGEParams, x) = p.cfloor > 0 ? max(0.0, p.cfloor - x) : 0.0
+
 # Dread of the employment lottery (agency, version 2): the expected news-utility
 # cost of next year's employment status, given next assets. Zero unless the
 # dread vectors are set. It depends on the state and next assets only, not on

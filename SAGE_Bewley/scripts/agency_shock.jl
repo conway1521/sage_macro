@@ -64,7 +64,8 @@ function agency_summary(p::SAGEParams, sol)
             w = d == 1 ? P1[i, s] : 1 - P1[i, s]
             w <= 0 && continue
             lab = (1 + p.subsidy) * α * sol.e_d[d+1][i, s] * z[s] * p.Z
-            cbar[i, s] += w * (p.R * a[i] + lab - p.lumptax + credit * d + tr - sol.a_d[d+1][i, s]) / p.pc   # real consumption
+            x = p.R * a[i] + lab - p.lumptax + credit * d + tr
+            cbar[i, s] += w * (x + floor_transfer(p, x) - sol.a_d[d+1][i, s]) / p.pc   # real consumption
             ybar[i, s] += w * (lab + tr)
         end
     end

@@ -62,6 +62,10 @@ Base.@kwdef struct SAGEConfig
     # extensions
     unemployment::Bool       = false
     rr::Float64              = 0.68             # net replacement rate
+    # The part of `rr` that the state pays and the lump-sum tax has to cover. NaN: all of it
+    # (as before). With the household-level rate of version 3, `rr` is what household income
+    # falls to on job loss, and part of that is a partner's earnings, which no tax pays for.
+    rr_public::Float64       = NaN
     f_find::Float64          = 0.767            # annual job-finding rate
     delta::NTuple{2,Float64} = (0.0795784, 0.0403684)   # separation, by cell
     beta_spread::Float64     = 0.0              # downward spread of the discount factor
@@ -202,6 +206,9 @@ Base.@kwdef struct SAGEConfig
     # the job: one level per state at which the effort condition holds on average
     # (SAGEParams.job_effort; V3_START.md, decision D1). One asset for now.
     effort_mode::Symbol = :free
+    # the means-tested floor on resources (SAGEParams.cfloor), in the model's income units;
+    # zero is no floor. Needs effort_mode = :job. Its cost is in the lump-sum tax (floor_tax_of).
+    cfloor::Float64 = 0.0
     country::String = ""
     illiquid::Bool = false
     illiquid_premium::Float64 = 0.0
@@ -316,6 +323,7 @@ function params_of(c::SAGEConfig, cell)
     c.ctax == 0 || (ps = [update(p; pc = 1 + c.ctax) for p in ps])
     c.psi == 2.0 || (ps = [update(p; ψ = c.psi) for p in ps])
     c.effort_mode === :free || (c.effort_mode === :job ? (ps = [update(p; job_effort = true) for p in ps]) : error("effort_mode is :free or :job"))
+    c.cfloor == 0 || (ps = [update(p; cfloor = c.cfloor) for p in ps])
     if c.illiquid
         c.solver === :egm || error("the illiquid asset needs solver = :egm")
         ps = [update(p; illiquid = true, Rk = p.R + c.illiquid_premium, chi0 = c.chi0, death = c.death,
@@ -354,8 +362,54 @@ end
 "Unemployment-insurance tax implied by a config, closed form (zero when off)."
 function ui_tax_of(c::SAGEConfig)
     c.unemployment || return 0.0
-    ui_tax([(share = x.share, α = x.α, δ = x.δ) for x in cells_of(c)], c.f_find, c.rr; nz = c.nz) *
-        (c.e_ref / E_REF)
+    ui_tax([(share = x.share, α = x.α, δ = x.δ) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz) *
+        (c.e_ref / E_REF) + floor_tax_of(c)
+end
+
+"The unemployment-benefit part of the tax alone (closed form)."
+ui_only_tax_of(c::SAGEConfig) = c.unemployment ?
+    ui_tax([(share = x.share, α = x.α, δ = x.δ) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz) * (c.e_ref / E_REF) : 0.0
+
+const FLOOR_TAX_CACHE = Dict{UInt64,Float64}()
+const FLOOR_TAX_LAST = Ref(0.0)
+"""
+    floor_tax_of(c)
+
+The lump-sum tax per head that pays for the means-tested floor: the fixed point
+of "outlay on the floor when households pay the tax that covers it". The outlay
+depends on who is poor, which depends on the tax, so it is iterated on the
+household problems with S off (saving does not depend on belonging when effort
+is set by the job, and participation moves effort through time only slightly;
+the economy reports what is left as `budget_gap`). Remembered per configuration.
+"""
+function floor_tax_of(c::SAGEConfig)
+    c.cfloor > 0 || return 0.0
+    c.effort_mode === :job || error("the means-tested floor needs effort_mode = :job")
+    c0 = SAGEConfig(c; S = false, E = false, cfloor = c.cfloor)
+    key = hash(repr((c0.cfloor, c0.alpha, c0.alpha_off, c0.A, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
+                     c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
+                     c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing)))
+    haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
+    base = c.lumptax + ui_only_tax_of(c)
+    cs = cells_of(c0); _, bw = betas_of(c0)
+    F = FLOOR_TAX_LAST[]
+    for it in 1:25
+        cT = SAGEConfig(c0; lumptax = base + F)
+        jobs = [(g, k, p) for g in 1:2 for (k, p) in enumerate(params_of(cT, cs[g]))]
+        outs = (nworkers() > 1 ? pmap : map)(jobs) do (g, k, p)
+            p = update(p; social_strength = 0.0)
+            s = solve_participation_logit(p, 1.0; theta = c0.theta, full = true)
+            cs[g].share * bw[k] * cell_summary(p, s).fout
+        end
+        out = sum(outs)
+        if abs(out - F) < 1e-9
+            F = out; break
+        end
+        F = out
+        it == 25 && @warn "floor_tax_of did not settle" F
+    end
+    FLOOR_TAX_LAST[] = F
+    FLOOR_TAX_CACHE[key] = F
 end
 
 taste_nodes_of(c::SAGEConfig) = taste_nodes_ln(c.sigma_m; n = c.nq)
@@ -627,6 +681,10 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
     base = (config = c, rate = rate, slope = slope, median_income = med,
             median_model = med_model, mean_income = ymean,
             mean_labour_income = minc,
+            # the means-tested floor: what it pays out per head, and what the budget is off by
+            # (the outlay less the tax raised for it; zero without a floor)
+            floor_outlay = sum(cs[g].share * pooled[g].fout for g in 1:2),
+            budget_gap = sum(cs[g].share * pooled[g].fout for g in 1:2) - floor_tax_of(c),
             hand_to_mouth = share_below_interp(agrid, Wtot, (4 / 52) * minc),
             wealth_p50 = cdf_quantile(agrid, Wtot, 0.5),
             wealth_p90 = cdf_quantile(agrid, Wtot, 0.9),
@@ -860,7 +918,7 @@ calibration script that is about to produce the file passes `missing_ok = true`.
 A file marked not calibrated (`.not_calibrated.txt` beside it, newer than it) is
 refused the same way.
 """
-function country_config(code::AbstractString; config::AbstractString = "GSA", missing_ok::Bool = false, kwargs...)
+function country_config(code::AbstractString; config::AbstractString = "GSA", missing_ok::Bool = false, v3::Bool = false, kwargs...)
     r = country_rows()[code]
     num(k) = parse(Float64, r[k])
     al, ah = num("alpha_low"), num("alpha_high")
@@ -883,6 +941,16 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
     cal = illq ? joinpath(@__DIR__, "calibration_country_$(code)_$(config)_I.txt") :
           joinpath(@__DIR__, config == "GSA" ? "calibration_country_$(code).txt" :
                                                "calibration_country_$(code)_$(config).txt")
+    # VERSION 3 (V3_START.md, section 13), beside version 2 until it is complete:
+    # effort set by the job; the replacement rate at the level of the household, of
+    # which only the state-paid part is taxed; patience spread uniformly; its own
+    # calibration files, calibration_v3_<code>_<config>[_I].txt. Nothing of version 2
+    # changes while v3 is false.
+    if v3
+        d[:effort_mode] = :job
+        d[:rr] = num("rr_household"); d[:rr_public] = num("rr_public")
+        cal = joinpath(@__DIR__, "calibration_v3_$(code)_$(config)" * (illq ? "_I" : "") * ".txt")
+    end
     marker = replace(cal, r"\.txt$" => ".not_calibrated.txt")
     stale = isfile(marker) && (!isfile(cal) || mtime(marker) > mtime(cal))
     if isfile(cal) && !(stale && !missing_ok)
