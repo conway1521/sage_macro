@@ -1,0 +1,15 @@
+FR G, one asset, effort set by the job, at: phi 6.600, impatient share 0.20 at 0.75, beta_bar 0.960
+moments: effort 0.6447, htm_total 0.2239, mpc 0.3308, liquid_wealth 0.2603, consumption_drop 0.1785
+change in each moment, in tolerance bands, for one step in the parameter (phi +10%; shares and patience +0.05; beta_bar +0.005)
+                                phi  impatient_share         beta_low         beta_bar
+effort                        -2.99             0.01             0.00            -0.27
+htm_total                      0.39             4.85             0.00            -0.77
+mpc                            0.05             0.82            -0.53            -0.49
+liquid_wealth                 -0.43            -0.72             0.00             2.51
+consumption_drop              -0.25             0.58             0.00            -1.13
+owned block (rows: each parameter's own target): condition number 10.0
+  phi              owns effort         (-2.99 bands); moves most: effort           (-2.99)
+  impatient_share  owns htm_total      (+4.85 bands); moves most: htm_total        (+4.85)
+  beta_low         owns mpc            (-0.53 bands); moves most: mpc              (-0.53)
+  beta_bar         owns liquid_wealth  (+2.51 bands); moves most: liquid_wealth    (+2.51)
+DONE
