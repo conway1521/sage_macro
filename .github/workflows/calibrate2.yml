@@ -23,6 +23,9 @@ on:
       hop:
         description: "How many times this calibration has been resumed (set automatically; stops at 5)"
         default: "0"
+      v3:
+        description: "Version 3 regime (calibrate_two_asset_v3.jl; G and GA): 1 or 0"
+        default: "0"
       prereq:
         description: "Calibration file this one needs, from an earlier run's artifact: 'run id:artifact:file' (set by .github/chain.sh)"
         default: ""
@@ -92,7 +95,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh run download ${{ inputs.resume_from }} -n calibration2-${{ matrix.code }}-${{ matrix.cfg }} -D /tmp/ck || true
-          cp /tmp/ck/checkpoint_two_asset_${{ matrix.code }}_${{ matrix.cfg }}.txt SAGE_Bewley/scripts/ 2>/dev/null && echo "checkpoint restored" || echo "no checkpoint found"
+          cp /tmp/ck/checkpoint*two_asset_${{ matrix.code }}_${{ matrix.cfg }}.txt SAGE_Bewley/scripts/ 2>/dev/null && echo "checkpoint restored" || echo "no checkpoint found"
       - name: Calibrate ${{ matrix.code }} ${{ matrix.cfg }} with the illiquid asset
         id: cal
         env:
@@ -105,6 +108,7 @@ jobs:
           set +e
           case "${{ matrix.cfg }}" in GS|GSA) script=calibrate_two_asset_s.jl ;; GE|GAE) script=calibrate_two_asset_e.jl ;; *) script=calibrate_two_asset.jl ;; esac
           extra=""; [ "$script" = calibrate_two_asset.jl ] && extra="${{ inputs.chi_from }}"
+          if [ "${{ inputs.v3 }}" = "1" ]; then script=calibrate_two_asset_v3.jl; extra=""; fi
           julia --project=scripts/run_env scripts/$script ${{ matrix.code }} ${{ matrix.cfg }} $extra 2>&1 | tee scripts/calibrate2_${{ matrix.code }}_${{ matrix.cfg }}.log
           code=${PIPESTATUS[0]}
           echo "code=$code" >> "$GITHUB_OUTPUT"
@@ -118,8 +122,10 @@ jobs:
             SAGE_Bewley/scripts/calibration_country_${{ matrix.code }}_${{ matrix.cfg }}_I*.txt
             SAGE_Bewley/scripts/calibrate2_${{ matrix.code }}_${{ matrix.cfg }}.log
             SAGE_Bewley/scripts/checkpoint_two_asset_${{ matrix.code }}_${{ matrix.cfg }}.txt
+            SAGE_Bewley/scripts/calibration_v3_${{ matrix.code }}_${{ matrix.cfg }}_I*.txt
+            SAGE_Bewley/scripts/checkpoint_v3_two_asset_${{ matrix.code }}_${{ matrix.cfg }}.txt
       - name: Start the calibrations that need this one
-        if: steps.cal.outputs.code == '0' && inputs.chain == 'yes'
+        if: steps.cal.outputs.code == '0' && inputs.chain == 'yes' && inputs.v3 != '1'
         env:
           GH_TOKEN: ${{ github.token }}
         run: bash .github/chain.sh 2 ${{ matrix.code }} ${{ matrix.cfg }} "${{ inputs.chi_from }}"
@@ -131,4 +137,4 @@ jobs:
           gh workflow run calibrate2.yml --ref ${{ github.ref_name }} -f countries=${{ matrix.code }} -f configs=${{ matrix.cfg }} \
             -f chi_from="${{ inputs.chi_from }}" -f resume_from=${{ github.run_id }} \
             -f budget=${{ inputs.budget }} -f hop=$(( ${{ inputs.hop }} + 1 )) \
-            -f prereq="${{ inputs.prereq }}" -f chain=${{ inputs.chain }}
+            -f prereq="${{ inputs.prereq }}" -f chain=${{ inputs.chain }} -f v3=${{ inputs.v3 }}

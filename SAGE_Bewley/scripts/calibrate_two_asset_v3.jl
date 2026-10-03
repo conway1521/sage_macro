@@ -85,7 +85,7 @@ show(tag, x, o, F) = (u = unpack(x);
     @printf("%s beta_bar %.4f chi0 %.4f impatient share %.4f | net wealth/income %.2f, liquid/income %.3f, poor htm %.4f, wealthy htm %.4f | misses in bands %+.2f %+.2f %+.2f %+.2f | MPC %.3f  [%d solves, %.1f min]\n",
             tag, u.beta_bar, u.chi0, u.impatient_share, o.m..., F..., o.r.mpc, nsolve[], (time() - t0) / 60); flush(stdout))
 write_ckpt(x, lam) = open(io -> println(io, join(string.(vcat(x, lam)), ",")), CKPT, "w")
-x = [0.975, log(0.03), PHTM]; lam = 0.3
+x = [0.955, log(0.05), PHTM]; lam = 0.3          # effective patience 0.975 started at twice the net wealth target (France, 2026-10-03)
 if isfile(CKPT)
     v = parse.(Float64, split(strip(read(CKPT, String)), ",")); x = v[1:3]; lam = v[4]
     say("  resuming from the checkpoint: ", round.(x; digits = 5))

@@ -137,7 +137,13 @@ const GAP = 0.0
 # Switching S on must still hit the G targets, so hand-to-mouth gets one
 # correction when it misses by more than this.
 const HTM_TOL = V3 ? 0.02 : 0.005   # v2: the poor hand-to-mouth targets are 0.03 to 0.14; v3: the total share, 0.18 to 0.23
-const LIQ_TOL = 0.03          # v3, liquid wealth over income: reported, and weighed in the best fit
+# v3, liquid wealth over income. The hand-to-mouth share OWNS the patience parameters: the MPC rests on it,
+# and it is the moment the calibration was agreed to hit. Median liquid wealth stays in the fit at a low
+# weight (its band is 4.5 times the hand-to-mouth band) and is REPORTED with its miss, not required: the two
+# cannot both be met where the spread sits on a bound. Grid of 2026-10-03, equal weights: Germany at spread 0
+# with both too high (0.255 against 0.225, 0.18 against 0.14); Italy at spread 0.15 with both too low (0.13
+# against 0.18, 0.21 against 0.27). France met both under equal weights (its files date from that fit).
+const LIQ_TOL = 0.09
 const E_TOL = 0.005          # effort
 const SKIP_GS = get(ENV, "SKIP_GS", "0") == "1"
 const OUTFILE = V3 ? joinpath(@__DIR__, "calibration_v3_$(CODE)_$(CFG).txt") :
