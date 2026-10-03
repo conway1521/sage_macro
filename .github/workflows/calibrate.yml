@@ -29,6 +29,9 @@ on:
       hop:
         description: "How many times this calibration has been resumed (set automatically; stops at 5)"
         default: "0"
+      v3:
+        description: "Version 3 regime (effort set by the job, household replacement rate, HFCS liquid-wealth targets): 1 or 0"
+        default: "0"
       prereq:
         description: "Calibration file this one needs, from an earlier run's artifact: 'run id:artifact:file' (set by .github/chain.sh)"
         default: ""
@@ -96,6 +99,7 @@ jobs:
           SAGE_WORKERS: "3"
           SAGE_SOLVER: ${{ inputs.solver }}
           SAGE_TIME_BUDGET_MIN: ${{ inputs.budget }}
+          SAGE_V3: ${{ inputs.v3 }}
         run: |
           cd SAGE_Bewley
           set +e
@@ -111,13 +115,14 @@ jobs:
           name: calibration-${{ matrix.code }}-${{ matrix.cfg }}
           path: |
             SAGE_Bewley/scripts/calibration_country_${{ matrix.code }}*.txt
+            SAGE_Bewley/scripts/calibration_v3_${{ matrix.code }}*.txt
             SAGE_Bewley/scripts/calibrate_${{ matrix.code }}_${{ matrix.cfg }}.log
             SAGE_Bewley/scripts/checkpoints/${{ matrix.code }}_${{ matrix.cfg }}_*
       - name: Start the calibrations that need this one
         if: steps.cal.outputs.code == '0' && inputs.chain == 'yes'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: bash .github/chain.sh 1 ${{ matrix.code }} ${{ matrix.cfg }}
+        run: SAGE_V3=${{ inputs.v3 }} bash .github/chain.sh 1 ${{ matrix.code }} ${{ matrix.cfg }}
       - name: Resume in a new run
         if: steps.cal.outputs.code == '3' && inputs.hop < 5
         env:
@@ -125,4 +130,4 @@ jobs:
         run: |
           gh workflow run calibrate.yml --ref ${{ github.ref_name }} -f solver=${{ inputs.solver }} -f countries=${{ matrix.code }} \
             -f configs=${{ matrix.cfg }} -f budget=${{ inputs.budget }} -f resume_from=${{ github.run_id }} -f hop=$(( ${{ inputs.hop }} + 1 )) \
-            -f prereq="${{ inputs.prereq }}" -f chain=${{ inputs.chain }}
+            -f prereq="${{ inputs.prereq }}" -f chain=${{ inputs.chain }} -f v3=${{ inputs.v3 }}

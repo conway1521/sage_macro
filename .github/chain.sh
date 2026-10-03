@@ -14,15 +14,17 @@
 #               G -> GE      GA -> GSA, GAE (the fixed cost of GA)      GSA -> GS
 set -euo pipefail
 kind=$1; code=$2; cfg=$3; chi_from=${4:-}
+v3=${SAGE_V3:-0}
 if [ "$kind" = 1 ]; then
   file=calibration_country_${code}_${cfg}.txt; [ "$cfg" = GSA ] && file=calibration_country_${code}.txt
+  [ "$v3" = 1 ] && file=calibration_v3_${code}_${cfg}.txt        # version 3 files, every configuration
   art=calibration-${code}-${cfg}
 else
   file=calibration_country_${code}_${cfg}_I.txt; art=calibration2-${code}-${cfg}
 fi
 [ -f "SAGE_Bewley/scripts/$file" ] || { echo "no $file: nothing to chain"; exit 0; }
 pre="$GITHUB_RUN_ID:$art:$file"
-run1() { gh workflow run calibrate.yml --ref "$GITHUB_REF_NAME" -f countries="$1" -f configs="$2" -f prereq="$pre"
+run1() { gh workflow run calibrate.yml --ref "$GITHUB_REF_NAME" -f countries="$1" -f configs="$2" -f prereq="$pre" -f v3="$v3"
          echo "started one-asset $1 $2, with $file from run $GITHUB_RUN_ID"; }
 run2() { gh workflow run calibrate2.yml --ref "$GITHUB_REF_NAME" -f countries="$1" -f configs="$2" -f chi_from="${3:-}" -f prereq="$pre"
          echo "started two-asset $1 $2 ${3:+(chi0 from $3)}, with $file from run $GITHUB_RUN_ID"; }

@@ -1,0 +1,21 @@
+start    phi 14.000 top patience 0.9450 spread 0.0200 | effort 0.5330 liquid/income 0.0000 htm 0.7900 | MPC 0.416 | worst 56.80 band [1 solves, 0.6 min]
+         conditioning of the map at the start: singular values 1716.3, 26.1, 0.0
+step 1   phi 6.735 top patience 0.9544 spread 0.0000 | effort 0.6377 liquid/income 0.1822 htm 0.0948 | MPC 0.211 | worst 12.72 band [5 solves, 0.9 min]
+step 2   phi 6.636 top patience 0.9547 spread 0.0322 | effort 0.6406 liquid/income 0.0778 htm 0.2486 | MPC 0.293 | worst 2.66 band [9 solves, 1.2 min]
+step 3   phi 6.519 top patience 0.9522 spread 0.0270 | effort 0.6435 liquid/income 0.0811 htm 0.2330 | MPC 0.292 | worst 1.10 band [13 solves, 1.5 min]
+step 4   phi 6.519 top patience 0.9499 spread 0.0227 | effort 0.6435 liquid/income 0.0806 htm 0.2300 | MPC 0.293 | worst 1.08 band [18 solves, 1.8 min]
+step 5   phi 6.520 top patience 0.9481 spread 0.0195 | effort 0.6435 liquid/income 0.0798 htm 0.2300 | MPC 0.294 | worst 1.04 band [23 solves, 2.2 min]
+step 6   phi 6.520 top patience 0.9467 spread 0.0168 | effort 0.6435 liquid/income 0.0797 htm 0.2282 | MPC 0.295 | worst 1.03 band [28 solves, 2.6 min]
+step 7   phi 6.519 top patience 0.9456 spread 0.0148 | effort 0.6435 liquid/income 0.0795 htm 0.2282 | MPC 0.295 | worst 1.02 band [33 solves, 3.0 min]
+step 8   phi 6.520 top patience 0.9449 spread 0.0133 | effort 0.6435 liquid/income 0.0798 htm 0.2269 | MPC 0.295 | worst 1.04 band [38 solves, 3.4 min]
+step 9   phi 6.521 top patience 0.9444 spread 0.0122 | effort 0.6435 liquid/income 0.0800 htm 0.2261 | MPC 0.295 | worst 1.05 band [43 solves, 3.8 min]
+step 10  phi 6.522 top patience 0.9441 spread 0.0114 | effort 0.6435 liquid/income 0.0803 htm 0.2254 | MPC 0.295 | worst 1.06 band [48 solves, 4.2 min]
+step 11  phi 6.522 top patience 0.9438 spread 0.0108 | effort 0.6435 liquid/income 0.0804 htm 0.2249 | MPC 0.295 | worst 1.07 band [53 solves, 4.5 min]
+step 12  phi 6.522 top patience 0.9436 spread 0.0103 | effort 0.6435 liquid/income 0.0804 htm 0.2247 | MPC 0.295 | worst 1.07 band [58 solves, 4.9 min]
+step 13  phi 6.524 top patience 0.9429 spread 0.0092 | effort 0.6434 liquid/income 0.0799 htm 0.2255 | MPC 0.295 | worst 1.04 band [62 solves, 5.2 min]
+step 14  phi 6.522 top patience 0.9425 spread 0.0083 | effort 0.6435 liquid/income 0.0799 htm 0.2251 | MPC 0.295 | worst 1.05 band [67 solves, 5.6 min]
+
+BEST FIT, outside a band: FR G, one asset as liquid wealth, effort set by the job | misses in bands: effort +0.05, liquid wealth +1.05, hand-to-mouth +0.31
+THE TEST, untargeted: MPC 0.295 against 0.392 self-reported (HFCS 2021) | hand-to-mouth 0.406, others 0.263 | earnings response -0.0000
+other untargeted: consumption drop on job loss 0.218 | protection if hit 0.7824 | income poverty 0.0036 | asset poverty 0.6523 | wealth p90 / median income 0.354
+DONE
