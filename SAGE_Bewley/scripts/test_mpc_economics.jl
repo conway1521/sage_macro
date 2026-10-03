@@ -21,7 +21,8 @@ using Printf
 code = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "FR"
 cfg = length(ARGS) >= 2 ? uppercase(ARGS[2]) : "G"
 occursin('S', cfg) && error("S off only: with S on the households are families over belonging scales")
-c = country_config(code; config = cfg, S = false, A = occursin('A', cfg))
+V3 = length(ARGS) >= 3 && lowercase(ARGS[3]) == "v3"          # third argument v3: the version 3 economy and its calibration
+c = country_config(code; config = cfg, v3 = V3, S = false, A = occursin('A', cfg))
 c.illiquid && error("one asset only")
 cs = cells_of(c); bs, bw = betas_of(c)
 cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
@@ -72,7 +73,7 @@ check(name, ok) = (push!(results, (name, ok)); @printf("   -> %s: %s\n", name, o
 
 M = 1 / 12
 all_ = response(M)
-@printf("%s %s, one asset: annual MPC %.3f, saving %.3f, earnings %+.3f (windfall of one month of income)\n", code, cfg, all_.mpc, all_.mps, all_.mpe)
+@printf("%s %s%s, one asset: annual MPC %.3f, saving %.3f, earnings %+.3f (windfall of one month of income)\n", code, cfg, V3 ? " (version 3)" : "", all_.mpc, all_.mps, all_.mpe)
 
 println("1. by liquid wealth quintile")
 q = [response(M; keep = (h, i, st) -> quint(h.a[i]) == k) for k in 1:5]

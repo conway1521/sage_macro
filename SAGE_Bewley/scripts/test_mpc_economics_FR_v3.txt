@@ -1,0 +1,34 @@
+   quintile 3 (mass 0.197): MPC 0.349
+   quintile 4 (mass 0.203): MPC 0.241
+   quintile 5 (mass 0.197): MPC 0.153
+   permanent-income benchmark (R - 1) / R = 0.020
+   -> MPC falls across wealth quintiles: PASS
+   -> the wealthiest are above the permanent-income benchmark: PASS
+2. hand-to-mouth against the others
+   hand-to-mouth (mass 0.223): MPC 0.504, earnings -0.000 | others: MPC 0.293, earnings +0.000
+   -> hand-to-mouth MPC above the others: PASS
+3. by size of the windfall
+     1.9% of annual income: MPC 0.379, saving 0.621, earnings -0.000, adding up 1.000000
+     8.3% of annual income: MPC 0.340, saving 0.660, earnings -0.000, adding up 1.000000
+    25.0% of annual income: MPC 0.308, saving 0.692, earnings +0.000, adding up 1.000000
+   100.0% of annual income: MPC 0.240, saving 0.760, earnings +0.000, adding up 1.000000
+   -> MPC falls with the size of the windfall: PASS
+   -> consumption, saving and earnings add up at every size: PASS
+4. a loss against a gain of one month of income, households that can absorb the loss on the grid
+   mass 0.462: MPC out of a gain 0.229, out of a loss 0.248
+   -> a loss moves consumption at least as much as a gain: PASS
+5. unemployed against employed
+   unemployed (mass 0.066): MPC 0.696 | employed: MPC 0.315, earnings -0.000
+   -> unemployed MPC above employed: PASS
+6. by patience type
+   beta 0.8719: MPC 0.342
+   beta 0.8722: MPC 0.341
+   beta 0.8725: MPC 0.340
+   beta 0.8727: MPC 0.339
+   beta 0.8730: MPC 0.338
+   -> MPC falls with patience: PASS
+7. by education cell
+   cell 1: MPC 0.324, saving 0.676, earnings +0.000
+   cell 2: MPC 0.371, saving 0.629, earnings -0.000
+8 of 8 properties hold
+DONE

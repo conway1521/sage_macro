@@ -11,14 +11,16 @@
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 cfg = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "GA"
+V3 = length(ARGS) >= 2 && lowercase(ARGS[2]) == "v3"
+CODES = length(ARGS) >= 3 ? split(uppercase(ARGS[3]), ",") : ["FR", "DE", "IT"]
 bench = Dict{Tuple{String,String},Float64}()
 for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "validation", "agency_benchmarks.csv"))
     (startswith(ln, "#") || startswith(ln, "indicator")) && continue
     f = split(ln, ","); bench[(f[1], f[2])] = parse(Float64, f[3])
 end
 println("1. expected income loss to unemployment, percent (model: a year ahead, employed today; OECD: labour market insecurity 2016)")
-for code in ("FR", "DE", "IT")
-    c = country_config(code; config = cfg, S = false, A = occursin('A', cfg))
+for code in CODES
+    c = country_config(code; config = cfg, v3 = V3, S = false, A = occursin('A', cfg))
     r = solve_economy(c; cache = false)
     @printf("   %s: model %.2f | OECD %.2f | consumption loss expected %.2f, drop if hit %.1f\n", code, 100 * r.shock_loss_income,
             bench[("labour_market_insecurity", code)], 100 * r.shock_loss, 100 * r.consumption_drop)
