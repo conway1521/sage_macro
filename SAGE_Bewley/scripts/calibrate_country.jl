@@ -108,7 +108,16 @@ const S8020_TARGET = V3 ? incdist("s80s20_under65") : NaN
 const INWORK_DATA = V3 ? incdist("inwork_poverty60") : NaN
 const S8020_TOL = 0.25
 const ETA = Ref(NaN)
-v3kw() = V3 && !isnan(ETA[]) ? (eta_z = ETA[],) : ()
+# Persistence of the income process, fitted in version 3 within the range of published annual estimates
+# (0.90 to 0.97; the country table's 0.92 is the start). Why: patience, its spread and the dispersion of the
+# shocks move the hand-to-mouth share and median liquid wealth along one line, so the pair could not be fitted
+# where it lies off that line (Germany: both too high). Persistence at a given cross-sectional dispersion is
+# the input that moves them independently (probe_wealth_shape.jl, 2026-10-03): the more of income inequality
+# that is lasting rather than risk, the less precautionary wealth at the median for a given share at zero.
+const RHO = Ref(NaN)
+const RHO_TABLE = V3 ? parse(Float64, country_rows()[CODE]["rho"]) : NaN
+const RHO_LO = 0.90; const RHO_HI = 0.97
+v3kw() = V3 && !isnan(ETA[]) ? (isnan(RHO[]) ? (eta_z = ETA[],) : (eta_z = ETA[], rho = RHO[])) : ()
 const PART = (num("part_low"), num("part_high"))
 const RATIO = num("ratio")
 # The national ratio exactly, and for the headline configuration the other
@@ -211,7 +220,7 @@ timed_scans(args...; kw...) = (t_ = time(); out = scans(args...; kw...); LASTSCA
 function write_cal(phi, spread; kappa = nothing, sigma = nothing)
     open(OUTFILE, "w") do io
         println(io, "# written by calibrate_country.jl $(CODE) $(CFG)", V3 ? ", version 3 (effort set by the job, household replacement rate, liquid-wealth targets from the HFCS)" : "", "; read by country_config")
-        V3 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\neta_z = %.4f\n", phi, spread, BB[], ETA[]) :
+        V3 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\neta_z = %.4f\nrho = %.4f\n", phi, spread, BB[], ETA[], RHO[]) :
              @printf(io, "phi = %.2f\nbeta_spread = %.3f\nbeta_bar = %.4f\n", phi, spread, BB[])
         kappa === nothing || @printf(io, "kappa = %.2f\nsigma_m = %.2f\n", kappa, sigma)
     end
@@ -276,15 +285,19 @@ function fit_spread(phi, target; grid = 0.0:0.005:SPREAD_MAX)
     (sp = 0.0, bb = round(0.5 * (lo + hi); digits = 4), edge = false)
 end
 """
-Version 3, the three G parameters by damped least squares: (log phi, top
-patience, spread) against (effort, liquid wealth over income, hand-to-mouth),
+Version 3, the G parameters by damped least squares: (log phi, top patience,
+spread, the dispersion of income, its persistence) against (effort, liquid
+wealth over income, hand-to-mouth, S80/S20),
 each miss in units of its tolerance. Top patience stays below 0.975 (beta R
 below one for the most patient type). Returns the point and its moments.
 """
-function fit_v3(aim_e, aim_h; x0 = [log(7.5), 0.90, 0.01, 0.22], iters = 16)
-    lo = [log(0.5), 0.84, 0.0, 0.05]; hi = [log(60.0), 0.975, SPREAD_MAX, 0.40]; H = [0.05, 0.004, 0.01, 0.02]
+function fit_v3(aim_e, aim_h; x0 = [log(7.5), 0.90, 0.01, 0.22 / sqrt(1 - RHO_TABLE^2), RHO_TABLE], iters = 16)
+    # x = (log phi, top patience, spread, sd of log income across the employed, persistence); the innovation's
+    # sd is eta = sd * sqrt(1 - rho^2), so persistence moves at a given cross-sectional dispersion
+    lo = [log(0.5), 0.84, 0.0, 0.15, RHO_LO]; hi = [log(60.0), 0.975, SPREAD_MAX, 1.40, RHO_HI]; H = [0.05, 0.004, 0.01, 0.04, 0.01]
+    eta_of(x) = x[4] * sqrt(1 - x[5]^2)
     function at(x)
-        BB[] = x[2]; ETA[] = x[4]
+        BB[] = x[2]; RHO[] = x[5]; ETA[] = eta_of(x)
         r = soff(exp(x[1]), x[3]); st = income_stats(cfg_off(exp(x[1]), x[3]))
         (r = r, st = st, m = [r.mean_effort_employed, r.wealth_p50 / r.median_income, r.hand_to_mouth_kvw, st.s8020])
     end
@@ -292,27 +305,28 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), 0.90, 0.01, 0.22], iters = 16)
     x = clamp.(x0, lo, hi); o = at(x); F = res(o); lam = 0.1
     for it in 1:iters
         maximum(abs.(F)) <= 0.25 && break
-        J = zeros(4, 4)
-        for k in 1:4
+        J = zeros(4, 5)
+        for k in 1:5
             xk = copy(x); h = (xk[k] + H[k] > hi[k]) ? -H[k] : H[k]; xk[k] += h
             J[:, k] = (res(at(xk)) .- F) ./ h
         end
         moved = false
         for _ in 1:6
-            A = J' * J; d = -((A + lam * Diagonal(diag(A))) \ (J' * F))
+            A = J' * J; d = -((A + lam * Diagonal(diag(A)) + 1e-10 * I) \ (J' * F))
             xn = clamp.(x .+ d, lo, hi); on = at(xn); Fn = res(on)
             if sum(abs2, Fn) < sum(abs2, F) - 1e-6
                 x = xn; o = on; F = Fn; lam = max(lam / 3, 1e-4); moved = true; break
             end
             lam *= 4
         end
-        @printf("    fit %2d: phi %.3f, top patience %.4f, spread %.4f, eta %.4f | effort %.4f, liquid/income %.4f, hand-to-mouth %.4f, S80/S20 %.2f | misses in bands %+.2f %+.2f %+.2f %+.2f\n",
-                it, exp(x[1]), x[2], x[3], x[4], o.m..., F...); flush(stdout)
+        @printf("    fit %2d: phi %.3f, top patience %.4f, spread %.4f, eta %.4f, rho %.4f | effort %.4f, liquid/income %.4f, hand-to-mouth %.4f, S80/S20 %.2f | misses in bands %+.2f %+.2f %+.2f %+.2f\n",
+                it, exp(x[1]), x[2], x[3], eta_of(x), x[5], o.m..., F...); flush(stdout)
         moved || break
     end
-    xr = [log(round(exp(x[1]); digits = 3)), round(x[2]; digits = 4), round(x[3]; digits = 4), round(x[4]; digits = 4)]
-    o = at(xr)
-    (phi = exp(xr[1]), bb = xr[2], sp = xr[3], eta = xr[4], r = o.r, st = o.st)
+    rho = round(x[5]; digits = 4); eta = round(x[4] * sqrt(1 - x[5]^2); digits = 4)
+    xr = [log(round(exp(x[1]); digits = 3)), round(x[2]; digits = 4), round(x[3]; digits = 4), eta / sqrt(1 - rho^2), rho]
+    o = at(xr); ETA[] = eta
+    (phi = exp(xr[1]), bb = xr[2], sp = xr[3], eta = eta, rho = rho, r = o.r, st = o.st)
 end
 say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", round(HTM_TARGET - GAP; digits = 4))
 liq_of(r) = r.wealth_p50 / r.median_income
@@ -321,11 +335,11 @@ liq_note(r) = V3 ? @sprintf(", liquid wealth over income %.4f (target %.4f, band
 ck1 = ck_read("stage1")
 if ck1 === nothing && V3
     f3 = fit_v3(E_TARGET, HTM_TARGET - GAP)
-    phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; edge = false
+    phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; RHO[] = f3.rho; edge = false
     chk_e, chk_h = f3.r.mean_effort_employed, f3.r.hand_to_mouth_kvw
-    ck_write("stage1", Dict("phi" => phi, "spread" => spread, "edge" => 0.0, "effort" => chk_e, "htm" => chk_h, "bb" => BB[], "eta" => ETA[]))
-    @printf("  income distribution: S80/S20 %.2f (official, under 65: %.2f) with eta %.4f | Gini %.3f | in-work poverty %.3f untargeted (official %.3f) | below half the median %.3f\n",
-            f3.st.s8020, S8020_TARGET, ETA[], f3.st.gini, f3.st.inwork60, INWORK_DATA, f3.st.p50)
+    ck_write("stage1", Dict("phi" => phi, "spread" => spread, "edge" => 0.0, "effort" => chk_e, "htm" => chk_h, "bb" => BB[], "eta" => ETA[], "rho" => RHO[]))
+    @printf("  income distribution: S80/S20 %.2f (official, under 65: %.2f) with eta %.4f and persistence %.4f | Gini %.3f | in-work poverty %.3f untargeted (official %.3f) | below half the median %.3f\n",
+            f3.st.s8020, S8020_TARGET, ETA[], RHO[], f3.st.gini, f3.st.inwork60, INWORK_DATA, f3.st.p50)
     @printf("  version 3 fit: liquid wealth over income %.4f (target %.4f, band %.3f; hand-to-mouth band %.3f) | MPC %.3f untargeted (survey %.3f) | earnings response %+.4f | drop on job loss %.3f\n",
             f3.r.wealth_p50 / f3.r.median_income, LIQ_TARGET, LIQ_TOL, HTM_TOL, f3.r.mpc, MPC_DATA, f3.r.mpe, f3.r.consumption_drop)
 elseif ck1 === nothing
@@ -342,7 +356,7 @@ elseif ck1 === nothing
                             "effort" => chk_e, "htm" => chk_h, "bb" => BB[]))
 else
     phi, spread, edge = ck1["phi"], ck1["spread"], ck1["edge"] == 1.0
-    chk_e, chk_h = ck1["effort"], ck1["htm"]; BB[] = get(ck1, "bb", 0.96); V3 && (ETA[] = ck1["eta"])
+    chk_e, chk_h = ck1["effort"], ck1["htm"]; BB[] = get(ck1, "bb", 0.96); V3 && (ETA[] = ck1["eta"]; RHO[] = get(ck1, "rho", RHO_TABLE))
     say("  from checkpoint ", basename(ckfile("stage1")))
 end
 @printf("  phi %.2f, spread %.3f, mean patience %.4f%s: effort %.4f (target %.4f), poor hand-to-mouth %.4f (aim %.4f)  [%.1f min]\n",
@@ -515,16 +529,16 @@ for correction in 1:2
     ck5 = ck_read("stage5_$(correction)")
     if ck5 === nothing
         if V3
-            f3 = fit_v3(E_TARGET - gap_e, HTM_TARGET - gap_h; x0 = [log(phi), BB[], spread, ETA[]], iters = 8)
-            phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; edge2 = false
+            f3 = fit_v3(E_TARGET - gap_e, HTM_TARGET - gap_h; x0 = [log(phi), BB[], spread, ETA[] / sqrt(1 - RHO[]^2), RHO[]], iters = 8)
+            phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; RHO[] = f3.rho; edge2 = false
         else
             phi = fit_phi(spread; lo = max(0.5, phi - 4), hi = phi + 4, steps = 10, aim = E_TARGET - gap_e)
             fs2 = fit_spread(phi, HTM_TARGET - gap_h)
             spread = fs2.sp; edge2 = fs2.edge; BB[] = fs2.bb
         end
-        ck_write("stage5_$(correction)", Dict("phi" => phi, "spread" => spread, "edge" => Float64(edge2), "bb" => BB[], "eta" => V3 ? ETA[] : NaN))
+        ck_write("stage5_$(correction)", Dict("phi" => phi, "spread" => spread, "edge" => Float64(edge2), "bb" => BB[], "eta" => V3 ? ETA[] : NaN, "rho" => V3 ? RHO[] : NaN))
     else
-        phi, spread, edge2 = ck5["phi"], ck5["spread"], ck5["edge"] == 1.0; BB[] = get(ck5, "bb", 0.96); V3 && (ETA[] = ck5["eta"])
+        phi, spread, edge2 = ck5["phi"], ck5["spread"], ck5["edge"] == 1.0; BB[] = get(ck5, "bb", 0.96); V3 && (ETA[] = ck5["eta"]; RHO[] = get(ck5, "rho", RHO_TABLE))
         say("  from checkpoint ", basename(ckfile("stage5_$(correction)")))
     end
     @printf("  new phi %.2f, spread %.3f, mean patience %.4f%s\n", phi, spread, BB[], edge2 ? " (ON THE GRID EDGE)" : ""); flush(stdout)

@@ -1,0 +1,14 @@
+DE G, version 3, one asset, at phi 9.777, top patience 0.8944, spread 0.0000, eta 0.2801, rho 0.92, replacement 0.585, job finding 0.689
+here: hand-to-mouth 0.2547 (data 0.2249), liquid/income 0.1789 (data 0.1397) | S80/S20 5.05, in-work poverty 0.172, MPC 0.289, drop on job loss 0.262, effort 0.6099
+needed move, in bands: hand-to-mouth -1.35, liquid -1.31
+step                                 d htm     d liq  d S8020 d inwork    d MPC   d drop d effort | angle to patience, cosine with the needed move
+top patience +0.005                -0.0254   +0.0488    +0.05   -0.000   -0.018   -0.014  -0.0008 |     0 deg, -0.15
+spread +0.02                       +0.0611   -0.0722    -0.08   +0.000   +0.038   +0.025  +0.0014 |   166 deg, -0.09
+shock dispersion eta +0.02         -0.0615   +0.0949    +0.70   +0.000   -0.028   -0.020  +0.0049 |     6 deg, -0.04
+persistence rho +0.03              -0.1712   +0.0141    +2.40   +0.000   -0.051   -0.001  +0.0273 |    51 deg, +0.68
+persistence rho -0.10              +0.0158   +0.0006    -1.85   -0.117   +0.068   -0.015  -0.0255 |   124 deg, -0.74
+replacement rate +0.05             +0.0315   -0.0249    -0.04   -0.000   +0.018   -0.026  +0.0001 |   155 deg, -0.27
+replacement rate -0.05             -0.0621   +0.0294    +0.04   +0.000   -0.018   +0.024  -0.0001 |    36 deg, +0.45
+job finding +0.05                  +0.0020   -0.0046    -0.02   -0.000   +0.002   -0.003  -0.0003 |   175 deg, +0.24
+separation +20%                    -0.0506   +0.0223    +0.06   +0.000   -0.017   -0.007  +0.0010 |    37 deg, +0.47
+DONE
