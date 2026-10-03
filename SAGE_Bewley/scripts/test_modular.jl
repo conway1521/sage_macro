@@ -147,6 +147,17 @@ reduce_to("G+A with negligible extra time  ->  G+A",
 reduce_to("G+A with negligible commuting  ->  G+A",
           solve_economy(SAGEConfig(A = true, commute = (1e-12, 1e-12))), GA)
 
+# 10d. The switches of version 3. A means-tested floor that no household reaches
+#      is no floor (with effort set by the job, which the floor requires); a
+#      state-paid share equal to the whole replacement rate is the default.
+let J = solve_economy(SAGEConfig(A = true, unemployment = true, effort_mode = :job))
+    reduce_to("G+A, effort set by the job, a floor no one reaches  ->  the same without",
+              solve_economy(SAGEConfig(A = true, unemployment = true, effort_mode = :job, cfloor = 1e-9)), J)
+end
+reduce_to("G+A with unemployment, state-paid share = the whole rate  ->  G+A with unemployment",
+          solve_economy(SAGEConfig(A = true, unemployment = true, rr_public = SAGEConfig().rr)),
+          solve_economy(SAGEConfig(A = true, unemployment = true)))
+
 # 10c. With S off there is no belonging payoff, so its part of welfare is zero.
 let vb = max(abs(G.welfare.Vb), abs(GA.welfare.Vb)); ok = vb <= 1e-12
     push!(RESULTS, (name = "belonging welfare is zero with S off", worst = vb, field = :welfare_Vb, ok = ok))
