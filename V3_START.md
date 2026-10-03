@@ -342,3 +342,54 @@ Agreed with the user: the base is made standard, line by line, and S, A and E ar
 - the net wealth Gini and top 10% share on two assets (HFCS, within 0.05);
 - regional participation against volunteering by region, Germany and Italy, without the community channel (reported, whatever it is);
 - the education gap in participation produced by S alone (reported).
+
+## 14. The HFCS, step 1 and step 2 (2026-10-02, night)
+
+The microdata are in `~/hfcs_secure` (five waves, France, Germany, Italy). `hfcs_protocol/hfcs_moments.py` reads them there and writes aggregate tables only; `data/hfcs_targets.csv` holds the moments the model uses, with standard errors. Source: Eurosystem Household Finance and Consumption Survey.
+
+**Gate 1 holds: the published figures are reproduced.**
+
+| benchmark | published | computed |
+|---|---|---|
+| Net wealth over gross income, 2021, FR / DE / IT (ECB tables) | 4.02 / 2.38 / 5.51 | 4.02 / 2.38 / 5.50 |
+| Self-reported MPC, 2017 (Drescher, Fessler and Lindner 2020) | 0.418 / 0.513 / 0.481 | 0.419 / 0.513 / 0.481 |
+| Poor hand-to-mouth, 2010 (Kaplan, Violante and Weidner 2014) | 0.032 / 0.074 / 0.083 | 0.030 / 0.079 / 0.084 |
+| Wealthy hand-to-mouth, 2010 | 0.173 / 0.248 / 0.155 | 0.158 / 0.226 / 0.150 |
+| Asset poverty, persons, 2014 (Balestra and Tonkin 2018) | 0.405 / 0.424 / 0.387 | 0.395 / 0.425 / 0.424 |
+
+The 2010 wave has been revised since the hand-to-mouth paper, which accounts for the small gaps there. Italy's asset poverty is 0.04 above the OECD figure; Italian income in the HFCS is recorded differently (taxes are a separate variable), and the difference is not resolved.
+
+**After-tax income exists.** The delivery includes household disposable income simulated by the ECB with EUROMOD (France and Germany, waves 2014 to 2021); Italy records its own taxes in every wave. Every ratio is therefore available on the model's income concept, which settles decision D5 from the data side.
+
+**What the survey says, 2021 unless stated**
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| Self-reported MPC (2017 / 2021 / 2023) | 0.42 / 0.39 / 0.39 | 0.51 / 0.47 / 0.46 | 0.48 / 0.47 / 0.44 |
+| Hand-to-mouth, published definition, total | 0.206 | 0.190 | 0.164 |
+| Hand-to-mouth, the model's rule (one week of income), narrow liquid wealth | 0.222 | 0.225 | 0.179 |
+| The same, broad liquid wealth (saving accounts counted as liquid) | 0.114 | 0.146 | 0.141 |
+| Median liquid wealth over median after-tax income, narrow | 0.059 | 0.140 | 0.272 |
+| The same, broad | 0.380 | 0.442 | 0.316 |
+| Median net wealth over median after-tax income | 4.78 | 3.15 | 6.82 |
+| Net wealth Gini | 0.68 | 0.73 | 0.64 |
+| Income poverty (half the median, after tax, persons) | 0.097 | 0.109 | 0.145 |
+| Liquid-asset poverty (OECD definition, after-tax line) | 0.335 | 0.321 | 0.341 |
+
+**Three findings that change the design**
+
+1. **The self-reported MPC is high at every level of liquid wealth.** By quintile of liquid wealth, 2017: Italy 0.56 falling to 0.42; Germany 0.55 to 0.47; France 0.35 rising to 0.50. A quarter of households answer one half. The level cannot come from a small group of constrained households; it needs most households to be short of liquid wealth, which is what the narrow definition shows.
+2. **Narrow against broad liquid wealth is the choice that decides the one-asset model.** With saving accounts counted as illiquid (the published definition), median liquid wealth is 6% of annual income in France and the model's rule puts 22% hand-to-mouth; with them counted as liquid, 38% and 11%. A one-asset model can be calibrated to one or the other.
+3. **Liquid-asset poverty runs with income poverty across places, against the version 2 model.** Italy, 2021, North / Centre / South and Islands: liquid-asset poverty 0.25 / 0.27 / 0.51; hand-to-mouth (broad) 0.09 / 0.10 / 0.25; income poverty 0.06 / 0.10 / 0.29; median liquid wealth EUR 13,000 / 8,200 / 3,000; self-reported MPC 0.43 / 0.46 / 0.53. Germany: the East is the most asset-poor (0.40 against 0.25 in the South-West). The version 2 model put the thinnest buffers where jobs are safest. That prediction is rejected. The test for version 3 is the same table.
+
+**The one-asset base, decided on this evidence.** The single asset is liquid wealth on the narrow definition (the standard liquid-wealth calibration, Kaplan and Violante 2022). `probe_liquid_calibration.jl`, France: lowering patience from 0.96 to about 0.925 moves median liquid wealth over income from 0.39 to 0.07, the hand-to-mouth share from 0.03 to 0.25 and the MPC from 0.17 to 0.34, with no impatient group and no MPC target; the MPC of households that are not hand-to-mouth rises to 0.30, as in the survey. The cost, stated: the one-asset economy then holds almost no wealth, and the consumption drop on job loss is about twice the French benchmark. Wealth and the MPC together are what two assets are for.
+
+**Other inputs measured the same night**
+
+- Replacement rates at the level of the household (OECD TaxBEN 2023, `data/benefits/`): France 0.704, Germany 0.585, Italy 0.527, of which the state pays 0.476, 0.361, 0.291; the rest is a partner's earnings and is not taxed in the model. Used in version 3.
+- A means-tested floor is built as a switch (`cfloor`, `test_floor.jl`) and is OFF in the baseline: Germany's and France's minimum income is already inside the OECD replacement rate, and Italy's scheme excludes childless households. In the model the floor does not reduce the consumption drop on job loss (households give up the buffers that cushioned it) and raises the hand-to-mouth share sharply, which is the result of Hubbard, Skinner and Zeldes (1995). Open: some household problems do not converge with the floor on.
+- The time participation takes: 0.04 of committed time from the time-use surveys (0.02 to 0.07), against 0.10 assumed (`data/timeuse/`). Now a parameter, 0.04 in version 3.
+- People outside the labour force by place: adding them rescales participation by 5 to 11% almost uniformly and explains almost none of the regional spread. Not the missing channel in E.
+- The literature check (`research/STANDARD_TREATMENTS.md`): effort set by the job is a state-by-state variant of the union rule of Auclert, Rognlie and Straub (2024), where one average condition sets hours for everyone; no published precedent for the state-by-state form was found, so it is presented as this model's variant. The excess-variance strategy for the multiplier is Glaeser, Sacerdote and Scheinkman (1996), not their 2003 paper. Blundell, Pistaferri and Saporta-Eksten (2016) is about permanent wage shocks, not job loss.
+
+**Version 3 runs beside version 2** (`country_config(...; v3 = true)`): effort set by the job, the household replacement rate, participation time 0.04, its own calibration files `calibration_v3_*`. Version 2 is unchanged to the last digit and stays until version 3 is complete.
