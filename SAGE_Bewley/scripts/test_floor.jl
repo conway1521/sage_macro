@@ -32,12 +32,14 @@ r0 = solve_economy(c; cache = false)
 thr = [(r0.ypov, r0.abar)]
 println("1. a floor no one reaches")
 r1 = solve_economy(SAGEConfig(c; cfloor = 1e-9); thresholds = thr, cache = false)
-r0 = solve_economy(c; thresholds = thr, cache = false)
+# with a floor the job's effort levels are the no-floor economy's, by education cell; the comparison is at those levels
+r0 = solve_economy(SAGEConfig(c; effort_by_cell = job_effort_levels(c)); thresholds = thr, cache = false)
 d = maximum(abs(getfield(r0, f) - getfield(r1, f)) for f in F)
 @printf("   largest difference %.1e\n", d)
 check("a floor no one reaches changes nothing", d < 1e-10)
 
 println("2 and 3. the floor as a share of a year's reference earnings (e_ref = $(c.e_ref))")
+r0 = solve_economy(c; thresholds = thr, cache = false)
 line("no floor", r0)
 rs = Any[]
 for sh in (0.20, 0.30, 0.40)

@@ -229,6 +229,9 @@ Base.@kwdef struct SAGEConfig
     # then moves with the grid (0.21 of income at 24 nodes, 0.16 at 48; probe_two_asset_grid.jl,
     # 2026-10-03). 1 reproduces every earlier two-asset result.
     k_sub::Int = 1
+    # The floor's tax when it is set from outside (the place layer finances the floor nationally
+    # and gives every place the national tax): NaN lets floor_tax_of find it for this economy alone.
+    floor_tax_given::Float64 = NaN
     # The illiquid grid's dense part: with k_mid > 0, three fifths of the nodes lie on [0, k_mid] and
     # the rest run geometrically to k_max. On the exponential grid (k_mid = 0, every earlier result)
     # the nodes around median net wealth are over two years of income apart at 24 nodes, and liquid
@@ -410,6 +413,24 @@ function floor_effort(c::SAGEConfig)
     SAGEConfig(c; effort_by_cell = lv)
 end
 
+"""
+    floor_outlay_at(c, T)
+
+What the floor pays out per head in economy `c` (S off) when every household pays
+a total lump-sum tax `T`, whoever the tax is raised for. For the place layer,
+where the floor is financed by the nation and not by each place.
+"""
+function floor_outlay_at(c::SAGEConfig, T)
+    cg = SAGEConfig(c; S = false, E = false, lumptax = T - ui_only_tax_of(c), floor_tax_given = 0.0)
+    c0 = floor_effort(cg); cs = cells_of(c0); _, bw = betas_of(c0)
+    cT = SAGEConfig(c0; lumptax = T)
+    jobs = [(g, k, p) for g in 1:2 for (k, p) in enumerate(params_of(cT, cs[g]))]
+    sum((nworkers() > 1 ? pmap : map)(jobs) do (g, k, p)
+            p = update(p; social_strength = 0.0)
+            cs[g].share * bw[k] * cell_summary(p, solve_participation_logit(p, 1.0; theta = c0.theta, full = true)).fout
+        end)
+end
+
 const FLOOR_TAX_CACHE = Dict{UInt64,Float64}()
 const FLOOR_TAX_LAST = Ref(0.0)
 """
@@ -424,6 +445,7 @@ the economy reports what is left as `budget_gap`). Remembered per configuration.
 """
 function floor_tax_of(c::SAGEConfig)
     c.cfloor > 0 || return 0.0
+    isnan(c.floor_tax_given) || return c.floor_tax_given
     c.effort_mode === :job || error("the means-tested floor needs effort_mode = :job")
     c0 = floor_effort(SAGEConfig(c; S = false, E = false, cfloor = c.cfloor))
     key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.alpha, c0.alpha_off, c0.A, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,

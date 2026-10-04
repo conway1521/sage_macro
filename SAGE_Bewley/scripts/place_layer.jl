@@ -38,11 +38,34 @@ function place_base(c::SAGEConfig, pl)
 end
 
 "The national total tax per head: the lump sum plus the population-weighted cost of every place's unemployment insurance."
-national_tax(c::SAGEConfig, places, w) = c.lumptax + sum(w[i] * ui_tax_of(place_base(c, places[i])) for i in eachindex(places))
+function national_tax(c::SAGEConfig, places, w)
+    c.cfloor > 0 || return c.lumptax + sum(w[i] * ui_tax_of(place_base(c, places[i])) for i in eachindex(places))
+    # With a means-tested floor the nation pays for it, as it does for unemployment insurance: one
+    # tax F per head such that F equals the population-weighted outlay of all places when every
+    # household pays the national total. Until 2026-10-04 each place found the tax for its own floor,
+    # which a poor place cannot raise (the Italian South: the iteration ran away).
+    base = c.lumptax + sum(w[i] * ui_only_tax_of(place_base(c, places[i])) for i in eachindex(places))
+    F = 0.0
+    for it in 1:30
+        out = sum(w[i] * floor_outlay_at(place_base(c, places[i]), base + F) for i in eachindex(places))
+        isfinite(out) || error("the floor's outlay is not finite at a national tax of $F: a floor of $(c.cfloor) cannot be financed")
+        if abs(out - F) < 1e-8
+            F = out; break
+        end
+        F = it <= 6 ? out : 0.5 * (F + out)
+        it == 30 && @warn "the national tax for the floor did not settle" F
+    end
+    NAT_FLOOR_TAX[] = F
+    base + F
+end
+"The national tax per head for the floor found by the last `national_tax` with a floor on."
+const NAT_FLOOR_TAX = Ref(0.0)
 
 "One place, financed nationally: its lump sum plus its own UI tax equals the national total `T_nat`."
 function place_config(c::SAGEConfig, pl, T_nat)
     cp = place_base(c, pl)
+    # with a floor: the place pays the national total, and no tax of its own for the floor
+    c.cfloor > 0 && return SAGEConfig(cp; lumptax = T_nat - ui_only_tax_of(cp), floor_tax_given = 0.0)
     lt = T_nat - ui_tax_of(cp)
     # a place identical to the nation gets the nation's tax exactly (rounding in
     # the national sum would otherwise change it in the last bit and force a

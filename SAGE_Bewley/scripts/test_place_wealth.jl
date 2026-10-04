@@ -32,7 +32,7 @@ c = country_config(code; v3 = true, config = cfg, S = occursin('S', cfg), A = oc
 fsh = length(ARGS) >= 2 ? parse(Float64, ARGS[2]) : 0.0
 fsh > 0 && (c = SAGEConfig(c; cfloor = fsh * c.e_ref))
 r = solve_economy(c)
-fsh > 0 && @printf("means-tested floor at %.2f of reference earnings (%.4f)\n", fsh, c.cfloor)
+fsh > 0 && @printf("means-tested floor at %.2f of reference earnings (%.4f), financed nationally: tax per head %.5f\n", fsh, c.cfloor, NAT_FLOOR_TAX[])
 _, w = places_from_data(code, SAGEConfig(c; E = false); typology = c.typology, channels = c.e_channels, epsilon = c.epsilon)
 names = [nm for (nm, _) in r.by_place]; res = [x for (_, x) in r.by_place]
 hfcs = Dict{Tuple{String,String,String},Tuple{Float64,Float64}}()
