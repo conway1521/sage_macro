@@ -14,12 +14,14 @@
 # The floor is given as a share of the reference effort's earnings (e_ref), the
 # model's unit for a full year's pay at mean productivity.
 #
-#   julia --project=scripts/run_env scripts/test_floor.jl [CODE] [CONFIG]
+#   julia --project=scripts/run_env scripts/test_floor.jl [CODE] [CONFIG] [v3]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "IT"
 cfg = length(ARGS) >= 2 ? uppercase(ARGS[2]) : "G"
-c = SAGEConfig(country_config(code; config = cfg, S = false, A = occursin('A', cfg)); effort_mode = :job)
+V3 = length(ARGS) >= 3 && lowercase(ARGS[3]) == "v3"          # third argument v3: the version 3 economy and its calibration
+c = V3 ? country_config(code; config = cfg, v3 = true, S = false, A = occursin('A', cfg)) :
+         SAGEConfig(country_config(code; config = cfg, S = false, A = occursin('A', cfg)); effort_mode = :job)
 results = Tuple{String,Bool}[]
 check(name, ok) = (push!(results, (name, ok)); @printf("   -> %s: %s\n", name, ok ? "PASS" : "FAIL"); flush(stdout))
 F = (:rate, :mean_effort_employed, :hand_to_mouth_kvw, :mpc, :mps, :consumption, :consumption_drop, :income_poor, :asset_poor, :mean_income)

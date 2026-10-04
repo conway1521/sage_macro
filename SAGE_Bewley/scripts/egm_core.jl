@@ -375,6 +375,16 @@ function solve_job_effort(p::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01, 
     tfl = [floor_at(p, s) for s in 1:nz]
     emp = [wv[s] > 0 for s in 1:nz]
     pfree = update(p; job_effort = false, effort_set = Float64[])
+    # With the means-tested floor on, the job's effort levels are those of the economy without it:
+    # the floor changes who works for how much, not what a job asks. Letting the condition respond to
+    # the floor gave no solution in version 3 (gap NaN in every Italian place, 2026-10-04): in the
+    # lowest income states every household is on the floor, where an extra euro earned is taken back.
+    if p.cfloor > 0
+        s0 = solve_job_effort(update(p; cfloor = 0.0), Q_agg; theta = theta, full = true, tol = tol, maxit = maxit, etol = etol, emax = emax)
+        sol = solve_participation_egm(update(pfree; effort_set = s0.effort_set), Q_agg; theta = theta, full = true, tol = tol, maxit = maxit)
+        full || return sol.Q, sol.rate, sol.meaninc, sol.partbase
+        return merge(sol, (effort_set = s0.effort_set, effort_gap = s0.effort_gap, effort_iters = s0.effort_iters))
+    end
     pstart = update(pfree; cfloor = 0.0)          # the free-effort starting point has no floor
     if warm !== nothing && hasproperty(warm, :effort_set) && length(warm.effort_set) == nz
         e = copy(warm.effort_set); w0 = warm
