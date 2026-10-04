@@ -39,10 +39,10 @@ IND = [("hand-to-mouth", x -> x.hand_to_mouth_kvw, "htm_model_narrow_total"), ("
 @printf("%s %s, version 3, %d places | national: hand-to-mouth %.4f, asset poverty %.4f, income poverty %.4f\n", code, cfg, length(res), r.hand_to_mouth_kvw, r.asset_poor, r.income_poor)
 results = Tuple{String,Bool}[]
 check(name, ok) = (push!(results, (name, ok)); @printf("   -> %s: %s\n", name, ok ? "PASS" : "FAIL"))
-for (lab, get, mom) in IND
+for (lab, val, mom) in IND
     println("\n", lab)
     M = ["IT North", "IT Centre", "IT South and Islands"]
-    mod = [sum(w[i] * get(res[i]) for i in eachindex(res) if macro_of(names[i]) == m) / sum(w[i] for i in eachindex(res) if macro_of(names[i]) == m) for m in M]
+    mod = [sum(w[i] * val(res[i]) for i in eachindex(res) if macro_of(names[i]) == m) / sum(w[i] for i in eachindex(res) if macro_of(names[i]) == m) for m in M]
     dat = [get(hfcs, (mom, "macro_region", m), (NaN, NaN)) for m in M]
     for k in 1:3
         @printf("   %-22s model %.3f | HFCS %.3f (s.e. %.3f)\n", M[k], mod[k], dat[k][1], dat[k][2])
@@ -54,7 +54,7 @@ for (lab, get, mom) in IND
     xs = Float64[]; ys = Float64[]; ws = Float64[]
     for (k, idx) in sort(collect(g))
         d = get(hfcs, (mom, "region", "IT$k"), nothing); d === nothing && continue
-        push!(xs, sum(w[i] * get(res[i]) for i in idx) / sum(w[i] for i in idx)); push!(ys, d[1]); push!(ws, sum(w[i] for i in idx))
+        push!(xs, sum(w[i] * val(res[i]) for i in idx) / sum(w[i] for i in idx)); push!(ys, d[1]); push!(ws, sum(w[i] for i in idx))
     end
     if length(xs) >= 5
         mx = sum(ws .* xs) / sum(ws); my = sum(ws .* ys) / sum(ws)
