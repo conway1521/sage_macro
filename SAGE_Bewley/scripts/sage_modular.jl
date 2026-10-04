@@ -224,6 +224,11 @@ Base.@kwdef struct SAGEConfig
     death::Float64 = 1 / 45
     nk::Int = 24
     k_max::Float64 = 150.0        # 60 held 1% of the mass at the top at beta_bar 0.99 (2026-09-29)
+    # Adjustment targets between two neighbouring illiquid nodes (egm2_core.jl). At 1 an adjuster
+    # chooses among the nodes alone and holds the remainder as liquid wealth, and the liquid median
+    # then moves with the grid (0.21 of income at 24 nodes, 0.16 at 48; probe_two_asset_grid.jl,
+    # 2026-10-03). 1 reproduces every earlier two-asset result.
+    k_sub::Int = 1
     b_max::Float64 = 15.0
     nb::Int = 120
     # numerics
@@ -337,7 +342,7 @@ function params_of(c::SAGEConfig, cell)
     if c.illiquid
         c.solver === :egm || error("the illiquid asset needs solver = :egm")
         ps = [update(p; illiquid = true, Rk = p.R + c.illiquid_premium, chi0 = c.chi0, death = c.death,
-                     nk = c.nk, k_max = c.k_max, a_max = c.b_max, na = c.nb) for p in ps]
+                     nk = c.nk, k_max = c.k_max, k_sub = c.k_sub, a_max = c.b_max, na = c.nb) for p in ps]
     end
     (c.search_time == 0 && c.belong_u == 1 && c.time_bonus == 0) && return ps
     tf = (c.search_time == 0 && c.time_bonus == 0) ? Float64[] : [(e ? 0.0 : c.search_time) - c.time_bonus for e in emp]

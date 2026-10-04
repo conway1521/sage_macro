@@ -12,6 +12,13 @@
 #    between the two illiquid nodes around Rk k;
 #  - an adjuster at (b, k) chooses k' = k_j and holds the rest as liquid, so it
 #    faces the inner problem at effective liquid b + (Rk k - chi0 - k_j) / R.
+#    With k_sub > 1 the targets also lie between the nodes, k_sub steps to each
+#    interval: a target k' between k_j and k_j+1 has the value of the two inner
+#    solutions at the same effective liquid wealth, weighted linearly, which is
+#    the interpolation of the continuation value in k' that the keeper already
+#    uses, and its mass goes to the two nodes with those weights (Young 2010).
+#    Without it the remainder between two nodes sits in liquid wealth, and the
+#    liquid median moves with the illiquid grid (probe_two_asset_grid.jl).
 # The choice among adjusting targets and between keeping and adjusting carries
 # logit smoothing of scale theta_adj, as participation does (Iskhakov,
 # Jorgensen, Rust and Schjerning 2017). Default 0.01: at the participation
@@ -77,7 +84,12 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     j0 = [clamp(searchsortedlast(kg, kn[m]), 1, nk - 1) for m in 1:nk]
     om = [clamp((kn[m] - kg[j0[m]]) / (kg[j0[m]+1] - kg[j0[m]]), 0.0, 1.0) for m in 1:nk]
     # adjusters: the shift in effective liquid wealth for each (current k_m, target k_j)
-    shift = [(p.Rk * kg[m] - p.chi0 - kg[j]) / p.R for m in 1:nk, j in 1:nk]
+    # targets: (lower node, weight on the node above); k_sub = 1 gives the nodes themselves
+    nsub = max(p.k_sub, 1); nf = (nk - 1) * nsub + 1
+    tj = [f == nf ? nk - 1 : (f - 1) ÷ nsub + 1 for f in 1:nf]
+    tw = [f == nf ? 1.0 : ((f - 1) % nsub) / nsub for f in 1:nf]
+    kt = [(1 - tw[f]) * kg[tj[f]] + tw[f] * kg[tj[f]+1] for f in 1:nf]
+    shift = [(p.Rk * kg[m] - p.chi0 - kt[f]) / p.R for m in 1:nk, f in 1:nf]
 
     V = zeros(na, nk, nz); Vb = zeros(na, nk, nz)
     if warm !== nothing
@@ -96,10 +108,10 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     bpin = (zeros(na, nk, nz), zeros(na, nk, nz)); vin = (zeros(na, nk, nz), zeros(na, nk, nz))
     Vin = zeros(na, nk, nz); P1in = zeros(na, nk, nz); muin = zeros(na, nk, nz)
     Vn = similar(V); Vbn = similar(Vb); Padj = zeros(na, nk, nz)
-    qadj = zeros(nk, na, nk, nz)          # adjusting targets: weight of k_j at (i, m, s)
+    qadj = zeros(nf, na, nk, nz)          # adjusting targets: weight of target f at (i, m, s)
     EV = zeros(na, nz); EVb = zeros(na, nz)
     aend = zeros(na); cend = zeros(na); eend = zeros(na)
-    Vj = zeros(nk); Mj = zeros(nk); ptr = ones(Int, nk)
+    Vj = zeros(nf); Mj = zeros(nf); ptr = ones(Int, nf)
     iters = 0
     t_in = 0.0; t_out = 0.0
     hist = zeros(maxit); stall = 0.0; relax = 1.0; stalled = false
@@ -131,7 +143,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                 Vk = (1 - w) * Vin[i, jl, s] + w * Vin[i, jl+1, s]
                 Mk = (1 - w) * muin[i, jl, s] + w * muin[i, jl+1, s]
                 vmax = -Inf
-                for j in 1:nk
+                for j in 1:nf
                     be = a[i] + shift[m, j]
                     if be < a[1]
                         Vj[j] = -Inf; Mj[j] = 0.0; continue
@@ -142,21 +154,30 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                         q += 1
                     end
                     ptr[j] = q
-                    Vj[j] = lin_at(a, view(Vin, :, j, s), be, q)
-                    Mj[j] = max(lin_at(a, view(muin, :, j, s), be, q), 0.0)
+                    jn = tj[j]; wn = tw[j]
+                    if wn == 0.0
+                        Vj[j] = lin_at(a, view(Vin, :, jn, s), be, q)
+                        Mj[j] = max(lin_at(a, view(muin, :, jn, s), be, q), 0.0)
+                    elseif wn == 1.0
+                        Vj[j] = lin_at(a, view(Vin, :, jn + 1, s), be, q)
+                        Mj[j] = max(lin_at(a, view(muin, :, jn + 1, s), be, q), 0.0)
+                    else
+                        Vj[j] = (1 - wn) * lin_at(a, view(Vin, :, jn, s), be, q) + wn * lin_at(a, view(Vin, :, jn + 1, s), be, q)
+                        Mj[j] = max((1 - wn) * lin_at(a, view(muin, :, jn, s), be, q) + wn * lin_at(a, view(muin, :, jn + 1, s), be, q), 0.0)
+                    end
                     Vj[j] > vmax && (vmax = Vj[j])
                 end
                 if vmax == -Inf
                     Va_ = -Inf; Ma = 0.0
-                    for j in 1:nk; qadj[j, i, m, s] = 0.0; end
+                    for j in 1:nf; qadj[j, i, m, s] = 0.0; end
                 else
                     ssum = 0.0
-                    for j in 1:nk
+                    for j in 1:nf
                         Vj[j] == -Inf && (qadj[j, i, m, s] = 0.0; continue)
                         ev = exp((Vj[j] - vmax) / theta_adj); qadj[j, i, m, s] = ev; ssum += ev
                     end
                     Ma = 0.0
-                    for j in 1:nk
+                    for j in 1:nf
                         qadj[j, i, m, s] /= ssum; Ma += qadj[j, i, m, s] * Mj[j]
                     end
                     Va_ = vmax + theta_adj * log(ssum)
@@ -226,7 +247,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     t2 = time()
     trace && @printf("  value iteration: inner %.1f s, outer %.1f s\n", t_in, t_out)
     dist = two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
-                                  death = p0.death, oth = oth, wv = wv, trs = [transfer_at(p, s) for s in 1:nz])
+                                  tj = tj, tw = tw, death = p0.death, oth = oth, wv = wv, trs = [transfer_at(p, s) for s in 1:nz])
     λ = dist.lambda; P1s = dist.P1; es = dist.e
     trace && @printf("  distribution %.1f s\n", time() - t2)
     part = 0.0; meaninc = 0.0; partbase = 0.0
@@ -241,7 +262,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
      lambda = λ, P1 = P1s, e = es, e_d = dist.e_d, cbar = dist.cbar, ybar = dist.ybar, post = dist.post,
      Pi = Π, Padj = Padj, V = V, Vb = Vb, z_vals = z_vals,
      iters = iters, stalled = stall, relax = relax, theta = theta, inner = (c = cin, e = ein, bp = bpin, P1 = P1in), qadj = qadj,
-     j0 = j0, om = om, shift = shift)
+     j0 = j0, om = om, shift = shift, tj = tj, tw = tw)
 end
 
 """
@@ -251,7 +272,7 @@ income transition then mixes s. Mass starts at k = 0. Also returns the
 participation probability and expected effort by state.
 """
 function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
-                                death = 0.0, oth = nothing, wv = nothing, trs = nothing)
+                                tj = collect(1:length(kg)), tw = zeros(length(kg)), death = 0.0, oth = nothing, wv = nothing, trs = nothing)
     na, nk, nz = length(a), length(kg), size(Π, 1)
     n = na * nk * nz
     idx(i, m, s) = i + (m - 1) * na + (s - 1) * na * nk
@@ -290,10 +311,12 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
             p1 > 0 && blot!(from, bpin[2][i, jj, s], jj, s, wt * p1)
         end
         pa <= 0 && continue
-        # adjusting: target k_j, inner solution at effective liquid wealth
-        for j in 1:nk
-            q = qadj[j, i, m, s]; wt = pa * q; wt <= 1e-12 && continue
-            be = min(a[i] + shift[m, j], a[end])
+        # adjusting: each target, at its effective liquid wealth, to the node below it and
+        # the node above with the target's weights (one node when the target is a node)
+        for f in eachindex(tj), (j, wn) in ((tj[f], 1 - tw[f]), (tj[f] + 1, tw[f]))
+            wn <= 0 && continue
+            q = qadj[f, i, m, s]; wt = pa * q * wn; wt <= 1e-12 && continue
+            be = min(a[i] + shift[m, f], a[end])
             r = clamp(searchsortedlast(a, be), 1, na - 1)
             p1 = clamp(lin_at(a, view(P1in, :, j, s), be, r), 0.0, 1.0)
             e0 = lin_at(a, view(ein[1], :, j, s), be, r); e1 = lin_at(a, view(ein[2], :, j, s), be, r)
@@ -390,10 +413,10 @@ function each_branch_full(f, sol, i, m, s)
         p1 > 0 && f(wt * p1, 1, inn.bp[2][i, jj, s], jj, inn.e[2][i, jj, s], a[i])
     end
     pa <= 0 && return
-    nk = length(sol.k)
-    for j in 1:nk
-        wt = pa * sol.qadj[j, i, m, s]; wt <= 1e-12 && continue
-        be = min(a[i] + sol.shift[m, j], a[end])
+    for f in eachindex(sol.tj), (j, wn) in ((sol.tj[f], 1 - sol.tw[f]), (sol.tj[f] + 1, sol.tw[f]))
+        wn <= 0 && continue
+        wt = pa * sol.qadj[f, i, m, s] * wn; wt <= 1e-12 && continue
+        be = min(a[i] + sol.shift[m, f], a[end])
         r = clamp(searchsortedlast(a, be), 1, na - 1)
         p1 = clamp(lin_at(a, view(inn.P1, :, j, s), be, r), 0.0, 1.0)
         p1 < 1 && f(wt * (1 - p1), 0, max(lin_at(a, view(inn.bp[1], :, j, s), be, r), a[1]), j,

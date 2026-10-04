@@ -207,6 +207,9 @@ Base.@kwdef struct SAGEParams
     chi0::Float64 = 0.0
     nk::Int = 30
     k_max::Float64 = 60.0
+    # Targets an adjuster may choose between two neighbouring illiquid nodes
+    # (egm2_core.jl): 1 is the nodes alone.
+    k_sub::Int = 1
     # Perpetual youth with the illiquid asset on: households die with this
     # probability and are replaced by newborns with no wealth (Kaplan, Moll and
     # Violante 2018: 1/180 a quarter, a 45-year average lifetime). Discounting
