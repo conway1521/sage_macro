@@ -320,6 +320,8 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
 
     # policies by state, for the distribution and the aggregates
     t2 = time()
+    get(ENV, "SAGE_MEM", "0") == "1" &&
+        (println("  two-asset value iteration: ", iters, " iterations, ", nk, " nodes, ", nf, " targets, resident memory ", round(Sys.maxrss() / 1e9; digits = 2), " GB"); flush(stdout))
     trace && @printf("  value iteration: inner %.1f s, outer %.1f s\n", t_in, t_out)
     dist = two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
                                   wsel = wsel, death = p0.death, oth = oth, wv = wv, trs = [transfer_at(p, s) for s in 1:nz])
@@ -415,6 +417,16 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
         end
     end
     Tt = transpose(sparse(rows, cols, vals, n, n))
+    # the triplets are the largest objects of a solve and nothing downstream reads them: released here
+    # (they were returned with the solution until 2026-10-04, and sent from every worker to the master)
+    nent = length(vals)
+    if get(ENV, "EGM2_TRACE", "0") == "1"
+        rs = vec(sum(sparse(rows, cols, vals, n, n), dims = 2))
+        println("  row sums of the decision operator: min ", minimum(rs), " max ", maximum(rs))
+    end
+    empty!(rows); empty!(cols); empty!(vals); sizehint!(rows, 0); sizehint!(cols, 0); sizehint!(vals, 0)
+    get(ENV, "SAGE_MEM", "0") == "1" &&
+        (println("  two-asset distribution: ", nent, " transition entries over ", n, " states, resident memory ", round(Sys.maxrss() / 1e9; digits = 2), " GB"); flush(stdout))
     λ = zeros(n)
     for s in 1:nz, i in 1:na; λ[idx(i, 1, s)] = 1.0; end
     λ ./= sum(λ)
@@ -446,18 +458,13 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
             println("    it ", it, " change ", dd, " total mass ", sum(λ), " mass at k = 0 ", sum(view(reshape(λ, na, nk, nz), :, 1, :)))
         dd < 1e-11 && break
     end
-    if get(ENV, "EGM2_TRACE", "0") == "1"
-        rs = vec(sum(sparse(rows, cols, vals, n, n), dims = 2))
-        println("  row sums of the decision operator: min ", minimum(rs), " max ", maximum(rs))
-    end
     get(ENV, "EGM2_TRACE", "0") == "1" && println("  distribution iterations ", nit)
     λ ./= sum(λ)
     @inbounds for x in eachindex(e0s)
         m0 = 1 - P1s[x]; e0s[x] = m0 > 1e-14 ? e0s[x] / m0 : 0.0
         e1s[x] = P1s[x] > 1e-14 ? e1s[x] / P1s[x] : 0.0
     end
-    (lambda = reshape(λ, na, nk, nz), P1 = P1s, e = es, e_d = (e0s, e1s), cbar = cbar, ybar = ybar,
-     post = (rows = rows, cols = cols, vals = vals))
+    (lambda = reshape(λ, na, nk, nz), P1 = P1s, e = es, e_d = (e0s, e1s), cbar = cbar, ybar = ybar, post = nothing)
 end
 
 # ------------------------------------------------------------- summaries --
