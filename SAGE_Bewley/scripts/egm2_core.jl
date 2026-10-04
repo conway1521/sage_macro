@@ -413,10 +413,10 @@ function each_branch_full(f, sol, i, m, s)
         p1 > 0 && f(wt * p1, 1, inn.bp[2][i, jj, s], jj, inn.e[2][i, jj, s], a[i])
     end
     pa <= 0 && return
-    for f in eachindex(sol.tj), (j, wn) in ((sol.tj[f], 1 - sol.tw[f]), (sol.tj[f] + 1, sol.tw[f]))
+    for t in eachindex(sol.tj), (j, wn) in ((sol.tj[t], 1 - sol.tw[t]), (sol.tj[t] + 1, sol.tw[t]))
         wn <= 0 && continue
-        wt = pa * sol.qadj[f, i, m, s] * wn; wt <= 1e-12 && continue
-        be = min(a[i] + sol.shift[m, f], a[end])
+        wt = pa * sol.qadj[t, i, m, s] * wn; wt <= 1e-12 && continue
+        be = min(a[i] + sol.shift[m, t], a[end])
         r = clamp(searchsortedlast(a, be), 1, na - 1)
         p1 = clamp(lin_at(a, view(inn.P1, :, j, s), be, r), 0.0, 1.0)
         p1 < 1 && f(wt * (1 - p1), 0, max(lin_at(a, view(inn.bp[1], :, j, s), be, r), a[1]), j,
