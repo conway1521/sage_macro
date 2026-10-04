@@ -1,0 +1,5 @@
+FR G, two assets, version 3, effective patience 0.9595, fixed cost 0.0022, premium 0.0354; illiquid grid to 150 with exponent 3.0
+   nk |  net w/inc liquid/inc  poor htm wealthy htm     MPC adjusting |  minutes | illiquid nodes around the median, in years of median income
+   24 |       4.53      0.213    0.0280      0.1342   0.157       NaN |      1.1 | 1.67 3.26 5.63 8.93
+   48 |       5.17      0.163    0.0273      0.1761   0.148       NaN |      3.6 | 3.06 4.07 5.28 6.72
+DONE
