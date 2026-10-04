@@ -29,6 +29,11 @@
 #    of income at 1, 4 and 16 on 24 nodes). Refining inside the iteration was
 #    tried and did not converge in 5000 iterations (2026-10-04): the search lands
 #    on a different side of a kink from one iteration to the next.
+#    One refining pass alone left the value computed for the steps and the
+#    policy for the refined targets, and the liquid median then rose with the
+#    number of steps (0.058, 0.068, 0.090 at 4, 8, 16). So the value iteration is
+#    continued with the refined targets held fixed, and the targets refined
+#    again, K_ROUNDS times: the value is then the value of the refined policy.
 #    (Smoothing over every target was tried first, 2026-10-04: the weights spread
 #    over many near-equal targets, the branches of the distribution multiplied
 #    and a solve no longer fitted in memory.)
@@ -42,6 +47,7 @@
 
 using Printf
 const GOLD = 0.6180339887498949
+const K_ROUNDS = 2          # rounds of (value iteration at fixed refined targets, refine again), k_sub > 1
 
 "Illiquid grid: zero, then exponentially spaced to k_max."
 illiquid_grid(p::SAGEParams) = SAGEBewley.exponential_grid(0.0, p.k_max, p.nk, p.pexp)
@@ -59,10 +65,12 @@ at liquid wealth ai: the two inner solutions at the same effective liquid
 wealth, weighted linearly. (-Inf, 0) when the target is not affordable.
 """
 @inline function adj_eval(a, Vin, muin, s, o, ω, ai, num, kg, R)
-    be = ai + (num - ((1 - ω) * kg[o] + ω * kg[o+1])) / R
+    be = ai + (num - (ω == 0 ? kg[o] : (1 - ω) * kg[o] + ω * kg[o+1])) / R
     be < a[1] && return (-Inf, 0.0)
     be = min(be, a[end])
     q = clamp(searchsortedlast(a, be), 1, length(a) - 1)
+    (ω == 0 || ω == 1) && (n_ = ω == 0 ? o : o + 1;
+                           return (lin_at(a, view(Vin, :, n_, s), be, q), max(lin_at(a, view(muin, :, n_, s), be, q), 0.0)))
     v = (1 - ω) * lin_at(a, view(Vin, :, o, s), be, q) + ω * lin_at(a, view(Vin, :, o + 1, s), be, q)
     isnan(v) && return (-Inf, 0.0)
     (v, max((1 - ω) * lin_at(a, view(muin, :, o, s), be, q) + ω * lin_at(a, view(muin, :, o + 1, s), be, q), 0.0))
@@ -150,8 +158,10 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     iters = 0
     t_in = 0.0; t_out = 0.0
     hist = zeros(maxit + 1); stall = 0.0; relax = 1.0; stalled = false
-    polish = false                        # the last pass, k_sub > 1: targets refined, value kept
-    for it in 1:maxit+1
+    polish = false                        # a refining pass, k_sub > 1: targets refined, value kept
+    frozen = false; rounds = 0; itp = 0; hitmax = false     # value iteration at the refined targets; iterations in this phase
+    for it in 1:(K_ROUNDS+1)*(maxit+1)
+        polish || (itp += 1)
         t0 = time()
         # inner: the liquid problem for every illiquid node taken as k'
         for j in 1:nk
@@ -179,6 +189,14 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                 Vk = (1 - w) * Vin[i, jl, s] + w * Vin[i, jl+1, s]
                 Mk = (1 - w) * muin[i, jl, s] + w * muin[i, jl+1, s]
                 vmax = -Inf
+                if frozen && !polish
+                    # the targets of the last refining pass, held fixed
+                    num_ = p.Rk * kg[m] - p.chi0
+                    for j in 1:nk
+                        Vo[j], Mo[j] = adj_eval(a, Vin, muin, s, j, wsel[j, i, m, s], a[i], num_, kg, p.R)
+                        Vo[j] > vmax && (vmax = Vo[j])
+                    end
+                else
                 for j in 1:nf
                     be = a[i] + shift[m, j]
                     if be < a[1]
@@ -238,6 +256,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                         end
                     end
                 end
+                end
                 if vmax == -Inf
                     Va_ = -Inf; Ma = 0.0
                     for j in 1:nk; qadj[j, i, m, s] = 0.0; end
@@ -265,7 +284,12 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
             end
         end
         t_out += time() - t1
-        polish && break                   # policies are in place; V and Vb stay the converged ones
+        if polish                         # policies are in place; V and Vb stay the converged ones
+            polish = false
+            rounds >= K_ROUNDS && break
+            rounds += 1; frozen = true; itp = 0; relax = 1.0; stalled = false
+            continue
+        end
         dmin = Inf; dmax = -Inf
         @inbounds for x in eachindex(V)
             δ = Vn[x] - V[x]; δ < dmin && (dmin = δ); δ > dmax && (dmax = δ)
@@ -279,8 +303,8 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
         # halving the step each time down to 1/16. The fixed point is unchanged.
         # A remaining stall below 1e-2 at the smallest step averages the last two
         # iterates and stops; `stalled` in the result records it and its size.
-        hist[it] = dist
-        if it > 100 && it % 50 == 0 && minimum(view(hist, it-49:it)) > 0.9 * minimum(view(hist, it-99:it-50))
+        hist[itp] = dist
+        if itp > 100 && itp % 50 == 0 && minimum(view(hist, itp-49:itp)) > 0.9 * minimum(view(hist, itp-99:itp-50))
             if relax > 1 / 16
                 relax /= 2
             elseif dist < 1e-2
@@ -306,16 +330,17 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
             end
         end
         V, Vn = Vn, V; Vb, Vbn = Vbn, Vb
-        iters = it
+        iters += 1
         isnan(dist) && error("the two-asset household problem has a state with no feasible choice (value NaN at iteration $it)")
-        if dist < tol || stalled || it == maxit
+        if dist < tol || stalled || itp == maxit
+            (itp == maxit && !(dist < tol || stalled)) && (hitmax = true)
             nsub > 1 || break
             polish = true
         end
     end
     # said, not swallowed: running out of iterations, and a stall accepted at more
     # than a fifth of the smoothing scale (the summaries do not carry `stalled`)
-    iters == maxit && !stalled && @warn "solve_two_asset_egm stopped at maxit without converging" maxit tol
+    hitmax && @warn "solve_two_asset_egm stopped at maxit without converging" maxit tol
     stall > 0.2 * theta_adj && @warn "solve_two_asset_egm accepted a stalled iteration" stall theta_adj chi0 = p.chi0
 
     # policies by state, for the distribution and the aggregates
