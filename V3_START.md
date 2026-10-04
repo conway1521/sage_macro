@@ -445,3 +445,41 @@ All eight MPC properties hold (`test_mpc_economics_FR_v3.txt`): the MPC falls fr
 - all dispersion is persistent risk, with no permanent differences beyond education and no transitory shocks.
 
 **Italy's liquid wealth** is the open misfit in the pilots (0.18 against 0.27 with patience at its bound): Italian deposits sit in sight accounts, so its narrow liquid wealth is high while its hand-to-mouth share is also high, which one patience distribution cannot give.
+
+## 16. The version 3 one-asset grid, three countries (2026-10-03)
+
+**The rule that stands.** The hand-to-mouth share owns the patience parameters (band 0.02) and is required, with effort. Median liquid wealth over income stays in the fit at a low weight (band 0.09) and is reported with its miss. Income persistence stays at the country table's 0.92.
+
+**What was tried on the way, and why it was dropped.**
+
+| rule | France | Germany | Italy |
+|---|---|---|---|
+| both wealth moments required, bands 0.02 and 0.03 (run 37094996963) | calibrates | hand-to-mouth 0.255 against 0.225, liquid 0.18 against 0.14, spread at 0 | 0.13 against 0.18, 0.21 against 0.27, spread at 0.15 |
+| both required, bands of two survey standard errors with a floor (run 37140582030) | not rerun | none of G, G+A, G+S+A: 0.25 and 0.18 | none: liquid inside (0.24 to 0.26), hand-to-mouth 0.11 against 0.18 |
+| the same with income persistence fitted in 0.90 to 0.97 (commit 9e9175a, laptop, Germany G) | | stalled at 0.261 and 0.173, persistence 0.915 | |
+| hand-to-mouth owns, liquid reported (run 37139922996) | files from the first rule stand | calibrates | calibrates |
+
+`probe_wealth_shape.jl` (outputs for the three countries beside it): patience, its spread and the dispersion of the shocks move the two wealth moments along one line in every country. Persistence looked independent at Germany's point (51 degrees off the line) but is close to collinear in France (12 degrees) and did not move the fit when freed. One patience distribution over one asset does not give both moments in Germany and Italy. The survey says why: most hand-to-mouth households are wealthy ones (France 0.17 of 0.21, Germany 0.12 of 0.19, Italy 0.09 of 0.16), which one asset cannot represent (Kaplan and Violante 2014).
+
+**The grid.** Targets: effort, hand-to-mouth, S80/S20; with S, participation by cell. Liquid wealth and the MPC are not required.
+
+| | hand-to-mouth (data) | liquid / income (data) | MPC (survey) | participation, multiplier |
+|---|---|---|---|---|
+| FR G | 0.223 (0.222) | 0.069 (0.059) | 0.34 (0.39) | |
+| FR G+A | on target | | 0.36 | |
+| FR G+S+A | on target | | 0.36 | 0.233, 1.9 |
+| FR G+S | on target | | 0.34 | 0.235, 1.9 |
+| DE G | 0.234 (0.225) | 0.218 (0.140) | 0.27 (0.47) | |
+| DE G+A | 0.229 | 0.203 | 0.27 | |
+| DE G+S+A | 0.231 | | | 0.278, 1.8 |
+| IT G | 0.172 (0.179) | 0.158 (0.272) | 0.31 (0.47) | |
+| IT G+A | 0.173 | 0.152 | 0.32 | |
+| IT G+S+A | 0.172 | | | 0.125, 1.3 |
+
+Germany and Italy G+S: the chained runs picked up the survey-band code and failed on it; rerun under the standing rule (run 37174463994).
+
+**Stated misses.** Liquid wealth in Germany (half as much again as the data) and Italy (a little over half the data). The MPC in Germany and Italy, 0.27 to 0.32 against 0.47 self-reported. In-work poverty, 0.14 to 0.17 against 0.07 to 0.12, in all three. Italy's survey moments are imprecise (standard errors 0.029 on the hand-to-mouth share and 0.028 on liquid wealth over income).
+
+**France's checks at the version 3 point.** Eight of eight MPC properties in G+A (MPC 0.60 in the bottom fifth of liquid wealth, 0.16 at the top; 0.71 unemployed, 0.33 employed). Agency: expected income loss to unemployment 1.9% against the OECD's 3.1%; consumption absorbs 67% of the income loss on job loss against 35% (INSEE), 97% in the lowest liquidity quartile against 58%. Identification (`identification.jl FR G v3`): effort and S80/S20 are owned cleanly; the owned block has condition number 97 because the spread and top patience are one dial.
+
+**Two assets, version 3: not calibrated, and a numerical doubt.** France G, three steps of the fit: net wealth over income 4.5 (4.78), liquid over income 0.21 (0.059) unchanged while the fixed cost fell from 0.05 to 0.002, wealthy hand-to-mouth 0.13 (0.18), MPC 0.16. An adjuster chooses illiquid wealth among 24 grid nodes and holds the remainder as liquid; near the median the nodes are more than a year of income apart, so the liquid median may be grid remainder. `probe_two_asset_grid.jl` solves the same economy on 24 and 48 nodes. Until it is read, the liquid moments of the two-asset model, version 2 included, are not results.
