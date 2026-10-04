@@ -40,7 +40,7 @@ for (nk, sub) in grids
     topm = hasproperty(r, :Ktot) ? 1 - r.Ktot[end-1] / r.Ktot[end] : NaN
     rss = maximum(fetch(@spawnat w Sys.maxrss()) for w in workers()) / 1e9
     @printf("%8s | %10.2f %10.3f %9.4f %11.4f %7.3f %9.3f | %8.1f | %s | %.4f | %.1f\n", string(nk, ":", sub), nwm, cdf_quantile(r.agrid, r.Wtot, 0.5) / r.median_income, r.hand_to_mouth_kvw, r.wealthy_htm, r.mpc, adj,
-            (time() - t0) / 60, join([@sprintf("%.2f", v) for v in kg[max(j - 1, 1):j+2]], " "))
+            (time() - t0) / 60, join([@sprintf("%.2f", v) for v in kg[max(j - 1, 1):j+2]], " "), topm, rss)
     flush(stdout)
 end
 println("DONE")

@@ -557,15 +557,32 @@ function two_asset_welfare_parts(p0::SAGEParams, sol)
             lbar[i, m, s] += wt * wv[s] * e
             k = clamp(searchsortedlast(a, bp), 1, na - 1)
             wk = clamp((a[k+1] - bp) / (a[k+1] - a[k]), 0.0, 1.0)
-            for s2 in 1:ns
-                pr = Π[s, s2] * wt; pr <= 0 && continue
-                push!(rows, x); push!(cols, idx(k, j, s2)); push!(vals, pr * wk)
-                push!(rows, x); push!(cols, idx(k + 1, j, s2)); push!(vals, pr * (1 - wk))
-            end
+            # the decision only (same income state); the income transition is applied in the iteration
+            push!(rows, x); push!(cols, idx(k, j, s)); push!(vals, wt * wk)
+            push!(rows, x); push!(cols, idx(k + 1, j, s)); push!(vals, wt * (1 - wk))
         end
     end
-    F = lu(sparse(1:n, 1:n, ones(n), n, n) - p.β * sparse(rows, cols, vals, n, n))
-    Vc = F \ uc; Ve = F \ ue; Vb = F \ ub; Vbu = F \ ubu; Veu = F \ ueu
+    # Policy evaluation by iteration on V = u + beta D (V Pi'), with D the decision operator and Pi the
+    # income transition. Until 2026-10-04 the operator D Pi was assembled (every branch times every income
+    # state: some 140 million entries on 24 nodes) and (I - beta D Pi) factorised, which took 8 to 16 GB a
+    # household problem. That, and not the solver, is what killed the two-asset runs on the runners and
+    # restarted the laptop three times on 3 October.
+    D = sparse(rows, cols, vals, n, n)
+    empty!(rows); empty!(cols); empty!(vals); sizehint!(rows, 0); sizehint!(cols, 0); sizehint!(vals, 0)
+    U = hcat(uc, ue, ub, ubu, ueu); X = U ./ (1 - p.β); Y = similar(X); Xn = similar(X)
+    Πt = Matrix(transpose(Π)); nb_ = na * nk
+    for it in 1:20_000
+        for q in 1:size(X, 2)
+            mul!(reshape(view(Y, :, q), nb_, ns), reshape(view(X, :, q), nb_, ns), Πt)
+        end
+        mul!(Xn, D, Y); Xn .= U .+ p.β .* Xn
+        dd = maximum(abs, Xn .- X); X, Xn = Xn, X
+        dd * p.β / (1 - p.β) < 1e-11 * (1 + maximum(abs, X)) && break
+        it == 20_000 && @warn "two_asset_welfare_parts: the policy evaluation stopped at its iteration limit" dd
+    end
+    Vc = X[:, 1]; Ve = X[:, 2]; Vb = X[:, 3]; Vbu = X[:, 4]; Veu = X[:, 5]
+    get(ENV, "SAGE_MEM", "0") == "1" &&
+        (println("  two-asset welfare parts: ", nnz(D), " decision entries, resident memory ", round(Sys.maxrss() / 1e9; digits = 2), " GB"); flush(stdout))
     vmass = zeros(ns); vcmass = zeros(ns); vemass = zeros(ns); vbmass = zeros(ns)
     vbumass = zeros(ns); veumass = zeros(ns); mppumass = zeros(ns)
     mpsmass = zeros(ns); mpemass = zeros(ns); mppmass = zeros(ns)
