@@ -264,6 +264,13 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
     aend = zeros(na); cend = zeros(na); eend = zeros(na)
     P1 = zeros(na, nz)
     iters = 0
+    # With the means-tested floor the value has a kink where the transfer starts and the plain
+    # iteration can cycle: 9410 household problems ran to maxit in one run of the Italian places
+    # with the floor (2026-10-04). The relaxation of the two-asset solver, for the floor only:
+    # when the bound stops improving the step is halved, down to 1/16, and a remaining stall
+    # below 1e-2 is accepted and reported. Without a floor nothing here is active.
+    floor_on = p.cfloor > 0
+    hist = floor_on ? zeros(maxit) : Float64[]; relax = 1.0; stalled = false; stall = 0.0
     for it in 1:maxit
         mul!(EV, V, Π'); mul!(EVa, Va, Π')
         for s in 1:nz, d in (0, 1)
@@ -294,8 +301,19 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
             δ = Vn[i] - V[i]; δ < dmin && (dmin = δ); δ > dmax && (dmax = δ)
         end
         dist = p.β / (1 - p.β) * (dmax - dmin)
-        if dist < tol
+        if floor_on
+            hist[it] = dist
+            if it > 100 && it % 50 == 0 && minimum(view(hist, it-49:it)) > 0.9 * minimum(view(hist, it-99:it-50))
+                relax > 1 / 16 ? (relax /= 2) : (dist < 1e-2 && (stalled = true))
+            end
+        end
+        if dist < tol || stalled
             Vn .+= p.β / (1 - p.β) * 0.5 * (dmin + dmax)
+            stalled && (Vn .= 0.5 .* (Vn .+ V); Van .= 0.5 .* (Van .+ Va); stall = dist)
+        elseif relax < 1
+            @inbounds for i in eachindex(V)
+                Vn[i] = V[i] + relax * (Vn[i] - V[i]); Van[i] = Va[i] + relax * (Van[i] - Va[i])
+            end
         end
         if trace && (it % 250 == 0 || it < 5)
             ia = argmax(abs.(Vn .- V))
@@ -307,9 +325,10 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
         # whose benefit net of tax is not positive) makes the log-sum NaN, which
         # then spreads to every state and never converges; say so at once
         isnan(dist) && error("the household problem has a state with no feasible choice (value NaN at iteration $it): check benefits net of the lump-sum tax")
-        dist < tol && break
+        (dist < tol || stalled) && break
     end
-    iters == maxit && @warn "solve_participation_egm stopped at maxit without converging" maxit tol
+    iters == maxit && !stalled && @warn "solve_participation_egm stopped at maxit without converging" maxit tol
+    stall > 1e-4 && @warn "solve_participation_egm accepted a stalled iteration (floor on)" stall
 
     λ = egm_distribution(a, Π, P1, a_d, na, nz)
     part = 0.0; meaninc = 0.0; partbase = 0.0
