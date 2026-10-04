@@ -500,3 +500,20 @@ What holds in all three countries: belonging adds to welfare and moves the hand-
 **Places (E) in version 3.** Germany G+S+A+E calibrated (participation 0.279, cells on target, multiplier 1.7 to 1.8, hand-to-mouth 0.232; five hours over two jobs). Germany G+E and G+A+E fitted and then crashed on a missing field in the report line; France and Italy were cancelled at the six-hour limit inside the fit. Fixed: the fit stops on the moments it owns (it had been running all sixteen steps after liquid wealth, which is not required), keeps its place across jobs, and starts a place configuration from the same one without places. Relaunched (runs 37213300219, 37213302262).
 
 **Two assets.** The moments move with the illiquid grid: liquid wealth over income 0.213 at 24 nodes and 0.163 at 48, wealthy hand-to-mouth 0.134 and 0.176, net wealth over income 4.53 and 5.17 (`probe_two_asset_grid_FR.txt`). 96 and 192 nodes do not fit on a runner. The solver now lets an adjuster choose targets between the nodes (`k_sub`; 1 is the old behaviour and the default), with the value interpolated linearly between the two nodes' inner solutions and the mass split between them. Under test on a runner (24 nodes with 1, 4 and 16 targets per interval; the first must reproduce 0.213).
+
+## 18. The place layer fails the wealth test (2026-10-04)
+
+`test_place_wealth.jl`, Italy, version 3, G+E and G+A+E, 21 TL2 regions, nothing in E fitted to wealth. Against the HFCS 2021:
+
+| | North | Centre | South and Islands | by region (19), correlation |
+|---|---|---|---|---|
+| Hand-to-mouth, model (G+A+E) | 0.247 | 0.152 | 0.102 | minus 0.66 |
+| Hand-to-mouth, HFCS | 0.096 | 0.151 | 0.316 | |
+| Liquid-asset poverty, model | 0.488 | 0.447 | 0.320 | minus 0.83 |
+| Liquid-asset poverty, HFCS | 0.248 | 0.273 | 0.505 | |
+| Income poverty, model | 0.165 | 0.171 | 0.207 | plus 0.86 |
+| Income poverty, HFCS | 0.058 | 0.096 | 0.291 | |
+
+The model orders the regions the wrong way round on both buffer indicators. Where unemployment risk is high, its households hold more liquid wealth, and where jobs are safe they hold less: the precautionary motive, working as it should, against the data. Income poverty has the right order and a quarter of the spread. This is the same failure the HFCS showed for version 2 (section 14), now measured region by region. The regional comparison reads the HFCS codes IT1 to IT20 as ISTAT's; the three macro-regions do not depend on that.
+
+What the literature says is missing: a means-tested floor, under which low-income households have no reason to save (Hubbard, Skinner and Zeldes 1995). The floor is built and off in the baseline. Italy had one in 2021 (Reddito di cittadinanza, 0.27 of the gross average wage). The test takes the floor as a second argument; run with it on next.

@@ -15,13 +15,24 @@
 # ... 20 Sardegna), with Bolzano and Trento together as 4: an assumption, which
 # the macro-region rows do not need.
 #
-#   julia --project=scripts/run_env scripts/test_place_wealth.jl [CONFIG]
+# Second argument: a means-tested floor, as a share of a year's reference
+# earnings (as in test_floor.jl). Without it the model orders the regions the
+# wrong way round (2026-10-04: more hand-to-mouth in the North, where jobs are
+# safe and households need no buffer). Italy's Reddito di cittadinanza, in force
+# when the HFCS 2021 was collected, was 0.27 of the gross average wage for a
+# single adult with housing support (data/benefits/). A floor removes the reason
+# to hold a buffer where it binds (Hubbard, Skinner and Zeldes 1995).
+#
+#   julia --project=scripts/run_env scripts/test_place_wealth.jl [CONFIG] [floor share]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf, Statistics
 cfg = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "GAE"
 code = "IT"
 c = country_config(code; v3 = true, config = cfg, S = occursin('S', cfg), A = occursin('A', cfg))
+fsh = length(ARGS) >= 2 ? parse(Float64, ARGS[2]) : 0.0
+fsh > 0 && (c = SAGEConfig(c; cfloor = fsh * c.e_ref))
 r = solve_economy(c)
+fsh > 0 && @printf("means-tested floor at %.2f of reference earnings: outlay per head %.5f, budget gap %+.1e\n", fsh, r.floor_outlay, r.budget_gap)
 _, w = places_from_data(code, SAGEConfig(c; E = false); typology = c.typology, channels = c.e_channels, epsilon = c.epsilon)
 names = [nm for (nm, _) in r.by_place]; res = [x for (_, x) in r.by_place]
 hfcs = Dict{Tuple{String,String,String},Tuple{Float64,Float64}}()
