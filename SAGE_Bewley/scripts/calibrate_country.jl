@@ -278,7 +278,7 @@ patience, spread) against (effort, liquid wealth over income, hand-to-mouth),
 each miss in units of its tolerance. Top patience stays below 0.975 (beta R
 below one for the most patient type). Returns the point and its moments.
 """
-function fit_v3(aim_e, aim_h; x0 = [log(7.5), 0.90, 0.01, 0.22], iters = 16)
+function fit_v3(aim_e, aim_h; x0 = [log(7.5), 0.90, 0.01, 0.22], iters = 16, tag = "fit3")
     lo = [log(0.5), 0.84, 0.0, 0.05]; hi = [log(60.0), 0.975, SPREAD_MAX, 0.40]; H = [0.05, 0.004, 0.01, 0.02]
     function at(x)
         BB[] = x[2]; ETA[] = x[4]
@@ -286,9 +286,26 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), 0.90, 0.01, 0.22], iters = 16)
         (r = r, st = st, m = [r.mean_effort_employed, r.wealth_p50 / r.median_income, r.hand_to_mouth_kvw, st.s8020])
     end
     res(o) = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET]) ./ [E_TOL, LIQ_TOL, HTM_TOL, S8020_TOL]
-    x = clamp.(x0, lo, hi); o = at(x); F = res(o); lam = 0.1
-    for it in 1:iters
-        maximum(abs.(F)) <= 0.25 && break
+    # Resumable: with places on, one step of the fit takes half an hour on a runner and sixteen
+    # do not fit in a job (France, Italy and Germany with E, 2026-10-04: cancelled at the six-hour
+    # limit with nothing kept). The point is checkpointed after every step.
+    ckf = ck_read(tag); it0 = 1
+    x = clamp.(x0, lo, hi); lam = 0.1
+    if ckf !== nothing
+        x = [ckf["x1"], ckf["x2"], ckf["x3"], ckf["x4"]]; lam = ckf["lam"]; it0 = Int(ckf["it"]) + 1
+        say("    fit resumed after step ", it0 - 1)
+    end
+    o = at(x); F = res(o); tfit = time(); nstep = 0
+    owned(F) = maximum(abs.(F[[1, 3, 4]]))          # effort, hand-to-mouth, S80/S20; liquid wealth is reported
+    for it in it0:iters
+        # Liquid wealth is not required and often cannot be reached, so the stop is on the moments
+        # the calibration owns; until 2026-10-04 it was on all four and the fit ran its sixteen
+        # steps without moving (Germany: misses 0.05, 0.61, 0.26, 0.01 from step 14 to 16).
+        owned(F) <= 0.25 && break
+        nstep > 0 && (time() - t_start) / 60 + 1.5 * (time() - tfit) / 60 / nstep > BUDGET &&
+            (say(@sprintf("\nTIME BUDGET: %.0f of %.0f minutes used inside the fit, after step %d; checkpoint kept, to resume in a new job.",
+                          (time() - t_start) / 60, BUDGET, it - 1)); exit(3))
+        ss0 = sum(abs2, F)
         J = zeros(4, 4)
         for k in 1:4
             xk = copy(x); h = (xk[k] + H[k] > hi[k]) ? -H[k] : H[k]; xk[k] += h
@@ -305,7 +322,10 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), 0.90, 0.01, 0.22], iters = 16)
         end
         @printf("    fit %2d: phi %.3f, top patience %.4f, spread %.4f, eta %.4f | effort %.4f, liquid/income %.4f, hand-to-mouth %.4f, S80/S20 %.2f | misses in bands %+.2f %+.2f %+.2f %+.2f\n",
                 it, exp(x[1]), x[2], x[3], x[4], o.m..., F...); flush(stdout)
+        nstep += 1
+        ck_write(tag, Dict("x1" => x[1], "x2" => x[2], "x3" => x[3], "x4" => x[4], "lam" => lam, "it" => Float64(it)))
         moved || break
+        sum(abs2, F) > 0.98 * ss0 && owned(F) <= 1.0 && break          # no longer improving, owned moments inside their bands
     end
     xr = [log(round(exp(x[1]); digits = 3)), round(x[2]; digits = 4), round(x[3]; digits = 4), round(x[4]; digits = 4)]
     o = at(xr)
@@ -314,7 +334,18 @@ end
 say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", round(HTM_TARGET - GAP; digits = 4))
 ck1 = ck_read("stage1")
 if ck1 === nothing && V3
-    f3 = fit_v3(E_TARGET, HTM_TARGET - GAP)
+    # with E on, start at the calibration of the same configuration without places, which is close:
+    # the place layer keeps the national means of what it distributes
+    x0e = nothing
+    if E_ON
+        fb = joinpath(@__DIR__, "calibration_v3_$(CODE)_$(replace(CFG, "E" => "")).txt")
+        if isfile(fb)
+            kv = Dict(strip(first(split(l, "="))) => parse(Float64, last(split(l, "="))) for l in eachline(fb) if occursin("=", l) && !startswith(l, "#"))
+            x0e = [log(kv["phi"]), kv["beta_bar"], kv["beta_spread"], kv["eta_z"]]
+            say("  starting from ", basename(fb))
+        end
+    end
+    f3 = x0e === nothing ? fit_v3(E_TARGET, HTM_TARGET - GAP) : fit_v3(E_TARGET, HTM_TARGET - GAP; x0 = x0e)
     phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; edge = false
     chk_e, chk_h = f3.r.mean_effort_employed, f3.r.hand_to_mouth_kvw
     ck_write("stage1", Dict("phi" => phi, "spread" => spread, "edge" => 0.0, "effort" => chk_e, "htm" => chk_h, "bb" => BB[], "eta" => ETA[]))
@@ -368,7 +399,7 @@ if !S_ON
     @printf("  expected loss to unemployment %.4f (income alone %.4f) | drop on job loss %.4f | agency on the old hardship reading %.4f\n",
             r.shock_loss, r.shock_loss_income, r.consumption_drop, r.A_hardship)
     V3 && @printf("  version 3, untargeted: MPC %.3f (survey %.3f), of the hand-to-mouth %.3f, earnings response %+.4f | liquid wealth over income %.4f (HFCS %.4f) | protection if hit %.4f | income poverty %.4f\n",
-                  r.mpc, MPC_DATA, r.mpc_htm, r.mpe, r.wealth_p50 / r.median_income, LIQ_TARGET, r.A_cond, r.income_poor)
+                  r.mpc, MPC_DATA, hasproperty(r, :mpc_htm) ? r.mpc_htm : NaN, r.mpe, r.wealth_p50 / r.median_income, LIQ_TARGET, r.A_cond, r.income_poor)
     if abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL || abs(r.mean_effort_employed - E_TARGET) > E_TOL
         say(@sprintf("\nNOT CALIBRATED: hand-to-mouth %.4f (target %.4f) or effort %.4f (target %.4f) outside tolerance. No calibration file written.",
                      r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET))
@@ -509,7 +540,7 @@ for correction in 1:2
     ck5 = ck_read("stage5_$(correction)")
     if ck5 === nothing
         if V3
-            f3 = fit_v3(E_TARGET - gap_e, HTM_TARGET - gap_h; x0 = [log(phi), BB[], spread, ETA[]], iters = 8)
+            f3 = fit_v3(E_TARGET - gap_e, HTM_TARGET - gap_h; x0 = [log(phi), BB[], spread, ETA[]], iters = 8, tag = "fit3_c$(correction)")
             phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; edge2 = false
         else
             phi = fit_phi(spread; lo = max(0.5, phi - 4), hi = phi + 4, steps = 10, aim = E_TARGET - gap_e)

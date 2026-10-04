@@ -7,7 +7,8 @@
 #   own calibration   each configuration at its own file: every configuration
 #                     must be a usable model that hits its own targets.
 # Checks, each PASS or FAIL:
-#   1. S off: participation and the belonging part of welfare are exactly zero;
+#   1. S off: no participation beyond the logit's tremble (below 1e-4) and no
+#      belonging in welfare;
 #   2. S on, fixed parameters: welfare rises by the belonging part and nothing in
 #      the consumption or effort parts moves by more than the G bands allow;
 #   3. A on, fixed parameters: the participation gap between the education cells
@@ -50,7 +51,8 @@ for code in codes
     for (nm, S_, A_) in CFGS
         fx[nm] = solve_economy(country_config(code; v3 = true, S = S_, A = A_)); row(nm, fx[nm])
     end
-    check("$code 1. S off: participation and belonging welfare exactly zero", all(fx[k].rate == 0 && fx[k].welfare.Vb == 0 for k in ("G", "GA")))
+    @printf("   S off: participation %.2e (G), %.2e (G+A); belonging in welfare %.2e, %.2e\n", fx["G"].rate, fx["GA"].rate, fx["G"].welfare.Vb, fx["GA"].welfare.Vb)
+    check("$code 1. S off: participation below 1e-4 and no belonging in welfare", all(fx[k].rate < 1e-4 && abs(fx[k].welfare.Vb) < 1e-8 for k in ("G", "GA")))
     for (off, on) in (("G", "GS"), ("GA", "GSA"))
         check("$code 2. $on against $off: belonging adds to welfare; hand-to-mouth within 0.03 and effort within 0.01 of S off",
               fx[on].welfare.Vb > 0 && abs(fx[on].hand_to_mouth_kvw - fx[off].hand_to_mouth_kvw) < 0.03 && abs(fx[on].mean_effort_employed - fx[off].mean_effort_employed) < 0.01)
