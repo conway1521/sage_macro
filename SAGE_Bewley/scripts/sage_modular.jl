@@ -229,6 +229,12 @@ Base.@kwdef struct SAGEConfig
     # then moves with the grid (0.21 of income at 24 nodes, 0.16 at 48; probe_two_asset_grid.jl,
     # 2026-10-03). 1 reproduces every earlier two-asset result.
     k_sub::Int = 1
+    # The illiquid grid's dense part: with k_mid > 0, three fifths of the nodes lie on [0, k_mid] and
+    # the rest run geometrically to k_max. On the exponential grid (k_mid = 0, every earlier result)
+    # the nodes around median net wealth are over two years of income apart at 24 nodes, and liquid
+    # wealth and the wealthy hand-to-mouth share only settle at 48 (0.074 against 0.041 of income;
+    # probe_two_asset_grid.jl, 2026-10-04).
+    k_mid::Float64 = 0.0
     b_max::Float64 = 15.0
     nb::Int = 120
     # numerics
@@ -342,7 +348,7 @@ function params_of(c::SAGEConfig, cell)
     if c.illiquid
         c.solver === :egm || error("the illiquid asset needs solver = :egm")
         ps = [update(p; illiquid = true, Rk = p.R + c.illiquid_premium, chi0 = c.chi0, death = c.death,
-                     nk = c.nk, k_max = c.k_max, k_sub = c.k_sub, a_max = c.b_max, na = c.nb) for p in ps]
+                     nk = c.nk, k_max = c.k_max, k_sub = c.k_sub, k_mid = c.k_mid, a_max = c.b_max, na = c.nb) for p in ps]
     end
     (c.search_time == 0 && c.belong_u == 1 && c.time_bonus == 0) && return ps
     tf = (c.search_time == 0 && c.time_bonus == 0) ? Float64[] : [(e ? 0.0 : c.search_time) - c.time_bonus for e in emp]
@@ -765,7 +771,7 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
                    sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
             dread_cost_E = mE <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].xmass[emp]) for g in 1:2) / mE,
             agrid = agrid, Wtot = Wtot, pooled = pooled, employed = emp, lumptax = T,
-            kgrid = c.illiquid ? SAGEBewley.exponential_grid(0.0, c.k_max, c.nk, c.pexp) : [0.0],
+            kgrid = c.illiquid ? illiquid_grid(c.k_max, c.nk, c.pexp, c.k_mid) : [0.0],
             Ktot = sum(cs[g].share .* vec(sum(pooled[g].K, dims = 1)) for g in 1:2),
             # net wealth, liquid plus illiquid, with the illiquid asset (cumulative on NWGRID)
             Ntot = sum(cs[g].share .* vec(sum(pooled[g].N, dims = 1)) for g in 1:2))

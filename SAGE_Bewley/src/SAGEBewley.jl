@@ -210,6 +210,9 @@ Base.@kwdef struct SAGEParams
     # Targets an adjuster may choose between two neighbouring illiquid nodes
     # (egm2_core.jl): 1 is the nodes alone.
     k_sub::Int = 1
+    # Where the dense part of the illiquid grid ends (egm2_core.jl, illiquid_grid);
+    # 0 is the exponential grid to k_max.
+    k_mid::Float64 = 0.0
     # Perpetual youth with the illiquid asset on: households die with this
     # probability and are replaced by newborns with no wealth (Kaplan, Moll and
     # Violante 2018: 1/180 a quarter, a 45-year average lifetime). Discounting

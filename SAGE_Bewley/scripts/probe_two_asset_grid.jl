@@ -27,13 +27,15 @@ one = country_config(code; config = "G", v3 = true, S = false, A = false)
 levels = job_effort_levels(one)
 base = SAGEConfig(one; illiquid = true, illiquid_premium = premium, effort_by_cell = levels, beta_spread = 0.0, beta_bar = bet / (1 - one.death), chi0 = chi0)
 length(ARGS) >= 5 && (base = SAGEConfig(base; k_max = parse(Float64, ARGS[5])))
+length(ARGS) >= 6 && (base = SAGEConfig(base; k_mid = parse(Float64, ARGS[6])))       # dense part of the illiquid grid ends here
+length(ARGS) >= 6 && println("dense part of the illiquid grid to ", base.k_mid)
 @printf("%s G, two assets, version 3, effective patience %.4f, fixed cost %.4f, premium %.4f; illiquid grid to %.0f with exponent %.1f\n", code, bet, chi0, premium, base.k_max, base.pexp)
 @printf("%8s | %10s %10s %9s %11s %7s %9s | %8s | %s\n", "nk:sub", "net w/inc", "liquid/inc", "poor htm", "wealthy htm", "MPC", "adjusting", "minutes", "illiquid nodes around the median, in years of median income | mass at the top node | worker memory, GB")
 for (nk, sub) in grids
     t0 = time()
     c = SAGEConfig(base; nk = nk, k_sub = sub)
     r = _solve(c, nothing; disk = false)
-    kg = SAGEBewley.exponential_grid(0.0, c.k_max, c.nk, c.pexp) ./ r.median_income
+    kg = illiquid_grid(c.k_max, c.nk, c.pexp, c.k_mid) ./ r.median_income
     nwm = cdf_quantile(NWGRID, r.Ntot, 0.5) / r.median_income
     j = clamp(searchsortedlast(kg, nwm), 1, nk - 2)
     adj = hasproperty(r, :adjust_share) ? r.adjust_share : NaN

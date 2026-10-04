@@ -49,8 +49,18 @@ using Printf
 const GOLD = 0.6180339887498949
 const K_ROUNDS = 2          # rounds of (value iteration at fixed refined targets, refine again), k_sub > 1
 
-"Illiquid grid: zero, then exponentially spaced to k_max."
-illiquid_grid(p::SAGEParams) = SAGEBewley.exponential_grid(0.0, p.k_max, p.nk, p.pexp)
+"""
+Illiquid grid. With k_mid = 0: zero, then exponentially spaced to k_max. With
+k_mid > 0: three fifths of the nodes on [0, k_mid] with exponent 1.5 (a few
+close to zero, then near-even spacing where households hold their wealth), the
+rest geometric from k_mid to k_max for the tail.
+"""
+function illiquid_grid(k_max, nk, pexp, k_mid = 0.0)
+    k_mid > 0 || return SAGEBewley.exponential_grid(0.0, k_max, nk, pexp)
+    n1 = max(2, round(Int, 0.6 * nk)); n2 = nk - n1
+    vcat([k_mid * ((i - 1) / (n1 - 1))^1.5 for i in 1:n1], [k_mid * (k_max / k_mid)^(i / n2) for i in 1:n2])
+end
+illiquid_grid(p::SAGEParams) = illiquid_grid(p.k_max, p.nk, p.pexp, p.k_mid)
 
 # linear interpolation on an increasing grid with extrapolation on the end segments
 @inline function lin_at(x, y, xi, j)
