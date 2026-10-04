@@ -21,6 +21,10 @@
 #    liquid median moves with the illiquid grid (probe_two_asset_grid.jl).
 #    The options of the smoothed choice stay one per node: option j is the best
 #    target in [k_j, k_j+1), so k_sub = 1 is the choice among the nodes exactly.
+#    The best target is found on the k_sub steps and then refined by a golden
+#    section search around the best step, for the options that carry weight: the
+#    steps alone left the liquid median falling with their number (0.213, 0.147,
+#    0.108 of income at 1, 4 and 16 steps on 24 nodes).
 #    (Smoothing over every target was tried first, 2026-10-04: the weights spread
 #    over many near-equal targets, the branches of the distribution multiplied
 #    and a solve no longer fitted in memory.)
@@ -33,6 +37,7 @@
 # problem exactly, which is the reduction test.
 
 using Printf
+const GOLD = 0.6180339887498949
 
 "Illiquid grid: zero, then exponentially spaced to k_max."
 illiquid_grid(p::SAGEParams) = SAGEBewley.exponential_grid(0.0, p.k_max, p.nk, p.pexp)
@@ -42,6 +47,25 @@ illiquid_grid(p::SAGEParams) = SAGEBewley.exponential_grid(0.0, p.k_max, p.nk, p
     t = (xi - x[j]) / (x[j+1] - x[j])
     y[j] + t * (y[j+1] - y[j])
 end
+
+"""
+Value and marginal value of liquid wealth of adjusting from illiquid wealth with
+`num` = Rk k - chi0 to the target a share ω of the way from node o to node o + 1,
+at liquid wealth ai: the two inner solutions at the same effective liquid
+wealth, weighted linearly. (-Inf, 0) when the target is not affordable.
+"""
+@inline function adj_eval(a, Vin, muin, s, o, ω, ai, num, kg, R)
+    be = ai + (num - ((1 - ω) * kg[o] + ω * kg[o+1])) / R
+    be < a[1] && return (-Inf, 0.0)
+    be = min(be, a[end])
+    q = clamp(searchsortedlast(a, be), 1, length(a) - 1)
+    v = (1 - ω) * lin_at(a, view(Vin, :, o, s), be, q) + ω * lin_at(a, view(Vin, :, o + 1, s), be, q)
+    isnan(v) && return (-Inf, 0.0)
+    (v, max((1 - ω) * lin_at(a, view(muin, :, o, s), be, q) + ω * lin_at(a, view(muin, :, o + 1, s), be, q), 0.0))
+end
+
+"Effective liquid wealth of an adjuster at liquid wealth ai and illiquid k_m whose option is node o with share ω towards the next."
+@inline adj_liquid(ai, km, kg, o, ω, Rk, chi0, R) = ai + (Rk * km - chi0 - (ω == 0 ? kg[o] : (1 - ω) * kg[o] + ω * kg[o+1])) / R
 
 """
     solve_two_asset_egm(p, Q_agg; theta, theta_adj, full, tol, maxit, warm)
@@ -114,7 +138,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     Vin = zeros(na, nk, nz); P1in = zeros(na, nk, nz); muin = zeros(na, nk, nz)
     Vn = similar(V); Vbn = similar(Vb); Padj = zeros(na, nk, nz)
     qadj = zeros(nk, na, nk, nz)          # adjusting options: weight of option j at (i, m, s)
-    fsel = ones(Int32, nk, na, nk, nz)    # the target option j stands for: the best in [k_j, k_j+1)
+    wsel = zeros(nk, na, nk, nz)          # the target option j stands for: this share of the way from k_j to k_j+1
     Vo = zeros(nk); Mo = zeros(nk)
     EV = zeros(na, nz); EVb = zeros(na, nz)
     aend = zeros(na); cend = zeros(na); eend = zeros(na)
@@ -181,7 +205,33 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                     for f in f1+1:f2
                         Vj[f] > Vj[fb] && (fb = f)
                     end
-                    Vo[j] = Vj[fb]; Mo[j] = Mj[fb]; fsel[j, i, m, s] = fb
+                    Vo[j] = Vj[fb]; Mo[j] = Mj[fb]; wsel[j, i, m, s] = j == nk ? 0.0 : tw[fb]
+                end
+                if nsub > 1 && vmax > -Inf
+                    # refine the options that carry weight: golden section around the best step
+                    num = p.Rk * kg[m] - p.chi0; cut = vmax - 20 * theta_adj
+                    for j in 1:nk-1
+                        Vo[j] < cut && continue
+                        w0 = wsel[j, i, m, s]
+                        lo = max(w0 - 1 / nsub, 0.0); hi = min(w0 + 1 / nsub, 1.0)
+                        x1 = hi - GOLD * (hi - lo); x2 = lo + GOLD * (hi - lo)
+                        v1, m1 = adj_eval(a, Vin, muin, s, j, x1, a[i], num, kg, p.R)
+                        v2, m2 = adj_eval(a, Vin, muin, s, j, x2, a[i], num, kg, p.R)
+                        for _ in 1:10
+                            if v1 < v2
+                                lo = x1; x1 = x2; v1 = v2; m1 = m2; x2 = lo + GOLD * (hi - lo)
+                                v2, m2 = adj_eval(a, Vin, muin, s, j, x2, a[i], num, kg, p.R)
+                            else
+                                hi = x2; x2 = x1; v2 = v1; m2 = m1; x1 = hi - GOLD * (hi - lo)
+                                v1, m1 = adj_eval(a, Vin, muin, s, j, x1, a[i], num, kg, p.R)
+                            end
+                        end
+                        v1 < v2 && (v1 = v2; m1 = m2; x1 = x2)
+                        if v1 > Vo[j]
+                            Vo[j] = v1; Mo[j] = m1; wsel[j, i, m, s] = x1
+                            v1 > vmax && (vmax = v1)
+                        end
+                    end
                 end
                 if vmax == -Inf
                     Va_ = -Inf; Ma = 0.0
@@ -263,7 +313,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     t2 = time()
     trace && @printf("  value iteration: inner %.1f s, outer %.1f s\n", t_in, t_out)
     dist = two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
-                                  tj = tj, tw = tw, fsel = fsel, death = p0.death, oth = oth, wv = wv, trs = [transfer_at(p, s) for s in 1:nz])
+                                  wsel = wsel, death = p0.death, oth = oth, wv = wv, trs = [transfer_at(p, s) for s in 1:nz])
     λ = dist.lambda; P1s = dist.P1; es = dist.e
     trace && @printf("  distribution %.1f s\n", time() - t2)
     part = 0.0; meaninc = 0.0; partbase = 0.0
@@ -278,7 +328,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
      lambda = λ, P1 = P1s, e = es, e_d = dist.e_d, cbar = dist.cbar, ybar = dist.ybar, post = dist.post,
      Pi = Π, Padj = Padj, V = V, Vb = Vb, z_vals = z_vals,
      iters = iters, stalled = stall, relax = relax, theta = theta, inner = (c = cin, e = ein, bp = bpin, P1 = P1in), qadj = qadj,
-     j0 = j0, om = om, shift = shift, tj = tj, tw = tw, fsel = fsel)
+     j0 = j0, om = om, shift = shift, wsel = wsel, adjp = (Rk = p.Rk, chi0 = p.chi0, R = p.R))
 end
 
 """
@@ -288,7 +338,7 @@ income transition then mixes s. Mass starts at k = 0. Also returns the
 participation probability and expected effort by state.
 """
 function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
-                                tj = collect(1:length(kg)), tw = zeros(length(kg)), fsel = nothing, death = 0.0, oth = nothing, wv = nothing, trs = nothing)
+                                wsel = nothing, death = 0.0, oth = nothing, wv = nothing, trs = nothing)
     na, nk, nz = length(a), length(kg), size(Π, 1)
     n = na * nk * nz
     idx(i, m, s) = i + (m - 1) * na + (s - 1) * na * nk
@@ -331,11 +381,11 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
         # the node above with the target's weights (one node when the target is a node)
         for o in 1:nk
             q = qadj[o, i, m, s]; pa * q <= 1e-12 && continue
-            f = fsel === nothing ? o : Int(fsel[o, i, m, s])
-            for (j, wn) in ((tj[f], 1 - tw[f]), (tj[f] + 1, tw[f]))
+            ω = wsel === nothing ? 0.0 : wsel[o, i, m, s]
+            for (j, wn) in ((o, 1 - ω), (o + 1, ω))
             wn <= 0 && continue
             wt = pa * q * wn; wt <= 1e-12 && continue
-            be = min(a[i] + shift[m, f], a[end])
+            be = min(adj_liquid(a[i], kg[m], kg, o, ω, p.Rk, p.chi0, p.R), a[end])
             r = clamp(searchsortedlast(a, be), 1, na - 1)
             p1 = clamp(lin_at(a, view(P1in, :, j, s), be, r), 0.0, 1.0)
             e0 = lin_at(a, view(ein[1], :, j, s), be, r); e1 = lin_at(a, view(ein[2], :, j, s), be, r)
@@ -435,10 +485,10 @@ function each_branch_full(f, sol, i, m, s)
     pa <= 0 && return
     for o in 1:length(sol.k)
         q = sol.qadj[o, i, m, s]; pa * q <= 1e-12 && continue
-        t = Int(sol.fsel[o, i, m, s])
-        be = min(a[i] + sol.shift[m, t], a[end])
+        ω = sol.wsel[o, i, m, s]
+        be = min(adj_liquid(a[i], sol.k[m], sol.k, o, ω, sol.adjp.Rk, sol.adjp.chi0, sol.adjp.R), a[end])
         r = clamp(searchsortedlast(a, be), 1, na - 1)
-        for (j, wn) in ((sol.tj[t], 1 - sol.tw[t]), (sol.tj[t] + 1, sol.tw[t]))
+        for (j, wn) in ((o, 1 - ω), (o + 1, ω))
             wn <= 0 && continue
             wt = pa * q * wn; wt <= 1e-12 && continue
             p1 = clamp(lin_at(a, view(inn.P1, :, j, s), be, r), 0.0, 1.0)
