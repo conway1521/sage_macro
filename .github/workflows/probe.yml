@@ -13,6 +13,9 @@ on:
       solver:
         description: "Household solver: egm (default) or grid (the reference)"
         default: "egm"
+      workers:
+        description: "Worker processes (3 fits one-asset work on a 16 GB runner; fewer for two assets on fine grids)"
+        default: "3"
 jobs:
   probe:
     runs-on: ubuntu-latest
@@ -27,7 +30,7 @@ jobs:
         run: julia --project=SAGE_Bewley/scripts/run_env -e 'using Pkg; Pkg.instantiate()'
       - name: Run ${{ inputs.script }}
         env:
-          SAGE_WORKERS: "3"
+          SAGE_WORKERS: "${{ inputs.workers }}"
           SAGE_SOLVER: ${{ inputs.solver }}
         run: |
           cd SAGE_Bewley
