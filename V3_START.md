@@ -517,3 +517,28 @@ What holds in all three countries: belonging adds to welfare and moves the hand-
 The model orders the regions the wrong way round on both buffer indicators. Where unemployment risk is high, its households hold more liquid wealth, and where jobs are safe they hold less: the precautionary motive, working as it should, against the data. Income poverty has the right order and a quarter of the spread. This is the same failure the HFCS showed for version 2 (section 14), now measured region by region. The regional comparison reads the HFCS codes IT1 to IT20 as ISTAT's; the three macro-regions do not depend on that.
 
 What the literature says is missing: a means-tested floor, under which low-income households have no reason to save (Hubbard, Skinner and Zeldes 1995). The floor is built and off in the baseline. Italy had one in 2021 (Reddito di cittadinanza, 0.27 of the gross average wage). The test takes the floor as a second argument; run with it on next.
+
+## 19. Two assets: what killed the runs, and what the grid does (2026-10-04)
+
+**Memory.** `two_asset_welfare_parts` assembled the decision operator times the income transition (every branch times every income state, about 140 million entries on 24 nodes) and factorised it. One household problem went from 0.9 GB after the solve to 8 GB, or 16 GB on a shorter grid. That step, not the solver, killed the two-asset jobs on the runners and restarted the laptop three times on 3 October. It now evaluates the policy by iteration and never forms that operator: 1.0 GB a worker at 24 nodes, 1.5 at 48, 3.9 at 96, and 48 and 96 nodes complete on a runner for the first time. The transition triplets of the distribution are also released instead of being returned.
+
+**The adjuster's target.** An adjuster used to choose illiquid wealth among the nodes and hold the remainder as liquid, so median liquid wealth was mostly remainder. Now (`k_sub` > 1): targets between the nodes, the value between two nodes interpolated linearly as for a keeper; one smoothed option per node, the best target in its interval; the value iteration on `k_sub` steps, then the targets refined by golden section and the value iteration continued at the refined targets, two rounds, so the value is that of the refined policy. `k_sub = 1` reproduces every earlier number exactly. Tried and dropped on the way: smoothing over every target (the branches multiplied), refining inside the value iteration (no convergence in 5000 iterations), a single refining pass (value and policy disagreed, and the result moved with the number of steps).
+
+France G, effective patience 0.9595, fixed cost 0.0022 (`probe_two_asset_grid.jl`; liquid wealth over income, wealthy hand-to-mouth share):
+
+| illiquid grid | nodes alone | 4 steps | 8 steps | 16 steps |
+|---|---|---|---|---|
+| exponential, 24 nodes | 0.213, 0.134 | 0.074, 0.267 | 0.068, 0.284 | 0.076, 0.264 |
+| exponential, 48 | 0.163, 0.176 | 0.041, 0.380 | 0.042, 0.369 | |
+| exponential, 96 (one refining pass) | 0.154, 0.208 | 0.042, 0.380 | | |
+| dense to 8 (`k_mid`), 24 | 0.191, 0.150 | 0.046, 0.341 | 0.047, 0.336 | |
+| dense to 8, 32 | | 0.033, 0.385 | | |
+| dense to 8, 40 | | 0.029, 0.413 | | |
+
+What stands: the number of steps no longer matters; on the nodes alone liquid wealth is three to five times too high at any grid that can be run; with targets it is 0.03 to 0.05 at this point and the wealthy hand-to-mouth share 0.34 to 0.41. What is left open: about 0.01 on liquid wealth over income, 0.04 on the wealthy hand-to-mouth share, 4% on net wealth over income, depending on the grid. The MPC falls with the grid, 0.15 at 24 exponential nodes to 0.09 at 96: at this fixed cost the wealthy hand-to-mouth withdraw almost for free and are not constrained.
+
+Consequence for version 2: its two-asset calibrations were fitted on the nodes alone. Their liquid moments and wealthy hand-to-mouth shares are remainder between nodes, and their fixed costs are not estimates of anything. They are not to be used.
+
+The version 3 calibration (`calibrate_two_asset_v3.jl`) runs on the dense grid with 32 nodes and 4 steps, with the band on the wealthy hand-to-mouth share widened to 0.04. France G launched (run 37231504506).
+
+**The floor with places.** The regional wealth test with Italy's 2021 floor ran three hours, with 9410 household problems at the iteration limit and the floor's tax unsettled 36 times, and then failed on a print line. Its numbers would not have been usable. The one-asset iteration now relaxes when it stops improving, with the floor on only. Rerun started.
