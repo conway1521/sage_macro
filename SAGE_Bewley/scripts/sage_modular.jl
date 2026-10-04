@@ -391,6 +391,25 @@ end
 ui_only_tax_of(c::SAGEConfig) = c.unemployment ?
     ui_tax([(share = x.share, α = x.α, δ = x.δ) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz) * (c.e_ref / E_REF) : 0.0
 
+const FLOOR_EFFORT_CACHE = Dict{UInt,Any}()
+"""
+    floor_effort(c)
+
+With the means-tested floor on and effort set by the job, the job's effort levels
+are those of the same economy WITHOUT the floor and without its tax: the floor
+changes who is topped up, not what a job asks. Returns the configuration with
+those levels given (`effort_by_cell`), or `c` unchanged when there is no floor,
+effort is free, or the levels are already given. Found by the model with the
+floor on, the levels have no solution in version 3: in the lowest income states
+every household is on the floor, where an extra euro earned is taken back.
+"""
+function floor_effort(c::SAGEConfig)
+    (c.cfloor > 0 && c.effort_mode === :job && isempty(c.effort_by_cell[1])) || return c
+    c1 = SAGEConfig(c; cfloor = 0.0, S = false)
+    lv = get!(() -> job_effort_levels(c1), FLOOR_EFFORT_CACHE, hash(repr(c1)))
+    SAGEConfig(c; effort_by_cell = lv)
+end
+
 const FLOOR_TAX_CACHE = Dict{UInt64,Float64}()
 const FLOOR_TAX_LAST = Ref(0.0)
 """
@@ -406,15 +425,17 @@ the economy reports what is left as `budget_gap`). Remembered per configuration.
 function floor_tax_of(c::SAGEConfig)
     c.cfloor > 0 || return 0.0
     c.effort_mode === :job || error("the means-tested floor needs effort_mode = :job")
-    c0 = SAGEConfig(c; S = false, E = false, cfloor = c.cfloor)
-    key = hash(repr((c0.cfloor, c0.alpha, c0.alpha_off, c0.A, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
+    c0 = floor_effort(SAGEConfig(c; S = false, E = false, cfloor = c.cfloor))
+    key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.alpha, c0.alpha_off, c0.A, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing)))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
     cs = cells_of(c0); _, bw = betas_of(c0)
-    F = FLOOR_TAX_LAST[]
-    for it in 1:25
+    # start from the last tax found, unless that run failed (a NaN kept here made every later
+    # configuration NaN: all Italian places after the first that broke, 2026-10-04)
+    F = isfinite(FLOOR_TAX_LAST[]) ? FLOOR_TAX_LAST[] : 0.0
+    for it in 1:40
         cT = SAGEConfig(c0; lumptax = base + F)
         jobs = [(g, k, p) for g in 1:2 for (k, p) in enumerate(params_of(cT, cs[g]))]
         outs = (nworkers() > 1 ? pmap : map)(jobs) do (g, k, p)
@@ -423,11 +444,12 @@ function floor_tax_of(c::SAGEConfig)
             cs[g].share * bw[k] * cell_summary(p, s).fout
         end
         out = sum(outs)
+        isfinite(out) || error("the floor's outlay is not finite at a tax of $F: a floor of $(c0.cfloor) cannot be financed in this economy")
         if abs(out - F) < 1e-9
             F = out; break
         end
-        F = out
-        it == 25 && @warn "floor_tax_of did not settle" F
+        F = it <= 10 ? out : 0.5 * (F + out)          # damped once the plain step has had its chance
+        it == 40 && @warn "floor_tax_of did not settle" F
     end
     FLOOR_TAX_LAST[] = F
     FLOOR_TAX_CACHE[key] = F
@@ -624,6 +646,7 @@ clear_cache!() = (empty!(ECON_CACHE); nothing)
 # applied here either way. `disk` and `any_thresholds` go to `build_families`.
 function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds = false)
     check_ratio(c)
+    c = floor_effort(c)
     cs = cells_of(c); bs, bw = betas_of(c)
     T = c.lumptax + ui_tax_of(c)
     cfgT = SAGEConfig(c; lumptax = T)
@@ -1132,7 +1155,7 @@ poverty). For the income process's dispersion, which version 3 fits to the
 official S80/S20 of people under 65 (data/validation/income_distribution.csv).
 """
 function income_stats(c::SAGEConfig)
-    c0 = SAGEConfig(c; S = false)
+    c0 = floor_effort(SAGEConfig(c; S = false))
     cs = cells_of(c0); _, bw = betas_of(c0); cT = SAGEConfig(c0; lumptax = c0.lumptax + ui_tax_of(c0))
     jobs = [(g, k, p) for g in 1:2 for (k, p) in enumerate(params_of(cT, cs[g]))]
     recs = (nworkers() > 1 ? pmap : map)(jobs) do (g, k, p)
