@@ -47,7 +47,7 @@ const PHTM = hfcs_target("htm_model_narrow_poor")
 const WHTM = hfcs_target("htm_model_narrow_wealthy")
 const MPC_DATA = hfcs_target("mpc_mean")
 const GINI_DATA = hfcs_target("networth_gini"); const TOP_DATA = hfcs_target("networth_top10_share")
-const TOL = [0.05, 0.03, 0.01, 0.02]            # net wealth (relative), liquid over income, poor htm, wealthy htm
+const TOL = [0.05, 0.03, 0.01, 0.04]            # net wealth (relative), liquid over income, poor htm, wealthy htm
 manual = Dict{Tuple{String,String},Float64}()
 for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "manual_inputs.csv"))
     startswith(ln, "#") && continue
@@ -70,7 +70,11 @@ say("calibrating ", CODE, " ", CFG, " on two assets, version 3 | targets: net we
 # k_sub = 4: adjustment targets between the illiquid nodes, refined after convergence (egm2_core.jl).
 # On the nodes alone the liquid median is the remainder between two nodes (0.213 of income at this
 # point against 0.058 with the targets; probe_two_asset_grid.jl, 2026-10-04).
-base = SAGEConfig(one; illiquid = true, illiquid_premium = PREMIUM, effort_by_cell = levels, beta_spread = 0.0, k_sub = 4)
+# The grid: 32 illiquid nodes, dense to k_mid = 8 (about 17 years of median income), four targets
+# to each interval. What the grid checks of 2026-10-04 leave open at a given point: liquid wealth
+# over income to about 0.01, the wealthy hand-to-mouth share to about 0.04, net wealth over income
+# to about 4% (V3_START.md, section 19). The bands below are no tighter than that.
+base = SAGEConfig(one; illiquid = true, illiquid_premium = PREMIUM, effort_by_cell = levels, beta_spread = 0.0, k_sub = 4, nk = 32, k_mid = 8.0)
 const SURV = 1 - base.death
 const BETA_LOW_EFF = 0.85
 unpack(x) = (beta_bar = x[1] / SURV, chi0 = exp(x[2]), impatient_share = clamp(x[3], 0.0, 0.5))
