@@ -19,6 +19,11 @@
 #    uses, and its mass goes to the two nodes with those weights (Young 2010).
 #    Without it the remainder between two nodes sits in liquid wealth, and the
 #    liquid median moves with the illiquid grid (probe_two_asset_grid.jl).
+#    The options of the smoothed choice stay one per node: option j is the best
+#    target in [k_j, k_j+1), so k_sub = 1 is the choice among the nodes exactly.
+#    (Smoothing over every target was tried first, 2026-10-04: the weights spread
+#    over many near-equal targets, the branches of the distribution multiplied
+#    and a solve no longer fitted in memory.)
 # The choice among adjusting targets and between keeping and adjusting carries
 # logit smoothing of scale theta_adj, as participation does (Iskhakov,
 # Jorgensen, Rust and Schjerning 2017). Default 0.01: at the participation
@@ -108,7 +113,9 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     bpin = (zeros(na, nk, nz), zeros(na, nk, nz)); vin = (zeros(na, nk, nz), zeros(na, nk, nz))
     Vin = zeros(na, nk, nz); P1in = zeros(na, nk, nz); muin = zeros(na, nk, nz)
     Vn = similar(V); Vbn = similar(Vb); Padj = zeros(na, nk, nz)
-    qadj = zeros(nf, na, nk, nz)          # adjusting targets: weight of target f at (i, m, s)
+    qadj = zeros(nk, na, nk, nz)          # adjusting options: weight of option j at (i, m, s)
+    fsel = ones(Int32, nk, na, nk, nz)    # the target option j stands for: the best in [k_j, k_j+1)
+    Vo = zeros(nk); Mo = zeros(nk)
     EV = zeros(na, nz); EVb = zeros(na, nz)
     aend = zeros(na); cend = zeros(na); eend = zeros(na)
     Vj = zeros(nf); Mj = zeros(nf); ptr = ones(Int, nf)
@@ -167,18 +174,27 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                     end
                     Vj[j] > vmax && (vmax = Vj[j])
                 end
+                # one option per node: the best target in [k_j, k_j+1) (the node itself when k_sub = 1)
+                for j in 1:nk
+                    f1 = (j - 1) * nsub + 1; f2 = j == nk ? nf : j * nsub
+                    fb = f1
+                    for f in f1+1:f2
+                        Vj[f] > Vj[fb] && (fb = f)
+                    end
+                    Vo[j] = Vj[fb]; Mo[j] = Mj[fb]; fsel[j, i, m, s] = fb
+                end
                 if vmax == -Inf
                     Va_ = -Inf; Ma = 0.0
-                    for j in 1:nf; qadj[j, i, m, s] = 0.0; end
+                    for j in 1:nk; qadj[j, i, m, s] = 0.0; end
                 else
                     ssum = 0.0
-                    for j in 1:nf
-                        Vj[j] == -Inf && (qadj[j, i, m, s] = 0.0; continue)
-                        ev = exp((Vj[j] - vmax) / theta_adj); qadj[j, i, m, s] = ev; ssum += ev
+                    for j in 1:nk
+                        Vo[j] == -Inf && (qadj[j, i, m, s] = 0.0; continue)
+                        ev = exp((Vo[j] - vmax) / theta_adj); qadj[j, i, m, s] = ev; ssum += ev
                     end
                     Ma = 0.0
-                    for j in 1:nf
-                        qadj[j, i, m, s] /= ssum; Ma += qadj[j, i, m, s] * Mj[j]
+                    for j in 1:nk
+                        qadj[j, i, m, s] /= ssum; Ma += qadj[j, i, m, s] * Mo[j]
                     end
                     Va_ = vmax + theta_adj * log(ssum)
                 end
@@ -247,7 +263,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     t2 = time()
     trace && @printf("  value iteration: inner %.1f s, outer %.1f s\n", t_in, t_out)
     dist = two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
-                                  tj = tj, tw = tw, death = p0.death, oth = oth, wv = wv, trs = [transfer_at(p, s) for s in 1:nz])
+                                  tj = tj, tw = tw, fsel = fsel, death = p0.death, oth = oth, wv = wv, trs = [transfer_at(p, s) for s in 1:nz])
     λ = dist.lambda; P1s = dist.P1; es = dist.e
     trace && @printf("  distribution %.1f s\n", time() - t2)
     part = 0.0; meaninc = 0.0; partbase = 0.0
@@ -262,7 +278,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
      lambda = λ, P1 = P1s, e = es, e_d = dist.e_d, cbar = dist.cbar, ybar = dist.ybar, post = dist.post,
      Pi = Π, Padj = Padj, V = V, Vb = Vb, z_vals = z_vals,
      iters = iters, stalled = stall, relax = relax, theta = theta, inner = (c = cin, e = ein, bp = bpin, P1 = P1in), qadj = qadj,
-     j0 = j0, om = om, shift = shift, tj = tj, tw = tw)
+     j0 = j0, om = om, shift = shift, tj = tj, tw = tw, fsel = fsel)
 end
 
 """
@@ -272,7 +288,7 @@ income transition then mixes s. Mass starts at k = 0. Also returns the
 participation probability and expected effort by state.
 """
 function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
-                                tj = collect(1:length(kg)), tw = zeros(length(kg)), death = 0.0, oth = nothing, wv = nothing, trs = nothing)
+                                tj = collect(1:length(kg)), tw = zeros(length(kg)), fsel = nothing, death = 0.0, oth = nothing, wv = nothing, trs = nothing)
     na, nk, nz = length(a), length(kg), size(Π, 1)
     n = na * nk * nz
     idx(i, m, s) = i + (m - 1) * na + (s - 1) * na * nk
@@ -313,9 +329,12 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
         pa <= 0 && continue
         # adjusting: each target, at its effective liquid wealth, to the node below it and
         # the node above with the target's weights (one node when the target is a node)
-        for f in eachindex(tj), (j, wn) in ((tj[f], 1 - tw[f]), (tj[f] + 1, tw[f]))
+        for o in 1:nk
+            q = qadj[o, i, m, s]; pa * q <= 1e-12 && continue
+            f = fsel === nothing ? o : Int(fsel[o, i, m, s])
+            for (j, wn) in ((tj[f], 1 - tw[f]), (tj[f] + 1, tw[f]))
             wn <= 0 && continue
-            q = qadj[f, i, m, s]; wt = pa * q * wn; wt <= 1e-12 && continue
+            wt = pa * q * wn; wt <= 1e-12 && continue
             be = min(a[i] + shift[m, f], a[end])
             r = clamp(searchsortedlast(a, be), 1, na - 1)
             p1 = clamp(lin_at(a, view(P1in, :, j, s), be, r), 0.0, 1.0)
@@ -333,6 +352,7 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
             end
             p1 < 1 && blot!(from, b0, j, s, wt * (1 - p1))
             p1 > 0 && blot!(from, b1, j, s, wt * p1)
+            end
         end
     end
     Tt = transpose(sparse(rows, cols, vals, n, n))
@@ -413,16 +433,20 @@ function each_branch_full(f, sol, i, m, s)
         p1 > 0 && f(wt * p1, 1, inn.bp[2][i, jj, s], jj, inn.e[2][i, jj, s], a[i])
     end
     pa <= 0 && return
-    for t in eachindex(sol.tj), (j, wn) in ((sol.tj[t], 1 - sol.tw[t]), (sol.tj[t] + 1, sol.tw[t]))
-        wn <= 0 && continue
-        wt = pa * sol.qadj[t, i, m, s] * wn; wt <= 1e-12 && continue
+    for o in 1:length(sol.k)
+        q = sol.qadj[o, i, m, s]; pa * q <= 1e-12 && continue
+        t = Int(sol.fsel[o, i, m, s])
         be = min(a[i] + sol.shift[m, t], a[end])
         r = clamp(searchsortedlast(a, be), 1, na - 1)
-        p1 = clamp(lin_at(a, view(inn.P1, :, j, s), be, r), 0.0, 1.0)
-        p1 < 1 && f(wt * (1 - p1), 0, max(lin_at(a, view(inn.bp[1], :, j, s), be, r), a[1]), j,
-                    max(lin_at(a, view(inn.e[1], :, j, s), be, r), 0.0), be)
-        p1 > 0 && f(wt * p1, 1, max(lin_at(a, view(inn.bp[2], :, j, s), be, r), a[1]), j,
-                    max(lin_at(a, view(inn.e[2], :, j, s), be, r), 0.0), be)
+        for (j, wn) in ((sol.tj[t], 1 - sol.tw[t]), (sol.tj[t] + 1, sol.tw[t]))
+            wn <= 0 && continue
+            wt = pa * q * wn; wt <= 1e-12 && continue
+            p1 = clamp(lin_at(a, view(inn.P1, :, j, s), be, r), 0.0, 1.0)
+            p1 < 1 && f(wt * (1 - p1), 0, max(lin_at(a, view(inn.bp[1], :, j, s), be, r), a[1]), j,
+                        max(lin_at(a, view(inn.e[1], :, j, s), be, r), 0.0), be)
+            p1 > 0 && f(wt * p1, 1, max(lin_at(a, view(inn.bp[2], :, j, s), be, r), a[1]), j,
+                        max(lin_at(a, view(inn.e[2], :, j, s), be, r), 0.0), be)
+        end
     end
 end
 
