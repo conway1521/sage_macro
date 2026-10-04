@@ -67,7 +67,10 @@ say("calibrating ", CODE, " ", CFG, " on two assets, version 3 | targets: net we
     ", poor htm ", PHTM, ", wealthy htm ", WHTM, " | premium ", PREMIUM, " | workers ", nworkers())
 @printf("effort set by the job, from the one-asset economy: cell means %.4f and %.4f  [%.1f min]\n",
         sum(levels[1]) / max(count(>(0), levels[1]), 1), sum(levels[2]) / max(count(>(0), levels[2]), 1), (time() - t0) / 60)
-base = SAGEConfig(one; illiquid = true, illiquid_premium = PREMIUM, effort_by_cell = levels, beta_spread = 0.0)
+# k_sub = 4: adjustment targets between the illiquid nodes, refined after convergence (egm2_core.jl).
+# On the nodes alone the liquid median is the remainder between two nodes (0.213 of income at this
+# point against 0.058 with the targets; probe_two_asset_grid.jl, 2026-10-04).
+base = SAGEConfig(one; illiquid = true, illiquid_premium = PREMIUM, effort_by_cell = levels, beta_spread = 0.0, k_sub = 4)
 const SURV = 1 - base.death
 const BETA_LOW_EFF = 0.85
 unpack(x) = (beta_bar = x[1] / SURV, chi0 = exp(x[2]), impatient_share = clamp(x[3], 0.0, 0.5))
@@ -85,7 +88,8 @@ show(tag, x, o, F) = (u = unpack(x);
     @printf("%s beta_bar %.4f chi0 %.4f impatient share %.4f | net wealth/income %.2f, liquid/income %.3f, poor htm %.4f, wealthy htm %.4f | misses in bands %+.2f %+.2f %+.2f %+.2f | MPC %.3f  [%d solves, %.1f min]\n",
             tag, u.beta_bar, u.chi0, u.impatient_share, o.m..., F..., o.r.mpc, nsolve[], (time() - t0) / 60); flush(stdout))
 write_ckpt(x, lam) = open(io -> println(io, join(string.(vcat(x, lam)), ",")), CKPT, "w")
-x = [0.955, log(0.05), PHTM]; lam = 0.3          # effective patience 0.975 started at twice the net wealth target (France, 2026-10-03)
+# start: France at (0.9595, 0.0022) has net wealth over income 5.5, liquid 0.058, wealthy hand-to-mouth 0.29
+x = [0.957, log(0.006), PHTM]; lam = 0.3
 if isfile(CKPT)
     v = parse.(Float64, split(strip(read(CKPT, String)), ",")); x = v[1:3]; lam = v[4]
     say("  resuming from the checkpoint: ", round.(x; digits = 5))
