@@ -21,10 +21,14 @@
 #    liquid median moves with the illiquid grid (probe_two_asset_grid.jl).
 #    The options of the smoothed choice stay one per node: option j is the best
 #    target in [k_j, k_j+1), so k_sub = 1 is the choice among the nodes exactly.
-#    The best target is found on the k_sub steps and then refined by a golden
-#    section search around the best step, for the options that carry weight: the
-#    steps alone left the liquid median falling with their number (0.213, 0.147,
-#    0.108 of income at 1, 4 and 16 steps on 24 nodes).
+#    The value iteration uses the k_sub steps. Once it has converged, one more
+#    pass refines each target by a golden section search around its best step,
+#    for the policies only: the value is flat at the best target, so the steps
+#    are enough for it, while the liquid remainder moves one for one with the
+#    target (the liquid median fell with the number of steps: 0.213, 0.147, 0.108
+#    of income at 1, 4 and 16 on 24 nodes). Refining inside the iteration was
+#    tried and did not converge in 5000 iterations (2026-10-04): the search lands
+#    on a different side of a kink from one iteration to the next.
 #    (Smoothing over every target was tried first, 2026-10-04: the weights spread
 #    over many near-equal targets, the branches of the distribution multiplied
 #    and a solve no longer fitted in memory.)
@@ -145,8 +149,9 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     Vj = zeros(nf); Mj = zeros(nf); ptr = ones(Int, nf)
     iters = 0
     t_in = 0.0; t_out = 0.0
-    hist = zeros(maxit); stall = 0.0; relax = 1.0; stalled = false
-    for it in 1:maxit
+    hist = zeros(maxit + 1); stall = 0.0; relax = 1.0; stalled = false
+    polish = false                        # the last pass, k_sub > 1: targets refined, value kept
+    for it in 1:maxit+1
         t0 = time()
         # inner: the liquid problem for every illiquid node taken as k'
         for j in 1:nk
@@ -207,7 +212,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                     end
                     Vo[j] = Vj[fb]; Mo[j] = Mj[fb]; wsel[j, i, m, s] = j == nk ? 0.0 : tw[fb]
                 end
-                if nsub > 1 && vmax > -Inf
+                if polish && vmax > -Inf
                     # refine the options that carry weight: golden section around the best step
                     num = p.Rk * kg[m] - p.chi0; cut = vmax - 20 * theta_adj
                     for j in 1:nk-1
@@ -260,6 +265,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
             end
         end
         t_out += time() - t1
+        polish && break                   # policies are in place; V and Vb stay the converged ones
         dmin = Inf; dmax = -Inf
         @inbounds for x in eachindex(V)
             δ = Vn[x] - V[x]; δ < dmin && (dmin = δ); δ > dmax && (dmax = δ)
@@ -302,7 +308,10 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
         V, Vn = Vn, V; Vb, Vbn = Vbn, Vb
         iters = it
         isnan(dist) && error("the two-asset household problem has a state with no feasible choice (value NaN at iteration $it)")
-        (dist < tol || stalled) && break
+        if dist < tol || stalled || it == maxit
+            nsub > 1 || break
+            polish = true
+        end
     end
     # said, not swallowed: running out of iterations, and a stall accepted at more
     # than a fifth of the smoothing scale (the summaries do not carry `stalled`)
