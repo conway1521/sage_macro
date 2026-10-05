@@ -1,0 +1,7 @@
+# floor and education regime: FR wants no floor (its G fit in the floor regime puts it at zero), so this is its education-regime calibration of GA, copied from calibration_v3e_FR_GA.txt, with the floor written out
+phi = 8.225
+beta_spread = 0.0000
+beta_bar = 0.9292
+eta_z = 0.2535
+beta_gap = 0.0736
+cfloor = 0.000000

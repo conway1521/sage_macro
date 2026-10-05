@@ -1,0 +1,9 @@
+# floor and education regime: DE wants no floor (its G fit in the floor regime puts it at zero), so this is its education-regime calibration of GSA, copied from calibration_v3e_DE_GSA.txt, with the floor written out
+phi = 9.436
+beta_spread = 0.0000
+beta_bar = 0.9425
+eta_z = 0.2595
+beta_gap = 0.0499
+kappa = 7.65
+sigma_m = 1.06
+cfloor = 0.000000

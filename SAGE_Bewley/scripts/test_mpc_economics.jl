@@ -22,9 +22,9 @@ using Printf
 code = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "FR"
 cfg = length(ARGS) >= 2 ? uppercase(ARGS[2]) : "G"
 occursin('S', cfg) && error("S off only: with S on the households are families over belonging scales")
-V3 = length(ARGS) >= 3 && lowercase(ARGS[3]) in ("v3", "v3f")          # third argument v3: the version 3 economy and its calibration; v3f: the floor regime
-V3F = length(ARGS) >= 3 && lowercase(ARGS[3]) == "v3f"
-c = floor_effort(country_config(code; config = cfg, v3 = V3F ? :floor : V3, S = false, A = occursin('A', cfg)))
+REG = length(ARGS) >= 3 ? lowercase(ARGS[3]) : ""          # third argument: v3, or a regime of it (v3f the floor, v3e patience by education, v3fe both)
+V3 = REG in ("v3", "v3f", "v3e", "v3fe"); V3F = REG in ("v3f", "v3fe")
+c = floor_effort(country_config(code; config = cfg, v3 = get(Dict("v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu), REG, V3), S = false, A = occursin('A', cfg)))
 c.illiquid && error("one asset only")
 cs = cells_of(c); bs, bw = betas_of(c)
 cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))

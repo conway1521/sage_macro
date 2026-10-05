@@ -21,13 +21,16 @@
 #
 # With "floor" among the arguments: the floor regime (calibration_v3f_*, V3_START.md section 22).
 #
-#   julia --project=scripts/run_env scripts/onoff_v3.jl [floor] [CODE ...]
+# With "edu": patience by education (calibration_v3e_*, or calibration_v3fe_* with the floor).
+#
+#   julia --project=scripts/run_env scripts/onoff_v3.jl [floor] [edu] [CODE ...]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 FLOORREG = any(a -> lowercase(a) == "floor", ARGS)
-V3ARG = FLOORREG ? :floor : true; VTAG = FLOORREG ? "v3f" : "v3"
-codes = (cc = [uppercase(a) for a in ARGS if lowercase(a) != "floor"]; isempty(cc) ? ["FR", "DE", "IT"] : cc)
-FLOORREG && println("floor regime")
+EDUREG = any(a -> lowercase(a) == "edu", ARGS)          # patience by education (V3_START.md section 24)
+V3ARG = FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : true); VTAG = "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "")
+codes = (cc = [uppercase(a) for a in ARGS if !(lowercase(a) in ("floor", "edu"))]; isempty(cc) ? ["FR", "DE", "IT"] : cc)
+(FLOORREG || EDUREG) && println("regime: ", VTAG)
 function hfcs(code, moment)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
         startswith(ln, "#") && continue
