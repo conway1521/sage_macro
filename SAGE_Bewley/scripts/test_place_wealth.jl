@@ -45,6 +45,11 @@ if length(ARGS) >= 3 && lowercase(ARGS[3]) == "hh"
     println("income per head by place on the household's view (:conversion_hh)")
 end
 fsh > 0 && (c = SAGEConfig(c; cfloor = fsh * c.e_ref))
+# fifth argument: a shift in patience, no spread (a pilot of what recalibrating with the floor would do)
+if length(ARGS) >= 5
+    c = SAGEConfig(c; beta_bar = c.beta_bar - c.beta_spread / 2 + parse(Float64, ARGS[5]), beta_spread = 0.0)
+    @printf("patience set to %.4f, no spread\n", c.beta_bar)
+end
 r = solve_economy(c)
 fsh > 0 && @printf("means-tested floor at %.2f of reference earnings (%.4f), financed nationally: tax per head %.5f\n", fsh, c.cfloor, NAT_FLOOR_TAX[])
 _, w = places_from_data(code, SAGEConfig(c; E = false); typology = c.typology, channels = c.e_channels, epsilon = c.epsilon)
