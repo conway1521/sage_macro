@@ -767,10 +767,10 @@ The floor's level with places on is the open design question for Italy: fitted i
 | **Numerical economists** | | | |
 | N1 | A standard, documented method (endogenous grid with upper envelope, non-stochastic simulation) | met | |
 | N2 | Exact reductions when a switch is off | met (on/off pass 16 of 16 in each country) | |
-| N3 | Accuracy on the base: Euler errors, convergence in the asset grid, its top, and the income grid | not run on the base; the income grid is coarse | `euler_errors.jl` and the convergence rows to run; income grid in the next version |
+| N3 | Accuracy on the base: Euler errors, convergence in the asset grid, its top, and the income grid | partly: France 7 of 7, Germany 6 of 7 (section 28); Italy and the income grid not run | Italy with its base; income grid in the next version |
 | N4 | An independent solver agrees | on version 2 only | to check what carries over |
 | N5 | Reproducible: public code, continuous integration, one command per result, data manifest | mostly met | |
-| N6 | Equilibria with S counted and stable | on version 2 only | `policy_equilibria.jl` to run |
+| N6 | Equilibria with S counted and stable | met in France and Germany: one stable equilibrium, the solver's (section 28) | Italy with its base |
 | **Beyond-GDP** | | | |
 | B1 | The dimensions are a recognised framework's | S and A yes; E is place here, where the framework's E is the environment | for the user's decision |
 | B2 | Each dimension measured on official data | met | |
@@ -782,7 +782,7 @@ The floor's level with places on is the open design question for Italy: fitted i
 | U2 | Policy levers with honest bands | band in place; check running | read as a model check only |
 | U3 | A new country added by the checklist | not tried | later |
 
-Count: 6 met, 11 partly, 5 not, of 22.
+Count: 7 met, 11 partly, 4 not, of 22 (evening of 2026-10-05: N3 from not to partly, N6 to met; 6, 11, 5 before).
 
 **The user's direction on this table (2026-10-05, afternoon).**
 - The macroeconomists' rows come first, each to be met as far as it can be, the wealth distribution included. So M7 is no longer left: two assets come back as the route to it.
