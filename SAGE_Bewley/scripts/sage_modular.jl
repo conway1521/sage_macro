@@ -984,7 +984,7 @@ calibration script that is about to produce the file passes `missing_ok = true`.
 A file marked not calibrated (`.not_calibrated.txt` beside it, newer than it) is
 refused the same way.
 """
-function country_config(code::AbstractString; config::AbstractString = "GSA", missing_ok::Bool = false, v3::Bool = false, kwargs...)
+function country_config(code::AbstractString; config::AbstractString = "GSA", missing_ok::Bool = false, v3::Union{Bool,Symbol} = false, kwargs...)
     r = country_rows()[code]
     num(k) = parse(Float64, r[k])
     al, ah = num("alpha_low"), num("alpha_high")
@@ -1012,11 +1012,13 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
     # which only the state-paid part is taxed; patience spread uniformly; its own
     # calibration files, calibration_v3_<code>_<config>[_I].txt. Nothing of version 2
     # changes while v3 is false.
-    if v3
+    # v3 = :floor: the version 3 economy with the means-tested floor in the base (V3_START.md,
+    # section 22); its own files, calibration_v3f_<code>_<config>.txt, which carry the floor's level.
+    if v3 !== false
         d[:effort_mode] = :job
         d[:rr] = num("rr_household"); d[:rr_public] = num("rr_public")
         d[:qbar] = 0.04                       # measured (data/timeuse), not the 0.10 assumed before
-        cal = joinpath(@__DIR__, "calibration_v3_$(code)_$(config)" * (illq ? "_I" : "") * ".txt")
+        cal = joinpath(@__DIR__, (v3 === :floor ? "calibration_v3f_" : "calibration_v3_") * "$(code)_$(config)" * (illq ? "_I" : "") * ".txt")
     end
     marker = replace(cal, r"\.txt$" => ".not_calibrated.txt")
     stale = isfile(marker) && (!isfile(cal) || mtime(marker) > mtime(cal))

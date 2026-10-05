@@ -67,6 +67,16 @@ const A_ON = occursin('A', CFG)
 # The MPC is not targeted; it is printed against the survey's self-reported MPC.
 # Writes calibration_v3_<code>_<cfg>.txt. Version 2 is untouched when the flag is off.
 const V3 = get(ENV, "SAGE_V3", "0") == "1"
+# THE FLOOR IN THE BASE (SAGE_FLOOR=1 with SAGE_V3=1; V3_START.md, section 22). A means-tested floor
+# (Hubbard, Skinner and Zeldes 1995), financed by the lump-sum tax, with patience the same for all
+# (no spread). In G the floor's level is the fourth parameter of the fit and median liquid wealth is
+# the moment it owns, beside the hand-to-mouth share that patience owns: at a given hand-to-mouth
+# share a higher floor means more patient households with more liquid wealth, which the spread could
+# not give (it moves the two moments along the same line as patience). In every other configuration
+# the floor is the country's, read from its G file. Files calibration_v3f_<code>_<cfg>.txt.
+const FLOORREG = V3 && get(ENV, "SAGE_FLOOR", "0") == "1"
+const V3ARG = FLOORREG ? :floor : V3
+const VTAG = FLOORREG ? "v3f" : "v3"
 function hfcs_target(moment; wave = "2021")
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
         startswith(ln, "#") && continue
@@ -99,7 +109,20 @@ const S8020_TARGET = V3 ? incdist("s80s20_under65") : NaN
 const INWORK_DATA = V3 ? incdist("inwork_poverty60") : NaN
 const S8020_TOL = 0.25
 const ETA = Ref(NaN)
-v3kw() = V3 && !isnan(ETA[]) ? (eta_z = ETA[],) : ()
+const FL = Ref(0.0)              # the floor, as a share of a year's reference earnings (cfloor = FL e_ref)
+const E_REF_C = V3 ? num("e_ref") : NaN
+v3kw() = V3 && !isnan(ETA[]) ? (FLOORREG ? (eta_z = ETA[], cfloor = FL[] * E_REF_C) : (eta_z = ETA[],)) : ()
+if FLOORREG
+    if CFG == "G"
+        FL[] = 0.10                 # where the search for the floor starts
+    else
+        fg = joinpath(@__DIR__, "calibration_v3f_$(CODE)_G.txt")
+        isfile(fg) || error("the floor regime needs the country's G calibration first: $(basename(fg)) is missing")
+        for l in eachline(fg)
+            startswith(strip(l), "cfloor") && (FL[] = parse(Float64, last(split(l, "="))) / E_REF_C)
+        end
+    end
+end
 const PART = (num("part_low"), num("part_high"))
 const RATIO = num("ratio")
 # The national ratio exactly, and for the headline configuration the other
@@ -121,9 +144,9 @@ const LOSS_STD = OWN_GAP ? 0.035 : AGG_TOL
 # multiplier 1/(1 - slope) of at most 5, a map slope of at most 0.8. A numerical
 # rule, not an estimate; the calibrated G+S+A economies sit at 1.3 to 1.9.
 const MULT_MAX = 5.0
-const CELLS0 = cells_of(country_config(CODE; v3 = V3, config = "GSA", S = true, A = A_ON, missing_ok = true))   # the data table only
+const CELLS0 = cells_of(country_config(CODE; v3 = V3ARG, config = "GSA", S = true, A = A_ON, missing_ok = true))   # the data table only
 const AGG = CELLS0[1].share * PART[1] + CELLS0[2].share * PART[2]
-const SIGMA_FIX = (OWN_GAP || !S_ON) ? NaN : country_config(CODE; v3 = V3, config = E_ON ? "GSAE" : "GSA", E = E_ON).sigma_m
+const SIGMA_FIX = (OWN_GAP || !S_ON) ? NaN : country_config(CODE; v3 = V3ARG, config = E_ON ? "GSAE" : "GSA", E = E_ON).sigma_m
 
 # How much switching cohesion on raises hand-to-mouth, used to aim the
 # cohesion-off fit. G+S+A: France on EU-SILC, 0.2804 with cohesion against 0.2512
@@ -153,7 +176,7 @@ const HTM_TOL = V3 ? 0.02 : 0.005   # v2: the poor hand-to-mouth targets are 0.0
 const LIQ_TOL = 0.09
 const E_TOL = 0.005          # effort
 const SKIP_GS = get(ENV, "SKIP_GS", "0") == "1"
-const OUTFILE = V3 ? joinpath(@__DIR__, "calibration_v3_$(CODE)_$(CFG).txt") :
+const OUTFILE = V3 ? joinpath(@__DIR__, "calibration_$(VTAG)_$(CODE)_$(CFG).txt") :
                 joinpath(@__DIR__, CFG == "GSA" ? "calibration_country_$(CODE).txt" :
                                                   "calibration_country_$(CODE)_$(CFG).txt")
 const NOTCAL = replace(OUTFILE, r"\.txt$" => ".not_calibrated.txt")
@@ -166,7 +189,7 @@ mark_not_calibrated() = open(io -> println(io, "# not calibrated; the reason is 
 # exactly the same inputs: the country's data row, the configuration, the
 # hand-to-mouth aim and the solver's source code.
 const CKDIR = joinpath(@__DIR__, "checkpoints"); isdir(CKDIR) || mkpath(CKDIR)
-const CKKEY = bytes2hex(sha1(string(sort(collect(ROW)), "|", CFG, "|", GAP, "|", SOLVER_DIGEST, V3 ? "|v3|$(HTM_TARGET)|$(LIQ_TARGET)|$(S8020_TARGET)" : "")))[1:16]
+const CKKEY = bytes2hex(sha1(string(sort(collect(ROW)), "|", CFG, "|", GAP, "|", SOLVER_DIGEST, V3 ? "|$(VTAG)|$(HTM_TARGET)|$(LIQ_TARGET)|$(S8020_TARGET)" : "")))[1:16]
 ckfile(stage) = joinpath(CKDIR, "$(CODE)_$(CFG)_$(stage)_$(CKKEY).txt")
 function ck_read(stage)
     f = ckfile(stage); isfile(f) || return nothing
@@ -208,7 +231,7 @@ timed_scans(args...; kw...) = (t_ = time(); out = scans(args...; kw...); LASTSCA
 function write_cal(phi, spread; kappa = nothing, sigma = nothing)
     open(OUTFILE, "w") do io
         println(io, "# written by calibrate_country.jl $(CODE) $(CFG)", V3 ? ", version 3 (effort set by the job, household replacement rate, liquid-wealth targets from the HFCS)" : "", "; read by country_config")
-        V3 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\neta_z = %.4f\n", phi, spread, BB[], ETA[]) :
+        V3 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\neta_z = %.4f\n%s", phi, spread, BB[], ETA[], FLOORREG ? @sprintf("cfloor = %.6f\n", FL[] * E_REF_C) : "") :
              @printf(io, "phi = %.2f\nbeta_spread = %.3f\nbeta_bar = %.4f\n", phi, spread, BB[])
         kappa === nothing || @printf(io, "kappa = %.2f\nsigma_m = %.2f\n", kappa, sigma)
     end
@@ -237,8 +260,8 @@ end
 const BB = Ref(0.96)
 # one pass without thresholds for E off (as before); with E on, the full place solve
 _solve_any(cc, thr = nothing; disk = true) = E_ON ? solve_economy(cc) : _solve(cc, thr; disk = disk)
-cfg_off(phi, sp) = country_config(CODE; v3 = V3, config = CFG, missing_ok = true, v3kw()..., S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = sp, beta_bar = BB[])
-soff(phi, sp) = _solve_any(country_config(CODE; v3 = V3, config = CFG, missing_ok = true, v3kw()..., S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = sp,
+cfg_off(phi, sp) = country_config(CODE; v3 = V3ARG, config = CFG, missing_ok = true, v3kw()..., S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = sp, beta_bar = BB[])
+soff(phi, sp) = _solve_any(country_config(CODE; v3 = V3ARG, config = CFG, missing_ok = true, v3kw()..., S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = sp,
                                       beta_bar = BB[]), nothing; disk = true)
 function fit_phi(sp; lo = 0.5, hi = 40.0, steps = 14, aim = E_TARGET)   # lo was 3.0: Italy's effort target needs less
     for _ in 1:steps
@@ -278,25 +301,29 @@ patience, spread) against (effort, liquid wealth over income, hand-to-mouth),
 each miss in units of its tolerance. Top patience stays below 0.975 (beta R
 below one for the most patient type). Returns the point and its moments.
 """
-function fit_v3(aim_e, aim_h; x0 = [log(7.5), 0.90, 0.01, 0.22], iters = 16, tag = "fit3")
-    lo = [log(0.5), 0.84, 0.0, 0.05]; hi = [log(60.0), 0.975, SPREAD_MAX, 0.40]; H = [0.05, 0.004, 0.01, 0.02]
+function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22, FL[]], iters = 16, tag = "fit3")
+    # fifth parameter: the floor's level. Free in G of the floor regime (0 to 0.35 of reference earnings),
+    # fixed elsewhere (at zero without the regime). In the floor regime patience has no spread.
+    flfree = FLOORREG && CFG == "G"
+    lo = [log(0.5), 0.84, 0.0, 0.05, flfree ? 0.0 : FL[]]; hi = [log(60.0), 0.975, FLOORREG ? 0.0 : SPREAD_MAX, 0.40, flfree ? 0.35 : FL[]]
+    H = [0.05, 0.004, 0.01, 0.02, 0.02]; np = 5
     function at(x)
-        BB[] = x[2]; ETA[] = x[4]
+        BB[] = x[2]; ETA[] = x[4]; FL[] = x[5]
         r = soff(exp(x[1]), x[3]); st = income_stats(cfg_off(exp(x[1]), x[3]))
         (r = r, st = st, m = [r.mean_effort_employed, r.wealth_p50 / r.median_income, r.hand_to_mouth_kvw, st.s8020])
     end
-    res(o) = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET]) ./ [E_TOL, LIQ_TOL, HTM_TOL, S8020_TOL]
+    res(o) = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET]) ./ [E_TOL, flfree ? 0.03 : LIQ_TOL, HTM_TOL, S8020_TOL]   # the floor owns liquid wealth in G
     # Resumable: with places on, one step of the fit takes half an hour on a runner and sixteen
     # do not fit in a job (France, Italy and Germany with E, 2026-10-04: cancelled at the six-hour
     # limit with nothing kept). The point is checkpointed after every step.
     ckf = ck_read(tag); it0 = 1
     x = clamp.(x0, lo, hi); lam = 0.1
     if ckf !== nothing
-        x = [ckf["x1"], ckf["x2"], ckf["x3"], ckf["x4"]]; lam = ckf["lam"]; it0 = Int(ckf["it"]) + 1
+        x = [ckf["x1"], ckf["x2"], ckf["x3"], ckf["x4"], get(ckf, "x5", FL[])]; lam = ckf["lam"]; it0 = Int(ckf["it"]) + 1
         say("    fit resumed after step ", it0 - 1)
     end
     o = at(x); F = res(o); tfit = time(); nstep = 0
-    owned(F) = maximum(abs.(F[[1, 3, 4]]))          # effort, hand-to-mouth, S80/S20; liquid wealth is reported
+    owned(F) = maximum(abs.(flfree ? F : F[[1, 3, 4]]))          # effort, hand-to-mouth, S80/S20; liquid wealth too where the floor is fitted
     for it in it0:iters
         # Liquid wealth is not required and often cannot be reached, so the stop is on the moments
         # the calibration owns; until 2026-10-04 it was on all four and the fit ran its sixteen
@@ -306,30 +333,32 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), 0.90, 0.01, 0.22], iters = 16, tag
             (say(@sprintf("\nTIME BUDGET: %.0f of %.0f minutes used inside the fit, after step %d; checkpoint kept, to resume in a new job.",
                           (time() - t_start) / 60, BUDGET, it - 1)); exit(3))
         ss0 = sum(abs2, F)
-        J = zeros(4, 4)
-        for k in 1:4
+        J = zeros(4, np)
+        for k in 1:np
+            hi[k] - lo[k] < 1e-12 && continue          # a fixed parameter: no column, no solve
             xk = copy(x); h = (xk[k] + H[k] > hi[k]) ? -H[k] : H[k]; xk[k] += h
             J[:, k] = (res(at(xk)) .- F) ./ h
         end
         moved = false
         for _ in 1:6
-            A = J' * J; d = -((A + lam * Diagonal(diag(A))) \ (J' * F))
+            A = J' * J; d = -((A + lam * Diagonal(diag(A)) + 1e-10 * I) \ (J' * F))
             xn = clamp.(x .+ d, lo, hi); on = at(xn); Fn = res(on)
             if sum(abs2, Fn) < sum(abs2, F) - 1e-6
                 x = xn; o = on; F = Fn; lam = max(lam / 3, 1e-4); moved = true; break
             end
             lam *= 4
         end
+        FLOORREG && @printf("    floor %.4f of reference earnings\n", x[5])
         @printf("    fit %2d: phi %.3f, top patience %.4f, spread %.4f, eta %.4f | effort %.4f, liquid/income %.4f, hand-to-mouth %.4f, S80/S20 %.2f | misses in bands %+.2f %+.2f %+.2f %+.2f\n",
                 it, exp(x[1]), x[2], x[3], x[4], o.m..., F...); flush(stdout)
         nstep += 1
-        ck_write(tag, Dict("x1" => x[1], "x2" => x[2], "x3" => x[3], "x4" => x[4], "lam" => lam, "it" => Float64(it)))
+        ck_write(tag, Dict("x1" => x[1], "x2" => x[2], "x3" => x[3], "x4" => x[4], "x5" => x[5], "lam" => lam, "it" => Float64(it)))
         moved || break
         sum(abs2, F) > 0.98 * ss0 && owned(F) <= 1.0 && break          # no longer improving, owned moments inside their bands
     end
-    xr = [log(round(exp(x[1]); digits = 3)), round(x[2]; digits = 4), round(x[3]; digits = 4), round(x[4]; digits = 4)]
+    xr = [log(round(exp(x[1]); digits = 3)), round(x[2]; digits = 4), round(x[3]; digits = 4), round(x[4]; digits = 4), round(x[5]; digits = 4)]
     o = at(xr)
-    (phi = exp(xr[1]), bb = xr[2], sp = xr[3], eta = xr[4], r = o.r, st = o.st)
+    (phi = exp(xr[1]), bb = xr[2], sp = xr[3], eta = xr[4], fl = xr[5], r = o.r, st = o.st)
 end
 say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", round(HTM_TARGET - GAP; digits = 4))
 ck1 = ck_read("stage1")
@@ -338,17 +367,17 @@ if ck1 === nothing && V3
     # the place layer keeps the national means of what it distributes
     x0e = nothing
     if E_ON
-        fb = joinpath(@__DIR__, "calibration_v3_$(CODE)_$(replace(CFG, "E" => "")).txt")
+        fb = joinpath(@__DIR__, "calibration_$(VTAG)_$(CODE)_$(replace(CFG, "E" => "")).txt")
         if isfile(fb)
             kv = Dict(strip(first(split(l, "="))) => parse(Float64, last(split(l, "="))) for l in eachline(fb) if occursin("=", l) && !startswith(l, "#"))
-            x0e = [log(kv["phi"]), kv["beta_bar"], kv["beta_spread"], kv["eta_z"]]
+            x0e = [log(kv["phi"]), kv["beta_bar"], kv["beta_spread"], kv["eta_z"], FL[]]
             say("  starting from ", basename(fb))
         end
     end
     f3 = x0e === nothing ? fit_v3(E_TARGET, HTM_TARGET - GAP) : fit_v3(E_TARGET, HTM_TARGET - GAP; x0 = x0e)
-    phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; edge = false
+    phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; FL[] = f3.fl; edge = false
     chk_e, chk_h = f3.r.mean_effort_employed, f3.r.hand_to_mouth_kvw
-    ck_write("stage1", Dict("phi" => phi, "spread" => spread, "edge" => 0.0, "effort" => chk_e, "htm" => chk_h, "bb" => BB[], "eta" => ETA[]))
+    ck_write("stage1", Dict("phi" => phi, "spread" => spread, "edge" => 0.0, "effort" => chk_e, "htm" => chk_h, "bb" => BB[], "eta" => ETA[], "fl" => FL[]))
     @printf("  income distribution: S80/S20 %.2f (official, under 65: %.2f) with eta %.4f | Gini %.3f | in-work poverty %.3f untargeted (official %.3f) | below half the median %.3f\n",
             f3.st.s8020, S8020_TARGET, ETA[], f3.st.gini, f3.st.inwork60, INWORK_DATA, f3.st.p50)
     @printf("  version 3 fit: liquid wealth over income %.4f (target %.4f, band %.2f) | MPC %.3f untargeted (survey %.3f) | earnings response %+.4f | drop on job loss %.3f\n",
@@ -367,7 +396,7 @@ elseif ck1 === nothing
                             "effort" => chk_e, "htm" => chk_h, "bb" => BB[]))
 else
     phi, spread, edge = ck1["phi"], ck1["spread"], ck1["edge"] == 1.0
-    chk_e, chk_h = ck1["effort"], ck1["htm"]; BB[] = get(ck1, "bb", 0.96); V3 && (ETA[] = ck1["eta"])
+    chk_e, chk_h = ck1["effort"], ck1["htm"]; BB[] = get(ck1, "bb", 0.96); V3 && (ETA[] = ck1["eta"]; FL[] = get(ck1, "fl", FL[]))
     say("  from checkpoint ", basename(ckfile("stage1")))
 end
 @printf("  phi %.2f, spread %.3f, mean patience %.4f%s: effort %.4f (target %.4f), poor hand-to-mouth %.4f (aim %.4f)  [%.1f min]\n",
@@ -392,7 +421,7 @@ end
 
 if !S_ON
     say("\n2. the ", CFG, " economy on its own thresholds")
-    r = solve_economy(country_config(CODE; v3 = V3, config = CFG, missing_ok = true, v3kw()..., S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = spread,
+    r = solve_economy(country_config(CODE; v3 = V3ARG, config = CFG, missing_ok = true, v3kw()..., S = false, A = A_ON, E = E_ON, phi = phi, beta_spread = spread,
                                      beta_bar = BB[]))
     @printf("  participation %.4f | agency %.4f | hardship %.4f | hand-to-mouth %.4f (target %.2f) | effort %.4f (target %.4f) | median %.4f\n",
             r.rate, r.A, r.hardship, r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET, r.median_income)
@@ -449,7 +478,7 @@ end
 # belonging scales; the calibration is then re-scanned and solved once on the
 # full grid, and only that economy is checked against the targets and written.
 function scans(phi, spread; ugrid = UGRID_COARSE)
-    c = country_config(CODE; v3 = V3, config = CFG, missing_ok = true, v3kw()..., S = true, A = A_ON, E = E_ON, phi = phi, beta_spread = spread, beta_bar = BB[],
+    c = country_config(CODE; v3 = V3ARG, config = CFG, missing_ok = true, v3kw()..., S = true, A = A_ON, E = E_ON, phi = phi, beta_spread = spread, beta_bar = BB[],
                        ugrid = ugrid)
     E_ON && return scans_places(c)
     t0 = time()
@@ -503,7 +532,7 @@ end
 
 # ------------------------------------------------------ 4 and 5. solve --
 function solve_at(phi, spread, best; ugrid = UGRID_COARSE)
-    c = country_config(CODE; v3 = V3, config = CFG, missing_ok = true, v3kw()..., S = true, A = A_ON, E = E_ON, phi = phi, beta_spread = spread,
+    c = country_config(CODE; v3 = V3ARG, config = CFG, missing_ok = true, v3kw()..., S = true, A = A_ON, E = E_ON, phi = phi, beta_spread = spread,
                        beta_bar = BB[], kappa = best.κ, sigma_m = best.σ, ugrid = ugrid)
     t0 = time(); r = solve_economy(c)
     @printf("  %s: participation %.4f (cells %.4f, %.4f against %.3f, %.3f; employed %.4f, unemployed %.4f)\n",
@@ -540,8 +569,8 @@ for correction in 1:2
     ck5 = ck_read("stage5_$(correction)")
     if ck5 === nothing
         if V3
-            f3 = fit_v3(E_TARGET - gap_e, HTM_TARGET - gap_h; x0 = [log(phi), BB[], spread, ETA[]], iters = 8, tag = "fit3_c$(correction)")
-            phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; edge2 = false
+            f3 = fit_v3(E_TARGET - gap_e, HTM_TARGET - gap_h; x0 = [log(phi), BB[], spread, ETA[], FL[]], iters = 8, tag = "fit3_c$(correction)")
+            phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; FL[] = f3.fl; edge2 = false
         else
             phi = fit_phi(spread; lo = max(0.5, phi - 4), hi = phi + 4, steps = 10, aim = E_TARGET - gap_e)
             fs2 = fit_spread(phi, HTM_TARGET - gap_h)
@@ -590,7 +619,7 @@ if CFG == "GSA"
     say("\n6. the four economies at ", CODE, "'s G+S+A parameters (the fixed-parameter view)")
     for (nm, S_, A_) in (("G     ", false, false), ("G+A   ", false, true), ("G+S   ", true, false), ("G+S+A ", true, true))
         (SKIP_GS && S_ && !A_) && (say(nm, " skipped (SKIP_GS)"); continue)
-        rr_ = solve_economy(country_config(CODE; v3 = V3, S = S_, A = A_))
+        rr_ = solve_economy(country_config(CODE; v3 = V3ARG, S = S_, A = A_))
         @printf("%s participation %.4f (E %.4f, U %.4f) | agency %.4f | loss %.4f | hardship %.4f | poor htm %.4f | effort %.4f | median %.4f\n",
                 nm, rr_.rate, rr_.rate_E, rr_.rate_U, rr_.A, rr_.shock_loss, rr_.hardship, rr_.hand_to_mouth_kvw,
                 rr_.mean_effort_employed, rr_.median_income)
