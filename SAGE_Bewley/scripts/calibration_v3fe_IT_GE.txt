@@ -1,0 +1,7 @@
+# written by calibrate_country.jl IT GE, version 3 (effort set by the job, household replacement rate, liquid-wealth targets from the HFCS); read by country_config
+phi = 5.132
+beta_spread = 0.0000
+beta_bar = 0.9226
+eta_z = 0.2927
+cfloor = 0.104939
+beta_gap = 0.0474

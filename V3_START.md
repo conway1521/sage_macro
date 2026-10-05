@@ -800,7 +800,7 @@ What this changes in the order: three changes to the base are now implied by the
 
 **The private share of belonging, Germany.** `estimate_omega.jl DE v3fe`, 16 Länder. The model's regional spread of participation equals the data's (0.084) at a private share between 0.15 and 0.30, about 0.2. Because common regional causes also spread participation (Manski 1993), this is a lower bound on the private share, so an upper bound on the multiplier of about 2.3. The band for Germany narrows from 1.2 to 2.8 to 1.2 to 2.3. Italy's run did not start (it asked for a v3e file that does not exist) and waits for Italy's base.
 
-**The floor fitted with places.** Germany G+E under the rule `floor_from=GE` chose no floor (hand-to-mouth 0.231 against 0.22, in band) and France likewise, so the rule changes nothing there. Italy G+E under the rule: run 37353825682, not finished after 3 h 50 min at the time of writing.
+**The floor fitted with places.** Germany G+E under the rule `floor_from=GE` chose no floor (hand-to-mouth 0.231 against 0.22, in band) and France likewise, so the rule changes nothing there. Italy G+E under the rule (run 37353825682, 236 minutes): calibrated. The floor is 0.145 of reference earnings (0.215 when fitted in G), hand-to-mouth 0.180 against 0.18, liquid wealth over income 0.272 against 0.272, MPC 0.283 untargeted. So Italy with places does calibrate when the floor is fitted where the places are. Its other configurations are not refitted on this base, because the income process is about to change (probe 3) and every calibration with it.
 
 **Probe 1. Two assets with patience by education: it does not give the wealth distribution by education.** `probe_two_asset_grid.jl FR 0.9578|0.9650|0.9720 0.0131 32:4 150 8 gap`, not recalibrated.
 
