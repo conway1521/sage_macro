@@ -244,6 +244,12 @@ Base.@kwdef struct SAGEConfig
     # own and negative resources after the lump-sum tax, which the household problem does not solve
     # (first run, 2026-10-05: not a number throughout).
     assist_long::Float64 = NaN
+    # PATIENCE BY EDUCATION: a shift of the discount factor in each cell, zero by default. The base
+    # puts the hand-to-mouth in the wrong cell (France G+A: 7% below tertiary and 53% with tertiary,
+    # against 26% and 15% in the HFCS; test_cell_wealth.jl, 2026-10-05): with one patience for all,
+    # the cell with the safer jobs holds no buffer. Estimated discount factors rise with education
+    # (Cagetti 2003; Lawrance 1991).
+    beta_cell::NTuple{2,Float64} = (0.0, 0.0)
     # The illiquid grid's dense part: with k_mid > 0, three fifths of the nodes lie on [0, k_mid] and
     # the rest run geometrically to k_max. On the exponential grid (k_mid = 0, every earlier result)
     # the nodes around median net wealth are over two years of income apart at 24 nodes, and liquid
@@ -313,8 +319,8 @@ end
 "The effective cell parameters implied by a config: alpha and B per cell."
 function cells_of(c::SAGEConfig)
     αs = c.A ? c.alpha : (c.alpha_off, c.alpha_off)
-    ((α = αs[1], B = c.B[1], share = c.share[1], δ = c.unemployment ? c.delta[1] : 0.0, τ = c.commute[1], eset = c.effort_by_cell[1], fL = c.f_long[1]),
-     (α = αs[2], B = c.B[2], share = c.share[2], δ = c.unemployment ? c.delta[2] : 0.0, τ = c.commute[2], eset = c.effort_by_cell[2], fL = c.f_long[2]))
+    ((α = αs[1], B = c.B[1], share = c.share[1], δ = c.unemployment ? c.delta[1] : 0.0, τ = c.commute[1], eset = c.effort_by_cell[1], fL = c.f_long[1], dβ = c.beta_cell[1]),
+     (α = αs[2], B = c.B[2], share = c.share[2], δ = c.unemployment ? c.delta[2] : 0.0, τ = c.commute[2], eset = c.effort_by_cell[2], fL = c.f_long[2], dβ = c.beta_cell[2]))
 end
 
 "Discount-factor nodes and weights implied by a config."
@@ -339,7 +345,7 @@ function params_of(c::SAGEConfig, cell)
     bs, _ = betas_of(c)
     ps = [cell_params_u(cell.α; δ = cell.δ, f = c.f_find, rr = c.rr, na = c.na, ne = c.ne,
                         a_max = c.a_max, pexp = c.pexp, subsidy = c.subsidy, lumptax = c.lumptax,
-                        partcredit = c.partcredit, β = b, pcost = c.pcost, nz = c.nz,
+                        partcredit = c.partcredit, β = b + cell.dβ, pcost = c.pcost, nz = c.nz,
                         ρ = c.rho, η = c.eta_z, fL = cell.fL, rrL = c.rr_long) for b in bs]
     (!isnan(cell.fL) && c.illiquid) && error("the long-term state is not built for two assets")
     if c.phi != 14.0 || c.e_ref != E_REF
@@ -1051,15 +1057,17 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
     # changes while v3 is false.
     # v3 = :floor: the version 3 economy with the means-tested floor in the base (V3_START.md,
     # section 22); its own files, calibration_v3f_<code>_<config>.txt, which carry the floor's level.
+    # v3 = :edu or :floor_edu: patience by education as well (files calibration_v3e_*, calibration_v3fe_*).
     if v3 !== false
         d[:effort_mode] = :job
         d[:rr] = num("rr_household"); d[:rr_public] = num("rr_public")
         d[:qbar] = 0.04                       # measured (data/timeuse), not the 0.10 assumed before
-        cal = joinpath(@__DIR__, (v3 === :floor ? "calibration_v3f_" : "calibration_v3_") * "$(code)_$(config)" * (illq ? "_I" : "") * ".txt")
+        vtag = v3 === :floor ? "v3f" : v3 === :edu ? "v3e" : v3 === :floor_edu ? "v3fe" : "v3"
+        cal = joinpath(@__DIR__, "calibration_$(vtag)_$(code)_$(config)" * (illq ? "_I" : "") * ".txt")
         # In the floor regime places differ by the household's income per head (:conversion_hh): what
         # is not unemployment in a low employment rate stays in the place's income, so a poor place is
         # poor against the national floor and not only riskier (V3_START.md, sections 21 and 22).
-        v3 === :floor && (d[:e_channels] = (:composition, :access, :conversion_hh, :commute, :community))
+        v3 in (:floor, :floor_edu) && (d[:e_channels] = (:composition, :access, :conversion_hh, :commute, :community))
     end
     marker = replace(cal, r"\.txt$" => ".not_calibrated.txt")
     stale = isfile(marker) && (!isfile(cal) || mtime(marker) > mtime(cal))
@@ -1070,6 +1078,8 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
             k, v = strip.(split(t, "="))
             if startswith(k, "effort_cell")           # effort levels by state, one line per education cell (two assets, version 3)
                 ec[parse(Int, k[end:end])] = parse.(Float64, split(v))
+            elseif k == "beta_gap"                  # patience of the lower-education cell below the other's
+                d[:beta_cell] = (-parse(Float64, v), 0.0)
             else
                 d[Symbol(k)] = parse(Float64, v)
             end

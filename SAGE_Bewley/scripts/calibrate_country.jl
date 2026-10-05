@@ -75,8 +75,13 @@ const V3 = get(ENV, "SAGE_V3", "0") == "1"
 # not give (it moves the two moments along the same line as patience). In every other configuration
 # the floor is the country's, read from its G file. Files calibration_v3f_<code>_<cfg>.txt.
 const FLOORREG = V3 && get(ENV, "SAGE_FLOOR", "0") == "1"
-const V3ARG = FLOORREG ? :floor : V3
-const VTAG = FLOORREG ? "v3f" : "v3"
+# PATIENCE BY EDUCATION (SAGE_EDU=1 with SAGE_V3=1; V3_START.md, section 24). The lower-education
+# cell's discount factor lies a gap below the other's; the gap is a parameter of the fit and the
+# difference between the two cells' hand-to-mouth shares (HFCS, by education) is the moment it owns.
+# No spread within a cell. Files calibration_v3e_* and, with the floor, calibration_v3fe_*.
+const EDUREG = V3 && get(ENV, "SAGE_EDU", "0") == "1"
+const V3ARG = FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : V3)
+const VTAG = "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "")
 function hfcs_target(moment; wave = "2021")
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
         startswith(ln, "#") && continue
@@ -110,13 +115,24 @@ const INWORK_DATA = V3 ? incdist("inwork_poverty60") : NaN
 const S8020_TOL = 0.25
 const ETA = Ref(NaN)
 const FL = Ref(0.0)              # the floor, as a share of a year's reference earnings (cfloor = FL e_ref)
+const BGAP = Ref(0.0)            # patience of the lower-education cell below the other's
+function hfcs_group(moment, group, sub; wave = "2021")
+    for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
+        startswith(ln, "#") && continue
+        f = split(ln, ",")
+        length(f) >= 6 && f[1] == moment && f[2] == CODE && f[3] == wave && f[4] == group && f[5] == sub && return parse(Float64, f[6])
+    end
+    error("no HFCS target $moment for $CODE, $group, $sub")
+end
+const HGAP_TARGET = EDUREG ? hfcs_group("htm_model_narrow_total", "education", "below tertiary") - hfcs_group("htm_model_narrow_total", "education", "tertiary") : NaN
+const HGAP_TOL = 0.03
 const E_REF_C = V3 ? num("e_ref") : NaN
-v3kw() = V3 && !isnan(ETA[]) ? (FLOORREG ? (eta_z = ETA[], cfloor = FL[] * E_REF_C) : (eta_z = ETA[],)) : ()
+v3kw() = V3 && !isnan(ETA[]) ? merge((eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;)) : ()
 if FLOORREG
     if CFG == "G"
         FL[] = 0.10                 # where the search for the floor starts
     else
-        fg = joinpath(@__DIR__, "calibration_v3f_$(CODE)_G.txt")
+        fg = joinpath(@__DIR__, "calibration_$(VTAG)_$(CODE)_G.txt")
         isfile(fg) || error("the floor regime needs the country's G calibration first: $(basename(fg)) is missing")
         for l in eachline(fg)
             startswith(strip(l), "cfloor") && (FL[] = parse(Float64, last(split(l, "="))) / E_REF_C)
@@ -231,7 +247,7 @@ timed_scans(args...; kw...) = (t_ = time(); out = scans(args...; kw...); LASTSCA
 function write_cal(phi, spread; kappa = nothing, sigma = nothing)
     open(OUTFILE, "w") do io
         println(io, "# written by calibrate_country.jl $(CODE) $(CFG)", V3 ? ", version 3 (effort set by the job, household replacement rate, liquid-wealth targets from the HFCS)" : "", "; read by country_config")
-        V3 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\neta_z = %.4f\n%s", phi, spread, BB[], ETA[], FLOORREG ? @sprintf("cfloor = %.6f\n", FL[] * E_REF_C) : "") :
+        V3 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\neta_z = %.4f\n%s", phi, spread, BB[], ETA[], (FLOORREG ? @sprintf("cfloor = %.6f\n", FL[] * E_REF_C) : "") * (EDUREG ? @sprintf("beta_gap = %.4f\n", BGAP[]) : "")) :
              @printf(io, "phi = %.2f\nbeta_spread = %.3f\nbeta_bar = %.4f\n", phi, spread, BB[])
         kappa === nothing || @printf(io, "kappa = %.2f\nsigma_m = %.2f\n", kappa, sigma)
     end
@@ -305,29 +321,37 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
     # fifth parameter: the floor's level. Free in G of the floor regime (0 to 0.30 of reference earnings),
     # fixed elsewhere (at zero without the regime). In the floor regime patience has no spread.
     flfree = FLOORREG && CFG == "G"
-    lo = [log(0.5), 0.84, 0.0, 0.05, flfree ? 0.0 : FL[]]; hi = [log(60.0), 0.975, FLOORREG ? 0.0 : SPREAD_MAX, 0.40, flfree ? 0.30 : FL[]]
-    H = [0.05, 0.004, 0.01, 0.02, 0.02]; np = 5
+    # sixth parameter: the patience gap between the education cells, free in the education regime
+    length(x0) == 5 && (x0 = vcat(x0, EDUREG ? max(BGAP[], 0.03) : 0.0))
+    nospread = FLOORREG || EDUREG
+    gapfree = EDUREG && !E_ON          # with places the gap is the one found without them (the cells' shares are not kept by place)
+    lo = [log(0.5), 0.84, 0.0, 0.05, flfree ? 0.0 : FL[], gapfree ? 0.0 : x0[6]]
+    hi = [log(60.0), 0.975, nospread ? 0.0 : SPREAD_MAX, 0.40, flfree ? 0.30 : FL[], gapfree ? 0.14 : x0[6]]
+    H = [0.05, 0.004, 0.01, 0.02, 0.02, 0.01]; np = 6; nm = 5
     # A point where the economy has no solution (a floor that cannot be financed: Italy at 0.35,
     # 2026-10-04) is not an error of the fit: it is a point to step away from.
     function at(x)
-        BB[] = x[2]; ETA[] = x[4]; FL[] = x[5]
+        BB[] = x[2]; ETA[] = x[4]; FL[] = x[5]; BGAP[] = x[6]
         try
             r = soff(exp(x[1]), x[3]); st = income_stats(cfg_off(exp(x[1]), x[3]))
-            return (r = r, st = st, m = [r.mean_effort_employed, r.wealth_p50 / r.median_income, r.hand_to_mouth_kvw, st.s8020], ok = true)
+            hc = hasproperty(r, :pooled) ? [sum(r.pooled[g].hmass) / sum(r.pooled[g].mass) for g in 1:2] : [NaN, NaN]
+            return (r = r, st = st, m = [r.mean_effort_employed, r.wealth_p50 / r.median_income, r.hand_to_mouth_kvw, st.s8020, hc[1] - hc[2]], ok = true)
         catch err
             say("    no solution at floor ", round(x[5]; digits = 4), ", patience ", round(x[2]; digits = 4), ": ", first(replace(sprint(showerror, err), "\n" => " "), 160))
-            return (r = nothing, st = nothing, m = fill(NaN, 4), ok = false)
+            return (r = nothing, st = nothing, m = fill(NaN, 5), ok = false)
         end
     end
     liqtol = Ref(flfree ? 0.03 : LIQ_TOL)          # the floor owns liquid wealth in G
-    res(o) = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET]) ./ [E_TOL, liqtol[], HTM_TOL, S8020_TOL]
+    # the fifth moment, the gap in the hand-to-mouth share between the cells, counts in the education regime only
+    res(o) = (r_ = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET, EDUREG ? HGAP_TARGET : 0.0]) ./ [E_TOL, liqtol[], HTM_TOL, S8020_TOL, HGAP_TOL];
+              gapfree || (r_[5] = 0.0); r_)
     # Resumable: with places on, one step of the fit takes half an hour on a runner and sixteen
     # do not fit in a job (France, Italy and Germany with E, 2026-10-04: cancelled at the six-hour
     # limit with nothing kept). The point is checkpointed after every step.
     ckf = ck_read(tag); it0 = 1
     x = clamp.(x0, lo, hi); lam = 0.1
     if ckf !== nothing
-        x = [ckf["x1"], ckf["x2"], ckf["x3"], ckf["x4"], get(ckf, "x5", FL[])]; lam = ckf["lam"]; it0 = Int(ckf["it"]) + 1
+        x = [ckf["x1"], ckf["x2"], ckf["x3"], ckf["x4"], get(ckf, "x5", FL[]), get(ckf, "x6", BGAP[])]; lam = ckf["lam"]; it0 = Int(ckf["it"]) + 1
         get(ckf, "nofloor", 0.0) == 1.0 && (flfree = false; lo[5] = hi[5] = 0.0; liqtol[] = LIQ_TOL)
         say("    fit resumed after step ", it0 - 1)
     end
@@ -337,7 +361,7 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
     end
     o.ok || error("the fit's starting point has no solution")
     F = res(o); tfit = time(); nstep = 0
-    owned(F) = maximum(abs.(flfree ? F : F[[1, 3, 4]]))          # effort, hand-to-mouth, S80/S20; liquid wealth too where the floor is fitted
+    owned(F) = maximum(abs.(flfree ? F : F[[1, 3, 4, 5]]))          # effort, hand-to-mouth, S80/S20, the gap by education (zero outside its regime); liquid wealth too where the floor is fitted
     for it in it0:iters
         # Liquid wealth is not required and often cannot be reached, so the stop is on the moments
         # the calibration owns; until 2026-10-04 it was on all four and the fit ran its sixteen
@@ -355,7 +379,7 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
             (say(@sprintf("\nTIME BUDGET: %.0f of %.0f minutes used inside the fit, after step %d; checkpoint kept, to resume in a new job.",
                           (time() - t_start) / 60, BUDGET, it - 1)); exit(3))
         ss0 = sum(abs2, F)
-        J = zeros(4, np)
+        J = zeros(nm, np)
         for k in 1:np
             hi[k] - lo[k] < 1e-12 && continue          # a fixed parameter: no column, no solve
             xk = copy(x); h = (xk[k] + H[k] > hi[k]) ? -H[k] : H[k]; xk[k] += h
@@ -375,17 +399,19 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
             lam *= 4
         end
         FLOORREG && @printf("    floor %.4f of reference earnings\n", x[5])
+        EDUREG && @printf("    patience gap %.4f | hand-to-mouth, below tertiary less tertiary %.4f (HFCS %.4f), %+.2f bands\n", x[6], o.m[5], HGAP_TARGET, F[5])
         @printf("    fit %2d: phi %.3f, top patience %.4f, spread %.4f, eta %.4f | effort %.4f, liquid/income %.4f, hand-to-mouth %.4f, S80/S20 %.2f | misses in bands %+.2f %+.2f %+.2f %+.2f\n",
-                it, exp(x[1]), x[2], x[3], x[4], o.m..., F...); flush(stdout)
+                it, exp(x[1]), x[2], x[3], x[4], o.m[1:4]..., F[1:4]...); flush(stdout)
         nstep += 1
-        ck_write(tag, Dict("x1" => x[1], "x2" => x[2], "x3" => x[3], "x4" => x[4], "x5" => x[5], "lam" => lam, "it" => Float64(it),
+        ck_write(tag, Dict("x1" => x[1], "x2" => x[2], "x3" => x[3], "x4" => x[4], "x5" => x[5], "x6" => x[6], "lam" => lam, "it" => Float64(it),
                            "nofloor" => (FLOORREG && CFG == "G" && !flfree) ? 1.0 : 0.0))
         moved || (flfree && x[5] <= 1e-3) || break
         sum(abs2, F) > 0.98 * ss0 && owned(F) <= 1.0 && break          # no longer improving, owned moments inside their bands
     end
-    xr = [log(round(exp(x[1]); digits = 3)), round(x[2]; digits = 4), round(x[3]; digits = 4), round(x[4]; digits = 4), round(x[5]; digits = 4)]
+    xr = [log(round(exp(x[1]); digits = 3)), round(x[2]; digits = 4), round(x[3]; digits = 4), round(x[4]; digits = 4), round(x[5]; digits = 4), round(x[6]; digits = 4)]
     o = at(xr); o.ok || error("the fitted point has no solution after rounding")
-    (phi = exp(xr[1]), bb = xr[2], sp = xr[3], eta = xr[4], fl = xr[5], r = o.r, st = o.st)
+    EDUREG && @printf("  hand-to-mouth by education: below tertiary less tertiary %.4f (HFCS %.4f) with a patience gap of %.4f\n", o.m[5], HGAP_TARGET, xr[6])
+    (phi = exp(xr[1]), bb = xr[2], sp = xr[3], eta = xr[4], fl = xr[5], gap = xr[6], r = o.r, st = o.st)
 end
 say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", round(HTM_TARGET - GAP; digits = 4))
 ck1 = ck_read("stage1")
@@ -397,14 +423,14 @@ if ck1 === nothing && V3
         fb = joinpath(@__DIR__, "calibration_$(VTAG)_$(CODE)_$(replace(CFG, "E" => "")).txt")
         if isfile(fb)
             kv = Dict(strip(first(split(l, "="))) => parse(Float64, last(split(l, "="))) for l in eachline(fb) if occursin("=", l) && !startswith(l, "#"))
-            x0e = [log(kv["phi"]), kv["beta_bar"], kv["beta_spread"], kv["eta_z"], FL[]]
+            x0e = [log(kv["phi"]), kv["beta_bar"], kv["beta_spread"], kv["eta_z"], FL[], get(kv, "beta_gap", 0.0)]
             say("  starting from ", basename(fb))
         end
     end
     f3 = x0e === nothing ? fit_v3(E_TARGET, HTM_TARGET - GAP) : fit_v3(E_TARGET, HTM_TARGET - GAP; x0 = x0e)
-    phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; FL[] = f3.fl; edge = false
+    phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; FL[] = f3.fl; BGAP[] = f3.gap; edge = false
     chk_e, chk_h = f3.r.mean_effort_employed, f3.r.hand_to_mouth_kvw
-    ck_write("stage1", Dict("phi" => phi, "spread" => spread, "edge" => 0.0, "effort" => chk_e, "htm" => chk_h, "bb" => BB[], "eta" => ETA[], "fl" => FL[]))
+    ck_write("stage1", Dict("phi" => phi, "spread" => spread, "edge" => 0.0, "effort" => chk_e, "htm" => chk_h, "bb" => BB[], "eta" => ETA[], "fl" => FL[], "gap" => BGAP[]))
     @printf("  income distribution: S80/S20 %.2f (official, under 65: %.2f) with eta %.4f | Gini %.3f | in-work poverty %.3f untargeted (official %.3f) | below half the median %.3f\n",
             f3.st.s8020, S8020_TARGET, ETA[], f3.st.gini, f3.st.inwork60, INWORK_DATA, f3.st.p50)
     @printf("  version 3 fit: liquid wealth over income %.4f (target %.4f, band %.2f) | MPC %.3f untargeted (survey %.3f) | earnings response %+.4f | drop on job loss %.3f\n",
@@ -423,7 +449,7 @@ elseif ck1 === nothing
                             "effort" => chk_e, "htm" => chk_h, "bb" => BB[]))
 else
     phi, spread, edge = ck1["phi"], ck1["spread"], ck1["edge"] == 1.0
-    chk_e, chk_h = ck1["effort"], ck1["htm"]; BB[] = get(ck1, "bb", 0.96); V3 && (ETA[] = ck1["eta"]; FL[] = get(ck1, "fl", FL[]))
+    chk_e, chk_h = ck1["effort"], ck1["htm"]; BB[] = get(ck1, "bb", 0.96); V3 && (ETA[] = ck1["eta"]; FL[] = get(ck1, "fl", FL[]); BGAP[] = get(ck1, "gap", BGAP[]))
     say("  from checkpoint ", basename(ckfile("stage1")))
 end
 @printf("  phi %.2f, spread %.3f, mean patience %.4f%s: effort %.4f (target %.4f), poor hand-to-mouth %.4f (aim %.4f)  [%.1f min]\n",
@@ -596,8 +622,8 @@ for correction in 1:2
     ck5 = ck_read("stage5_$(correction)")
     if ck5 === nothing
         if V3
-            f3 = fit_v3(E_TARGET - gap_e, HTM_TARGET - gap_h; x0 = [log(phi), BB[], spread, ETA[], FL[]], iters = 8, tag = "fit3_c$(correction)")
-            phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; FL[] = f3.fl; edge2 = false
+            f3 = fit_v3(E_TARGET - gap_e, HTM_TARGET - gap_h; x0 = [log(phi), BB[], spread, ETA[], FL[], BGAP[]], iters = 8, tag = "fit3_c$(correction)")
+            phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; FL[] = f3.fl; BGAP[] = f3.gap; edge2 = false
         else
             phi = fit_phi(spread; lo = max(0.5, phi - 4), hi = phi + 4, steps = 10, aim = E_TARGET - gap_e)
             fs2 = fit_spread(phi, HTM_TARGET - gap_h)
