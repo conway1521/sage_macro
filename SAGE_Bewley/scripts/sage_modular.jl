@@ -1019,6 +1019,10 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
         d[:rr] = num("rr_household"); d[:rr_public] = num("rr_public")
         d[:qbar] = 0.04                       # measured (data/timeuse), not the 0.10 assumed before
         cal = joinpath(@__DIR__, (v3 === :floor ? "calibration_v3f_" : "calibration_v3_") * "$(code)_$(config)" * (illq ? "_I" : "") * ".txt")
+        # In the floor regime places differ by the household's income per head (:conversion_hh): what
+        # is not unemployment in a low employment rate stays in the place's income, so a poor place is
+        # poor against the national floor and not only riskier (V3_START.md, sections 21 and 22).
+        v3 === :floor && (d[:e_channels] = (:composition, :access, :conversion_hh, :commute, :community))
     end
     marker = replace(cal, r"\.txt$" => ".not_calibrated.txt")
     stale = isfile(marker) && (!isfile(cal) || mtime(marker) > mtime(cal))
