@@ -51,6 +51,11 @@ if length(ARGS) >= 5
     c = SAGEConfig(c; beta_bar = v5 > 0.5 ? v5 : c.beta_bar - c.beta_spread / 2 + v5, beta_spread = 0.0)
     @printf("patience set to %.4f, no spread\n", c.beta_bar)
 end
+# sixth argument: the number of income states (11 in every calibration). The states are 45% apart,
+# so a region 23% poorer moves at most one of them across the poverty line or the floor.
+if length(ARGS) >= 6
+    c = SAGEConfig(c; nz = parse(Int, ARGS[6])); println("income states: ", c.nz)
+end
 r = solve_economy(c)
 fsh > 0 && @printf("means-tested floor at %.2f of reference earnings (%.4f), financed nationally: tax per head %.5f\n", fsh, c.cfloor, NAT_FLOOR_TAX[])
 _, w = places_from_data(code, SAGEConfig(c; E = false); typology = c.typology, channels = c.e_channels, epsilon = c.epsilon)
