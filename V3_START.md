@@ -696,3 +696,29 @@ Not right, untargeted: liquid wealth of the tertiary cell is far too high (Franc
 | Liquid-asset poverty, HFCS | 0.248 | 0.273 | 0.505 | |
 
 National liquid wealth over income 0.234 (HFCS 0.272, s.e. 0.028): inside two standard errors. The order of the hand-to-mouth is right for the first time at parameters that were fitted and not set by hand, and with national liquid wealth in range. Still wrong: the spread is a third of the survey's, the North's level is two and a half times the survey's, asset poverty is flat across regions, and the national hand-to-mouth share is 0.27 here because A and places were switched on without refitting. The run that counts is the same test at Italy's own G+A+E calibration in this regime (calibrations launched).
+
+## 25. The combined regime as a candidate base (2026-10-05, 05:00)
+
+`calibration_v3fe_*`: version 3 with the means-tested floor and patience by education. Twelve files: G, G+A, G+S, G+S+A in the three countries. France and Germany want no floor, so theirs are their education-regime calibrations with the floor written as zero; Italy's floor is 0.215 of reference earnings.
+
+| | patience, tertiary | gap | hand-to-mouth, model (data) | by education, model (HFCS) | liquid wealth over income (data) | MPC (survey) | participation, multiplier in G+S+A |
+|---|---|---|---|---|---|---|---|
+| France G+A | 0.929 | 0.074 | 0.223 (0.222) | 0.260, 0.153 (0.256, 0.151) | 0.077 (0.059) | 0.31 (0.39) | 0.233, 1.8 |
+| Germany G+A | 0.942 | 0.050 | 0.231 (0.225) | 0.277, 0.113 (0.285, 0.118) | 0.208 (0.140) | 0.26 (0.47) | 0.280, 1.7 |
+| Italy G+A | 0.934 | 0.047 | 0.179 (0.179) | 0.197, 0.094 (0.196, 0.095) | 0.302 (0.272) | 0.29 (0.47) | 0.121, 1.3 |
+
+**Validation, all on runners.** On/off pass (`onoff_v3.jl floor edu`): 16 of 16 in each country. By education (`test_cell_wealth.jl GA v3fe`): 3 of 3. MPC properties (`test_mpc_economics.jl <CODE> GA v3fe`): 7 of 7 in each country, the floor's withdrawal counted in the adding up. Participation and the multiplier are as in version 3.
+
+**What it gets right that version 3 did not:** who is hand-to-mouth, in every country; Italy's liquid wealth with its hand-to-mouth share; the order of the hand-to-mouth across Italian regions (plus 0.62, at G parameters with A and places on; the run at Italy's own G+A+E calibration is pending).
+
+**What it does not, stated:**
+- the MPC is no higher (France lower, 0.31 against 0.34 in version 3);
+- Germany's liquid wealth (0.21 against 0.14);
+- the liquid wealth of the tertiary cell, untargeted, several times too high (France 0.75 of the national median income, Germany 1.58, Italy 1.51, against 0.07, 0.28 and 0.42 of the group's own income in the HFCS): the patient cell holds in liquid form what graduates hold in houses and pensions;
+- the spread across Italian regions (a third of the survey's) and regional asset poverty (flat);
+- income poverty and in-work poverty remain step functions of the income grid;
+- the multiplier still rests on the private share of belonging.
+
+**Not yet in the regime:** the place configurations (Italy G+E and G+A+E running; France and Germany not started), two assets.
+
+**For decision:** whether this regime becomes the base in place of version 3. It costs one preference parameter per country, identified by one well-measured moment, and for Italy the floor. The alternative that addresses the same failure without preference differences is saving that rises with permanent income (section 23), not built.
