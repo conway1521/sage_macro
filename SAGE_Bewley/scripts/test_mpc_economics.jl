@@ -11,7 +11,8 @@
 #   5. the unemployed spend more of a windfall than the employed;
 #   6. the impatient spend more than the patient (when there are patience types);
 #   7. consumption, saving and earnings account for the whole windfall:
-#      MPC + MPS - MPE = 1 at every size.
+#      MPC + MPS - MPE = 1 at every size; with a means-tested floor, less what
+#      the floor withdraws from a household it was topping up.
 # The windfall is a multiple of the household's own annual labour and benefit
 # income, as cash on hand at the start of the year.
 #
@@ -35,7 +36,7 @@ hh = []
 for g in 1:2, (k, p) in enumerate(params_of(cT, cs[g]))
     s = solve_participation_logit(update(p; social_strength = 0.0), 1.0; theta = c.theta, full = true)
     z, _ = SAGEBewley.income_process(p); a = s.a; na, ns = length(a), length(z)
-    cb = zeros(na, ns); sb = zeros(na, ns); lb = zeros(na, ns); yb = zeros(na, ns)
+    cb = zeros(na, ns); sb = zeros(na, ns); lb = zeros(na, ns); yb = zeros(na, ns); fb = zeros(na, ns)
     for st in 1:ns
         α = p.α[st]; credit = net_participation(p, α, z[st]); tr = transfer_at(p, st)
         for i in 1:na, d in (0, 1)
@@ -43,15 +44,15 @@ for g in 1:2, (k, p) in enumerate(params_of(cT, cs[g]))
             lab = (1 + p.subsidy) * α * s.e_d[d+1][i, st] * z[st] * p.Z
             x = p.R * a[i] + lab - p.lumptax + credit * d + tr
             cb[i, st] += w * (x + floor_transfer(p, x) - s.a_d[d+1][i, st]) / p.pc          # with the floor's top-up, if any
-            sb[i, st] += w * s.a_d[d+1][i, st]; lb[i, st] += w * lab; yb[i, st] += w * (lab + tr)
+            sb[i, st] += w * s.a_d[d+1][i, st]; lb[i, st] += w * lab; yb[i, st] += w * (lab + tr); fb[i, st] += w * floor_transfer(p, x)
         end
     end
-    push!(hh, (w = cs[g].share * bw[k], g = g, k = k, p = p, a = a, z = z, λ = s.lambda, c = cb, s = sb, l = lb, y = yb))
+    push!(hh, (w = cs[g].share * bw[k], g = g, k = k, p = p, a = a, z = z, λ = s.lambda, c = cb, s = sb, l = lb, y = yb, f = fb))
 end
 
 "Mass-weighted mean response per unit of windfall, windfall = `mult` times own annual income, over the states where `keep` holds."
 function response(mult; keep = (h, i, st) -> true)
-    num = zeros(3); den = 0.0
+    num = zeros(4); den = 0.0
     for h in hh, st in eachindex(h.z), i in eachindex(h.a)
         m = h.w * h.λ[i, st]; (m <= 0 || !keep(h, i, st)) && continue
         Δ = mult * h.y[i, st]; Δ == 0 && continue
@@ -60,9 +61,10 @@ function response(mult; keep = (h, i, st) -> true)
         num[1] += m * h.p.pc * (interp_ext(h.a, view(h.c, :, st), ai) - h.c[i, st]) / Δ
         num[2] += m * (interp_ext(h.a, view(h.s, :, st), ai) - h.s[i, st]) / Δ
         num[3] += m * (interp_ext(h.a, view(h.l, :, st), ai) - h.l[i, st]) / Δ
+        num[4] += m * (interp_ext(h.a, view(h.f, :, st), ai) - h.f[i, st]) / Δ          # the floor's top-up withdrawn (negative), zero without a floor
         den += m
     end
-    (mpc = num[1] / den, mps = num[2] / den, mpe = num[3] / den, mass = den)
+    (mpc = num[1] / den, mps = num[2] / den, mpe = num[3] / den, mpf = num[4] / den, mass = den)
 end
 
 # liquid wealth quintiles over the whole population
@@ -97,10 +99,10 @@ println("3. by size of the windfall")
 sizes = (1 / 52, 1 / 12, 1 / 4, 1.0)
 rs = [response(m) for m in sizes]
 for (m, r) in zip(sizes, rs)
-    @printf("   %5.1f%% of annual income: MPC %.3f, saving %.3f, earnings %+.3f, adding up %.6f\n", 100 * m, r.mpc, r.mps, r.mpe, r.mpc + r.mps - r.mpe)
+    @printf("   %5.1f%% of annual income: MPC %.3f, saving %.3f, earnings %+.3f, adding up %.6f\n", 100 * m, r.mpc, r.mps, r.mpe, r.mpc + r.mps - r.mpe - r.mpf)
 end
 check("MPC falls with the size of the windfall", all(rs[k].mpc >= rs[k+1].mpc - 1e-4 for k in 1:3))
-check("consumption, saving and earnings add up at every size", all(abs(r.mpc + r.mps - r.mpe - 1) < 1e-6 for r in rs))
+check("consumption, saving and earnings add up at every size", all(abs(r.mpc + r.mps - r.mpe - r.mpf - 1) < 1e-6 for r in rs))
 
 println("4. a loss against a gain of one month of income, households that can absorb the loss on the grid")
 can(h, i, st) = h.a[i] - M * h.y[i, st] / h.p.R >= h.a[1]
