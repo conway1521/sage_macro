@@ -11,6 +11,9 @@ on:
       countries:
         description: "Country codes, space separated"
         default: "FR DE IT"
+      regime:
+        description: "Calibration regime: empty (version 2), v3, v3f, v3e or v3fe"
+        default: ""
 jobs:
   plan:
     runs-on: ubuntu-latest
@@ -44,6 +47,7 @@ jobs:
         env:
           SAGE_WORKERS: "3"
           SAGE_SOLVER: ${{ inputs.solver }}
+          SAGE_REGIME: ${{ inputs.regime }}
         run: |
           cd SAGE_Bewley
           set -o pipefail
@@ -55,3 +59,4 @@ jobs:
           path: |
             SAGE_Bewley/scripts/policy_tests_${{ matrix.code }}.txt
             SAGE_Bewley/scripts/policy_results_${{ matrix.code }}.csv
+            SAGE_Bewley/scripts/policy_results_*_${{ matrix.code }}.csv

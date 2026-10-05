@@ -213,6 +213,9 @@ Base.@kwdef struct SAGEParams
     # Where the dense part of the illiquid grid ends (egm2_core.jl, illiquid_grid);
     # 0 is the exponential grid to k_max.
     k_mid::Float64 = 0.0
+    # Sub-points within an income state for the shares below an income line (the
+    # summaries in unemployment_core.jl): 1 is the state's own income, as before.
+    ysmooth::Int = 1
     # Perpetual youth with the illiquid asset on: households die with this
     # probability and are replaced by newborns with no wealth (Kaplan, Moll and
     # Violante 2018: 1/180 a quarter, a 45-year average lifetime). Discounting

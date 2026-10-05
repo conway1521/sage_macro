@@ -250,6 +250,10 @@ Base.@kwdef struct SAGEConfig
     # the cell with the safer jobs holds no buffer. Estimated discount factors rise with education
     # (Cagetti 2003; Lawrance 1991).
     beta_cell::NTuple{2,Float64} = (0.0, 0.0)
+    # Sub-points within an income state for the shares below an income line (cell_summary and
+    # income_stats); 1 counts each state as a point, as every result before 2026-10-05 did. The
+    # version 3 regimes use 9. No calibration target reads these shares.
+    ysmooth::Int = 1
     # The illiquid grid's dense part: with k_mid > 0, three fifths of the nodes lie on [0, k_mid] and
     # the rest run geometrically to k_max. On the exponential grid (k_mid = 0, every earlier result)
     # the nodes around median net wealth are over two years of income apart at 24 nodes, and liquid
@@ -351,6 +355,7 @@ function params_of(c::SAGEConfig, cell)
     if c.phi != 14.0 || c.e_ref != E_REF
         ps = [update(p; ϕ = c.phi, transfer = p.transfer .* (c.e_ref / E_REF)) for p in ps]
     end
+    c.ysmooth == 1 || (ps = [update(p; ysmooth = c.ysmooth) for p in ps])
     if !isnan(cell.fL)
         al = assist_of(c); nl = count(>(0), ps[1].z_vals_override)
         ps = [update(p; transfer = [s > 2nl ? p.transfer[s] + al : p.transfer[s] for s in eachindex(p.transfer)]) for p in ps]
@@ -1059,6 +1064,7 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
     # section 22); its own files, calibration_v3f_<code>_<config>.txt, which carry the floor's level.
     # v3 = :edu or :floor_edu: patience by education as well (files calibration_v3e_*, calibration_v3fe_*).
     if v3 !== false
+        d[:ysmooth] = 9
         d[:effort_mode] = :job
         d[:rr] = num("rr_household"); d[:rr_public] = num("rr_public")
         d[:qbar] = 0.04                       # measured (data/timeuse), not the 0.10 assumed before
@@ -1237,15 +1243,25 @@ function income_stats(c::SAGEConfig)
         p = update(p; social_strength = 0.0)
         s = solve_participation_logit(p, 1.0; theta = c0.theta, full = true)
         ys = Float64[]; ws = Float64[]; es = Bool[]
+        y2 = Float64[]; w2 = Float64[]; e2 = Bool[]          # with the mass of each income state spread over its interval (ysmooth)
+        zp = sort(unique(s.z_vals[s.z_vals .> 0])); K = max(p.ysmooth, 1)
+        Δ = (K > 1 && length(zp) > 1) ? log(zp[2] / zp[1]) : 0.0
         for st in eachindex(s.z_vals), i in eachindex(s.a), d in (0, 1)
             pd = d == 1 ? s.P1[i, st] : 1 - s.P1[i, st]; m = cs[g].share * bw[k] * s.lambda[i, st] * pd; m <= 0 && continue
+            sy = (1 + p.subsidy) * p.α[st] * s.e_d[d+1][i, st] * s.z_vals[st] * p.Z + net_participation(p, p.α[st], s.z_vals[st]) * d + transfer_at(p, st)
             x = p.R * s.a[i] + (1 + p.subsidy) * p.α[st] * s.e_d[d+1][i, st] * s.z_vals[st] * p.Z - p.lumptax +
                 net_participation(p, p.α[st], s.z_vals[st]) * d + transfer_at(p, st)
             push!(ys, (x + floor_transfer(p, x) - s.a[i]) / p.pc); push!(ws, m); push!(es, s.z_vals[st] > 0)
+            Δ == 0 && continue
+            for j in 1:K
+                xj = p.R * s.a[i] - p.lumptax + sy * exp(Δ * ((j - 0.5) / K - 0.5))
+                push!(y2, (xj + floor_transfer(p, xj) - s.a[i]) / p.pc); push!(w2, m / K); push!(e2, s.z_vals[st] > 0)
+            end
         end
-        (ys, ws, es)
+        (ys, ws, es, y2, w2, e2)
     end
     ys = reduce(vcat, [r[1] for r in recs]); ws = reduce(vcat, [r[2] for r in recs]); es = reduce(vcat, [r[3] for r in recs])
+    y2 = reduce(vcat, [r[4] for r in recs]); w2 = reduce(vcat, [r[5] for r in recs]); e2 = reduce(vcat, [r[6] for r in recs])
     o = sortperm(ys); y = ys[o]; w = ws[o] ./ sum(ws); e = es[o]; cw = cumsum(w)
     med = y[findfirst(>=(0.5), cw)]
     # the fifths by interpolation in the cumulative weight, so an atom of income is split and not assigned whole
@@ -1253,6 +1269,15 @@ function income_stats(c::SAGEConfig)
     L = cumsum(w .* y) ./ sum(w .* y)
     gini = 1 - sum(w[i] * (L[i] + (i > 1 ? L[i-1] : 0.0)) for i in eachindex(y))
     below(q, sel) = sum(w[i] for i in eachindex(y) if sel[i] && y[i] < q * med; init = 0.0) / sum(w[sel])
+    # the shares below a line from the spread distribution, where there is one; S80/S20 and the Gini, which
+    # the calibration targets, stay on the states themselves
+    if !isempty(y2)
+        o2 = sortperm(y2); ya = y2[o2]; wa = w2[o2] ./ sum(w2); ea = e2[o2]; ca = cumsum(wa)
+        med2 = ya[findfirst(>=(0.5), ca)]
+        bel2(q, sel) = sum(wa[i] for i in eachindex(ya) if sel[i] && ya[i] < q * med2; init = 0.0) / sum(wa[sel])
+        return (s8020 = part(0.8, 1.0) / part(0.0, 0.2), gini = gini, p50 = bel2(0.5, trues(length(ya))), p60 = bel2(0.6, trues(length(ya))),
+                inwork60 = bel2(0.6, ea), median = med2)
+    end
     (s8020 = part(0.8, 1.0) / part(0.0, 0.2), gini = gini, p50 = below(0.5, trues(length(y))), p60 = below(0.6, trues(length(y))),
      inwork60 = below(0.6, e), median = med)
 end

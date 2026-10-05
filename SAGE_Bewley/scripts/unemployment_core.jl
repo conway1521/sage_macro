@@ -198,6 +198,17 @@ function cell_summary(p::SAGEParams, sol; thresholds = nothing)
     # 43 in the second highest, 27 in the top), so it tests the SHAPE of the
     # joint distribution rather than any level.
     fout = 0.0          # outlay on the means-tested floor, per head
+    # SHARES BELOW AN INCOME LINE, SMOOTHED (p.ysmooth > 1). The productivity states are a grid on a
+    # continuous distribution, 45% apart at eleven states; counted as points, a share below a line
+    # jumps by the mass of a state when the state crosses it (Germany G: 0.174 and 0.064 below half the
+    # median in two nearly identical economies, 2026-10-04). Each state stands for the interval of
+    # log productivity half a step either side of it, and its mass is spread evenly over that
+    # interval at `ysmooth` sub-points: the part of income that moves with productivity (earnings,
+    # the benefit) is scaled, the rest (interest, the tax) is not. Only the income distribution and
+    # the joint indicators use the sub-points; means, wealth and the floor's outlay do not.
+    Ksm = max(p.ysmooth, 1)
+    zpos = sort(unique(z[z .> 0]))
+    Δz = (Ksm > 1 && length(zpos) > 1) ? log(zpos[2] / zpos[1]) : 0.0
     @inbounds for i_z in 1:nz, i_a in 1:na
         w = λ[i_a, i_z]
         w <= 0 && continue
@@ -223,15 +234,34 @@ function cell_summary(p::SAGEParams, sol; thresholds = nothing)
             ymean += wd * y; ym_s[i_z] += wd * y
             employed && y < ymin_E && (ymin_E = y)
             employed && (eff_E += wd * sol.e_d[d+1][i_a, i_z])
-            k = searchsortedfirst(YGRID, y)
-            if k <= length(YGRID)
-                Y[k] += wd; Ys[i_z, k] += wd
-                np > 0 && a[i_a] / p.pc < thr[1][2] && (ypoor[k] += wd)
-            end
-            for q in 1:np
-                y < thr[q][1] || continue
-                jinc[i_z, q] += wd
-                a[i_a] / p.pc < thr[q][2] && (jboth[i_z, q] += wd)
+            if Δz == 0
+                k = searchsortedfirst(YGRID, y)
+                if k <= length(YGRID)
+                    Y[k] += wd; Ys[i_z, k] += wd
+                    np > 0 && a[i_a] / p.pc < thr[1][2] && (ypoor[k] += wd)
+                end
+                for q in 1:np
+                    y < thr[q][1] || continue
+                    jinc[i_z, q] += wd
+                    a[i_a] / p.pc < thr[q][2] && (jboth[i_z, q] += wd)
+                end
+            else
+                sy = ynom - cap + p.lumptax          # what moves with productivity: earnings, the credit, the benefit
+                wj = wd / Ksm
+                for j in 1:Ksm
+                    yn = sy * exp(Δz * ((j - 0.5) / Ksm - 0.5)) + cap - p.lumptax
+                    yj = (yn + floor_transfer(p, yn + a[i_a])) / p.pc
+                    k = searchsortedfirst(YGRID, yj)
+                    if k <= length(YGRID)
+                        Y[k] += wj; Ys[i_z, k] += wj
+                        np > 0 && a[i_a] / p.pc < thr[1][2] && (ypoor[k] += wj)
+                    end
+                    for q in 1:np
+                        yj < thr[q][1] || continue
+                        jinc[i_z, q] += wj
+                        a[i_a] / p.pc < thr[q][2] && (jboth[i_z, q] += wj)
+                    end
+                end
             end
 
         end
