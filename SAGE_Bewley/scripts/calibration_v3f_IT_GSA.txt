@@ -1,0 +1,8 @@
+# written by calibrate_country.jl IT GSA, version 3 (effort set by the job, household replacement rate, liquid-wealth targets from the HFCS); read by country_config
+phi = 5.087
+beta_spread = 0.0000
+beta_bar = 0.8898
+eta_z = 0.2847
+cfloor = 0.106535
+kappa = 4.05
+sigma_m = 1.44
