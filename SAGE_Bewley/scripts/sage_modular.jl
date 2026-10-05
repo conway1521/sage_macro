@@ -418,8 +418,13 @@ every household is on the floor, where an extra euro earned is taken back.
 """
 function floor_effort(c::SAGEConfig)
     (c.cfloor > 0 && c.effort_mode === :job && isempty(c.effort_by_cell[1])) || return c
-    c1 = SAGEConfig(c; cfloor = 0.0, S = false)
+    # With the long-term state the economy without the floor has no solution (those households have no
+    # income of their own), so the levels are those of the economy without the floor and without that
+    # state, and zero in its block.
+    long = !isnan(c.f_long[1])
+    c1 = SAGEConfig(c; cfloor = 0.0, S = false, f_long = (NaN, NaN))
     lv = get!(() -> job_effort_levels(c1), FLOOR_EFFORT_CACHE, hash(repr(c1)))
+    long && (lv = Tuple(vcat(v, zeros(length(v) ÷ 2)) for v in lv))
     SAGEConfig(c; effort_by_cell = lv)
 end
 
