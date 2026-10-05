@@ -30,6 +30,12 @@ cfg = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "GAE"
 code = "IT"
 c = country_config(code; v3 = true, config = cfg, S = occursin('S', cfg), A = occursin('A', cfg))
 fsh = length(ARGS) >= 2 ? parse(Float64, ARGS[2]) : 0.0
+# third argument hh: income per head by place keeps the part of a low employment rate that is not
+# unemployment (:conversion_hh), so that the South is poorer and not only riskier
+if length(ARGS) >= 3 && lowercase(ARGS[3]) == "hh"
+    c = SAGEConfig(c; e_channels = Tuple(ch === :conversion ? :conversion_hh : ch for ch in c.e_channels))
+    println("income per head by place on the household's view (:conversion_hh)")
+end
 fsh > 0 && (c = SAGEConfig(c; cfloor = fsh * c.e_ref))
 r = solve_economy(c)
 fsh > 0 && @printf("means-tested floor at %.2f of reference earnings (%.4f), financed nationally: tax per head %.5f\n", fsh, c.cfloor, NAT_FLOOR_TAX[])
@@ -48,6 +54,10 @@ istat = Dict("ITC1" => 1, "ITC2" => 2, "ITC4" => 3, "ITH1" => 4, "ITH2" => 4, "I
 IND = [("hand-to-mouth", x -> x.hand_to_mouth_kvw, "htm_model_narrow_total"), ("liquid-asset poverty", x -> x.asset_poor, "asset_poor_disp_persons"),
        ("income poverty", x -> x.income_poor, "income_poor50_disp_persons")]
 @printf("%s %s, version 3, %d places | national: hand-to-mouth %.4f, asset poverty %.4f, income poverty %.4f\n", code, cfg, length(res), r.hand_to_mouth_kvw, r.asset_poor, r.income_poor)
+let M = ["IT North", "IT Centre", "IT South and Islands"]
+    inc = [sum(w[i] * res[i].mean_income for i in eachindex(res) if macro_of(names[i]) == m) / sum(w[i] for i in eachindex(res) if macro_of(names[i]) == m) for m in M]
+    @printf("mean income by macro-region, North = 1: Centre %.2f, South and Islands %.2f (household income per head, Eurostat: 0.90, 0.68)\n", inc[2] / inc[1], inc[3] / inc[1])
+end
 results = Tuple{String,Bool}[]
 check(name, ok) = (push!(results, (name, ok)); @printf("   -> %s: %s\n", name, ok ? "PASS" : "FAIL"))
 for (lab, val, mom) in IND

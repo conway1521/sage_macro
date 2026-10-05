@@ -209,7 +209,7 @@ function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (
             specs[i][:f_find] = f; specs[i][:delta] = (c.delta[1] * sl, c.delta[2] * sh)
         end
     end
-    if :conversion in channels && !any(isnothing, u)
+    if (:conversion in channels || :conversion_hh in channels) && !any(isnothing, u)
         key = typology === :degurba ? "median_income_eur" : "hh_income_per_head"
         inc = [latest(d, key, p) for (_, p) in pl]
         if !any(isnothing, inc)
@@ -220,7 +220,12 @@ function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (
             # 2026-10-02: with 1 - u alone, Campania against Bolzano came out at
             # 0.61 where about 0.86 remains). Otherwise one minus unemployment.
             er = [latest(d, "employment_rate_20_64", p) for (_, p) in pl]
-            emp = any(isnothing, er) ? [1 - u[i] / 100 for i in 1:n] : er ./ 100
+            # :conversion_hh, the household's view: only the model's own unemployment is netted out, so the
+            # rest of a low employment rate (people outside the labour force, who are not in the model)
+            # stays in the place's income per head. For the wealth side: with the employment rate netted
+            # out the Italian South has the North's income and more risk, and holds MORE buffers than
+            # the North, against the HFCS (test_place_wealth.jl, 2026-10-04).
+            emp = (any(isnothing, er) || :conversion_hh in channels) ? [1 - u[i] / 100 for i in 1:n] : er ./ 100
             pred = [((1 - t[i]) * c.alpha[1] + t[i] * c.alpha[2]) * emp[i] for i in 1:n]
             raw = inc ./ pred; k = sum(w .* pred) / sum(w .* inc)
             for i in 1:n; specs[i][:conv] = raw[i] * k; end
