@@ -23,13 +23,21 @@
 # single adult with housing support (data/benefits/). A floor removes the reason
 # to hold a buffer where it binds (Hubbard, Skinner and Zeldes 1995).
 #
-#   julia --project=scripts/run_env scripts/test_place_wealth.jl [CONFIG] [floor share]
+# Second argument "base": the floor regime (calibration_v3f_*: the floor in the base, its level
+# and patience calibrated with it); a fourth argument then names the configuration whose file is
+# read, when the switches of CONFIG are to be turned on at another configuration's parameters
+# (GAE at the G file: what places do at the G calibration, nothing refitted).
+#
+#   julia --project=scripts/run_env scripts/test_place_wealth.jl [CONFIG] [floor share | base] [hh] [file configuration]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf, Statistics
 cfg = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "GAE"
 code = "IT"
-c = country_config(code; v3 = true, config = cfg, S = occursin('S', cfg), A = occursin('A', cfg))
-fsh = length(ARGS) >= 2 ? parse(Float64, ARGS[2]) : 0.0
+BASE = length(ARGS) >= 2 && lowercase(ARGS[2]) == "base"
+filecfg = length(ARGS) >= 4 ? uppercase(ARGS[4]) : cfg
+c = country_config(code; v3 = BASE ? :floor : true, config = filecfg, S = occursin('S', cfg), A = occursin('A', cfg), E = occursin('E', cfg))
+BASE && @printf("floor regime, parameters of %s: floor %.4f (%.3f of reference earnings), patience %.4f\n", filecfg, c.cfloor, c.cfloor / c.e_ref, c.beta_bar)
+fsh = (length(ARGS) >= 2 && !BASE) ? parse(Float64, ARGS[2]) : 0.0
 # third argument hh: income per head by place keeps the part of a low employment rate that is not
 # unemployment (:conversion_hh), so that the South is poorer and not only riskier
 if length(ARGS) >= 3 && lowercase(ARGS[3]) == "hh"
