@@ -47,7 +47,8 @@ end
 fsh > 0 && (c = SAGEConfig(c; cfloor = fsh * c.e_ref))
 # fifth argument: a shift in patience, no spread (a pilot of what recalibrating with the floor would do)
 if length(ARGS) >= 5
-    c = SAGEConfig(c; beta_bar = c.beta_bar - c.beta_spread / 2 + parse(Float64, ARGS[5]), beta_spread = 0.0)
+    v5 = parse(Float64, ARGS[5])          # above 0.5: patience itself; below: a shift from the file's mean patience
+    c = SAGEConfig(c; beta_bar = v5 > 0.5 ? v5 : c.beta_bar - c.beta_spread / 2 + v5, beta_spread = 0.0)
     @printf("patience set to %.4f, no spread\n", c.beta_bar)
 end
 r = solve_economy(c)
@@ -67,6 +68,8 @@ istat = Dict("ITC1" => 1, "ITC2" => 2, "ITC4" => 3, "ITH1" => 4, "ITH2" => 4, "I
 IND = [("hand-to-mouth", x -> x.hand_to_mouth_kvw, "htm_model_narrow_total"), ("liquid-asset poverty", x -> x.asset_poor, "asset_poor_disp_persons"),
        ("income poverty", x -> x.income_poor, "income_poor50_disp_persons")]
 @printf("%s %s, version 3, %d places | national: hand-to-mouth %.4f, asset poverty %.4f, income poverty %.4f\n", code, cfg, length(res), r.hand_to_mouth_kvw, r.asset_poor, r.income_poor)
+@printf("national: liquid wealth over income %.4f (HFCS %.4f, s.e. %.3f) | hand-to-mouth HFCS %.4f (s.e. %.3f) | MPC %.3f | effort %.4f\n", r.wealth_p50 / r.median_income,
+        get(hfcs, ("liquid_kvw_to_disposable_income_ratio_of_medians", "all", "all"), (NaN, NaN))..., get(hfcs, ("htm_model_narrow_total", "all", "all"), (NaN, NaN))..., r.mpc, r.mean_effort_employed)
 let M = ["IT North", "IT Centre", "IT South and Islands"]
     inc = [sum(w[i] * res[i].mean_income for i in eachindex(res) if macro_of(names[i]) == m) / sum(w[i] for i in eachindex(res) if macro_of(names[i]) == m) for m in M]
     @printf("mean income by macro-region, North = 1: Centre %.2f, South and Islands %.2f (household income per head, Eurostat: 0.90, 0.68)\n", inc[2] / inc[1], inc[3] / inc[1])
