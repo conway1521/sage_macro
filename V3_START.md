@@ -660,3 +660,39 @@ The state gives the South its income poverty (0.29 against 0.291) and does not t
 **Where this leaves the regional order.** Four things tried, in this order: a floor (turns it only with national liquid wealth at 0.47 of income or more), a poorer South (no), twenty-one income states (no solution as the process stands), the long-term state (no). In every one the model holds more buffers where risk is higher, which is what a Bewley household does. The survey has fewer buffers where incomes are lower. What the model lacks is a reason for richer households to hold liquid wealth that is not precaution: its North is hand-to-mouth because its jobs are safe and its patience is the low one the national share needs. The literature's answer is saving that rises with permanent income (Dynan, Skinner and Zeldes 2004; a wealth motive as in Carroll 2000 and De Nardi 2004; Straub 2019), beside the floor for the poor (Hubbard, Skinner and Zeldes 1995). That is a change to preferences and a new set of moments (liquid wealth by income), not built, for decision.
 
 **Dead end:** twenty-one income states. The Rouwenhorst grid widens with the number of states, the lowest then earn 3% of the mean, cannot pay the lump-sum tax, and the floor cannot be financed.
+
+## 24. Who is hand-to-mouth: patience by education (2026-10-05)
+
+**The test that located the problem** (`test_cell_wealth.jl`). The regional question, asked inside each country on well-measured data: the model's two education cells are the HFCS's two groups.
+
+| G+A, version 3 | model, below tertiary | model, tertiary | HFCS, below tertiary | HFCS, tertiary |
+|---|---|---|---|---|
+| France | 0.066 | 0.534 | 0.256 (s.e. 0.009) | 0.151 (0.009) |
+| Germany | 0.196 | 0.316 | 0.285 (0.015) | 0.118 (0.015) |
+| Italy | 0.108 | 0.481 | 0.196 (0.034) | 0.095 (0.030) |
+
+0 of 3, in G as in G+A. The national hand-to-mouth share was on target and made of the wrong households: with one patience for all, the cell with the safer jobs holds no buffer and the cell with the riskier jobs saves. The same mechanism as the regions, in every country, in the core of the model. It bears on A (who is exposed when hit) and on where the MPC comes from.
+
+**The regime** (`SAGE_EDU=1` with `SAGE_V3=1`, workflow `-f edu=1`, `country_config(...; v3 = :edu)` or `:floor_edu`, files `calibration_v3e_*` and `calibration_v3fe_*`; `beta_cell` in the configuration, `beta_gap` in the files). The lower-education cell's discount factor lies a gap below the other's. The gap is a parameter of the fit and the difference between the cells' hand-to-mouth shares in the HFCS is the moment it owns. No spread within a cell. With places the gap is the one found without them. Estimated discount factors rise with education (Cagetti 2003; Lawrance 1991: both cited from memory, to be checked at source before any write-up).
+
+**G, with the gap.**
+
+| | patience, tertiary | gap | hand-to-mouth by cell, model (HFCS) | national (data) | liquid wealth over income (data) | MPC (survey) |
+|---|---|---|---|---|---|---|
+| France | 0.912 | 0.050 | 0.255, 0.154 (0.256, 0.151) | 0.220 (0.222) | 0.089 (0.059) | 0.31 (0.39) |
+| Germany | 0.929 | 0.041 | 0.278, 0.118 (0.285, 0.118) | 0.234 (0.225) | 0.220 (0.140) | 0.27 (0.47) |
+| Italy | 0.885 | 0.079 | 0.192, 0.087 (0.196, 0.095) | 0.175 (0.179) | 0.044 (0.272) | 0.39 (0.47) |
+| Italy, floor too (0.215) | 0.928 | 0.047 | gap 0.087 (0.102) | 0.198 (0.179) | 0.277 (0.272) | 0.30 (0.47) |
+
+Not right, untargeted: liquid wealth of the tertiary cell is far too high (France 0.34 of the national median income against 0.07 of its own in the HFCS, Germany 0.84 against 0.28). The patient cell holds in liquid form what graduates hold in houses and pensions; one asset cannot separate them.
+
+**The regional order, at calibrated parameters.** Italy, the floor and the gap as fitted in G (floor 0.215, patience 0.928 and 0.881), with A and places on and nothing refitted:
+
+| | North | Centre | South and Islands | by region, correlation |
+|---|---|---|---|---|
+| Hand-to-mouth, model | 0.246 | 0.263 | 0.303 | plus 0.62 |
+| Hand-to-mouth, HFCS | 0.096 | 0.151 | 0.316 | |
+| Liquid-asset poverty, model | 0.423 | 0.414 | 0.421 | minus 0.38 |
+| Liquid-asset poverty, HFCS | 0.248 | 0.273 | 0.505 | |
+
+National liquid wealth over income 0.234 (HFCS 0.272, s.e. 0.028): inside two standard errors. The order of the hand-to-mouth is right for the first time at parameters that were fitted and not set by hand, and with national liquid wealth in range. Still wrong: the spread is a third of the survey's, the North's level is two and a half times the survey's, asset poverty is flat across regions, and the national hand-to-mouth share is 0.27 here because A and places were switched on without refitting. The run that counts is the same test at Italy's own G+A+E calibration in this regime (calibrations launched).
