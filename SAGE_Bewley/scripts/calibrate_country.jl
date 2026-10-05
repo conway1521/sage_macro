@@ -302,17 +302,25 @@ each miss in units of its tolerance. Top patience stays below 0.975 (beta R
 below one for the most patient type). Returns the point and its moments.
 """
 function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22, FL[]], iters = 16, tag = "fit3")
-    # fifth parameter: the floor's level. Free in G of the floor regime (0 to 0.35 of reference earnings),
+    # fifth parameter: the floor's level. Free in G of the floor regime (0 to 0.30 of reference earnings),
     # fixed elsewhere (at zero without the regime). In the floor regime patience has no spread.
     flfree = FLOORREG && CFG == "G"
-    lo = [log(0.5), 0.84, 0.0, 0.05, flfree ? 0.0 : FL[]]; hi = [log(60.0), 0.975, FLOORREG ? 0.0 : SPREAD_MAX, 0.40, flfree ? 0.35 : FL[]]
+    lo = [log(0.5), 0.84, 0.0, 0.05, flfree ? 0.0 : FL[]]; hi = [log(60.0), 0.975, FLOORREG ? 0.0 : SPREAD_MAX, 0.40, flfree ? 0.30 : FL[]]
     H = [0.05, 0.004, 0.01, 0.02, 0.02]; np = 5
+    # A point where the economy has no solution (a floor that cannot be financed: Italy at 0.35,
+    # 2026-10-04) is not an error of the fit: it is a point to step away from.
     function at(x)
         BB[] = x[2]; ETA[] = x[4]; FL[] = x[5]
-        r = soff(exp(x[1]), x[3]); st = income_stats(cfg_off(exp(x[1]), x[3]))
-        (r = r, st = st, m = [r.mean_effort_employed, r.wealth_p50 / r.median_income, r.hand_to_mouth_kvw, st.s8020])
+        try
+            r = soff(exp(x[1]), x[3]); st = income_stats(cfg_off(exp(x[1]), x[3]))
+            return (r = r, st = st, m = [r.mean_effort_employed, r.wealth_p50 / r.median_income, r.hand_to_mouth_kvw, st.s8020], ok = true)
+        catch err
+            say("    no solution at floor ", round(x[5]; digits = 4), ", patience ", round(x[2]; digits = 4), ": ", first(replace(sprint(showerror, err), "\n" => " "), 160))
+            return (r = nothing, st = nothing, m = fill(NaN, 4), ok = false)
+        end
     end
-    res(o) = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET]) ./ [E_TOL, flfree ? 0.03 : LIQ_TOL, HTM_TOL, S8020_TOL]   # the floor owns liquid wealth in G
+    liqtol = Ref(flfree ? 0.03 : LIQ_TOL)          # the floor owns liquid wealth in G
+    res(o) = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET]) ./ [E_TOL, liqtol[], HTM_TOL, S8020_TOL]
     # Resumable: with places on, one step of the fit takes half an hour on a runner and sixteen
     # do not fit in a job (France, Italy and Germany with E, 2026-10-04: cancelled at the six-hour
     # limit with nothing kept). The point is checkpointed after every step.
@@ -320,15 +328,29 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
     x = clamp.(x0, lo, hi); lam = 0.1
     if ckf !== nothing
         x = [ckf["x1"], ckf["x2"], ckf["x3"], ckf["x4"], get(ckf, "x5", FL[])]; lam = ckf["lam"]; it0 = Int(ckf["it"]) + 1
+        get(ckf, "nofloor", 0.0) == 1.0 && (flfree = false; lo[5] = hi[5] = 0.0; liqtol[] = LIQ_TOL)
         say("    fit resumed after step ", it0 - 1)
     end
-    o = at(x); F = res(o); tfit = time(); nstep = 0
+    o = at(x)
+    while !o.ok && x[5] > lo[5]          # a start with no solution: halve the floor
+        x[5] = max(lo[5], x[5] / 2 - 1e-3); o = at(x)
+    end
+    o.ok || error("the fit's starting point has no solution")
+    F = res(o); tfit = time(); nstep = 0
     owned(F) = maximum(abs.(flfree ? F : F[[1, 3, 4]]))          # effort, hand-to-mouth, S80/S20; liquid wealth too where the floor is fitted
     for it in it0:iters
         # Liquid wealth is not required and often cannot be reached, so the stop is on the moments
         # the calibration owns; until 2026-10-04 it was on all four and the fit ran its sixteen
         # steps without moving (Germany: misses 0.05, 0.61, 0.26, 0.01 from step 14 to 16).
         owned(F) <= 0.25 && break
+        # The floor at zero and the wealth moments still apart: the country needs no floor (Germany,
+        # whose minimum income is already inside the replacement rate). The fit goes on as without
+        # the regime's extra target: the hand-to-mouth share owns patience, liquid wealth is reported.
+        if flfree && x[5] <= 1e-3 && it > it0
+            flfree = false; x[5] = 0.0; lo[5] = hi[5] = 0.0; liqtol[] = LIQ_TOL; F = res(o)
+            say("    the floor is at zero: fitting on without it, liquid wealth reported")
+            owned(F) <= 0.25 && break
+        end
         nstep > 0 && (time() - t_start) / 60 + 1.5 * (time() - tfit) / 60 / nstep > BUDGET &&
             (say(@sprintf("\nTIME BUDGET: %.0f of %.0f minutes used inside the fit, after step %d; checkpoint kept, to resume in a new job.",
                           (time() - t_start) / 60, BUDGET, it - 1)); exit(3))
@@ -337,13 +359,17 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
         for k in 1:np
             hi[k] - lo[k] < 1e-12 && continue          # a fixed parameter: no column, no solve
             xk = copy(x); h = (xk[k] + H[k] > hi[k]) ? -H[k] : H[k]; xk[k] += h
-            J[:, k] = (res(at(xk)) .- F) ./ h
+            ok_ = at(xk)
+            if !ok_.ok && x[k] - H[k] >= lo[k]          # no solution on that side: the other
+                xk = copy(x); h = -H[k]; xk[k] += h; ok_ = at(xk)
+            end
+            ok_.ok && (J[:, k] = (res(ok_) .- F) ./ h)
         end
         moved = false
         for _ in 1:6
             A = J' * J; d = -((A + lam * Diagonal(diag(A)) + 1e-10 * I) \ (J' * F))
             xn = clamp.(x .+ d, lo, hi); on = at(xn); Fn = res(on)
-            if sum(abs2, Fn) < sum(abs2, F) - 1e-6
+            if on.ok && sum(abs2, Fn) < sum(abs2, F) - 1e-6
                 x = xn; o = on; F = Fn; lam = max(lam / 3, 1e-4); moved = true; break
             end
             lam *= 4
@@ -352,12 +378,13 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
         @printf("    fit %2d: phi %.3f, top patience %.4f, spread %.4f, eta %.4f | effort %.4f, liquid/income %.4f, hand-to-mouth %.4f, S80/S20 %.2f | misses in bands %+.2f %+.2f %+.2f %+.2f\n",
                 it, exp(x[1]), x[2], x[3], x[4], o.m..., F...); flush(stdout)
         nstep += 1
-        ck_write(tag, Dict("x1" => x[1], "x2" => x[2], "x3" => x[3], "x4" => x[4], "x5" => x[5], "lam" => lam, "it" => Float64(it)))
-        moved || break
+        ck_write(tag, Dict("x1" => x[1], "x2" => x[2], "x3" => x[3], "x4" => x[4], "x5" => x[5], "lam" => lam, "it" => Float64(it),
+                           "nofloor" => (FLOORREG && CFG == "G" && !flfree) ? 1.0 : 0.0))
+        moved || (flfree && x[5] <= 1e-3) || break
         sum(abs2, F) > 0.98 * ss0 && owned(F) <= 1.0 && break          # no longer improving, owned moments inside their bands
     end
     xr = [log(round(exp(x[1]); digits = 3)), round(x[2]; digits = 4), round(x[3]; digits = 4), round(x[4]; digits = 4), round(x[5]; digits = 4)]
-    o = at(xr)
+    o = at(xr); o.ok || error("the fitted point has no solution after rounding")
     (phi = exp(xr[1]), bb = xr[2], sp = xr[3], eta = xr[4], fl = xr[5], r = o.r, st = o.st)
 end
 say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", round(HTM_TARGET - GAP; digits = 4))
