@@ -746,3 +746,40 @@ The floor's level with places on is the open design question for Italy: fitted i
 | 5 | The multiplier as a band: the policy tests carry the private share of belonging at 0.15 and 0.60 beside the calibrated 0.30; `estimate_omega.jl` sets the spread of participation across regions against the data's | running for Germany; Italy after step 3 |
 | 6 | The income process of the next version: a transitory shock beside the persistent one, and a proportional tax in place of the lump sum | planned, not started; it changes every calibration |
 | 7 | Two assets | left until asked for |
+
+## 27. The gold standard and the readiness scorecard (proposed 2026-10-05, for the user's agreement)
+
+**The product.** A Bewley economy (G) on which S, A and E switch on in any order, each fitted to its own data, in which a policy or a shock can be run and its effects read on wellbeing indicators. Three audiences have to accept it.
+
+**What "ready" means.** A calibrated stationary equilibrium in every configuration and country; transition paths for a policy or a one-off shock; no aggregate uncertainty. Partial equilibrium with the interest rate given (a member of a currency union), stated as such. Every status update reports against the table below.
+
+| | criterion | state on the base, 2026-10-05 | what is being done |
+|---|---|---|---|
+| **Macroeconomists** | | | |
+| M1 | Stationary equilibrium, budget balanced, closure stated | met | |
+| M2 | Standard building blocks: CRRA, persistent and transitory income risk, unemployment, a proportional tax | partly: no transitory shock, lump-sum tax | next version (section 26, step 6) |
+| M3 | Every parameter from a source or identified by a named moment; identification shown | partly: the private share of belonging is a band; identification table not yet on the base | band in place; table to run |
+| M4 | Every configuration hits its own targets in every country | partly: France and Germany 8 of 8, Italy 4 of 8 | the floor fitted with places, running |
+| M5 | Spending behaviour untargeted: MPC and its properties, consumption on job loss | partly: properties hold, level about 0.3, consumption absorbs too much of a loss | level accepted and stated |
+| M6 | Who holds no buffer | met by education (targeted); not by region | regional buffers a stated limit |
+| M7 | The wealth distribution | not met on one asset; two assets not calibrated | left until asked for |
+| M8 | Transitions for policies and shocks | built on version 2, not run on the base | to run |
+| **Numerical economists** | | | |
+| N1 | A standard, documented method (endogenous grid with upper envelope, non-stochastic simulation) | met | |
+| N2 | Exact reductions when a switch is off | met (on/off pass 16 of 16 in each country) | |
+| N3 | Accuracy on the base: Euler errors, convergence in the asset grid, its top, and the income grid | not run on the base; the income grid is coarse | `euler_errors.jl` and the convergence rows to run; income grid in the next version |
+| N4 | An independent solver agrees | on version 2 only | to check what carries over |
+| N5 | Reproducible: public code, continuous integration, one command per result, data manifest | mostly met | |
+| N6 | Equilibria with S counted and stable | on version 2 only | `policy_equilibria.jl` to run |
+| **Beyond-GDP** | | | |
+| B1 | The dimensions are a recognised framework's | S and A yes; E is place here, where the framework's E is the environment | for the user's decision |
+| B2 | Each dimension measured on official data | met | |
+| B3 | Recognised indicators, stable and checked against official figures | partly: income poverty smoothed today; checks to tabulate | table to build |
+| B4 | Welfare split by dimension and by group | computed; not tabulated on the base | table to build |
+| B5 | Accessible: switches, a notebook, a site | switches yes; the site is the first baseline only | later |
+| **Use** | | | |
+| U1 | Any order of switches, each calibrated | France and Germany | Italy with places |
+| U2 | Policy levers with honest bands | band in place; check running | read as a model check only |
+| U3 | A new country added by the checklist | not tried | later |
+
+Count: 6 met, 11 partly, 5 not, of 22.
