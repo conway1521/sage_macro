@@ -6,7 +6,7 @@
 # the lower-education cell has the higher unemployment risk, so the model can have it the wrong way
 # round, as it has the regions.
 #
-#   julia --project=scripts/run_env scripts/test_cell_wealth.jl [CONFIG] [v3 | v3f] [CODE ...]
+#   julia --project=scripts/run_env scripts/test_cell_wealth.jl [CONFIG] [v3 | v3f | v3e | v3fe] [CODE ...]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 cfg = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "GA"
@@ -23,7 +23,7 @@ end
 results = Tuple{String,Bool}[]
 check(name, ok) = (push!(results, (name, ok)); @printf("   -> %s: %s\n", name, ok ? "PASS" : "FAIL"))
 for code in codes
-    c = country_config(code; v3 = reg == "v3f" ? :floor : true, config = cfg, S = occursin('S', cfg), A = occursin('A', cfg))
+    c = country_config(code; v3 = Dict("v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu, "v3" => true)[reg], config = cfg, S = occursin('S', cfg), A = occursin('A', cfg))
     r = solve_economy(c)
     htm = [sum(r.pooled[g].hmass) / sum(r.pooled[g].mass) for g in 1:2]
     liq = [(cm = vec(sum(r.pooled[g].W, dims = 1)); cdf_quantile(r.agrid, cm ./ cm[end], 0.5) / r.median_income) for g in 1:2]

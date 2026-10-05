@@ -33,10 +33,11 @@ include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf, Statistics
 cfg = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "GAE"
 code = "IT"
-BASE = length(ARGS) >= 2 && lowercase(ARGS[2]) == "base"
+BASE = length(ARGS) >= 2 && lowercase(ARGS[2]) in ("base", "base_edu")          # base_edu: the floor regime with patience by education
+BASEREG = (length(ARGS) >= 2 && lowercase(ARGS[2]) == "base_edu") ? :floor_edu : :floor
 filecfg = length(ARGS) >= 4 ? uppercase(ARGS[4]) : cfg
-c = country_config(code; v3 = BASE ? :floor : true, config = filecfg, S = occursin('S', cfg), A = occursin('A', cfg), E = occursin('E', cfg))
-BASE && @printf("floor regime, parameters of %s: floor %.4f (%.3f of reference earnings), patience %.4f\n", filecfg, c.cfloor, c.cfloor / c.e_ref, c.beta_bar)
+c = country_config(code; v3 = BASE ? BASEREG : true, config = filecfg, S = occursin('S', cfg), A = occursin('A', cfg), E = occursin('E', cfg))
+BASE && @printf("floor regime, parameters of %s: floor %.4f (%.3f of reference earnings), patience %.4f, by education %+.4f and %+.4f\n", filecfg, c.cfloor, c.cfloor / c.e_ref, c.beta_bar, c.beta_cell...)
 fsh = (length(ARGS) >= 2 && !BASE) ? parse(Float64, ARGS[2]) : 0.0
 # third argument hh: income per head by place keeps the part of a low employment rate that is not
 # unemployment (:conversion_hh), so that the South is poorer and not only riskier
