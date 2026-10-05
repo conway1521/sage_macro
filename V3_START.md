@@ -542,3 +542,23 @@ Consequence for version 2: its two-asset calibrations were fitted on the nodes a
 The version 3 calibration (`calibrate_two_asset_v3.jl`) runs on the dense grid with 32 nodes and 4 steps, with the band on the wealthy hand-to-mouth share widened to 0.04. France G launched (run 37231504506).
 
 **The floor with places.** The regional wealth test with Italy's 2021 floor ran three hours, with 9410 household problems at the iteration limit and the floor's tax unsettled 36 times, and then failed on a print line. Its numbers would not have been usable. The one-asset iteration now relaxes when it stops improving, with the floor on only. Rerun started.
+
+## 20. Two assets, France G, the first calibration on the corrected solver (2026-10-04, run 37231504506)
+
+Dense illiquid grid, 32 nodes, 4 targets to an interval; four hours, 13 solves at 16 to 18 minutes on a runner.
+
+| | start (fixed cost 0.006) | best fit (fixed cost 0.013) | HFCS 2021 |
+|---|---|---|---|
+| Net wealth over income | 4.63 | 4.81 | 4.78 |
+| Liquid wealth over income | 0.055 | 0.112 | 0.059 |
+| Poor hand-to-mouth | 0.047 | 0.044 | 0.038 |
+| Wealthy hand-to-mouth | 0.324 | 0.250 | 0.184 |
+| **MPC, untargeted** | 0.147 | **0.146** | **0.39** (self-reported) |
+| MPC of the poor, of the wealthy hand-to-mouth | | 0.34, 0.17 | |
+| Net wealth Gini, untargeted | | 0.652 | 0.676 |
+| Top 10% share of net wealth, untargeted | | 0.461 | 0.499 |
+| Consumption drop on job loss | | 0.07 | 0.15 (INSEE) |
+
+Not calibrated: liquid wealth is at 1.8 bands and the wealthy hand-to-mouth share at 1.7, and the search found no better point. The two pull against each other through the fixed cost: a low cost gives little liquid wealth and many households at zero, a high cost the reverse, and the data have little liquid wealth and few at zero.
+
+What it settles. The two-asset model gets the wealth distribution about right without being asked to (Gini, top share, net wealth) and does NOT deliver the MPC: 0.15 against 0.34 in the one-asset liquid model and 0.39 in the survey. With a year as the period and a fixed cost of 3% of annual income, the wealthy hand-to-mouth adjust within the year and spend 17% of a windfall. So the division of labour stands as decided on 3 October: one asset for spending behaviour and for the S, A and E switches, two assets for the wealth distribution. Two assets is not a route to a higher MPC in this model.
