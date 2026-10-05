@@ -21,11 +21,13 @@ using Printf
 code = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "FR"
 cfg = length(ARGS) >= 2 ? uppercase(ARGS[2]) : "G"
 occursin('S', cfg) && error("S off only: with S on the households are families over belonging scales")
-V3 = length(ARGS) >= 3 && lowercase(ARGS[3]) == "v3"          # third argument v3: the version 3 economy and its calibration
-c = country_config(code; config = cfg, v3 = V3, S = false, A = occursin('A', cfg))
+V3 = length(ARGS) >= 3 && lowercase(ARGS[3]) in ("v3", "v3f")          # third argument v3: the version 3 economy and its calibration; v3f: the floor regime
+V3F = length(ARGS) >= 3 && lowercase(ARGS[3]) == "v3f"
+c = floor_effort(country_config(code; config = cfg, v3 = V3F ? :floor : V3, S = false, A = occursin('A', cfg)))
 c.illiquid && error("one asset only")
 cs = cells_of(c); bs, bw = betas_of(c)
 cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
+V3F && @printf("floor regime: floor %.4f, its tax %.5f\n", c.cfloor, floor_tax_of(c))
 
 # one record per (education cell, patience type): weight, parameters, solution,
 # and the expected consumption, saving, earnings and income at every state
@@ -39,7 +41,8 @@ for g in 1:2, (k, p) in enumerate(params_of(cT, cs[g]))
         for i in 1:na, d in (0, 1)
             w = d == 1 ? s.P1[i, st] : 1 - s.P1[i, st]; w <= 0 && continue
             lab = (1 + p.subsidy) * α * s.e_d[d+1][i, st] * z[st] * p.Z
-            cb[i, st] += w * (p.R * a[i] + lab - p.lumptax + credit * d + tr - s.a_d[d+1][i, st]) / p.pc
+            x = p.R * a[i] + lab - p.lumptax + credit * d + tr
+            cb[i, st] += w * (x + floor_transfer(p, x) - s.a_d[d+1][i, st]) / p.pc          # with the floor's top-up, if any
             sb[i, st] += w * s.a_d[d+1][i, st]; lb[i, st] += w * lab; yb[i, st] += w * (lab + tr)
         end
     end

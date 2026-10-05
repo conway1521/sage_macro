@@ -19,10 +19,15 @@
 #   6. the MPC stays in the range of the version 3 base in every configuration
 #      (0.2 to 0.5): no switch breaks spending behaviour.
 #
-#   julia --project=scripts/run_env scripts/onoff_v3.jl [CODE ...]
+# With "floor" among the arguments: the floor regime (calibration_v3f_*, V3_START.md section 22).
+#
+#   julia --project=scripts/run_env scripts/onoff_v3.jl [floor] [CODE ...]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
-codes = isempty(ARGS) ? ["FR", "DE", "IT"] : uppercase.(ARGS)
+FLOORREG = any(a -> lowercase(a) == "floor", ARGS)
+V3ARG = FLOORREG ? :floor : true; VTAG = FLOORREG ? "v3f" : "v3"
+codes = (cc = [uppercase(a) for a in ARGS if lowercase(a) != "floor"]; isempty(cc) ? ["FR", "DE", "IT"] : cc)
+FLOORREG && println("floor regime")
 function hfcs(code, moment)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
         startswith(ln, "#") && continue
@@ -49,7 +54,7 @@ for code in codes
     println("fixed parameters (the G+S+A calibration, switches turned off)")
     fx = Dict{String,Any}()
     for (nm, S_, A_) in CFGS
-        fx[nm] = solve_economy(country_config(code; v3 = true, S = S_, A = A_)); row(nm, fx[nm])
+        fx[nm] = solve_economy(country_config(code; v3 = V3ARG, S = S_, A = A_)); row(nm, fx[nm])
     end
     @printf("   S off: participation %.2e (G), %.2e (G+A); belonging in welfare %.2e, %.2e\n", fx["G"].rate, fx["GA"].rate, fx["G"].welfare.Vb, fx["GA"].welfare.Vb)
     check("$code 1. S off: participation below 1e-4 and no belonging in welfare", all(fx[k].rate < 1e-4 && abs(fx[k].welfare.Vb) < 1e-8 for k in ("G", "GA")))
@@ -62,12 +67,13 @@ for code in codes
     check("$code 3. A widens the participation gap between the cells", gap(fx["GSA"]) > gap(fx["GS"]))
     println("own calibration (each configuration at its own file)")
     for (nm, S_, A_) in CFGS
-        f = joinpath(@__DIR__, "calibration_v3_$(code)_$(nm).txt")
+        f = joinpath(@__DIR__, "calibration_$(VTAG)_$(code)_$(nm).txt")
         isfile(f) || (println(nm, "      no calibration file yet"); push!(results, ("$code 4. $nm has a calibration", false)); continue)
-        r = solve_economy(country_config(code; v3 = true, config = nm, S = S_, A = A_)); row(nm, r)
+        r = solve_economy(country_config(code; v3 = V3ARG, config = nm, S = S_, A = A_)); row(nm, r)
         ok = abs(r.mean_effort_employed - E) <= 0.005 && abs(r.hand_to_mouth_kvw - H) <= 0.02 && (!S_ || abs(r.rate - P) <= 0.005)
         check("$code 4. $nm hits its own targets", ok)
-        check("$code 5. $nm: the budget balances", abs(r.budget_gap) < 1e-8)
+        check("$code 5. $nm: the budget balances" * (FLOORREG ? " (to 0.05% of mean income with S on)" : ""), abs(r.budget_gap) < (FLOORREG && S_ ? 5e-4 * r.mean_income : 1e-8))
+        FLOORREG && @printf("      floor %.4f, outlay per head %.5f, budget gap %+.1e\n", r.config.cfloor, r.floor_outlay, r.budget_gap)
         check("$code 6. $nm: MPC between 0.2 and 0.5", 0.2 <= r.mpc <= 0.5)
     end
 end
