@@ -819,4 +819,27 @@ Without a gap the Gini (0.64 against 0.68) and the top share (0.46 against 0.50)
 
 **Probe 2. The period on two assets** (`probe_two_asset_period.jl`, runs 37379989414 and 37379993283, started 22:03 UTC). On one asset the period was settled as irrelevant to the annual MPC (section 3, `probe_mpc_period.jl`). On two it can matter because the period is also how often the fixed cost can be paid. The quarterly problem is the annual one disaggregated (fourth roots of the transition matrix, the discount factor, the returns and survival; flows a quarter; the fixed cost and wealth unchanged in goods), at the same fixed cost and at three times it. It reports the MPC within the period and over the year for the poor hand-to-mouth, the wealthy hand-to-mouth and the rest, and how many of the wealthy hand-to-mouth adjust in a period, which is the diagnosis of the 0.15.
 
-**Probe 3. A transitory shock and a proportional tax on one asset** (`probe_transitory_tax.jl`, run 37379996565). France G, v3e. A three-node independent draw on the income of the employed (standard deviation 0, 0.15, 0.25), the benefit bill raised lump-sum or in proportion to labour income, each at three levels of patience and once with the benefit rate ten points higher. It answers three things: the MPC at a like hand-to-mouth share, the fall in consumption on job loss, and whether the response of the hand-to-mouth share to the benefit rate (too large in the policy check) is the lump-sum tax.
+**Probe 3. A transitory shock and a proportional tax on one asset: the transitory shock is the missing piece.** `probe_transitory_tax.jl FR`, run 37379996565, France G, v3e, not recalibrated. A three-node independent draw on the income of the employed (standard deviation 0, 0.15, 0.25, probe values, not yet sourced), the benefit bill raised lump-sum or in proportion to labour income (3.8% of it), each at three levels of patience and once with the benefit rate ten points higher. Liquid wealth is over mean income here.
+
+| transitory | tax | patience | htm | MPC | MPC of htm | liquid/income | fall on job loss | htm, benefit rate +10 points |
+|---|---|---|---|---|---|---|---|---|
+| none | lump-sum | fitted | 0.221 | 0.305 | 0.436 | 0.075 | 0.205 | 0.432 (+0.211) |
+| none | lump-sum | -0.02 | 0.470 | 0.369 | 0.487 | 0.023 | 0.240 | |
+| none | proportional | fitted | 0.439 | 0.366 | 0.541 | 0.034 | 0.195 | 0.546 (+0.107) |
+| sd 0.15 | lump-sum | fitted | 0.132 | 0.339 | 0.574 | 0.161 | 0.160 | 0.165 (+0.033) |
+| sd 0.15 | lump-sum | -0.02 | 0.188 | 0.398 | 0.576 | 0.104 | 0.181 | |
+| sd 0.15 | lump-sum | -0.04 | 0.265 | 0.452 | 0.589 | 0.072 | 0.199 | |
+| sd 0.15 | proportional | fitted | 0.193 | 0.366 | 0.574 | 0.127 | 0.146 | 0.235 (+0.042) |
+| sd 0.15 | proportional | -0.02 | 0.270 | 0.425 | 0.588 | 0.085 | 0.163 | |
+| sd 0.25 | lump-sum | fitted | 0.104 | 0.321 | 0.567 | 0.277 | 0.126 | 0.104 (-0.001) |
+| sd 0.25 | lump-sum | -0.04 | 0.159 | 0.419 | 0.585 | 0.151 | 0.155 | |
+| sd 0.25 | proportional | fitted | 0.122 | 0.342 | 0.565 | 0.238 | 0.114 | 0.130 (+0.008) |
+| sd 0.25 | proportional | -0.04 | 0.198 | 0.438 | 0.576 | 0.126 | 0.139 | |
+
+Read at a like hand-to-mouth share of 0.22 (interpolating in patience):
+- **The MPC.** 0.305 without the transitory part, about 0.42 with a standard deviation of 0.15 under the lump-sum tax and about 0.39 under the proportional one, against a target of 0.39 to 0.47. Liquid wealth at that point is about 0.09 to 0.11 of mean income against 0.075 at the base.
+- **The response to the benefit rate.** Ten points more put 21 points more of households hand-to-mouth in the base. With the transitory part it is 3 to 4 points at 0.15 and nil at 0.25 (at fitted patience, so at a lower hand-to-mouth share; to be confirmed at the recalibrated point). The base's buffers exist only against job loss, so anything that changes income out of work moves them at once. The same knife edge shows in the tax row: moving a tax of 2% of mean pay off the unemployed doubles the hand-to-mouth share (0.221 to 0.439) without the transitory part, and moves it by 0.06 (0.15) or 0.02 (0.25) with it.
+- **The fall in consumption on job loss.** 0.205 at the base, about 0.19 at a like hand-to-mouth share with 0.15 and 0.15 to 0.16 with 0.25. Better, not repaired.
+- **The proportional tax** does not by itself reduce the response to the benefit rate once the transitory part is in (0.042 against 0.033). Its case is the standard one (row M2) and that the lowest income states can pay it, which the lump-sum tax prevented on a finer income grid (section 21).
+
+Limits of the probe: not recalibrated (the transitory part widens the cross-section, so the persistent dispersion will fall when refitted to S80/S20, and patience was shifted for everyone alike); three nodes; the size of the transitory part is still to be taken from a source for each country and must not be fitted to the MPC, which stays untargeted.
