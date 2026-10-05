@@ -793,3 +793,30 @@ Count: 6 met, 11 partly, 5 not, of 22.
 - Transitions are part of ready.
 
 What this changes in the order: three changes to the base are now implied by the macro rows (a transitory shock and a proportional tax; two assets for wealth; possibly a shorter period for the MPC on two assets). Each changes every calibration, so the architecture is to be settled first, on probes, and calibrated once.
+
+## 28. The probes before the build, and what else came in (2026-10-05, evening)
+
+**Numerical evidence on the base (rows N3 and N6), France and Germany.** `numerics_base.jl`, runs 37361581090 and 37361588838. Mean Euler error 10^-5.5 to 10^-5.8 in every household problem, worst 10^-3.6 (over the 80 to 94% of households neither constrained nor on the floor). Doubling the asset grid moves no moment by half its tolerance. Doubling its top passes everywhere except one row: Germany G+S+A, where participation moves by 0.0036 (the top of the grid at 4 years of mean income is slightly low for Germany's patient group). One stable participation equilibrium in G+S and G+S+A in both countries, and it is the solver's. France 7 of 7, Germany 6 of 7. Not extended, by the user's ordering. The income grid is not in this run.
+
+**The private share of belonging, Germany.** `estimate_omega.jl DE v3fe`, 16 Länder. The model's regional spread of participation equals the data's (0.084) at a private share between 0.15 and 0.30, about 0.2. Because common regional causes also spread participation (Manski 1993), this is a lower bound on the private share, so an upper bound on the multiplier of about 2.3. The band for Germany narrows from 1.2 to 2.8 to 1.2 to 2.3. Italy's run did not start (it asked for a v3e file that does not exist) and waits for Italy's base.
+
+**The floor fitted with places.** Germany G+E under the rule `floor_from=GE` chose no floor (hand-to-mouth 0.231 against 0.22, in band) and France likewise, so the rule changes nothing there. Italy G+E under the rule: run 37353825682, not finished after 3 h 50 min at the time of writing.
+
+**Probe 1. Two assets with patience by education: it does not give the wealth distribution by education.** `probe_two_asset_grid.jl FR 0.9578|0.9650|0.9720 0.0131 32:4 150 8 gap`, not recalibrated.
+
+| | gap 0 | gap 0.03 | gap 0.05 | HFCS |
+|---|---|---|---|---|
+| Net wealth over income | 5.06 | 2.70 | 1.89 | 4.78 |
+| Liquid over income | 0.118 | 0.128 | 0.136 | 0.059 |
+| Poor, wealthy hand-to-mouth | 0.029, 0.258 | 0.032, 0.216 | 0.036, 0.183 | 0.038, 0.184 |
+| MPC | 0.138 | 0.140 | 0.150 | 0.39 to 0.47 |
+| Net wealth Gini | 0.642 | 0.706 | 0.776 | 0.676 |
+| Top 10% share | 0.460 | 0.553 | 0.652 | 0.499 |
+| Hand-to-mouth, below tertiary and tertiary | 0.275, 0.309 | 0.219, 0.305 | 0.203, 0.248 | 0.256, 0.151 |
+| Net wealth by education | 5.08, 5.02 | 1.78, 6.95 | 0.95, 9.02 | 4.45, 5.44 |
+
+Without a gap the Gini (0.64 against 0.68) and the top share (0.46 against 0.50) are close, which is the case for two assets as the reference for wealth. The gap, which on one asset puts the hand-to-mouth in the right group, here empties the less educated of net wealth and leaves graduates hand-to-mouth at 0.25 to 0.31 against 0.15: on two assets a graduate who is hand-to-mouth is one who has put wealth in the illiquid asset, and patience raises that. The education pattern on two assets therefore needs something other than patience (a candidate: the fixed cost or the return by education, since access to the illiquid asset differs by education). The MPC stays at 0.14 to 0.15 whatever the gap.
+
+**Probe 2. The period on two assets** (`probe_two_asset_period.jl`, runs 37379989414 and 37379993283, started 22:03 UTC). On one asset the period was settled as irrelevant to the annual MPC (section 9, `probe_mpc_period.jl`). On two it can matter because the period is also how often the fixed cost can be paid. The quarterly problem is the annual one disaggregated (fourth roots of the transition matrix, the discount factor, the returns and survival; flows a quarter; the fixed cost and wealth unchanged in goods), at the same fixed cost and at three times it. It reports the MPC within the period and over the year for the poor hand-to-mouth, the wealthy hand-to-mouth and the rest, and how many of the wealthy hand-to-mouth adjust in a period, which is the diagnosis of the 0.15.
+
+**Probe 3. A transitory shock and a proportional tax on one asset** (`probe_transitory_tax.jl`, run 37379996565). France G, v3e. A three-node independent draw on the income of the employed (standard deviation 0, 0.15, 0.25), the benefit bill raised lump-sum or in proportion to labour income, each at three levels of patience and once with the benefit rate ten points higher. It answers three things: the MPC at a like hand-to-mouth share, the fall in consumption on job loss, and whether the response of the hand-to-mouth share to the benefit rate (too large in the policy check) is the lump-sum tax.
