@@ -620,3 +620,18 @@ What the floor does not do: the MPC (Italy 0.29, down from 0.31) and Germany's l
 Along the line that keeps the national hand-to-mouth share near its target, a low floor with low patience matches national liquid wealth and gets the regions wrong, a higher floor with more patience gets the regions right and (to be measured) puts national liquid wealth above the data. Italy's national wealth moments are imprecise in the survey (standard errors 0.028 and 0.029) and the regional gap is not (North 0.096 with 0.014, South 0.316 with 0.033). Six runs along the line measure whether a point exists with the regions right and both national moments within two standard errors; if so the regional gap is the better moment for the floor.
 
 Also seen: the model's North has 16% below half the median income against 6% in the data. Every place has the same dispersion of income, so the North has too many low-income households, which holds its hand-to-mouth share up. Not addressed.
+
+**The six runs along the line (Italy G+A+E, regions by household income, national hand-to-mouth share held near 0.18).**
+
+| floor | patience | national hand-to-mouth | national liquid wealth over income | correlation, hand-to-mouth | correlation, asset poverty | MPC |
+|---|---|---|---|---|---|---|
+| 0.147 | 0.895 | 0.178 | 0.34 | minus 0.50 | minus 0.76 | 0.27 |
+| 0.17 | 0.900 | 0.189 | 0.38 | minus 0.61 | minus 0.77 | 0.27 |
+| 0.185 | 0.908 | 0.191 | 0.47 | plus 0.46 | minus 0.50 | 0.24 |
+| 0.20 | 0.916 | 0.182 | 0.60 | plus 0.67 | plus 0.17 | 0.24 |
+| 0.22 | 0.925 | 0.176 | 0.79 | plus 0.82 | plus 0.59 | 0.22 |
+| 0.25 | 0.936 | 0.184 | 1.12 | plus 0.90 | plus 0.66 | 0.19 |
+
+No admissible point. The regions come out the right way round only where national liquid wealth is 0.47 of income or more, against 0.27 in the survey with a standard error of 0.028; and the MPC falls further. In the model the order turns when the patient households of the North hold half a year's income in liquid form, which they do not.
+
+So the floor settles Italy's national wealth moments and does not settle the regional order. What the runs point to instead: the regions' income distributions are too alike in the model. Its North has 16% below half the median against 6% in the survey, its South 21% against 29%. The mean gap is 0.77 where Eurostat has 0.68, and the eleven income states are 45% apart, so a place a quarter poorer moves at most one state across the line or the floor. Three runs with twenty-one income states test that (2026-10-05).
