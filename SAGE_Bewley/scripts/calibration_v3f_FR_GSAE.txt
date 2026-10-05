@@ -1,0 +1,8 @@
+# floor regime: FR wants no floor (its G fit puts the floor at zero), so this is the version 3 calibration of FR GSAE, copied from calibration_v3_FR_GSAE.txt, with the floor written out
+phi = 8.252
+beta_spread = 0.0000
+beta_bar = 0.8781
+eta_z = 0.2597
+kappa = 6.60
+sigma_m = 0.98
+cfloor = 0.000000

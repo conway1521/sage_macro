@@ -1,0 +1,8 @@
+# floor regime: DE wants no floor (its G fit puts the floor at zero), so this is the version 3 calibration of DE GSAE, copied from calibration_v3_DE_GSAE.txt, with the floor written out
+phi = 9.593
+beta_spread = 0.0000
+beta_bar = 0.9025
+eta_z = 0.2666
+kappa = 7.75
+sigma_m = 1.06
+cfloor = 0.000000

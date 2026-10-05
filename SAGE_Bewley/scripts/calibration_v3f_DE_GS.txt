@@ -1,0 +1,8 @@
+# floor regime: DE wants no floor (its G fit puts the floor at zero), so this is the version 3 calibration of DE GS, copied from calibration_v3_DE_GS.txt, with the floor written out
+phi = 9.460
+beta_spread = 0.0000
+beta_bar = 0.8984
+eta_z = 0.2804
+kappa = 7.50
+sigma_m = 1.02
+cfloor = 0.000000

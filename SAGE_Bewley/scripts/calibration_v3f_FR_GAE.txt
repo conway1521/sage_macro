@@ -1,0 +1,6 @@
+# floor regime: FR wants no floor (its G fit puts the floor at zero), so this is the version 3 calibration of FR GAE, copied from calibration_v3_FR_GAE.txt, with the floor written out
+phi = 8.495
+beta_spread = 0.0119
+beta_bar = 0.8837
+eta_z = 0.2603
+cfloor = 0.000000

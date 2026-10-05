@@ -1,0 +1,6 @@
+# floor regime: DE wants no floor (its G fit puts the floor at zero), so this is the version 3 calibration of DE GA, copied from calibration_v3_DE_GA.txt, with the floor written out
+phi = 9.881
+beta_spread = 0.0000
+beta_bar = 0.9037
+eta_z = 0.2652
+cfloor = 0.000000
