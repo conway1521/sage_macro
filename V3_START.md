@@ -728,3 +728,21 @@ National liquid wealth over income 0.234 (HFCS 0.272, s.e. 0.028): inside two st
 So the statement in section 24 needs its limit. The order of the hand-to-mouth across Italian regions is right (plus 0.62) at the G parameters with A and places switched on, where the national share is 0.27 and liquid wealth 0.23. There is no point yet at which the regions are in the right order AND both national moments are met with places on: the tension of section 22 is smaller with patience by education (liquid wealth 0.41 where the floor alone needed 0.60 for the same hand-to-mouth share) and is not gone. What would close it is in the list already: regions whose income distributions differ as the survey's do, or a reason other than precaution for the better-off to hold liquid wealth.
 
 The floor's level with places on is the open design question for Italy: fitted in G it is too high once the poorer regions are in. Options, not tried: fit the floor in G+E, or give the national hand-to-mouth share with places a wider band (the survey's standard error is 0.029).
+
+## 26. Closing out: the base adopted, and the order of the last work (2026-10-05, decided by the user)
+
+**The base is the combined regime** (`calibration_v3fe_*`, `BASE_REGIME = :floor_edu`, `base_config(code; ...)` in `sage_modular.jl`): version 3 with the means-tested floor and patience by education. Version 3 without them stays as the stated alternative, and headline results are reported under both. The patience gap is to be described as standing for whatever makes graduates save more (pensions, life-cycle saving, bequests), not as a claim about people.
+
+**Scope, stated.** One asset: spending behaviour and liquid buffers at the bottom of the distribution. Not claimed: the MPC's level beyond about 0.3, the liquid wealth of graduates, buffers by region. E: participation, income and risk across places. Two assets: the wealth distribution, when someone asks for it.
+
+**The order, and where each stands.**
+
+| | step | state |
+|---|---|---|
+| 1 | Adopt the base and freeze it | done in code and here; the tag follows once Italy with places is settled |
+| 2 | Indicators: shares below an income line from each income state spread over its interval (`ysmooth`, 9 sub-points in the version 3 regimes) | built; no calibration target reads these shares; check running |
+| 3 | The floor fitted on the configuration with places (`SAGE_FLOOR_FROM=GE`, workflow `floor_from`), one rule for every country | running for the three countries (run 37353825682); Italy's other configurations follow from its result |
+| 4 | The policy layer on the base (`policy_tests.jl` with `SAGE_REGIME`, workflow `policy.yml -f regime=v3fe`): subsidy, empowerment, insurance up and down, and the floor as a policy | running for France and Germany; Italy after step 3 |
+| 5 | The multiplier as a band: the policy tests carry the private share of belonging at 0.15 and 0.60 beside the calibrated 0.30; `estimate_omega.jl` sets the spread of participation across regions against the data's | running for Germany; Italy after step 3 |
+| 6 | The income process of the next version: a transitory shock beside the persistent one, and a proportional tax in place of the lump sum | planned, not started; it changes every calibration |
+| 7 | Two assets | left until asked for |
