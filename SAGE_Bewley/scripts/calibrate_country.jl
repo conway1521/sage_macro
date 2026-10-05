@@ -75,6 +75,11 @@ const V3 = get(ENV, "SAGE_V3", "0") == "1"
 # not give (it moves the two moments along the same line as patience). In every other configuration
 # the floor is the country's, read from its G file. Files calibration_v3f_<code>_<cfg>.txt.
 const FLOORREG = V3 && get(ENV, "SAGE_FLOOR", "0") == "1"
+# The configuration in which the country's floor is fitted (SAGE_FLOOR_FROM, default G); every other
+# configuration reads it from that one's file. One rule for every country, 2026-10-05: GE, the base
+# with places. Fitted in G, Italy's floor (0.215 of reference earnings) is too high once the poorer
+# regions are in, and no configuration with places then meets the hand-to-mouth share.
+const FLOOR_CFG = uppercase(get(ENV, "SAGE_FLOOR_FROM", "G"))
 # PATIENCE BY EDUCATION (SAGE_EDU=1 with SAGE_V3=1; V3_START.md, section 24). The lower-education
 # cell's discount factor lies a gap below the other's; the gap is a parameter of the fit and the
 # difference between the two cells' hand-to-mouth shares (HFCS, by education) is the moment it owns.
@@ -129,11 +134,11 @@ const HGAP_TOL = 0.03
 const E_REF_C = V3 ? num("e_ref") : NaN
 v3kw() = V3 && !isnan(ETA[]) ? merge((eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;)) : ()
 if FLOORREG
-    if CFG == "G"
-        FL[] = 0.10                 # where the search for the floor starts
+    if CFG == FLOOR_CFG
+        FL[] = 0.10                 # where the search for the floor starts (a configuration with places starts from the same one without)
     else
-        fg = joinpath(@__DIR__, "calibration_$(VTAG)_$(CODE)_G.txt")
-        isfile(fg) || error("the floor regime needs the country's G calibration first: $(basename(fg)) is missing")
+        fg = joinpath(@__DIR__, "calibration_$(VTAG)_$(CODE)_$(FLOOR_CFG).txt")
+        isfile(fg) || error("the floor regime needs the country's $(FLOOR_CFG) calibration first: $(basename(fg)) is missing")
         for l in eachline(fg)
             startswith(strip(l), "cfloor") && (FL[] = parse(Float64, last(split(l, "="))) / E_REF_C)
         end
@@ -320,7 +325,7 @@ below one for the most patient type). Returns the point and its moments.
 function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22, FL[]], iters = 16, tag = "fit3")
     # fifth parameter: the floor's level. Free in G of the floor regime (0 to 0.30 of reference earnings),
     # fixed elsewhere (at zero without the regime). In the floor regime patience has no spread.
-    flfree = FLOORREG && CFG == "G"
+    flfree = FLOORREG && CFG == FLOOR_CFG
     # sixth parameter: the patience gap between the education cells, free in the education regime
     length(x0) == 5 && (x0 = vcat(x0, EDUREG ? max(BGAP[], 0.03) : 0.0))
     nospread = FLOORREG || EDUREG
@@ -404,7 +409,7 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
                 it, exp(x[1]), x[2], x[3], x[4], o.m[1:4]..., F[1:4]...); flush(stdout)
         nstep += 1
         ck_write(tag, Dict("x1" => x[1], "x2" => x[2], "x3" => x[3], "x4" => x[4], "x5" => x[5], "x6" => x[6], "lam" => lam, "it" => Float64(it),
-                           "nofloor" => (FLOORREG && CFG == "G" && !flfree) ? 1.0 : 0.0))
+                           "nofloor" => (FLOORREG && CFG == FLOOR_CFG && !flfree) ? 1.0 : 0.0))
         moved || (flfree && x[5] <= 1e-3) || break
         sum(abs2, F) > 0.98 * ss0 && owned(F) <= 1.0 && break          # no longer improving, owned moments inside their bands
     end
@@ -423,7 +428,8 @@ if ck1 === nothing && V3
         fb = joinpath(@__DIR__, "calibration_$(VTAG)_$(CODE)_$(replace(CFG, "E" => "")).txt")
         if isfile(fb)
             kv = Dict(strip(first(split(l, "="))) => parse(Float64, last(split(l, "="))) for l in eachline(fb) if occursin("=", l) && !startswith(l, "#"))
-            x0e = [log(kv["phi"]), kv["beta_bar"], kv["beta_spread"], kv["eta_z"], FL[], get(kv, "beta_gap", 0.0)]
+            x0e = [log(kv["phi"]), kv["beta_bar"], kv["beta_spread"], kv["eta_z"],
+                   CFG == FLOOR_CFG ? get(kv, "cfloor", FL[] * E_REF_C) / E_REF_C : FL[], get(kv, "beta_gap", 0.0)]
             say("  starting from ", basename(fb))
         end
     end

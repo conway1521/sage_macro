@@ -35,6 +35,9 @@ on:
       floor:
         description: "Floor regime with v3=1 (the means-tested floor in the base; files calibration_v3f_*): 1 or 0"
         default: "0"
+      floor_from:
+        description: "The configuration in which the floor is fitted, read by the others (G, or GE with places)"
+        default: "G"
       edu:
         description: "Patience by education with v3=1 (files calibration_v3e_*, with the floor calibration_v3fe_*): 1 or 0"
         default: "0"
@@ -108,6 +111,7 @@ jobs:
           SAGE_V3: ${{ inputs.v3 }}
           SAGE_FLOOR: ${{ inputs.floor }}
           SAGE_EDU: ${{ inputs.edu }}
+          SAGE_FLOOR_FROM: ${{ inputs.floor_from }}
         run: |
           cd SAGE_Bewley
           set +e
@@ -133,7 +137,7 @@ jobs:
         if: steps.cal.outputs.code == '0' && inputs.chain == 'yes'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: SAGE_V3=${{ inputs.v3 }} SAGE_FLOOR=${{ inputs.floor }} SAGE_EDU=${{ inputs.edu }} bash .github/chain.sh 1 ${{ matrix.code }} ${{ matrix.cfg }}
+        run: SAGE_V3=${{ inputs.v3 }} SAGE_FLOOR=${{ inputs.floor }} SAGE_EDU=${{ inputs.edu }} SAGE_FLOOR_FROM=${{ inputs.floor_from }} bash .github/chain.sh 1 ${{ matrix.code }} ${{ matrix.cfg }}
       - name: Resume in a new run
         if: steps.cal.outputs.code == '3' && inputs.hop < 5
         env:
@@ -141,4 +145,4 @@ jobs:
         run: |
           gh workflow run calibrate.yml --ref ${{ github.ref_name }} -f solver=${{ inputs.solver }} -f countries=${{ matrix.code }} \
             -f configs=${{ matrix.cfg }} -f budget=${{ inputs.budget }} -f resume_from=${{ github.run_id }} -f hop=$(( ${{ inputs.hop }} + 1 )) \
-            -f prereq="${{ inputs.prereq }}" -f chain=${{ inputs.chain }} -f v3=${{ inputs.v3 }} -f floor=${{ inputs.floor }} -f edu=${{ inputs.edu }}
+            -f prereq="${{ inputs.prereq }}" -f chain=${{ inputs.chain }} -f v3=${{ inputs.v3 }} -f floor=${{ inputs.floor }} -f edu=${{ inputs.edu }} -f floor_from=${{ inputs.floor_from }}
