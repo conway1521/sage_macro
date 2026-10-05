@@ -54,7 +54,11 @@ const OMEGAS = REG != "" ? (0.15, 0.60) : ()
 # silently give the table's defaults.
 const CFGS = [c for c in (length(ARGS) >= 2 ? [uppercase(ARGS[2])] : ["GSA", "GS", "GA", "G"]) if isfile(calfile(c))]
 println("configurations calibrated for ", CODE, ": ", join(CFGS, ", "))
-const TAU = 0.20
+# The subsidy is 20 percent in version 2 and 5 percent in the version 3 regimes: there the incomes of
+# the employed are as dispersed as the data's, and the levy that pays for 20 percent exceeds what the
+# lowest earners make, so their problem has no solution (first run, 2026-10-05). If even that fails the
+# subsidy is said and left out. A levy in proportion to earnings belongs to the next version's tax.
+const TAU = REG != "" ? 0.05 : 0.20
 const DRR = 0.10
 const FIELDS = [:rate, :rate_E, :rate_U, :A, :A_cond, :room, :dread_cost_E, :mpc, :shock_loss, :shock_loss_income, :consumption_drop,
                 :hardship, :hand_to_mouth_kvw, :mean_effort_employed, :median_income, :mean_labour_income, :income_poor, :asset_poor]
@@ -129,16 +133,20 @@ for cfg in CFGS
     # 0.0874, 0.0877), so the first step extrapolates with that slope and later
     # steps use the secant through the last two points.
     T = TAU * b0.mean_labour_income / (1 - b0.unemployment); rs = nothing; prev = nothing
-    for it in 1:5
-        rs = solve_economy(at(SAGEConfig(base; subsidy = TAU, levy_employed = T), pts[1]); thresholds = thr)
-        Tn = TAU * rs.mean_labour_income / (1 - rs.unemployment)
-        @printf("  subsidy budget iteration %d: levy %.5f -> %.5f\n", it, T, Tn); flush(stdout)
-        abs(Tn - T) < 1e-4 && break
-        slope = prev === nothing ? 0.1 : clamp(((Tn - T) - prev[2]) / (T - prev[1]) + 1, 0.0, 0.5)
-        prev = (T, Tn - T)
-        T = T + (Tn - T) / (1 - slope)
+    try
+        for it in 1:5
+            rs = solve_economy(at(SAGEConfig(base; subsidy = TAU, levy_employed = T), pts[1]); thresholds = thr)
+            Tn = TAU * rs.mean_labour_income / (1 - rs.unemployment)
+            @printf("  subsidy budget iteration %d: levy %.5f -> %.5f\n", it, T, Tn); flush(stdout)
+            abs(Tn - T) < 1e-4 && break
+            slope = prev === nothing ? 0.1 : clamp(((Tn - T) - prev[2]) / (T - prev[1]) + 1, 0.0, 0.5)
+            prev = (T, Tn - T)
+            T = T + (Tn - T) / (1 - slope)
+        end
+        push!(pols, "subsidy" => SAGEConfig(base; subsidy = TAU, levy_employed = T))
+    catch err
+        @printf("  subsidy of %.0f%%: no solution with a levy on the employed (%s); left out\n", 100 * TAU, first(replace(sprint(showerror, err), "\n" => " "), 90)); flush(stdout)
     end
-    push!(pols, "subsidy" => SAGEConfig(base; subsidy = TAU, levy_employed = T))
     A_ && push!(pols, "empowerment" => SAGEConfig(base; alpha = ((base.alpha[1] + base.alpha[2]) / 2, base.alpha[2])))
     # the state-paid part of the replacement rate, where there is one (version 3), moves with the rate
     pub(d) = isnan(base.rr_public) ? NaN : base.rr_public + d
