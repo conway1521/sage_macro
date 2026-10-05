@@ -635,3 +635,28 @@ Also seen: the model's North has 16% below half the median income against 6% in 
 No admissible point. The regions come out the right way round only where national liquid wealth is 0.47 of income or more, against 0.27 in the survey with a standard error of 0.028; and the MPC falls further. In the model the order turns when the patient households of the North hold half a year's income in liquid form, which they do not.
 
 So the floor settles Italy's national wealth moments and does not settle the regional order. What the runs point to instead: the regions' income distributions are too alike in the model. Its North has 16% below half the median against 6% in the survey, its South 21% against 29%. The mean gap is 0.77 where Eurostat has 0.68, and the eleven income states are 45% apart, so a place a quarter poorer moves at most one state across the line or the floor. Three runs with twenty-one income states test that (2026-10-05).
+
+## 23. A long-term out-of-work state, and where the regional order stands (2026-10-05)
+
+**Why.** Eurostat's share of people under 65 in households with very low work intensity (ilc_lvhl21n, 2021): Lombardy 4.9%, Veneto 4.6%, Emilia-Romagna 3.8%, Campania 27.6%, Sicily 22.1%, Sardinia 18.6%. The model had no such households: everyone out of work was unemployed on a benefit that never ended (the replacement rate is the average over a five-year spell, `data/benefits/`).
+
+**What was built, off by default** (`f_long`, `assist_long`; `unemployment_process` with `fL`; place channel `:jobless`; `probe_longterm.jl`). Three blocks of states, (U, E, L). U is the first year out of work, insured as before; it ends in work with the job-finding rate and in L otherwise. L pays assistance, a flat transfer at the floor's level, taxed like insurance, and ends in work with a yearly probability. By place the mass of L is the quasi-jobless share beyond the first-year unemployed, split between the education cells in proportion to their unemployment; the exit rate follows from the two masses. Nothing is fitted. Without the state every result is unchanged (on/off pass 16 of 16 for Italy on the new code). The code that assumed two blocks (dread, the agency summary) is general; two assets refuse the state.
+
+Two failures on the way: with no income of their own the L households had negative resources after the lump-sum tax and the household problem returned nothing finite, so assistance is a transfer and not the floor's top-up; and the job's effort levels cannot come from the economy without the floor when the state is on, so they come from the economy without either.
+
+**Italy G, floor regime, the state on nationally (exit 0.20, masses 9% and 4% by cell):** hand-to-mouth 0.156 (0.183 without), liquid wealth over income 0.74 (0.275), MPC 0.22 (0.29). Households save against it. It is not a switch to add to a calibrated economy: patience has to be refitted.
+
+**Italy G+A+E, the state by place, floor 0.147:**
+
+| patience | national hand-to-mouth | national liquid wealth over income | North | South | correlation, hand-to-mouth | income poverty, North and South (HFCS 0.058, 0.291) |
+|---|---|---|---|---|---|---|
+| 0.80 | 0.46 | 0.04 | 0.55 | 0.33 | minus 0.85 | 0.145, 0.293 |
+| 0.84 | 0.31 | 0.18 | 0.37 | 0.23 | minus 0.80 | 0.145, 0.292 |
+| 0.87 | 0.21 | 0.41 | 0.25 | 0.17 | minus 0.68 | 0.176, 0.290 |
+| 0.895 | 0.15 | 0.73 | 0.16 | 0.13 | minus 0.48 | 0.178, 0.289 |
+
+The state gives the South its income poverty (0.29 against 0.291) and does not turn the order of the buffers at any patience. More households are in the state in the South, and the rest of the South saves against ending there.
+
+**Where this leaves the regional order.** Four things tried, in this order: a floor (turns it only with national liquid wealth at 0.47 of income or more), a poorer South (no), twenty-one income states (no solution as the process stands), the long-term state (no). In every one the model holds more buffers where risk is higher, which is what a Bewley household does. The survey has fewer buffers where incomes are lower. What the model lacks is a reason for richer households to hold liquid wealth that is not precaution: its North is hand-to-mouth because its jobs are safe and its patience is the low one the national share needs. The literature's answer is saving that rises with permanent income (Dynan, Skinner and Zeldes 2004; a wealth motive as in Carroll 2000 and De Nardi 2004; Straub 2019), beside the floor for the poor (Hubbard, Skinner and Zeldes 1995). That is a change to preferences and a new set of moments (liquid wealth by income), not built, for decision.
+
+**Dead end:** twenty-one income states. The Rouwenhorst grid widens with the number of states, the lowest then earn 3% of the mean, cannot pay the lump-sum tax, and the floor cannot be financed.
