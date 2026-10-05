@@ -20,7 +20,7 @@
 # adjusting in a period, for everyone and among the wealthy hand-to-mouth. Ratios
 # are to MEAN annual income here (the grid probe's are to the median). Not recalibrated.
 #
-#   julia --project=scripts/run_env scripts/probe_two_asset_period.jl [CODE] [effective patience] [chi0] [nk:k_sub] [k_max] [k_mid] [periods a year, comma separated: 1,4]
+#   julia --project=scripts/run_env scripts/probe_two_asset_period.jl [CODE] [effective patience] [chi0] [nk:k_sub] [k_max] [k_mid] [periods a year, comma separated: 1,4] [sd of a transitory part]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "FR"
@@ -30,6 +30,10 @@ nk, sub = (v = split(length(ARGS) >= 4 ? ARGS[4] : "32:4", ":"); (parse(Int, v[1
 kmax = length(ARGS) >= 5 ? parse(Float64, ARGS[5]) : 150.0
 kmid = length(ARGS) >= 6 ? parse(Float64, ARGS[6]) : 8.0
 periods = length(ARGS) >= 7 ? parse.(Int, split(ARGS[7], ",")) : [1, 4]
+# eighth argument: standard deviation of an independent transitory draw on the income of the employed
+# (three nodes, as probe_transitory_tax.jl), at the annual period only
+sdt = length(ARGS) >= 8 ? parse(Float64, ARGS[8]) : 0.0
+sdt > 0 && periods != [1] && error("the transitory part is built for the annual period here")
 premium = 0.0
 for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "manual_inputs.csv"))
     f = split(ln, ","); length(f) >= 3 && f[1] == code && f[2] == "illiquid_premium" && (global premium = parse(Float64, f[3]))
@@ -47,10 +51,23 @@ cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
         Q = real.(Π^(1 / n)); Q = max.(Q, 0.0); Q ./= sum(Q, dims = 2)
         (Q, maximum(abs.(Q^n .- Π)))
     end
+    "The household problem with an independent transitory draw on the income of the employed: nt nodes, standard deviation sd."
+    function expand_transitory(p, sd, nt)
+        sd == 0 && return p
+        isempty(p.dread_q) || error("not built with dread on")
+        z = p.z_vals_override; Π = p.Π_override; ns = length(z)
+        x = [sd * sqrt(nt - 1) * (2 * (t - 1) / (nt - 1) - 1) for t in 1:nt]
+        w = [binomial(nt - 1, t - 1) / 2.0^(nt - 1) for t in 1:nt]
+        ε = exp.(x); ε ./= dot(w, ε)
+        ex(v) = isempty(v) ? v : repeat(v, inner = nt)
+        update(p; nz = ns * nt, z_vals_override = [z[s] * ε[t] for s in 1:ns for t in 1:nt], Π_override = kron(Π, ones(nt) * w'),
+               α = ex(p.α), B = ex(p.B), transfer = ex(p.transfer), effort_set = ex(p.effort_set),
+               belong_scale = ex(p.belong_scale), time_floor = ex(p.time_floor))
+    end
     "One education cell at `n` periods a year: the sums the table needs, over the cell's own mass of one."
-    function period_cell(cT, g, n)
+    function period_cell(cT, g, n, sdt = 0.0)
         p = params_of(cT, cells_of(cT)[g])[1]
-        p = update(p; social_strength = 0.0)
+        p = expand_transitory(update(p; social_strength = 0.0), sdt, 3)
         err = 0.0; th = cT.theta; tha = 0.01
         if n > 1
             Q, err = root_of(p.Π_override, n)
@@ -118,9 +135,10 @@ end
 
 @printf("%s G, two assets, version 3, effective patience %.4f, fixed cost %.4f, premium %.4f, illiquid grid %d:%d to %.0f (dense to %.0f); not recalibrated\n",
         code, bet, chi0, premium, nk, sub, kmax, kmid)
+sdt > 0 && @printf("with a transitory part of standard deviation %.3f on the income of the employed\n", sdt)
 sh = c.share
 for n in periods
-    rs = pmap(g -> period_cell(cT, g, n), 1:2)
+    rs = pmap(g -> period_cell(cT, g, n, sdt), 1:2)
     tot(f) = sum(sh[g] * getfield(rs[g], f) for g in 1:2)
     ms = tot(:mass); y = tot(:y) / ms; hp = tot(:hp); hw = tot(:hw); hn = ms - hp - hw
     liq = sum(sh[g] .* rs[g].liq for g in 1:2); nw = sum(sh[g] .* rs[g].nw for g in 1:2)
