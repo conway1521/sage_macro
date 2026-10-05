@@ -587,3 +587,36 @@ Two candidate changes to the base, for decision, neither made:
 2. Benefit exhaustion: a long-term unemployed state with assistance in place of insurance.
 
 **Places, version 3, calibrated today:** Germany G+E, G+A+E, G+S+E, G+S+A+E; France the same four; Italy G+E, G+A+E, G+S+A+E (G+S+E running). Twenty-three version 3 files in all.
+
+## 22. The floor in the base: the floor regime (2026-10-04 night, 2026-10-05)
+
+Decided by the user on 4 October: the means-tested floor first. `SAGE_V3=1 SAGE_FLOOR=1` for `calibrate_country.jl`, `-f v3=1 -f floor=1` for the workflow, `country_config(...; v3 = :floor)`, files `calibration_v3f_<CODE>_<CFG>.txt`. The 23 no-floor files stay as the comparison.
+
+**Specification.** A means-tested floor (Hubbard, Skinner and Zeldes 1995) financed by the lump-sum tax, nationally when places are on. Patience the same for all, no spread. With a floor the job's effort levels are the no-floor economy's. In G the floor's level is a parameter and median liquid wealth is the moment it owns, beside the hand-to-mouth share that patience owns: at a given hand-to-mouth share a higher floor goes with more patient households holding more liquid wealth, which the spread could not give. In every other configuration the floor is the country's, read from its G file. Where the fit ends with the floor at zero it goes on without it (the hand-to-mouth share owns patience, liquid wealth is reported). A floor that cannot be financed is a point the fit steps away from. With places, regions differ by the household's income per head (`:conversion_hh`).
+
+Not done as first proposed: the level was to come from the share of households on minimum-income support. That series was not found in the OECD data service, and no remembered figure was used. The recipient share is an untargeted check to add from an official source.
+
+**G, three countries.**
+
+| | floor chosen (share of reference earnings) | hand-to-mouth (data) | liquid wealth over income (data) | MPC (survey) |
+|---|---|---|---|---|
+| France | 0 | 0.223 (0.222) | 0.069 (0.059) | 0.34 (0.39) |
+| Germany | 0 | 0.234 (0.225) | 0.217 (0.140) | 0.28 (0.47) |
+| Italy | 0.147 | 0.183 (0.179) | 0.275 (0.272) | 0.29 (0.47) |
+
+France and Germany want no floor, so their version 3 calibrations stand and are written out as floor-regime files with a floor of zero (Germany's minimum income is already inside its replacement rate, `data/benefits/`). Italy with a floor meets both wealth moments, which nothing else had done (0.158 against 0.272 without it). Italy G+A (0.177, 0.298) and G+S+A (participation 0.121, multiplier 1.3) are calibrated in the regime; G+S and G+E running.
+
+What the floor does not do: the MPC (Italy 0.29, down from 0.31) and Germany's liquid wealth.
+
+**The regional test in the regime.** At Italy's calibrated floor and patience (0.147, 0.882), G parameters with A and places on: still the wrong order, North 0.242, South 0.174, correlation minus 0.70. Pilots with a higher floor and more patience give the right one:
+
+| floor | patience | national hand-to-mouth | North | South | correlation, hand-to-mouth | correlation, asset poverty |
+|---|---|---|---|---|---|---|
+| 0.20 | 0.891 | 0.259 | 0.256 | 0.293 | plus 0.39 | minus 0.56 |
+| 0.20 | 0.911 | 0.197 | 0.181 | 0.245 | plus 0.62 | minus 0.02 |
+| 0.20 | 0.931 | 0.137 | 0.115 | 0.186 | plus 0.79 | plus 0.57 |
+| 0.25 | 0.921 | 0.232 | 0.212 | 0.261 | plus 0.89 | plus 0.59 |
+
+Along the line that keeps the national hand-to-mouth share near its target, a low floor with low patience matches national liquid wealth and gets the regions wrong, a higher floor with more patience gets the regions right and (to be measured) puts national liquid wealth above the data. Italy's national wealth moments are imprecise in the survey (standard errors 0.028 and 0.029) and the regional gap is not (North 0.096 with 0.014, South 0.316 with 0.033). Six runs along the line measure whether a point exists with the regions right and both national moments within two standard errors; if so the regional gap is the better moment for the floor.
+
+Also seen: the model's North has 16% below half the median income against 6% in the data. Every place has the same dispersion of income, so the North has too many low-income households, which holds its hand-to-mouth share up. Not addressed.
