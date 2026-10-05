@@ -1104,6 +1104,11 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
     SAGEConfig(; d...)
 end
 
+"The base (decided 2026-10-05): version 3 with the means-tested floor and patience by education, files calibration_v3fe_*."
+const BASE_REGIME = :floor_edu
+"`country_config` in the base regime."
+base_config(code::AbstractString; kwargs...) = country_config(code; v3 = BASE_REGIME, kwargs...)
+
 """
     france_footing()
 
