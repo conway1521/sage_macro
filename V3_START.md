@@ -783,3 +783,13 @@ The floor's level with places on is the open design question for Italy: fitted i
 | U3 | A new country added by the checklist | not tried | later |
 
 Count: 6 met, 11 partly, 5 not, of 22.
+
+**The user's direction on this table (2026-10-05, afternoon).**
+- The macroeconomists' rows come first, each to be met as far as it can be, the wealth distribution included. So M7 is no longer left: two assets come back as the route to it.
+- The numerical rows can be extended later, once the model works and has no bugs. The accuracy run already started is read and not extended.
+- E is the lived environment in both senses: the opportunities of a place, and the climate and natural environment. The environmental side returns to E as part of the dimension (the indicators: footprint, exposure), not as policy.
+- Welfare tables and accessibility come later.
+- The interest rate is given, an assumption that fits a currency union. A version in which it is determined inside the model is a validation test for afterwards, to be noted and not built now.
+- Transitions are part of ready.
+
+What this changes in the order: three changes to the base are now implied by the macro rows (a transitory shock and a proportional tax; two assets for wealth; possibly a shorter period for the MPC on two assets). Each changes every calibration, so the architecture is to be settled first, on probes, and calibrated once.
