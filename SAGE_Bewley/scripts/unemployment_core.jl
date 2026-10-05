@@ -19,11 +19,32 @@ Rouwenhorst matrix whether or not employed; employment moves by
 productivity in every state, the employment flag, and the Rouwenhorst
 stationary distribution.
 """
-function unemployment_process(base::SAGEParams, δ::Float64, f::Float64)
+function unemployment_process(base::SAGEParams, δ::Float64, f::Float64; fL::Float64 = NaN)
     base.z_vals_override === nothing ||
         error("unemployment_process expects a plain Rouwenhorst base")
     z2, Π2 = SAGEBewley.income_process(base)
     nz = length(z2)
+    if !isnan(fL)
+        # WITH THE LONG-TERM STATE (2026-10-05). State order (U, z), (E, z), (L, z): the first two
+        # blocks as without it. U is the first year out of work, insured: it ends in work with
+        # probability f and in L otherwise. L is out of work beyond a year, on assistance: it ends
+        # in work with probability fL a year. Masses: u = e delta, l = u (1 - f) / fL.
+        πz = fill(1 / nz, nz)
+        for _ in 1:10_000
+            πn = Π2' * πz
+            maximum(abs, πn - πz) < 1e-15 && (πz = πn; break)
+            πz = πn
+        end
+        Ps = [0.0 f 1-f; δ 1-δ 0.0; 0.0 fL 1-fL]          # from (U, E, L) to (U, E, L)
+        n = 3nz; Π = zeros(n, n)
+        for si in 1:3, i in 1:nz, sj in 1:3, j in 1:nz
+            Π[(si-1)*nz + i, (sj-1)*nz + j] = Ps[si, sj] * Π2[i, j]
+        end
+        e = 1 / (1 + δ + δ * (1 - f) / fL)
+        return (z_vals = vcat(zeros(nz), z2, zeros(nz)), Π = Π, z_latent = vcat(z2, z2, z2),
+                employed = vcat(falses(nz), trues(nz), falses(nz)), pi_z = πz, u = e * δ, l = e * δ * (1 - f) / fL,
+                longterm = vcat(falses(2nz), trues(nz)))
+    end
     # stationary distribution of the productivity chain
     πz = fill(1 / nz, nz)
     for _ in 1:10_000
@@ -38,7 +59,7 @@ function unemployment_process(base::SAGEParams, δ::Float64, f::Float64)
         Π[(si-1)*nz + i, (sj-1)*nz + j] = Ps[si, sj] * Π2[i, j]
     end
     (z_vals = vcat(zeros(nz), z2), Π = Π, z_latent = vcat(z2, z2),
-     employed = vcat(falses(nz), trues(nz)), pi_z = πz, u = δ / (δ + f))
+     employed = vcat(falses(nz), trues(nz)), pi_z = πz, u = δ / (δ + f), l = 0.0, longterm = falses(2nz))
 end
 
 """
@@ -51,7 +72,7 @@ the unemployment-insurance tax (see `ui_tax`).
 """
 function cell_params_u(αg; δ, f, rr, na = 200, ne = 80, a_max = 4.0, pexp = 3.0,
                        subsidy = 0.0, lumptax = 0.0, partcredit = 0.0,
-                       β = 0.96, pcost = 0.0, nz = 2, ρ = 0.9, η = 0.1)
+                       β = 0.96, pcost = 0.0, nz = 2, ρ = 0.9, η = 0.1, fL = NaN, rrL = 0.0)
     base = SAGEParams(na = na, ne = ne, nz = nz, α = fill(αg, nz), B = fill(1.0, nz),
                       a_max = a_max, pexp = pexp, ρ = ρ, η = η)
     if δ === nothing
@@ -65,9 +86,10 @@ function cell_params_u(αg; δ, f, rr, na = 200, ne = 80, a_max = 4.0, pexp = 3.
                           a_max = a_max, pexp = pexp, subsidy = subsidy, lumptax = lumptax,
                           partcredit = partcredit, β = β, pcost = pcost)
     end
-    up = unemployment_process(base, δ, f)
+    up = unemployment_process(base, δ, f; fL = fL)
     n = length(up.z_vals)
-    b = [up.employed[i] ? 0.0 : rr * αg * up.z_latent[i] * base.Z * E_REF for i in 1:n]
+    # insurance in the first year out of work, assistance (rrL, zero by default) beyond it
+    b = [up.employed[i] ? 0.0 : (up.longterm[i] ? rrL : rr) * αg * up.z_latent[i] * base.Z * E_REF for i in 1:n]
     SAGEParams(na = na, ne = ne, nz = n, α = fill(αg, n), B = fill(1.0, n),
                z_vals_override = up.z_vals, Π_override = up.Π, transfer = b,
                a_max = a_max, pexp = pexp, subsidy = subsidy, lumptax = lumptax,
@@ -119,14 +141,15 @@ end
 
 "Closed-form lump-sum tax financing the benefit: the joint stationary law is a
 product, so cost per head is sum_g share_g u_g sum_z pi_z b_{g,z}."
-function ui_tax(cells, f, rr; Z = 1.0, nz = 2)
+function ui_tax(cells, f, rr; Z = 1.0, nz = 2, rrL = 0.0)
     T = 0.0
     for c in cells
         c.δ === nothing && continue
         base = SAGEParams(nz = nz, α = fill(c.α, nz), B = fill(1.0, nz))
-        up = unemployment_process(base, c.δ, f)
+        up = unemployment_process(base, c.δ, f; fL = hasproperty(c, :fL) ? c.fL : NaN)
         nz = length(up.pi_z)
         T += c.share * up.u * sum(up.pi_z[i] * rr * c.α * up.z_latent[i] * Z * E_REF for i in 1:nz)
+        up.l > 0 && rrL > 0 && (T += c.share * up.l * sum(up.pi_z[i] * rrL * c.α * up.z_latent[i] * Z * E_REF for i in 1:nz))
     end
     T
 end

@@ -51,9 +51,11 @@ function agency_summary(p::SAGEParams, sol)
     ns = length(z)
     pmass = zeros(ns); pinc = zeros(ns); dmass = zeros(ns); hmass = zeros(ns)
     mpcmass = zeros(ns); mpchmass = zeros(ns); rmass = zeros(ns); xmass = zeros(ns); cmass = zeros(ns)
-    U = findall(==(0.0), z)
-    nh = length(U)
-    haveU = !isempty(U) && 2 * nh == ns
+    # blocks (U, E) or, with the long-term state, (U, E, L), each of nh latent productivity states;
+    # a job is lost into U, and state u + nh is the employed state with u's productivity
+    nh = count(>(0.0), z)
+    haveU = nh > 0 && ns > nh && ns % nh == 0
+    U = haveU ? collect(1:nh) : Int[]
     # Expected consumption and labour-plus-benefit income at every grid point,
     # mixing the participation choice with its own probability, from the same
     # budget the solver uses.
@@ -113,7 +115,7 @@ function agency_summary(p::SAGEParams, sol)
             end
         end
         pmass[s] += m * pc; pinc[s] += m * py
-        s > nh && cbar[i, s] > 0 && (dmass[s] += m * max(0.0, 1 - cbar[i, s - nh] / cbar[i, s]))
+        z[s] > 0 && cbar[i, s] > 0 && (dmass[s] += m * max(0.0, 1 - cbar[i, s - nh] / cbar[i, s]))
     end
     merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = zeros(ns),
            mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = zeros(ns), rmass = rmass, xmass = xmass, cmass = cmass),

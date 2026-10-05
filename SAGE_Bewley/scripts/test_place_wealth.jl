@@ -46,15 +46,20 @@ if length(ARGS) >= 3 && lowercase(ARGS[3]) == "hh"
 end
 fsh > 0 && (c = SAGEConfig(c; cfloor = fsh * c.e_ref))
 # fifth argument: a shift in patience, no spread (a pilot of what recalibrating with the floor would do)
-if length(ARGS) >= 5
+if length(ARGS) >= 5 && ARGS[5] != "-"
     v5 = parse(Float64, ARGS[5])          # above 0.5: patience itself; below: a shift from the file's mean patience
     c = SAGEConfig(c; beta_bar = v5 > 0.5 ? v5 : c.beta_bar - c.beta_spread / 2 + v5, beta_spread = 0.0)
     @printf("patience set to %.4f, no spread\n", c.beta_bar)
 end
 # sixth argument: the number of income states (11 in every calibration). The states are 45% apart,
 # so a region 23% poorer moves at most one of them across the poverty line or the floor.
-if length(ARGS) >= 6
+if length(ARGS) >= 6 && ARGS[6] != "-"
     c = SAGEConfig(c; nz = parse(Int, ARGS[6])); println("income states: ", c.nz)
+end
+# seventh argument jobless: the long-term out-of-work state by place, its mass from the regional share
+# of people in quasi-jobless households (place_layer.jl, channel :jobless). A dash skips an argument.
+if length(ARGS) >= 7 && lowercase(ARGS[7]) == "jobless"
+    c = SAGEConfig(c; e_channels = (c.e_channels..., :jobless)); println("long-term state by place (:jobless)")
 end
 r = solve_economy(c)
 fsh > 0 && @printf("means-tested floor at %.2f of reference earnings (%.4f), financed nationally: tax per head %.5f\n", fsh, c.cfloor, NAT_FLOOR_TAX[])

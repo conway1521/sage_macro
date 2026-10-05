@@ -29,6 +29,7 @@ function place_base(c::SAGEConfig, pl)
     haskey(pl, :tertiary) && (kw[:share] = (1 - pl.tertiary, pl.tertiary))
     haskey(pl, :f_find) && (kw[:f_find] = pl.f_find)
     haskey(pl, :delta) && (kw[:delta] = pl.delta)
+    haskey(pl, :f_long) && (kw[:f_long] = pl.f_long)
     haskey(pl, :omega) && (kw[:omega] = pl.omega)
     haskey(pl, :commute) && (kw[:commute] = pl.commute)
     if haskey(pl, :conv)
@@ -207,6 +208,26 @@ function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (
             sl = (ul_n === nothing || cellrate(ul, i) === nothing) ? s : odds(cellrate(ul, i)) * f / (odds(ul_n) * c.f_find)
             sh = (uh_n === nothing || cellrate(uh, i) === nothing) ? s : odds(cellrate(uh, i)) * f / (odds(uh_n) * c.f_find)
             specs[i][:f_find] = f; specs[i][:delta] = (c.delta[1] * sl, c.delta[2] * sh)
+        end
+    end
+    if :jobless in channels
+        # THE LONG-TERM STATE BY PLACE. Its mass is the place's share of people in quasi-jobless
+        # households (Eurostat ilc_lvhl21n, very low work intensity, population under 65) beyond the
+        # unemployed in their first year. The first-year unemployed keep the place's unemployment and
+        # job finding; the yearly exit from the long-term state follows from the two masses. By cell
+        # in proportion to the cell's unemployment. Nothing is fitted.
+        J = [latest(d, "low_work_intensity", p) for (_, p) in pl]
+        any(isnothing, J) && error("no quasi-jobless shares by place for $code ($typology): indicator low_work_intensity")
+        for i in 1:n
+            f = get(specs[i], :f_find, c.f_find); dl = get(specs[i], :delta, c.delta)
+            t = get(specs[i], :tertiary, c.share[2]); sh = (1 - t, t)
+            uo = [dl[g] / (dl[g] + f) for g in 1:2]          # unemployment by cell, as without the state
+            us = uo .* f                                     # of which in their first year
+            ubar = sum(sh .* uo); usbar = sum(sh .* us)
+            lbar = max(J[i] / 100 - usbar, 0.002)
+            l = [lbar * uo[g] / ubar for g in 1:2]
+            specs[i][:delta] = Tuple(us[g] / (1 - us[g] - l[g]) for g in 1:2)
+            specs[i][:f_long] = Tuple(min(0.95, us[g] * (1 - f) / l[g]) for g in 1:2)
         end
     end
     if (:conversion in channels || :conversion_hh in channels) && !any(isnothing, u)

@@ -232,6 +232,13 @@ Base.@kwdef struct SAGEConfig
     # The floor's tax when it is set from outside (the place layer finances the floor nationally
     # and gives every place the national tax): NaN lets floor_tax_of find it for this economy alone.
     floor_tax_given::Float64 = NaN
+    # THE LONG-TERM STATE (unemployment_core.jl, 2026-10-05): the yearly probability of leaving
+    # long-term non-employment for work, by education cell; NaN is no such state and every earlier
+    # result. With it, the first year out of work is insured (rr) and ends in work with f_find or
+    # in the long-term state; that state pays rr_long (assistance in place of insurance; zero means
+    # the household lives on the means-tested floor, which must then be on).
+    f_long::NTuple{2,Float64} = (NaN, NaN)
+    rr_long::Float64 = 0.0
     # The illiquid grid's dense part: with k_mid > 0, three fifths of the nodes lie on [0, k_mid] and
     # the rest run geometrically to k_max. On the exponential grid (k_mid = 0, every earlier result)
     # the nodes around median net wealth are over two years of income apart at 24 nodes, and liquid
@@ -301,8 +308,8 @@ end
 "The effective cell parameters implied by a config: alpha and B per cell."
 function cells_of(c::SAGEConfig)
     αs = c.A ? c.alpha : (c.alpha_off, c.alpha_off)
-    ((α = αs[1], B = c.B[1], share = c.share[1], δ = c.unemployment ? c.delta[1] : 0.0, τ = c.commute[1], eset = c.effort_by_cell[1]),
-     (α = αs[2], B = c.B[2], share = c.share[2], δ = c.unemployment ? c.delta[2] : 0.0, τ = c.commute[2], eset = c.effort_by_cell[2]))
+    ((α = αs[1], B = c.B[1], share = c.share[1], δ = c.unemployment ? c.delta[1] : 0.0, τ = c.commute[1], eset = c.effort_by_cell[1], fL = c.f_long[1]),
+     (α = αs[2], B = c.B[2], share = c.share[2], δ = c.unemployment ? c.delta[2] : 0.0, τ = c.commute[2], eset = c.effort_by_cell[2], fL = c.f_long[2]))
 end
 
 "Discount-factor nodes and weights implied by a config."
@@ -328,7 +335,8 @@ function params_of(c::SAGEConfig, cell)
     ps = [cell_params_u(cell.α; δ = cell.δ, f = c.f_find, rr = c.rr, na = c.na, ne = c.ne,
                         a_max = c.a_max, pexp = c.pexp, subsidy = c.subsidy, lumptax = c.lumptax,
                         partcredit = c.partcredit, β = b, pcost = c.pcost, nz = c.nz,
-                        ρ = c.rho, η = c.eta_z) for b in bs]
+                        ρ = c.rho, η = c.eta_z, fL = cell.fL, rrL = c.rr_long) for b in bs]
+    (!isnan(cell.fL) && c.illiquid) && error("the long-term state is not built for two assets")
     if c.phi != 14.0 || c.e_ref != E_REF
         ps = [update(p; ϕ = c.phi, transfer = p.transfer .* (c.e_ref / E_REF)) for p in ps]
     end
@@ -370,13 +378,15 @@ the lump-sum tax. States 1..n/2 are unemployed, n/2+1..n employed with the same
 latent productivity (see `unemployment_process`).
 """
 function dread_params(p::SAGEParams, c::SAGEConfig, cell)
-    n = length(p.transfer); nh = n ÷ 2
+    n = length(p.transfer)
     z = p.z_vals_override; Π = p.Π_override
-    q = [s <= nh ? sum(Π[s, nh+1:n]) : sum(Π[s, 1:nh]) for s in 1:n]
-    zl(s) = s <= nh ? z[s + nh] : z[s]
-    hi = [(1 + p.subsidy) * cell.α * zl(s) * p.Z * c.e_ref + p.transfer[s <= nh ? s + nh : s] - p.lumptax
+    nh = count(>(0), z)                       # latent productivity states: blocks (U, E) or (U, E, L) of this size
+    isE(s) = nh < s <= 2nh; lat(s) = (s - 1) % nh + 1
+    q = [isE(s) ? sum(Π[s, 1:nh]) + (n > 2nh ? sum(Π[s, 2nh+1:n]) : 0.0) : sum(Π[s, nh+1:2nh]) for s in 1:n]
+    zl(s) = z[nh + lat(s)]
+    hi = [(1 + p.subsidy) * cell.α * zl(s) * p.Z * c.e_ref + p.transfer[nh + lat(s)] - p.lumptax
           for s in 1:n]
-    lo = [p.transfer[s <= nh ? s : s - nh] - p.lumptax for s in 1:n]
+    lo = [p.transfer[isE(s) ? lat(s) : s] - p.lumptax for s in 1:n]
     c.dread_mode in (:overlay, :behaviour) || error("dread_mode must be :overlay or :behaviour")
     c.dread_mode == :behaviour ?
         update(p; dread = c.dread, dread_q = q .* (1 .- q), dread_hi = hi, dread_lo = lo) :
@@ -386,13 +396,13 @@ end
 "Unemployment-insurance tax implied by a config, closed form (zero when off)."
 function ui_tax_of(c::SAGEConfig)
     c.unemployment || return 0.0
-    ui_tax([(share = x.share, α = x.α, δ = x.δ) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz) *
+    ui_tax([(share = x.share, α = x.α, δ = x.δ, fL = x.fL) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long) *
         (c.e_ref / E_REF) + floor_tax_of(c)
 end
 
 "The unemployment-benefit part of the tax alone (closed form)."
 ui_only_tax_of(c::SAGEConfig) = c.unemployment ?
-    ui_tax([(share = x.share, α = x.α, δ = x.δ) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz) * (c.e_ref / E_REF) : 0.0
+    ui_tax([(share = x.share, α = x.α, δ = x.δ, fL = x.fL) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long) * (c.e_ref / E_REF) : 0.0
 
 const FLOOR_EFFORT_CACHE = Dict{UInt,Any}()
 """
