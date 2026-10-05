@@ -334,7 +334,7 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
         BB[] = x[2]; ETA[] = x[4]; FL[] = x[5]; BGAP[] = x[6]
         try
             r = soff(exp(x[1]), x[3]); st = income_stats(cfg_off(exp(x[1]), x[3]))
-            hc = hasproperty(r, :pooled) ? [sum(r.pooled[g].hmass) / sum(r.pooled[g].mass) for g in 1:2] : [NaN, NaN]
+            hc = (hasproperty(r, :pooled) && hasproperty(r.pooled[1], :hmass)) ? [sum(r.pooled[g].hmass) / sum(r.pooled[g].mass) for g in 1:2] : [NaN, NaN]   # not kept with places
             return (r = r, st = st, m = [r.mean_effort_employed, r.wealth_p50 / r.median_income, r.hand_to_mouth_kvw, st.s8020, hc[1] - hc[2]], ok = true)
         catch err
             say("    no solution at floor ", round(x[5]; digits = 4), ", patience ", round(x[2]; digits = 4), ": ", first(replace(sprint(showerror, err), "\n" => " "), 160))
