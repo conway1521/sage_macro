@@ -562,3 +562,28 @@ Dense illiquid grid, 32 nodes, 4 targets to an interval; four hours, 13 solves a
 Not calibrated: liquid wealth is at 1.8 bands and the wealthy hand-to-mouth share at 1.7, and the search found no better point. The two pull against each other through the fixed cost: a low cost gives little liquid wealth and many households at zero, a high cost the reverse, and the data have little liquid wealth and few at zero.
 
 What it settles. The two-asset model gets the wealth distribution about right without being asked to (Gini, top share, net wealth) and does NOT deliver the MPC: 0.15 against 0.34 in the one-asset liquid model and 0.39 in the survey. With a year as the period and a fixed cost of 3% of annual income, the wealthy hand-to-mouth adjust within the year and spend 17% of a windfall. So the division of labour stands as decided on 3 October: one asset for spending behaviour and for the S, A and E switches, two assets for the wealth distribution. Two assets is not a route to a higher MPC in this model.
+
+## 21. The regional wealth test, what was tried (2026-10-04, evening)
+
+Italy G+A+E, hand-to-mouth share by macro-region (HFCS: North 0.096, Centre 0.151, South and Islands 0.316):
+
+| | North | Centre | South | by region, correlation | national |
+|---|---|---|---|---|---|
+| base | 0.247 | 0.152 | 0.102 | minus 0.66 | 0.180 |
+| floor 0.15, financed nationally | 0.343 | 0.306 | 0.232 | minus 0.85 | 0.298 |
+| floor 0.20 | 0.354 | 0.342 | 0.260 | minus 0.84 | 0.321 |
+| South poorer (`:conversion_hh`: income 0.77 of the North's; Eurostat 0.68) | 0.278 | 0.178 | 0.093 | minus 0.76 | 0.196 |
+| South poorer, floor 0.15 | 0.339 | 0.311 | 0.224 | minus 0.84 | 0.295 |
+| South poorer, floor 0.20 | 0.367 | 0.322 | 0.352 | minus 0.28 | 0.353 |
+
+Neither a floor nor a poorer South reverses the order, alone. Together, at the higher floor, the South catches up with the North and the correlation goes from minus 0.84 to minus 0.28: the mechanism of Hubbard, Skinner and Zeldes (1995) is there, but at these levels the national share is twice the data's, so the test is not a fair one until patience is recalibrated with the floor on.
+
+What had to be fixed to run it: the floor is financed by the nation (each place had been raising the tax for its own, which a poor place cannot); the tax iteration no longer starts from a failed run's NaN and is damped; with a floor the job's effort levels are the no-floor economy's (`floor_effort`); the household iteration relaxes when it stops improving, floor on only. With the floor off nothing changes (on/off pass 16 of 16 in France and Italy on the new code).
+
+Why the order is wrong in the base: the model's South is riskier, not poorer, and an unemployed household keeps its replacement income for as long as it is unemployed. Long-term unemployment enters only as a lower job-finding rate (`f_find` is one minus the long-term share). A household facing a long spell saves for it and is never destitute. In Italy benefits end after at most two years and 60% of the unemployed in the South are long-term.
+
+Two candidate changes to the base, for decision, neither made:
+1. The floor on in the base, its level from the share of households on minimum-income support, patience recalibrated with it, and regional income on the household's view.
+2. Benefit exhaustion: a long-term unemployed state with assistance in place of insurance.
+
+**Places, version 3, calibrated today:** Germany G+E, G+A+E, G+S+E, G+S+A+E; France the same four; Italy G+E, G+A+E, G+S+A+E (G+S+E running). Twenty-three version 3 files in all.
