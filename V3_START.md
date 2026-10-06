@@ -950,3 +950,29 @@ Not addressed by this build: the persistent shock is larger than its source says
 **Risks.** The state space triples (66 income states for 22). The longest calibration today (Italy with places, 236 minutes) would pass the runner's six hours; the checkpoint and resume chain exists for this, and two transitory nodes instead of three is the fallback. Germany's liquid wealth may come under pressure once patience is refitted (section 28).
 
 **For the user to decide.** (1) Go ahead with A to E in this order. (2) The persistent shock: keep the fit and state it, with the GRID test (recommended), or add a permanent type now. (3) Accept that the two-asset reference will carry an MPC of about 0.2 and no education split, stated as limits.
+
+## 30. The build, steps 1 and 2: the engine, and G calibrated in the new regime (2026-10-06)
+
+**Step 1, the engine** (commits 8d266f9 to a50a3b3). Two settings of the configuration, both off by default: `sd_eps`, `n_eps` (the transitory part: every state becomes n_eps states, `expand_transitory`, applied last in `params_of`) and `tax_mode = :prop` (the amount in `lumptax` raised at the rate lumptax / `labour_base(c)`, mean labour income per head at the job's effort levels). With either on, the job's effort levels are those of the economy without both (`floor_effort`, which already did this for the floor), so effort does not follow the year's draw. The regimes `:trans`, `:floor_trans`, `:edu_trans`, `:floor_edu_trans` of `country_config` switch both on, with the size from `data/manual_inputs.csv` (field `sd_eps`, 0.178) and files tagged with a t (`calibration_v3fet_*` for the base); `SAGE_TRANS=1` and the workflow input `trans=1` in the calibration. The place layer refuses the proportional tax for now (one national rate on a national base is step 3).
+
+`test_transitory_engine.jl` (run 37515253263), 11 of 11: with both off France G reproduces its numbers; with them on the engine gives the probe's numbers at the probe's refitted points (MPC 0.413 against 0.412, 0.443 against 0.440, 0.266 against 0.265, 0.376 against 0.376); the tax raises the benefit bill to 2e-13; G+S, G+S+A, G+A and Italy with the floor solve with both on; the place layer refuses with its message. The on/off pass of the old base is unchanged, 16 of 16 (run 37514447549).
+
+**Step 2, the gate: G in the three countries, full calibration** (run 37526231562, files `calibration_v3fet_{FR,DE,IT}_G.txt`; readout `gate_readout.jl`, run 37528263359). Every owned target is met in the three countries (effort, the hand-to-mouth share, its difference by education, S80/S20, and in Italy liquid wealth through the floor).
+
+| | top patience, gap, floor | htm | MPC | survey MPC | liquid/income | HFCS | fall on job loss | htm, benefit rate +10 points |
+|---|---|---|---|---|---|---|---|---|
+| France, old base | 0.912, 0.050, 0 | 0.221 | 0.305 | 0.392 | 0.089 | 0.059 | 0.205 | +0.223 |
+| France, new | 0.889, 0.043, 0 | 0.223 | 0.415 | | 0.124 | | 0.152 | +0.041 |
+| Germany, old base | 0.929, 0.041, 0 | 0.234 | 0.274 | 0.468 | 0.220 | 0.140 | 0.248 | +0.073 |
+| Germany, new | 0.904, 0.064, 0 | 0.226 | 0.405 | | 0.128 | | 0.251 | +0.021 |
+| Italy, old base | 0.928, 0.047, 0.156 | 0.198 | 0.304 | 0.469 | 0.276 | 0.272 | 0.251 | +0.066 |
+| Italy, new | 0.920, 0.051, 0.136 | 0.179 | 0.313 | | 0.273 | | 0.238 | +0.004 |
+
+- France and Germany pass: the MPC is 0.41 and 0.40 untargeted at the full calibration, as the probe said. Germany's liquid wealth, which I had flagged, moves towards its target (0.128 against 0.140, from 0.220). France's moves away (0.124 against 0.059, inside the band of 0.09).
+- The response of the hand-to-mouth share to the benefit rate is 0.00 to 0.04 in the three countries.
+- **Italy's MPC does not rise (0.31 against a survey 0.47).** The reason is identified: Italy's liquid wealth target is high (0.27 of income, against 0.06 and 0.14), the floor is the parameter that meets it, and it does so by raising patience (0.92). Without the floor Italy's MPC is 0.41 and its liquid wealth 0.12 (section 28). On one asset Italy has either its liquid wealth or its MPC; the rule keeps the targeted moment.
+- The fall in consumption on job loss: France 0.15, Germany 0.25, Italy 0.24. Improved in France only.
+- In-work poverty, untargeted, is too high in all three (0.16, 0.18, 0.19 against 0.07, 0.09, 0.12).
+- The persistent dispersion did not fall when refitted (eta 0.263, 0.275, 0.295, as before), so the transitory part adds to the cross-section less than the formula of the probe assumed.
+
+**Step 3 started**: G+A and G+S+A in the three countries (G+S follows G+S+A by the chain). The place configurations wait for the proportional tax in the place layer.
