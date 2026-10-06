@@ -1,5 +1,6 @@
 # The two-asset household problem (TWO_ASSET_DESIGN.md): liquid b, return R,
-# and illiquid k, return Rk, which accrues to k and can be changed only at a
+# and illiquid k, return Rk, which accrues to k (or, with k_payout, is paid into
+# liquid wealth every period, the keeper then holding k' = k) and can be changed only at a
 # fixed cost chi0. Effort, the participation logit, unemployment and dread are
 # as in egm_core.jl.
 #
@@ -131,9 +132,12 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     end
 
     # keepers: k' = Rk k, between illiquid nodes j0 and j0 + 1 with weight om on the upper
-    kn = [min(p.Rk * kg[m], kg[end]) for m in 1:nk]
+    kn = [p.k_payout ? kg[m] : min(p.Rk * kg[m], kg[end]) for m in 1:nk]
     j0 = [clamp(searchsortedlast(kg, kn[m]), 1, nk - 1) for m in 1:nk]
     om = [clamp((kn[m] - kg[j0[m]]) / (kg[j0[m]+1] - kg[j0[m]]), 0.0, 1.0) for m in 1:nk]
+    # With the return paid out (k_payout, 2026-10-06) a keeper holds k' = k and has (Rk - 1) k more
+    # cash in hand: the inner solution at liquid wealth higher by ksh. An adjuster is as before.
+    ksh = [p.k_payout ? (p.Rk - 1) * kg[m] / p.R : 0.0 for m in 1:nk]
     # adjusters: the shift in effective liquid wealth for each (current k_m, target k_j)
     # targets: (lower node, weight on the node above); k_sub = 1 gives the nodes themselves
     nsub = max(p.k_sub, 1); nf = (nk - 1) * nsub + 1
@@ -196,8 +200,14 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
             jl = j0[m]; w = om[m]
             fill!(ptr, 1)
             for i in 1:na
-                Vk = (1 - w) * Vin[i, jl, s] + w * Vin[i, jl+1, s]
-                Mk = (1 - w) * muin[i, jl, s] + w * muin[i, jl+1, s]
+                if ksh[m] == 0
+                    Vk = (1 - w) * Vin[i, jl, s] + w * Vin[i, jl+1, s]
+                    Mk = (1 - w) * muin[i, jl, s] + w * muin[i, jl+1, s]
+                else
+                    bk = min(a[i] + ksh[m], a[end]); qk = clamp(searchsortedlast(a, bk), 1, na - 1)
+                    Vk = (1 - w) * lin_at(a, view(Vin, :, jl, s), bk, qk) + w * lin_at(a, view(Vin, :, jl + 1, s), bk, qk)
+                    Mk = max((1 - w) * lin_at(a, view(muin, :, jl, s), bk, qk) + w * lin_at(a, view(muin, :, jl + 1, s), bk, qk), 0.0)
+                end
                 vmax = -Inf
                 if frozen && !polish
                     # the targets of the last refining pass, held fixed
@@ -359,7 +369,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
         (println("  two-asset value iteration: ", iters, " iterations, ", nk, " nodes, ", nf, " targets, resident memory ", round(Sys.maxrss() / 1e9; digits = 2), " GB"); flush(stdout))
     trace && @printf("  value iteration: inner %.1f s, outer %.1f s\n", t_in, t_out)
     dist = two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
-                                  wsel = wsel, death = p0.death, oth = oth, wv = wv, trs = [transfer_at(p, s) for s in 1:nz])
+                                  wsel = wsel, ksh = ksh, death = p0.death, oth = oth, wv = wv, trs = [transfer_at(p, s) for s in 1:nz])
     λ = dist.lambda; P1s = dist.P1; es = dist.e
     trace && @printf("  distribution %.1f s\n", time() - t2)
     part = 0.0; meaninc = 0.0; partbase = 0.0
@@ -374,7 +384,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
      lambda = λ, P1 = P1s, e = es, e_d = dist.e_d, cbar = dist.cbar, ybar = dist.ybar, post = dist.post,
      Pi = Π, Padj = Padj, V = V, Vb = Vb, z_vals = z_vals,
      iters = iters, stalled = stall, relax = relax, theta = theta, inner = (c = cin, e = ein, bp = bpin, P1 = P1in), qadj = qadj,
-     j0 = j0, om = om, shift = shift, wsel = wsel, adjp = (Rk = p.Rk, chi0 = p.chi0, R = p.R))
+     j0 = j0, om = om, shift = shift, ksh = ksh, wsel = wsel, adjp = (Rk = p.Rk, chi0 = p.chi0, R = p.R))
 end
 
 """
@@ -384,7 +394,7 @@ income transition then mixes s. Mass starts at k = 0. Also returns the
 participation probability and expected effort by state.
 """
 function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
-                                wsel = nothing, death = 0.0, oth = nothing, wv = nothing, trs = nothing)
+                                wsel = nothing, ksh = nothing, death = 0.0, oth = nothing, wv = nothing, trs = nothing)
     na, nk, nz = length(a), length(kg), size(Π, 1)
     n = na * nk * nz
     idx(i, m, s) = i + (m - 1) * na + (s - 1) * na * nk
@@ -409,6 +419,26 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
         # keeping: the two illiquid nodes around Rk k, inner solution at liquid b
         for (jj, wk) in ((j0[m], 1 - om[m]), (j0[m] + 1, om[m]))
             wt = (1 - pa) * wk; wt <= 0 && continue
+            if ksh !== nothing && ksh[m] != 0
+                # the return paid out: the inner solution at liquid wealth higher by ksh
+                be = min(a[i] + ksh[m], a[end])
+                r = clamp(searchsortedlast(a, be), 1, na - 1)
+                p1 = clamp(lin_at(a, view(P1in, :, jj, s), be, r), 0.0, 1.0)
+                e0 = max(lin_at(a, view(ein[1], :, jj, s), be, r), 0.0); e1 = max(lin_at(a, view(ein[2], :, jj, s), be, r), 0.0)
+                b0 = max(lin_at(a, view(bpin[1], :, jj, s), be, r), a[1]); b1 = max(lin_at(a, view(bpin[2], :, jj, s), be, r), a[1])
+                P1s[i, m, s] += wt * p1
+                es[i, m, s] += wt * ((1 - p1) * e0 + p1 * e1)
+                e0s[i, m, s] += wt * (1 - p1) * e0; e1s[i, m, s] += wt * p1 * e1
+                if haveC
+                    c0 = (p.R * be + wv[s] * e0 + oth[s][1] - b0) / p.pc
+                    c1 = (p.R * be + wv[s] * e1 + oth[s][2] - b1) / p.pc
+                    p1 < 1 && (cbar[i, m, s] += wt * (1 - p1) * c0; ybar[i, m, s] += wt * (1 - p1) * (wv[s] * e0 + trs[s]))
+                    p1 > 0 && (cbar[i, m, s] += wt * p1 * c1; ybar[i, m, s] += wt * p1 * (wv[s] * e1 + trs[s]))
+                end
+                p1 < 1 && blot!(from, b0, jj, s, wt * (1 - p1))
+                p1 > 0 && blot!(from, b1, jj, s, wt * p1)
+                continue
+            end
             p1 = P1in[i, jj, s]
             P1s[i, m, s] += wt * p1
             es[i, m, s] += wt * ((1 - p1) * ein[1][i, jj, s] + p1 * ein[2][i, jj, s])
@@ -529,6 +559,15 @@ function each_branch_full(f, sol, i, m, s)
     pa = sol.Padj[i, m, s]
     for (jj, wk) in ((sol.j0[m], 1 - sol.om[m]), (sol.j0[m] + 1, sol.om[m]))
         wt = (1 - pa) * wk; wt <= 0 && continue
+        if hasproperty(sol, :ksh) && sol.ksh[m] != 0      # the return paid out (k_payout)
+            be = min(a[i] + sol.ksh[m], a[end]); r = clamp(searchsortedlast(a, be), 1, na - 1)
+            p1 = clamp(lin_at(a, view(inn.P1, :, jj, s), be, r), 0.0, 1.0)
+            p1 < 1 && f(wt * (1 - p1), 0, max(lin_at(a, view(inn.bp[1], :, jj, s), be, r), a[1]), jj,
+                        max(lin_at(a, view(inn.e[1], :, jj, s), be, r), 0.0), be)
+            p1 > 0 && f(wt * p1, 1, max(lin_at(a, view(inn.bp[2], :, jj, s), be, r), a[1]), jj,
+                        max(lin_at(a, view(inn.e[2], :, jj, s), be, r), 0.0), be)
+            continue
+        end
         p1 = inn.P1[i, jj, s]
         p1 < 1 && f(wt * (1 - p1), 0, inn.bp[1][i, jj, s], jj, inn.e[1][i, jj, s], a[i])
         p1 > 0 && f(wt * p1, 1, inn.bp[2][i, jj, s], jj, inn.e[2][i, jj, s], a[i])

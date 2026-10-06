@@ -213,6 +213,9 @@ Base.@kwdef struct SAGEParams
     # Where the dense part of the illiquid grid ends (egm2_core.jl, illiquid_grid);
     # 0 is the exponential grid to k_max.
     k_mid::Float64 = 0.0
+    # The illiquid return paid into liquid wealth every period instead of accruing to
+    # illiquid wealth (egm2_core.jl). false reproduces every earlier result.
+    k_payout::Bool = false
     # Sub-points within an income state for the shares below an income line (the
     # summaries in unemployment_core.jl): 1 is the state's own income, as before.
     ysmooth::Int = 1

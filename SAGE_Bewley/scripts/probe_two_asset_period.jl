@@ -34,6 +34,8 @@ periods = length(ARGS) >= 7 ? parse.(Int, split(ARGS[7], ",")) : [1, 4]
 # (three nodes, as probe_transitory_tax.jl), at the annual period only
 sdt = length(ARGS) >= 8 ? parse(Float64, ARGS[8]) : 0.0
 sdt > 0 && periods != [1] && error("the transitory part is built for the annual period here")
+# ninth argument "payout": the illiquid return paid into liquid wealth every period (k_payout)
+payout = length(ARGS) >= 9 && ARGS[9] == "payout"
 premium = 0.0
 for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "manual_inputs.csv"))
     f = split(ln, ","); length(f) >= 3 && f[1] == code && f[2] == "illiquid_premium" && (global premium = parse(Float64, f[3]))
@@ -65,8 +67,9 @@ cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
                belong_scale = ex(p.belong_scale), time_floor = ex(p.time_floor))
     end
     "One education cell at `n` periods a year: the sums the table needs, over the cell's own mass of one."
-    function period_cell(cT, g, n, sdt = 0.0)
+    function period_cell(cT, g, n, sdt = 0.0, payout = false)
         p = params_of(cT, cells_of(cT)[g])[1]
+        payout && (p = update(p; k_payout = true))
         p = expand_transitory(update(p; social_strength = 0.0), sdt, 3)
         err = 0.0; th = cT.theta; tha = 0.01
         if n > 1
@@ -136,9 +139,10 @@ end
 @printf("%s G, two assets, version 3, effective patience %.4f, fixed cost %.4f, premium %.4f, illiquid grid %d:%d to %.0f (dense to %.0f); not recalibrated\n",
         code, bet, chi0, premium, nk, sub, kmax, kmid)
 sdt > 0 && @printf("with a transitory part of standard deviation %.3f on the income of the employed\n", sdt)
+payout && println("the illiquid return is paid into liquid wealth every period")
 sh = c.share
 for n in periods
-    rs = pmap(g -> period_cell(cT, g, n, sdt), 1:2)
+    rs = pmap(g -> period_cell(cT, g, n, sdt, payout), 1:2)
     tot(f) = sum(sh[g] * getfield(rs[g], f) for g in 1:2)
     ms = tot(:mass); y = tot(:y) / ms; hp = tot(:hp); hw = tot(:hw); hn = ms - hp - hw
     liq = sum(sh[g] .* rs[g].liq for g in 1:2); nw = sum(sh[g] .* rs[g].nw for g in 1:2)
