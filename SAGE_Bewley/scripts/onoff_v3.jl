@@ -23,14 +23,18 @@
 #
 # With "edu": patience by education (calibration_v3e_*, or calibration_v3fe_* with the floor).
 #
-#   julia --project=scripts/run_env scripts/onoff_v3.jl [floor] [edu] [CODE ...]
+# With "trans": the transitory part and the proportional tax as well (calibration_v3fet_* with both).
+#
+#   julia --project=scripts/run_env scripts/onoff_v3.jl [floor] [edu] [trans] [CODE ...]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 FLOORREG = any(a -> lowercase(a) == "floor", ARGS)
 EDUREG = any(a -> lowercase(a) == "edu", ARGS)          # patience by education (V3_START.md section 24)
-V3ARG = FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : true); VTAG = "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "")
-codes = (cc = [uppercase(a) for a in ARGS if !(lowercase(a) in ("floor", "edu"))]; isempty(cc) ? ["FR", "DE", "IT"] : cc)
-(FLOORREG || EDUREG) && println("regime: ", VTAG)
+TRANS = any(a -> lowercase(a) == "trans", ARGS)        # the transitory part and the proportional tax (V3_START.md section 29)
+V3ARG = TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") : FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : true)
+VTAG = "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "") * (TRANS ? "t" : "")
+codes = (cc = [uppercase(a) for a in ARGS if !(lowercase(a) in ("floor", "edu", "trans"))]; isempty(cc) ? ["FR", "DE", "IT"] : cc)
+(FLOORREG || EDUREG || TRANS) && println("regime: ", VTAG)
 function hfcs(code, moment)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
         startswith(ln, "#") && continue
