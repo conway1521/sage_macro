@@ -889,6 +889,29 @@ Limits of the probe: not recalibrated (the transitory part widens the cross-sect
 
 At a quarterly period the MPC over the year is lower (0.116 against 0.138), the hand-to-mouth nearly vanish and liquid wealth doubles: with four chances a year to reach the illiquid asset it is more liquid, not less. A quarterly solve also takes over five hours against ten minutes, so it could not be calibrated on these runners in any case. The period stays annual, on this result for two assets and on `probe_mpc_period.jl` for one. The transitory run at lower patience (37386744233) did not converge in three hours and was cancelled.
 
+**The transitory part at a refitted point: the MPC holds** (`probe_transitory_tax.jl CODE 0,0.126,0.178 fit`, runs 37511452534, 37511456560, 37511460253, 2026-10-06). For each variant the persistent innovation is lowered so the variance of log income is unchanged, the job's effort levels are found again, and patience and its gap by education are refitted to the hand-to-mouth share and its difference by education (both hit to 0.001 except one Italian row at 0.169). G, v3e (no floor). The rows at the sourced variance (standard deviation 0.178) and at half of it:
+
+| | tax | top patience, gap | MPC | survey | MPC of htm | liquid/income | fall on job loss | htm, benefit rate +10 points |
+|---|---|---|---|---|---|---|---|---|
+| France, base | lump-sum | 0.913, 0.050 | 0.305 | 0.392 | 0.436 | 0.075 | 0.205 | +0.211 |
+| France, 0.178 | proportional | 0.893, 0.042 | 0.412 | | 0.577 | 0.109 | 0.149 | +0.041 |
+| France, 0.178 | lump-sum | 0.877, 0.049 | 0.440 | | 0.580 | 0.092 | 0.182 | +0.050 |
+| France, 0.126 | proportional | 0.906, 0.038 | 0.376 | | 0.577 | 0.101 | 0.157 | +0.051 |
+| Germany, base | lump-sum | 0.932, 0.042 | 0.267 | 0.468 | 0.529 | 0.212 | 0.243 | +0.060 |
+| Germany, 0.178 | proportional | 0.906, 0.062 | 0.400 | | 0.588 | 0.117 | 0.247 | +0.020 |
+| Germany, 0.178 | lump-sum | 0.902, 0.064 | 0.404 | | 0.584 | 0.114 | 0.260 | +0.018 |
+| Germany, 0.126 | proportional | 0.916, 0.055 | 0.369 | | 0.595 | 0.114 | 0.253 | +0.034 |
+| Italy, base | lump-sum | 0.884, 0.078 | 0.388 | 0.469 | 0.552 | 0.038 | 0.391 | +0.377 |
+| Italy, 0.178 | proportional | 0.891, 0.063 | 0.408 | | 0.622 | 0.123 | 0.306 | +0.054 |
+| Italy, 0.178 | lump-sum | 0.876, 0.070 | 0.433 | | 0.628 | 0.107 | 0.341 | +0.038 |
+| Italy, 0.126 | proportional | 0.897, 0.061 | 0.386 | | 0.622 | 0.109 | 0.317 | +0.083 |
+
+- The MPC is 0.40 to 0.41 in the three countries at the sourced variance with the proportional tax, untargeted: 0.02 above France's survey figure, 0.06 to 0.07 below Germany's and Italy's. At half the variance 0.37 to 0.39. The proportional tax costs about 0.03 of MPC against the lump-sum one and takes 0.01 to 0.04 off the fall in consumption on job loss.
+- The response of the hand-to-mouth share to the benefit rate is 0.02 to 0.05 for ten points, from 0.06 to 0.38.
+- The fall in consumption on job loss is repaired only in part: France 0.15, Germany 0.25 (unchanged), Italy 0.31.
+- The cost is in patience and in Germany's liquid wealth. Patience falls by 0.02 to 0.03 at the top (0.89 to 0.91) and the less educated sit at 0.83 to 0.85. Germany's liquid wealth over mean income halves, from 0.21 to 0.12, which at the full calibration will be at the edge of its band.
+- Still not the full calibration: the effort scale and the floor are not refitted, the dispersion is held by formula and not by S80/S20, and this is G alone.
+
 ## 29. The architecture, proposed for the user's decision (2026-10-06)
 
 Built on the probes of section 28. Nothing below is built yet except the two switches named.
@@ -907,7 +930,7 @@ Built on the probes of section 28. Nothing below is built yet except the two swi
 
 | | now | expected | data |
 |---|---|---|---|
-| MPC, one asset | 0.26 to 0.34 | about 0.4 | 0.39 to 0.47 (survey) |
+| MPC, one asset | 0.27 to 0.39 | 0.40 to 0.41 at a refitted point (section 28) | 0.39 to 0.47 (survey) |
 | Hand-to-mouth for ten points of benefit rate, one asset | +0.06 to +0.38 | +0.02 to +0.05 | small |
 | Fall in consumption on job loss, one asset | 0.21 to 0.39 | a little lower, still high | about 0.1 |
 | Wealth Gini and top 10% share, two assets | 0.64, 0.46 | to be seen after the three changes | 0.68, 0.50 |
