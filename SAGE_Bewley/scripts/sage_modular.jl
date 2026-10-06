@@ -610,6 +610,7 @@ taste_nodes_of(c::SAGEConfig) = taste_nodes_ln(c.sigma_m; n = c.nq)
 # ------------------------------------------------ unemployed participation --
 "The employed states of a config's state space, true where employed."
 function employment_mask(c::SAGEConfig)
+    c = floor_effort(c)
     cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
     employed_states(params_of(cT, cells_of(c)[1])[1])
 end
@@ -697,6 +698,10 @@ thresholds; only the first pass of `solve_economy` uses it, because that pass
 reads nothing but income and participation, which thresholds do not touch.
 """
 function build_families(c::SAGEConfig, thr; disk = true, any_thresholds = false)
+    # the job's effort levels where they are given (the floor, the transitory part, the proportional
+    # tax), as `_solve` does: a caller that builds families itself (the calibration's scans) reached
+    # the household problem without them until 2026-10-06
+    c = floor_effort(c)
     cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
     _, bw = betas_of(c)
     map(cells_of(c)) do cell
