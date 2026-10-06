@@ -1096,6 +1096,14 @@ function country_rows(file = COUNTRY_FILE)
          end for l in lines[2:end])
 end
 
+"A value of data/manual_inputs.csv."
+function manual_input(code, field)
+    for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "manual_inputs.csv"))
+        f = split(ln, ","); length(f) >= 3 && f[1] == code && f[2] == field && return parse(Float64, f[3])
+    end
+    error("no $field for $code in data/manual_inputs.csv")
+end
+
 """
     country_config(code; kwargs...)
 
@@ -1112,14 +1120,6 @@ calibration script that is about to produce the file passes `missing_ok = true`.
 A file marked not calibrated (`.not_calibrated.txt` beside it, newer than it) is
 refused the same way.
 """
-"A value of data/manual_inputs.csv."
-function manual_input(code, field)
-    for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "manual_inputs.csv"))
-        f = split(ln, ","); length(f) >= 3 && f[1] == code && f[2] == field && return parse(Float64, f[3])
-    end
-    error("no $field for $code in data/manual_inputs.csv")
-end
-
 function country_config(code::AbstractString; config::AbstractString = "GSA", missing_ok::Bool = false, v3::Union{Bool,Symbol} = false, kwargs...)
     r = country_rows()[code]
     num(k) = parse(Float64, r[k])
