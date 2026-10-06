@@ -12,7 +12,7 @@
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf, LinearAlgebra
 code = uppercase(ARGS[1]); reg = length(ARGS) >= 2 ? lowercase(ARGS[2]) : "v3fe"
-V3ARG = Dict("v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu, "v3" => true)[reg]
+V3ARG = Dict("v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu, "v3" => true, "v3fet" => :floor_edu_trans, "v3et" => :edu_trans)[reg]
 results = Tuple{String,Bool}[]
 check(name, ok) = (push!(results, (name, ok)); @printf("   -> %s: %s\n", name, ok ? "PASS" : "FAIL"); flush(stdout))
 

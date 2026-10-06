@@ -45,7 +45,7 @@ say(args...) = (println(args...); flush(stdout))
 
 const CODE = ARGS[1]
 const REG = get(ENV, "SAGE_REGIME", "")
-const V3ARG = get(Dict("v3" => true, "v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu), REG, false)
+const V3ARG = get(Dict("v3" => true, "v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu, "v3fet" => :floor_edu_trans, "v3et" => :edu_trans), REG, false)
 calfile(cfg) = REG != "" ? joinpath(@__DIR__, "calibration_$(REG)_$(CODE)_$(cfg).txt") :
                joinpath(@__DIR__, cfg == "GSA" ? "calibration_country_$(CODE).txt" :
                                                   "calibration_country_$(CODE)_$(cfg).txt")

@@ -18,7 +18,7 @@ using Printf, Statistics
 code = uppercase(ARGS[1])
 reg = length(ARGS) >= 2 ? lowercase(ARGS[2]) : "v3fe"
 omegas = length(ARGS) >= 3 ? parse.(Float64, split(ARGS[3], ",")) : [0.15, 0.30, 0.60, 0.90]
-c = country_config(code; v3 = Dict("v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu, "v3" => true)[reg], config = "GSA", S = true, A = true)
+c = country_config(code; v3 = Dict("v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu, "v3" => true, "v3fet" => :floor_edu_trans, "v3et" => :edu_trans)[reg], config = "GSA", S = true, A = true)
 vol = Dict{String,Float64}()
 if code == "IT"
     for (k, ln) in enumerate(eachline(joinpath(PLACE_DIR, "italy_regions.csv")))

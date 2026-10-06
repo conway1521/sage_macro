@@ -23,7 +23,7 @@ end
 results = Tuple{String,Bool}[]
 check(name, ok) = (push!(results, (name, ok)); @printf("   -> %s: %s\n", name, ok ? "PASS" : "FAIL"))
 for code in codes
-    c = country_config(code; v3 = Dict("v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu, "v3" => true)[reg], config = cfg, S = occursin('S', cfg), A = occursin('A', cfg))
+    c = country_config(code; v3 = Dict("v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu, "v3" => true, "v3fet" => :floor_edu_trans, "v3et" => :edu_trans)[reg], config = cfg, S = occursin('S', cfg), A = occursin('A', cfg))
     r = solve_economy(c)
     htm = [sum(r.pooled[g].hmass) / sum(r.pooled[g].mass) for g in 1:2]
     liq = [(cm = vec(sum(r.pooled[g].W, dims = 1)); cdf_quantile(r.agrid, cm ./ cm[end], 0.5) / r.median_income) for g in 1:2]
