@@ -879,7 +879,15 @@ Limits of the probe: not recalibrated (the transitory part widens the cross-sect
 - The MPC of the whole economy is then 0.19 to 0.20. The three quarters of households that are not hand-to-mouth have an MPC of 0.13 to 0.14, as they should with three to four years of income in wealth; on one asset every household is impatient and holds little, which is where its 0.4 comes from. Raising patience to restore net wealth (3.4 to 3.6 against 4.78) will lower the MPC a little. So the two-asset reference will give an MPC near 0.2, about half the survey figure, and that is a property of holding realistic wealth, not a fault to fit away.
 - The hand-to-mouth themselves have an MPC of 0.33 to 0.40, not one: at an annual period a household that starts the year with a week of income in liquid wealth still plans to end it with some.
 
-**The quarterly runs** (37379989414, 37379993283) had not finished after four hours against 25 minutes for an annual solve, and will be cut at the runner's limit. Whatever they would show, a quarterly two-asset problem cannot be calibrated on these runners (a calibration takes dozens of solves). The period stays annual, on cost for two assets and on the result of `probe_mpc_period.jl` for one. The transitory run at lower patience (37386744233) did not converge in three hours and was cancelled.
+**The quarterly runs: the period is not the cause** (37379989414, 37379993283; they ended after 5 h 15 min by reaching the iteration limit, so they are not converged and are indicative only). France G, no transitory part, same parameters:
+
+| period | fixed cost | net wealth | liquid | poor htm | wealthy htm | MPC over the year | MPC within the period | adjusting in a period, all | adjusting, wealthy htm |
+|---|---|---|---|---|---|---|---|---|---|
+| annual | 0.0131 | 4.20 | 0.098 | 0.029 | 0.258 | 0.138 | 0.138 | 0.49 | 0.81 |
+| quarterly | 0.0131 | 4.23 | 0.213 | 0.010 | 0.049 | 0.116 | 0.036 | 0.28 | 0.49 |
+| quarterly | 0.0393 | 4.05 | 0.337 | 0.011 | 0.032 | 0.115 | 0.036 | 0.13 | 0.48 |
+
+At a quarterly period the MPC over the year is lower (0.116 against 0.138), the hand-to-mouth nearly vanish and liquid wealth doubles: with four chances a year to reach the illiquid asset it is more liquid, not less. A quarterly solve also takes over five hours against ten minutes, so it could not be calibrated on these runners in any case. The period stays annual, on this result for two assets and on `probe_mpc_period.jl` for one. The transitory run at lower patience (37386744233) did not converge in three hours and was cancelled.
 
 ## 29. The architecture, proposed for the user's decision (2026-10-06)
 
@@ -889,7 +897,7 @@ Built on the probes of section 28. Nothing below is built yet except the two swi
 
 **B. The tax.** The benefit bill and the floor are paid by a proportional tax on labour income in place of the lump-sum tax. It is the standard closure, the unemployed and the lowest paid can pay it, and it frees the income grid.
 
-**C. The period.** Annual.
+**C. The period.** Annual. A quarterly period lowers the two-asset MPC over the year and does not move the one-asset one (section 28).
 
 **D. One asset is the base.** S, A, E and places, every country, policy checks and transitions run on it, with the floor and patience by education refitted as in section 25. Wealth on it is liquid wealth. The MPC, the fall in consumption on job loss and the response of buffers to the benefit rate are untargeted and are the test of A at the recalibrated point.
 
