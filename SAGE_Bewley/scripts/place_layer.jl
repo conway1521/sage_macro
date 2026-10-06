@@ -40,10 +40,16 @@ end
 
 "The national total tax per head: the lump sum plus the population-weighted cost of every place's unemployment insurance."
 function national_tax(c::SAGEConfig, places, w)
-    # A proportional tax with places is one national rate on a national base; the base is not passed
-    # to the places yet (V3_START.md, section 29, step 3).
-    c.tax_mode === :prop && error("the proportional tax is not built for the place layer yet")
-    c.cfloor > 0 || return c.lumptax + sum(w[i] * ui_tax_of(place_base(c, places[i])) for i in eachindex(places))
+    # A PROPORTIONAL TAX WITH PLACES (2026-10-06) is one national rate: the national total per head
+    # over the nation's mean labour income per head (`national_base`). The total is found as before;
+    # the base is kept with it for `place_config`, which hands it to every place (`tax_base`), so a
+    # place with higher earnings pays more per head and no place has a rate of its own.
+    prop = c.tax_mode === :prop
+    if c.cfloor <= 0
+        T = c.lumptax + sum(w[i] * ui_tax_of(place_base(c, places[i])) for i in eachindex(places))
+        prop && (NAT_TAX_BASE[] = (T, national_base(c, places, w, T)))
+        return T
+    end
     # With a means-tested floor the nation pays for it, as it does for unemployment insurance: one
     # tax F per head such that F equals the population-weighted outlay of all places when every
     # household pays the national total. Until 2026-10-04 each place found the tax for its own floor,
@@ -51,7 +57,8 @@ function national_tax(c::SAGEConfig, places, w)
     base = c.lumptax + sum(w[i] * ui_only_tax_of(place_base(c, places[i])) for i in eachindex(places))
     F = 0.0
     for it in 1:30
-        out = sum(w[i] * floor_outlay_at(place_base(c, places[i]), base + F) for i in eachindex(places))
+        L = prop ? national_base(c, places, w, base + F) : NaN
+        out = sum(w[i] * floor_outlay_at(SAGEConfig(place_base(c, places[i]); tax_base = L), base + F) for i in eachindex(places))
         isfinite(out) || error("the floor's outlay is not finite at a national tax of $F: a floor of $(c.cfloor) cannot be financed")
         if abs(out - F) < 1e-8
             F = out; break
@@ -60,13 +67,32 @@ function national_tax(c::SAGEConfig, places, w)
         it == 30 && @warn "the national tax for the floor did not settle" F
     end
     NAT_FLOOR_TAX[] = F
+    prop && (NAT_TAX_BASE[] = (base + F, national_base(c, places, w, base + F)))
     base + F
 end
+"The national total per head and the nation's mean labour income per head found by the last `national_tax` under a proportional tax."
+const NAT_TAX_BASE = Ref((NaN, NaN))
+"""
+    national_base(c, places, w, T_nat)
+
+The nation's mean labour income per head when every place pays the national total `T_nat`: each
+place's own (`labour_base`, at its job's effort levels), weighted by population.
+"""
+national_base(c::SAGEConfig, places, w, T_nat) =
+    sum(w[i] * labour_base(floor_effort(SAGEConfig(place_amount(c, places[i], T_nat); S = false))) for i in eachindex(places))
 "The national tax per head for the floor found by the last `national_tax` with a floor on."
 const NAT_FLOOR_TAX = Ref(0.0)
 
 "One place, financed nationally: its lump sum plus its own UI tax equals the national total `T_nat`."
 function place_config(c::SAGEConfig, pl, T_nat)
+    cp = place_amount(c, pl, T_nat)
+    c.tax_mode === :prop || return cp
+    (isfinite(NAT_TAX_BASE[][2]) && abs(NAT_TAX_BASE[][1] - T_nat) < 1e-12) ||
+        error("place_config under a proportional tax needs the national base of the same national_tax call")
+    SAGEConfig(cp; tax_base = NAT_TAX_BASE[][2])
+end
+"A place paying the national total `T_nat` per head, as an amount (the rate, under a proportional tax, is set by `place_config`)."
+function place_amount(c::SAGEConfig, pl, T_nat)
     cp = place_base(c, pl)
     # with a floor: the place pays the national total, and no tax of its own for the floor
     c.cfloor > 0 && return SAGEConfig(cp; lumptax = T_nat - ui_only_tax_of(cp), floor_tax_given = 0.0)

@@ -66,13 +66,26 @@ for (code, cfg, reg) in (("FR", "GS", :edu), ("FR", "GSA", :edu), ("FR", "GA", :
         println("      ", first(replace(sprint(showerror, err), "\n" => " "), 300)); check(code * " " * cfg * ": solves", false)
     end
 end
-println("   the place layer refuses the proportional tax until it is built:")
-check("places: refused with a message", try
-          solve_economy(SAGEConfig(country_config("FR"; config = "GE", v3 = :floor_edu); sd_eps = 0.178, tax_mode = :prop); cache = false); false
-      catch err
-          msg = sprint(showerror, err); occursin("not built for the place layer", msg) || println("      ", first(replace(msg, "\n" => " "), 300)); occursin("not built for the place layer", msg)
-      end)
-
+println("5. Places under the proportional tax: one national rate, the budget covered")
+for code in ("FR", "IT")
+    try
+        c = SAGEConfig(country_config(code; config = "GE", v3 = :floor_edu, S = false, A = false); sd_eps = 0.178, tax_mode = :prop)
+        c0 = SAGEConfig(c; E = false)
+        places, w = places_from_data(c.country, c0; typology = c.typology, channels = c.e_channels, epsilon = c.epsilon)
+        T = national_tax(c0, places, w); cps = [place_config(c0, pl, T) for pl in places]
+        L = NAT_TAX_BASE[][2]
+        rs = [solve_economy(cp; cache = false) for cp in cps]
+        own = [labour_base(floor_effort(SAGEConfig(cp; S = false))) for cp in cps]
+        rev = sum(w[i] * (T / L) * own[i] for i in eachindex(w))                      # the rate on each place's labour income
+        bill = sum(w[i] * (ui_only_tax_of(cps[i]) + rs[i].floor_outlay) for i in eachindex(w)) + c0.lumptax
+        @printf("   %s: %d places | national rate %.4f | revenue per head %.6f | benefits and floor per head %.6f | off by %.2e\n", code, length(w), T / L, rev, bill, rev - bill)
+        @printf("      hand-to-mouth by place %s | national %.4f | MPC %.4f\n", join([@sprintf("%.3f", r.hand_to_mouth_kvw) for r in rs], " "),
+                sum(w[i] * rs[i].hand_to_mouth_kvw for i in eachindex(w)), sum(w[i] * rs[i].mpc for i in eachindex(w)))
+        check(code * " with places: revenue covers the bill to 1e-4 of mean pay", abs(rev - bill) < 1e-4)
+    catch err
+        println("      ", first(replace(sprint(showerror, err), "\n" => " "), 400)); check(code * " with places: solves", false)
+    end
+end
 np = count(last, results)
 println(np, " of ", length(results), " checks pass", np == length(results) ? "" : "; FAILED: " * join([n for (n, ok) in results if !ok], "; "))
 println("DONE")
