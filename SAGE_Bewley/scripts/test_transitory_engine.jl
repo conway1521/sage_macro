@@ -56,7 +56,7 @@ end
 println("4. The switches, both on")
 for (code, cfg, reg) in (("FR", "GS", :edu), ("FR", "GSA", :edu), ("FR", "GA", :edu), ("IT", "G", :floor_edu))
     try
-        c = SAGEConfig(country_config(code; config = cfg, v3 = reg); sd_eps = 0.178, tax_mode = :prop)
+        c = SAGEConfig(country_config(code; config = cfg, v3 = reg, S = occursin('S', cfg), A = occursin('A', cfg)); sd_eps = 0.178, tax_mode = :prop)
         r = solve_economy(c; cache = false); st = income_stats(c)
         row(code * " " * cfg * " " * string(reg), r)
         @printf("      participation %.4f | S80/S20 %.2f | below half the median %.3f | floor's budget off by %.2e\n", r.rate, st.s8020, st.p50, r.budget_gap)
@@ -68,9 +68,9 @@ for (code, cfg, reg) in (("FR", "GS", :edu), ("FR", "GSA", :edu), ("FR", "GA", :
 end
 println("   the place layer refuses the proportional tax until it is built:")
 check("places: refused with a message", try
-          solve_economy(SAGEConfig(country_config("FR"; config = "GE", v3 = :edu); sd_eps = 0.178, tax_mode = :prop); cache = false); false
+          solve_economy(SAGEConfig(country_config("FR"; config = "GE", v3 = :floor_edu); sd_eps = 0.178, tax_mode = :prop); cache = false); false
       catch err
-          occursin("not built for the place layer", sprint(showerror, err))
+          msg = sprint(showerror, err); occursin("not built for the place layer", msg) || println("      ", first(replace(msg, "\n" => " "), 300)); occursin("not built for the place layer", msg)
       end)
 
 np = count(last, results)
