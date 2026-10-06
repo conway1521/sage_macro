@@ -15,7 +15,7 @@
 # each variant is run at three levels of patience, to compare the MPC at a like
 # hand-to-mouth share, and once with the benefit rate ten points higher (the tax with it).
 #
-#   julia --project=scripts/run_env scripts/probe_transitory_tax.jl [CODE] [sd of the transitory part, comma separated: 0,0.15,0.25]
+#   julia --project=scripts/run_env scripts/probe_transitory_tax.jl [CODE] [sd of the transitory part, comma separated: 0,0.15,0.25] [fit]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf, LinearAlgebra
 code = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "FR"
@@ -84,10 +84,10 @@ function problems(c, sd, prop)
     cs = cells_of(cT); _, bw = betas_of(cT)
     ps = [params_of(cT, cs[g]) for g in 1:2]
     L = sum(cs[g].share * labour_income(ps[g][1]) for g in 1:2)
-    out = Tuple{Float64,Any}[]
+    out = Tuple{Float64,Any,Int}[]
     for g in 1:2, (j, p) in enumerate(ps[g])
         prop && (p = update(p; lumptax = p.lumptax - T, subsidy = p.subsidy - T / L))
-        push!(out, (cs[g].share * bw[j], expand_transitory(p, sd, NT)))
+        push!(out, (cs[g].share * bw[j], expand_transitory(p, sd, NT), g))
     end
     (out, T / L)
 end
@@ -103,10 +103,62 @@ function run_economy(c, sd, prop)
     rs = pmap(x -> shock_cell(x[2], c.theta), pr)
     tot(f) = sum(pr[i][1] * getfield(rs[i], f) for i in eachindex(rs))
     ms = tot(:mass); liq = sum(pr[i][1] .* rs[i].liq for i in eachindex(rs))
+    hg = [sum(pr[i][1] * rs[i].htm for i in eachindex(rs) if pr[i][3] == g) / sum(pr[i][1] * rs[i].mass for i in eachindex(rs) if pr[i][3] == g) for g in 1:2]
     (htm = tot(:htm) / ms, mpc = tot(:mpc) / ms, mpch = tot(:mpch) / max(tot(:htm), 1e-12), drop = tot(:drop) / tot(:emp),
-     liq = med(rs[1].a, liq) / (tot(:y) / ms), tau = τ)
+     liq = med(rs[1].a, liq) / (tot(:y) / ms), tau = τ, htm_low = hg[1], htm_high = hg[2])
 end
 
+
+# FIT MODE (third argument "fit"): the probe's result at a refitted point. For each variant the persistent
+# innovation is lowered so that the variance of log income is unchanged, the job's effort levels are found
+# again, and patience and its gap by education are refitted to the two hand-to-mouth targets (all households,
+# and the difference between the education groups). The untargeted rows are then read there.
+function hf(moment, grp, sub)
+    for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
+        startswith(ln, "#") && continue
+        f = split(ln, ",")
+        length(f) >= 6 && f[1] == moment && f[2] == code && f[3] == "2021" && f[4] == grp && f[5] == sub && return parse(Float64, f[6])
+    end
+    NaN
+end
+function bisect(f, lo, hi; n = 12)          # f decreasing in its argument, root of f = 0
+    for _ in 1:n
+        mid = (lo + hi) / 2
+        f(mid) > 0 ? (lo = mid) : (hi = mid)
+    end
+    (lo + hi) / 2
+end
+function refit(sd, prop)
+    T_all = hf("htm_model_narrow_total", "all", "all")
+    T_gap = hf("htm_model_narrow_total", "education", "below tertiary") - hf("htm_model_narrow_total", "education", "tertiary")
+    cc = country_config(code; config = "G", v3 = :edu, S = false, A = false)
+    eta = sqrt(max(cc.eta_z^2 - sd^2 * (1 - cc.rho^2), 1e-4))
+    cc = SAGEConfig(cc; eta_z = eta)
+    cc = SAGEConfig(cc; effort_by_cell = job_effort_levels(cc))
+    b0 = cc.beta_bar; gap = -cc.beta_cell[1]; shift = 0.0
+    at(sh, gp) = run_economy(SAGEConfig(cc; beta_bar = b0 + sh, beta_cell = (-gp, 0.0)), sd, prop)
+    for _ in 1:4
+        shift = bisect(x -> at(x, gap).htm - T_all, -0.10, 0.04)                  # the share falls with patience
+        gap = bisect(g -> T_gap - (r = at(shift, g); r.htm_low - r.htm_high), 0.0, 0.12)   # the difference rises with the gap
+    end
+    c = SAGEConfig(cc; beta_bar = b0 + shift, beta_cell = (-gap, 0.0))
+    r = run_economy(c, sd, prop)
+    r2 = run_economy(SAGEConfig(c; rr = c.rr + 0.10, rr_public = c.rr_public + 0.10), sd, prop)
+    (r = r, r2 = r2, eta = eta, top = b0 + shift, gap = gap)
+end
+if length(ARGS) >= 3 && ARGS[3] == "fit"
+    @printf("%s G, one asset (v3e): each variant refitted to the hand-to-mouth share (%.3f) and its difference by education (%.3f); survey MPC %.3f\n",
+            code, hf("htm_model_narrow_total", "all", "all"),
+            hf("htm_model_narrow_total", "education", "below tertiary") - hf("htm_model_narrow_total", "education", "tertiary"), hf("mpc_mean", "all", "all"))
+    @printf("%-10s %-12s | %7s %7s %7s | %6s %6s %6s | %6s %10s %8s %9s | %s\n", "transitory", "tax", "eta", "top b", "gap", "htm", "low", "high", "MPC", "MPC of htm", "liq/inc", "job loss", "htm, benefit rate +10 points")
+    for sd in sds, prop in (false, true)
+        t0 = time(); f = refit(sd, prop); r = f.r
+        @printf("%-10s %-12s | %7.4f %7.4f %7.4f | %6.3f %6.3f %6.3f | %6.3f %10.3f %8.3f %9.3f | %.3f (%+.3f)   [%.1f min]\n",
+                sd == 0 ? "none" : @sprintf("sd %.3f", sd), prop ? @sprintf("prop. %.3f", r.tau) : "lump-sum", f.eta, f.top, f.gap,
+                r.htm, r.htm_low, r.htm_high, r.mpc, r.mpch, r.liq, r.drop, f.r2.htm, f.r2.htm - r.htm, (time() - t0) / 60)
+        flush(stdout)
+    end
+else
 @printf("%s G, one asset, patience by education (v3e), household problem with a transitory part and a proportional tax; not recalibrated\n", code)
 @printf("benefit rate (household) %.3f, of which public %.3f; the lump-sum tax %.4f of mean pay\n", c0.rr, c0.rr_public, ui_tax_of(c0))
 @printf("%-10s %-12s %-9s | %6s %6s %10s %8s %9s | %s\n", "transitory", "tax", "patience", "htm", "MPC", "MPC of htm", "liq/inc", "job loss", "htm with the benefit rate ten points higher")
@@ -125,5 +177,6 @@ for sd in sds, prop in (false, true)
                 r.htm, r.mpc, r.mpch, r.liq, r.drop, extra, (time() - t0) / 60, "")
         flush(stdout)
     end
+end
 end
 println("DONE")
