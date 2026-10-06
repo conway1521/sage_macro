@@ -40,6 +40,9 @@ end
 
 "The national total tax per head: the lump sum plus the population-weighted cost of every place's unemployment insurance."
 function national_tax(c::SAGEConfig, places, w)
+    # A proportional tax with places is one national rate on a national base; the base is not passed
+    # to the places yet (V3_START.md, section 29, step 3).
+    c.tax_mode === :prop && error("the proportional tax is not built for the place layer yet")
     c.cfloor > 0 || return c.lumptax + sum(w[i] * ui_tax_of(place_base(c, places[i])) for i in eachindex(places))
     # With a means-tested floor the nation pays for it, as it does for unemployment insurance: one
     # tax F per head such that F equals the population-weighted outlay of all places when every

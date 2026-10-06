@@ -254,6 +254,17 @@ Base.@kwdef struct SAGEConfig
     # income_stats); 1 counts each state as a point, as every result before 2026-10-05 did. The
     # version 3 regimes use 9. No calibration target reads these shares.
     ysmooth::Int = 1
+    # THE TRANSITORY PART (2026-10-06; V3_START.md, sections 28 and 29). An independent draw each
+    # period on the income of the employed: n_eps nodes, standard deviation sd_eps of the log
+    # (binomial nodes and weights, the Rouwenhorst discretisation at zero persistence). Benefits
+    # follow the persistent part. Zero reproduces every earlier result.
+    sd_eps::Float64 = 0.0
+    n_eps::Int = 3
+    # How the tax in `lumptax` is raised. :lump, per head, as before. :prop, in proportion to
+    # labour income, at the rate lumptax / tax_base, with tax_base mean labour income per head at
+    # the job's effort levels (NaN: this economy's own). Needs effort_mode = :job.
+    tax_mode::Symbol = :lump
+    tax_base::Float64 = NaN
     # The illiquid grid's dense part: with k_mid > 0, three fifths of the nodes lie on [0, k_mid] and
     # the rest run geometrically to k_max. On the exponential grid (k_mid = 0, every earlier result)
     # the nodes around median net wealth are over two years of income apart at 24 nodes, and liquid
@@ -344,14 +355,80 @@ employed at a zero replacement rate and no one at a negative levy.
 """
 employed_states(p::SAGEParams) = p.z_vals_override === nothing ? trues(p.nz) : p.z_vals_override .> 0
 
+"""
+    expand_transitory(p, sd, nt)
+
+The household problem `p` with an independent transitory draw on the income of the employed:
+every state becomes `nt` states, productivity times the draw, reached with the draw's
+probabilities whatever the state left. Everything else a state carries (the benefit, the job's
+effort, dread's reference points) is that of the persistent state.
+"""
+function expand_transitory(p::SAGEParams, sd, nt)
+    (sd == 0 || nt <= 1) && return p
+    p.z_vals_override === nothing && error("the transitory part needs the unemployment state space")
+    z = p.z_vals_override; Π = p.Π_override; ns = length(z)
+    x = [sd * sqrt(nt - 1) * (2 * (t - 1) / (nt - 1) - 1) for t in 1:nt]
+    w = [binomial(nt - 1, t - 1) / 2.0^(nt - 1) for t in 1:nt]
+    ε = exp.(x); ε ./= dot(w, ε)
+    ex(v) = isempty(v) ? v : repeat(v, inner = nt)
+    zp = sort(unique(z[z .> 0]))
+    update(p; nz = ns * nt, z_vals_override = [z[s] * ε[t] for s in 1:ns for t in 1:nt], Π_override = kron(Π, ones(nt) * w'),
+           α = ex(p.α), B = ex(p.B), transfer = ex(p.transfer), effort_set = ex(p.effort_set),
+           belong_scale = ex(p.belong_scale), time_floor = ex(p.time_floor),
+           dread_q = ex(p.dread_q), dread_hi = ex(p.dread_hi), dread_lo = ex(p.dread_lo),
+           zstep = length(zp) > 1 ? log(zp[2] / zp[1]) : 0.0)
+end
+
+const LABOUR_BASE_CACHE = Dict{UInt,Float64}()
+"""
+    labour_base(c)
+
+Mean labour income per head in economy `c` at the job's effort levels, before tax: the base of
+the proportional tax. From the stationary distribution of the states, so it needs no solve.
+"""
+function labour_base(c::SAGEConfig)
+    (c.effort_mode === :job && !isempty(c.effort_by_cell[1])) ||
+        error("a proportional tax needs the job's effort levels given (effort_mode = :job, and floor_effort(c) first)")
+    c1 = SAGEConfig(c; tax_mode = :lump, tax_base = NaN, sd_eps = 0.0, lumptax = 0.0, subsidy = 0.0, levy_employed = 0.0,
+                    S = false, cfloor = 0.0, floor_tax_given = NaN)
+    get!(LABOUR_BASE_CACHE, hash(repr(c1))) do
+        cs = cells_of(c1)
+        sum(1:2) do g
+            p = _params_of(c1, cs[g])[1]
+            z, Π = SAGEBewley.income_process(p); π = fill(1 / length(z), length(z))
+            for _ in 1:100_000
+                πn = Π' * π; d = maximum(abs, πn - π); π = πn
+                d < 1e-14 && break
+            end
+            cs[g].share * sum(π[st] * p.α[st] * p.effort_set[st] * z[st] * p.Z for st in eachindex(z))
+        end
+    end
+end
+
 "Parameter sets for one cell, one per discount type."
 function params_of(c::SAGEConfig, cell)
+    ps = _params_of(c, cell)
+    c.sd_eps > 0 ? [expand_transitory(p, c.sd_eps, c.n_eps) for p in ps] : ps
+end
+
+function _params_of(c::SAGEConfig, cell)
+    # With a transitory part or a proportional tax the job's effort levels are those of the economy
+    # without either (floor_effort): what a job asks does not move with the year's draw or with how
+    # the benefit bill is raised. Found by the model here, effort would follow the draw.
+    (c.sd_eps > 0 || c.tax_mode === :prop) && c.effort_mode === :job && isempty(cell.eset) &&
+        error("with a transitory part or a proportional tax the job's effort levels are given: floor_effort(c) first")
+    c.tax_mode in (:lump, :prop) || error("tax_mode is :lump or :prop")
     bs, _ = betas_of(c)
     ps = [cell_params_u(cell.α; δ = cell.δ, f = c.f_find, rr = c.rr, na = c.na, ne = c.ne,
                         a_max = c.a_max, pexp = c.pexp, subsidy = c.subsidy, lumptax = c.lumptax,
                         partcredit = c.partcredit, β = b + cell.dβ, pcost = c.pcost, nz = c.nz,
                         ρ = c.rho, η = c.eta_z, fL = cell.fL, rrL = c.rr_long) for b in bs]
     (!isnan(cell.fL) && c.illiquid) && error("the long-term state is not built for two assets")
+    if c.tax_mode === :prop && c.lumptax != 0
+        # the same revenue per head, raised in proportion to labour income
+        τ = c.lumptax / (isnan(c.tax_base) ? labour_base(c) : c.tax_base)
+        ps = [update(p; lumptax = p.lumptax - c.lumptax, subsidy = p.subsidy - τ) for p in ps]
+    end
     if c.phi != 14.0 || c.e_ref != E_REF
         ps = [update(p; ϕ = c.phi, transfer = p.transfer .* (c.e_ref / E_REF)) for p in ps]
     end
@@ -450,12 +527,14 @@ floor on, the levels have no solution in version 3: in the lowest income states
 every household is on the floor, where an extra euro earned is taken back.
 """
 function floor_effort(c::SAGEConfig)
-    (c.cfloor > 0 && c.effort_mode === :job && isempty(c.effort_by_cell[1])) || return c
+    (c.effort_mode === :job && isempty(c.effort_by_cell[1]) && (c.cfloor > 0 || c.sd_eps > 0 || c.tax_mode === :prop)) || return c
     # With the long-term state the economy without the floor has no solution (those households have no
     # income of their own), so the levels are those of the economy without the floor and without that
     # state, and zero in its block.
     long = !isnan(c.f_long[1])
-    c1 = SAGEConfig(c; cfloor = 0.0, S = false, f_long = (NaN, NaN))
+    # The same holds for the transitory part and the proportional tax (2026-10-06): the levels are
+    # those of the economy with persistent risk alone and the tax raised per head.
+    c1 = SAGEConfig(c; cfloor = 0.0, S = false, f_long = (NaN, NaN), sd_eps = 0.0, tax_mode = :lump, tax_base = NaN)
     lv = get!(() -> job_effort_levels(c1), FLOOR_EFFORT_CACHE, hash(repr(c1)))
     long && (lv = Tuple(vcat(v, zeros(length(v) ÷ 2)) for v in lv))
     SAGEConfig(c; effort_by_cell = lv)
@@ -498,7 +577,8 @@ function floor_tax_of(c::SAGEConfig)
     c0 = floor_effort(SAGEConfig(c; S = false, E = false, cfloor = c.cfloor))
     key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.alpha, c0.alpha_off, c0.A, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
-                     c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing)))
+                     c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
+                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth)))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
     cs = cells_of(c0); _, bw = betas_of(c0)
@@ -1032,6 +1112,14 @@ calibration script that is about to produce the file passes `missing_ok = true`.
 A file marked not calibrated (`.not_calibrated.txt` beside it, newer than it) is
 refused the same way.
 """
+"A value of data/manual_inputs.csv."
+function manual_input(code, field)
+    for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "manual_inputs.csv"))
+        f = split(ln, ","); length(f) >= 3 && f[1] == code && f[2] == field && return parse(Float64, f[3])
+    end
+    error("no $field for $code in data/manual_inputs.csv")
+end
+
 function country_config(code::AbstractString; config::AbstractString = "GSA", missing_ok::Bool = false, v3::Union{Bool,Symbol} = false, kwargs...)
     r = country_rows()[code]
     num(k) = parse(Float64, r[k])
@@ -1068,12 +1156,21 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
         d[:effort_mode] = :job
         d[:rr] = num("rr_household"); d[:rr_public] = num("rr_public")
         d[:qbar] = 0.04                       # measured (data/timeuse), not the 0.10 assumed before
-        vtag = v3 === :floor ? "v3f" : v3 === :edu ? "v3e" : v3 === :floor_edu ? "v3fe" : "v3"
+        # v3 = :trans, :floor_trans, :edu_trans or :floor_edu_trans: the same regimes with the transitory
+        # part (its size from data/manual_inputs.csv, field sd_eps) and the proportional tax
+        # (V3_START.md, section 29); files with a t added to the tag, calibration_v3fet_* for the base.
+        vs = v3 === true ? "" : string(v3)
+        vs in ("", "floor", "edu", "floor_edu", "trans", "floor_trans", "edu_trans", "floor_edu_trans") || error("unknown version 3 regime $v3")
+        vfl = occursin("floor", vs); ved = occursin("edu", vs); vtr = occursin("trans", vs)
+        vtag = "v3" * (vfl ? "f" : "") * (ved ? "e" : "") * (vtr ? "t" : "")
+        if vtr
+            d[:sd_eps] = manual_input(code, "sd_eps"); d[:tax_mode] = :prop
+        end
         cal = joinpath(@__DIR__, "calibration_$(vtag)_$(code)_$(config)" * (illq ? "_I" : "") * ".txt")
         # In the floor regime places differ by the household's income per head (:conversion_hh): what
         # is not unemployment in a low employment rate stays in the place's income, so a poor place is
         # poor against the national floor and not only riskier (V3_START.md, sections 21 and 22).
-        v3 in (:floor, :floor_edu) && (d[:e_channels] = (:composition, :access, :conversion_hh, :commute, :community))
+        vfl && (d[:e_channels] = (:composition, :access, :conversion_hh, :commute, :community))
     end
     marker = replace(cal, r"\.txt$" => ".not_calibrated.txt")
     stale = isfile(marker) && (!isfile(cal) || mtime(marker) > mtime(cal))
@@ -1250,7 +1347,7 @@ function income_stats(c::SAGEConfig)
         ys = Float64[]; ws = Float64[]; es = Bool[]
         y2 = Float64[]; w2 = Float64[]; e2 = Bool[]          # with the mass of each income state spread over its interval (ysmooth)
         zp = sort(unique(s.z_vals[s.z_vals .> 0])); K = max(p.ysmooth, 1)
-        Δ = (K > 1 && length(zp) > 1) ? log(zp[2] / zp[1]) : 0.0
+        Δ = K > 1 ? (isnan(p.zstep) ? (length(zp) > 1 ? log(zp[2] / zp[1]) : 0.0) : p.zstep) : 0.0
         for st in eachindex(s.z_vals), i in eachindex(s.a), d in (0, 1)
             pd = d == 1 ? s.P1[i, st] : 1 - s.P1[i, st]; m = cs[g].share * bw[k] * s.lambda[i, st] * pd; m <= 0 && continue
             sy = (1 + p.subsidy) * p.α[st] * s.e_d[d+1][i, st] * s.z_vals[st] * p.Z + net_participation(p, p.α[st], s.z_vals[st]) * d + transfer_at(p, st)

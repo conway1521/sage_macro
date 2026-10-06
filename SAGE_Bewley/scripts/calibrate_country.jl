@@ -85,8 +85,13 @@ const FLOOR_CFG = uppercase(get(ENV, "SAGE_FLOOR_FROM", "G"))
 # difference between the two cells' hand-to-mouth shares (HFCS, by education) is the moment it owns.
 # No spread within a cell. Files calibration_v3e_* and, with the floor, calibration_v3fe_*.
 const EDUREG = V3 && get(ENV, "SAGE_EDU", "0") == "1"
-const V3ARG = FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : V3)
-const VTAG = "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "")
+# THE TRANSITORY PART AND THE PROPORTIONAL TAX (SAGE_TRANS=1 with SAGE_V3=1; V3_START.md, section 29).
+# The same regime with both on; files with a t added to the tag (calibration_v3fet_* for the base).
+const TRANS = V3 && get(ENV, "SAGE_TRANS", "0") == "1"
+const VTAG0 = "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "")          # the regime without them, for the starting point
+const V3ARG = TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") :
+              FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : V3)
+const VTAG = VTAG0 * (TRANS ? "t" : "")
 function hfcs_target(moment; wave = "2021")
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
         startswith(ln, "#") && continue
@@ -431,6 +436,17 @@ if ck1 === nothing && V3
             x0e = [log(kv["phi"]), kv["beta_bar"], kv["beta_spread"], kv["eta_z"],
                    CFG == FLOOR_CFG ? get(kv, "cfloor", FL[] * E_REF_C) / E_REF_C : FL[], get(kv, "beta_gap", 0.0)]
             say("  starting from ", basename(fb))
+        end
+    end
+    if x0e === nothing && TRANS
+        # start at the calibration of the same configuration without the transitory part, patience a
+        # little lower (the refit of section 28 found 0.02 to 0.03)
+        fb = joinpath(@__DIR__, "calibration_$(VTAG0)_$(CODE)_$(CFG).txt")
+        if isfile(fb)
+            kv = Dict(strip(first(split(l, "="))) => parse(Float64, last(split(l, "="))) for l in eachline(fb) if occursin("=", l) && !startswith(l, "#"))
+            x0e = [log(kv["phi"]), kv["beta_bar"] - 0.02, kv["beta_spread"], kv["eta_z"],
+                   CFG == FLOOR_CFG ? get(kv, "cfloor", FL[] * E_REF_C) / E_REF_C : FL[], get(kv, "beta_gap", 0.0)]
+            say("  starting from ", basename(fb), ", patience 0.02 lower")
         end
     end
     f3 = x0e === nothing ? fit_v3(E_TARGET, HTM_TARGET - GAP) : fit_v3(E_TARGET, HTM_TARGET - GAP; x0 = x0e)

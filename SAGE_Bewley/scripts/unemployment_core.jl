@@ -208,7 +208,7 @@ function cell_summary(p::SAGEParams, sol; thresholds = nothing)
     # the joint indicators use the sub-points; means, wealth and the floor's outlay do not.
     Ksm = max(p.ysmooth, 1)
     zpos = sort(unique(z[z .> 0]))
-    Δz = (Ksm > 1 && length(zpos) > 1) ? log(zpos[2] / zpos[1]) : 0.0
+    Δz = Ksm > 1 ? (isnan(p.zstep) ? (length(zpos) > 1 ? log(zpos[2] / zpos[1]) : 0.0) : p.zstep) : 0.0
     @inbounds for i_z in 1:nz, i_a in 1:na
         w = λ[i_a, i_z]
         w <= 0 && continue

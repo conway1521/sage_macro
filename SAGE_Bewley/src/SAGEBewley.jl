@@ -216,6 +216,10 @@ Base.@kwdef struct SAGEParams
     # The illiquid return paid into liquid wealth every period instead of accruing to
     # illiquid wealth (egm2_core.jl). false reproduces every earlier result.
     k_payout::Bool = false
+    # Log distance between two neighbouring PERSISTENT productivity states, set when the states
+    # also carry a transitory part (sage_modular.jl, expand_transitory), for the smoothed shares
+    # below an income line. NaN: read from the states themselves, as before.
+    zstep::Float64 = NaN
     # Sub-points within an income state for the shares below an income line (the
     # summaries in unemployment_core.jl): 1 is the state's own income, as before.
     ysmooth::Int = 1
