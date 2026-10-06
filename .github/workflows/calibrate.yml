@@ -131,10 +131,7 @@ jobs:
           name: calibration-${{ matrix.code }}-${{ matrix.cfg }}
           path: |
             SAGE_Bewley/scripts/calibration_country_${{ matrix.code }}*.txt
-            SAGE_Bewley/scripts/calibration_v3_${{ matrix.code }}*.txt
-            SAGE_Bewley/scripts/calibration_v3f_${{ matrix.code }}*.txt
-            SAGE_Bewley/scripts/calibration_v3e_${{ matrix.code }}*.txt
-            SAGE_Bewley/scripts/calibration_v3fe_${{ matrix.code }}*.txt
+            SAGE_Bewley/scripts/calibration_v3*_${{ matrix.code }}*.txt
             SAGE_Bewley/scripts/calibrate_${{ matrix.code }}_${{ matrix.cfg }}.log
             SAGE_Bewley/scripts/checkpoints/${{ matrix.code }}_${{ matrix.cfg }}_*
       - name: Start the calibrations that need this one
