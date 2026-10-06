@@ -880,3 +880,42 @@ Limits of the probe: not recalibrated (the transitory part widens the cross-sect
 - The hand-to-mouth themselves have an MPC of 0.33 to 0.40, not one: at an annual period a household that starts the year with a week of income in liquid wealth still plans to end it with some.
 
 **The quarterly runs** (37379989414, 37379993283) had not finished after four hours against 25 minutes for an annual solve, and will be cut at the runner's limit. Whatever they would show, a quarterly two-asset problem cannot be calibrated on these runners (a calibration takes dozens of solves). The period stays annual, on cost for two assets and on the result of `probe_mpc_period.jl` for one. The transitory run at lower patience (37386744233) did not converge in three hours and was cancelled.
+
+## 29. The architecture, proposed for the user's decision (2026-10-06)
+
+Built on the probes of section 28. Nothing below is built yet except the two switches named.
+
+**A. The household's income (one asset and two).** Persistent part as now (persistence 0.92, innovation fitted to S80/S20) plus an independent transitory draw each year on the income of the employed, three nodes, variance 0.0316 (Bayer and Juessen 2012, Table 1, Germany; a common European value, as their persistence already is). Benefits follow the persistent part. A sensitivity row at half the variance, since the estimate includes measurement error. The model's one-year and five-year income changes are checked against the Global Repository of Income Dynamics (Guvenen, Pistaferri and Violante 2022) as an untargeted test, which is also where a new country's process would come from.
+
+**B. The tax.** The benefit bill and the floor are paid by a proportional tax on labour income in place of the lump-sum tax. It is the standard closure, the unemployed and the lowest paid can pay it, and it frees the income grid.
+
+**C. The period.** Annual.
+
+**D. One asset is the base.** S, A, E and places, every country, policy checks and transitions run on it, with the floor and patience by education refitted as in section 25. Wealth on it is liquid wealth. The MPC, the fall in consumption on job loss and the response of buffers to the benefit rate are untargeted and are the test of A at the recalibrated point.
+
+**E. Two assets are the reference for wealth.** G only at first, per country, with three changes from the version of section 20: the illiquid return paid out as liquid income (`k_payout`); the return on liquid wealth at zero in real terms, from a source to be fixed (deposit rates less inflation), the illiquid return unchanged; the fixed cost fitted to the wealthy hand-to-mouth share, which now identifies it. Patience fitted to net wealth over income. Untargeted: the Gini, the top 10% share, liquid wealth, the MPC. No device for education on two assets: patience fails there (probe 1) and the split is reported as it comes out.
+
+**What this is expected to deliver, and what it will not.**
+
+| | now | expected | data |
+|---|---|---|---|
+| MPC, one asset | 0.26 to 0.34 | about 0.4 | 0.39 to 0.47 (survey) |
+| Hand-to-mouth for ten points of benefit rate, one asset | +0.06 to +0.38 | +0.02 to +0.05 | small |
+| Fall in consumption on job loss, one asset | 0.21 to 0.39 | a little lower, still high | about 0.1 |
+| Wealth Gini and top 10% share, two assets | 0.64, 0.46 | to be seen after the three changes | 0.68, 0.50 |
+| MPC, two assets | 0.14 | about 0.2 | 0.39 to 0.47 (survey) |
+| Wealth by education, two assets | flat | flat | graduates richer, less often hand-to-mouth |
+
+Not addressed by this build: the persistent shock is larger than its source says (it carries permanent differences between households; a permanent type is the repair, noted for later); the regional order of buffers; the two-asset MPC, which stays at about half the survey figure.
+
+**Order and gates.**
+1. Engine: the transitory part and the tax as two settings, with the old economy reproduced exactly when they are off (the regression test). Tested on GitHub.
+2. Gate: recalibrate G in the three countries and read the three untargeted rows at the recalibrated point. If the probe's result does not survive recalibration, stop and report.
+3. The other configurations (France and Germany eight each; Italy eight, the floor fitted with places).
+4. On/off, accuracy, the policy check, the private share, the regional test; the scorecard.
+5. The two-asset reference, G in three countries.
+6. Transitions on the base; the environment side of E as indicators.
+
+**Risks.** The state space triples (66 income states for 22). The longest calibration today (Italy with places, 236 minutes) would pass the runner's six hours; the checkpoint and resume chain exists for this, and two transitory nodes instead of three is the fallback. Germany's liquid wealth may come under pressure once patience is refitted (section 28).
+
+**For the user to decide.** (1) Go ahead with A to E in this order. (2) The persistent shock: keep the fit and state it, with the GRID test (recommended), or add a permanent type now. (3) Accept that the two-asset reference will carry an MPC of about 0.2 and no education split, stated as limits.
