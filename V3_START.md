@@ -850,4 +850,16 @@ Limits of the probe: not recalibrated (the transitory part widens the cross-sect
 
 **A weakness this exposes (row M3).** The persistent innovation fitted to S80/S20 has a standard deviation of 0.26 to 0.29 in the three countries, against 0.10 in the source. The fitted shock carries permanent differences between households that the two education cells do not (the source estimates a fixed effect beside the shock). This is common in Bewley models whose process is estimated without fixed effects, but it overstates persistent risk, and it is one reason fitted patience is as low as 0.91 to 0.93. To be decided in the architecture: keep the fit and say so, with the model's one-year and five-year income changes checked against the Global Repository of Income Dynamics (Guvenen, Pistaferri and Violante 2022, Quantitative Economics 13(4)) as an untargeted test, or add a permanent type.
 
-**Two assets with the transitory part** (`probe_two_asset_period.jl FR 0.9578|0.9478 0.0131 32:4 150 8 1 0.18`, runs 37386740426 and 37386744233): does the two-asset MPC of 0.15 rise as the one-asset one does.
+**Two assets with the transitory part: the MPC does not move, and why.** `probe_two_asset_period.jl FR 0.9578 chi0 32:4 150 8 1 0.18`, France G, annual, transitory standard deviation 0.18, not recalibrated (runs 37386740426, 37389076438, 37389079348).
+
+| fixed cost | net wealth | liquid | poor htm | wealthy htm | MPC, all | MPC, poor htm | MPC, wealthy htm | adjusting, all | adjusting, wealthy htm |
+|---|---|---|---|---|---|---|---|---|---|
+| 0.0131 | 4.72 | 0.113 | 0.038 | 0.226 | 0.139 | 0.335 | 0.154 | 0.51 | 0.73 |
+| 0.05 | 4.24 | 0.284 | 0.040 | 0.120 | 0.139 | 0.360 | 0.156 | 0.28 | 0.72 |
+| 0.15 | 3.71 | 0.543 | 0.042 | 0.067 | 0.133 | 0.375 | 0.129 | 0.15 | 0.73 |
+
+(Ratios to mean annual income.) The transitory part, which lifts the one-asset MPC to 0.4, leaves the two-asset one at 0.14. The wealthy hand-to-mouth have the MPC of everyone else, and three in four of them adjust their illiquid wealth within the year, at every fixed cost: a higher cost makes fewer of them and does not make them constrained. So the households the model counts as wealthy hand-to-mouth are households about to withdraw, whose liquid wealth is low because the withdrawal is due, and not households sitting at zero liquid wealth and spending their income, which is what the term means in Kaplan and Violante (2014). My first reading (a fixed cost too low) is refuted by the second and third rows.
+
+A candidate cause, being tested: the illiquid return accrues inside the illiquid asset, so a household can spend its capital income (a quarter of labour income at these wealth levels) only by paying the fixed cost. Withdrawing is then routine for anyone with illiquid wealth. In Bayer, Luetticke, Pham-Dao and Tjaden (2019, Econometrica 87(1)) the illiquid asset pays its return as a liquid dividend, and in Kaplan and Violante (2014, Econometrica 82(4)) part of it is a flow of housing services. The solver now has a switch for this (`k_payout`, off by default so every earlier result is unchanged): the keeper holds k' = k and receives (Rk - 1) k in cash. Runs 37397134555 and 37397137046 (fixed cost 0.0131 and 0.05).
+
+The quarterly runs (37379989414, 37379993283) had not finished after 2 h 20 min.
