@@ -975,4 +975,16 @@ Not addressed by this build: the persistent shock is larger than its source says
 - In-work poverty, untargeted, is too high in all three (0.16, 0.18, 0.19 against 0.07, 0.09, 0.12).
 - The persistent dispersion did not fall when refitted (eta 0.263, 0.275, 0.295, as before), so the transitory part adds to the cross-section less than the formula of the probe assumed.
 
-**Step 3 started**: G+A and G+S+A in the three countries (G+S follows G+S+A by the chain). The place configurations wait for the proportional tax in the place layer.
+**Step 3, the other configurations** (2026-10-06, evening).
+
+| | G+A: MPC, htm, liquid | G+S+A: MPC, htm, liquid | participation, multiplier (band) |
+|---|---|---|---|
+| France | 0.415, 0.219, 0.119 | 0.414, 0.217, 0.120 | 0.233, 1.9 (1.3 to 3.7) |
+| Germany | 0.401, 0.222, 0.123 | 0.403, 0.225, 0.121 | 0.279, 1.8 (1.3 to 2.7) |
+| Italy | 0.319, 0.178, 0.262 | 0.319, 0.178, 0.262 | 0.125, 1.3 (1.1 to 1.9) |
+
+All owned targets met (runs 37529086794 for G+A, 37530240230 for G+S+A; files `calibration_v3fet_*_GA.txt`, `*_GSA.txt`). G+S is running, started by the chain. The first G+S+A run failed at the guard: the calibration's scans build the response families themselves and reached the household problem without the job's effort levels. `build_families` and `employment_mask` now take the levels as `_solve` does (commit b3d894b); this also holds for the old floor regime, whose scans had found effort with the floor on.
+
+**The proportional tax with places** (commit 773fff6): one national rate, the national total per head over the nation's mean labour income per head (`national_base`), handed to every place as `tax_base`. `test_transitory_engine.jl`, 12 of 12 (run 37529268427): France (14 places) at a rate of 0.0378 and Italy (21 places) at 0.0241 raise the benefits and the floor to 1e-13 per head.
+
+**The place configurations**: G+E started for the three countries with the floor fitted there (`floor_from=GE`, run 37536039819). At three times the income states a place calibration will pass the six-hour limit and resume from its checkpoints. Italy's four configurations without places are then to be refitted with the floor of G+E, as on the old base.
