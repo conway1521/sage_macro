@@ -988,3 +988,9 @@ All owned targets met (runs 37529086794 for G+A, 37530240230 for G+S+A; files `c
 **The proportional tax with places** (commit 773fff6): one national rate, the national total per head over the nation's mean labour income per head (`national_base`), handed to every place as `tax_base`. `test_transitory_engine.jl`, 12 of 12 (run 37529268427): France (14 places) at a rate of 0.0378 and Italy (21 places) at 0.0241 raise the benefits and the floor to 1e-13 per head.
 
 **The place configurations**: G+E started for the three countries with the floor fitted there (`floor_from=GE`, run 37536039819). At three times the income states a place calibration will pass the six-hour limit and resume from its checkpoints. Italy's four configurations without places are then to be refitted with the floor of G+E, as on the old base.
+
+**Later the same evening.**
+- G+S calibrated in the three countries (MPC 0.413, 0.403, 0.313; multipliers 1.9, 1.8, 1.3), so the four configurations without places are done in the new regime.
+- The on/off pass in the new regime: 16 of 16 in France, in Germany and in Italy (runs 37538440810, 37538444721, 37538448491; `onoff_v3.jl floor edu trans CODE`).
+- G+E calibrated in the three countries with the floor fitted there (run 37536039819), in 28, 53 and 91 minutes, well inside the runner's limit. France MPC 0.415, hand-to-mouth 0.224, liquid 0.123; Germany 0.402, 0.222, 0.130; Italy 0.317, 0.178, 0.270. Italy's floor comes out at 0.137 with places against 0.136 without, so in this regime the two rules agree, where on the old base they did not (0.105 against 0.156 in the file's units).
+- Started: G+A+E and G+S+A+E in the three countries (G+S+E by the chain), run 37546002483; Italy's four configurations without places again with the floor of G+E, run 37546005118; accuracy, the private share and the spending tests for France and Germany in the new regime.
