@@ -1153,11 +1153,11 @@ The base is now the regime with the floor, patience by education, the transitory
 | M1 | Stationary equilibrium, budget balanced, closure stated | met | the proportional tax raises the benefit bill to 1e-13, with places too |
 | M2 | Standard building blocks | **met** (was partly) | CRRA, persistent and transitory income risk, unemployment, a proportional tax |
 | M3 | Every parameter from a source or identified; identification shown | partly, closer | identification table on the base, no flat column, in three countries. Left: the private share of belonging (a band); the persistent shock larger than its source (a more persistent process answers it, the user's decision, section 32); the liquid return of the two-asset reference (an assumption) |
-| M4 | Every configuration hits its own targets in every country | partly: 20 of 24 | the last four are running; every finished one meets every owned target |
+| M4 | Every configuration hits its own targets in every country | partly: 22 of 24 | France and Germany eight of eight; Italy six, its two with S and places running; every finished one meets every owned target |
 | M5 | Spending behaviour untargeted | partly, much closer | MPC 0.41 and 0.40 against 0.39 and 0.47 in France and Germany; seven MPC properties in three countries; the benefit rate no longer moves buffers by tens of points. Left: Italy's MPC 0.31 against 0.47 (a limit of one asset there, section 32); the fall in consumption on job loss in Germany and Italy (0.25, 0.24 against 0.07 to 0.16) |
 | M6 | Who holds no buffer | partly, closer | by education met (targeted); by region the order is now right in Italy at its own calibration (correlation 0.83), the spread a fifth of the data's |
-| M7 | The wealth distribution | partly (was not met) | the two-asset reference for France: Gini 0.655 against 0.676, top 10% 0.469 against 0.499, untargeted. Left: Germany and Italy (running); liquid wealth too high, MPC 0.17 and no split by education on the reference |
-| M8 | Transitions for policies and shocks | partly (was not run) | G and G+A in three countries: a zero shock exact, a recession, a temporary benefit along the path, 12 of 12. Left: S on (fails the zero-shock test), places, a permanent reform |
+| M7 | The wealth distribution | partly (was not met) | the two-asset reference in three countries, untargeted: Gini 0.655, 0.658, 0.664 against 0.676, 0.727, 0.640; top 10% 0.47 to 0.48 against 0.50, 0.56, 0.50. Left: the difference between countries (Germany); liquid wealth too high, an MPC of 0.11 to 0.17 and no split by education on the reference |
+| M8 | Transitions for policies and shocks | **met** on one asset without places (was not run) | G and G+A in three countries: a zero shock exact, a recession, a temporary benefit along the path, 12 of 12; S on in France exact as well (Germany and Italy running). Left: places, a permanent reform |
 | **Numerical economists** | | | |
 | N1 | A standard, documented method | met | |
 | N2 | Exact reductions when a switch is off | met | 16 of 16 in three countries on the new base; both new settings off reproduce the old base |
@@ -1172,13 +1172,13 @@ The base is now the regime with the floor, patience by education, the transitory
 | B4 | Welfare split by dimension and by group | computed, not tabulated | later, by the user's ordering |
 | B5 | Accessible | switches only | later |
 | **Use** | | | |
-| U1 | Any order of switches, each calibrated | France and Germany 7 of 8, Italy 6 of 8, running | |
+| U1 | Any order of switches, each calibrated | France and Germany 8 of 8, Italy 6 of 8 | Italy's two with S and places running |
 | U2 | Policy levers with honest bands | partly | multiplier bands; Germany's capped near 2.2 by regional spread; a temporary benefit along a recession as a model check |
 | U3 | A new country added by the checklist | not tried | later. The transitory size and persistence would come from the GRID database, which covers thirteen countries |
 
-Count: 8 met, 12 partly, 2 not, of 22 (7, 11, 4 before the build). The rows that changed class: M2 and N3 to met, N6 met in the third country, M7 and M8 from not to partly.
+Count: 9 met, 11 partly, 2 not, of 22 (7, 11, 4 before the build). The rows that changed class: M2, N3 and M8 to met, N6 met in the third country, M7 from not to partly.
 
-**What the build did not repair, in order of weight for a macroeconomist.** (1) Italy's MPC. (2) The fall in consumption on job loss in Germany and Italy on one asset; the two-asset reference gives 0.07 for France, so this looks like a one-asset limit, to be confirmed when Germany's and Italy's references land. (3) The size of the persistent shock, with a sourced repair on the table. (4) In-work poverty. (5) Transitions with S on.
+**What the build did not repair, in order of weight for a macroeconomist.** (1) Italy's MPC. (2) The fall in consumption on job loss in Germany and Italy on one asset; the two-asset reference gives 0.07 to 0.11 in the three countries, so it is a limit of one asset. (3) The size of the persistent shock, with a sourced repair on the table. (4) In-work poverty. (5) The difference in wealth inequality between countries on the two-asset reference.
 
 **The two-asset reference in the three countries** (`calibrate_two_asset_ref.jl`; Germany run 37566752617, Italy 37566754669, four solves each by Broyden steps; files `calibration_v3fet_{FR,DE,IT}_G_I.txt`). Patience fitted to net wealth over income and the fixed cost to the wealthy hand-to-mouth share; everything else untargeted.
 
