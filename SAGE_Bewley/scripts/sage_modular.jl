@@ -221,6 +221,11 @@ Base.@kwdef struct SAGEConfig
     illiquid::Bool = false
     illiquid_premium::Float64 = 0.0
     chi0::Float64 = 0.05
+    # The reference version for wealth (V3_START.md, sections 28 and 29): the illiquid return paid
+    # into liquid wealth every period (egm2_core.jl), and the gross return on liquid wealth when it
+    # differs from the engine's (NaN: the engine's; the illiquid return stays the engine's plus the premium).
+    k_payout::Bool = false
+    r_liquid::Float64 = NaN
     death::Float64 = 1 / 45
     nk::Int = 24
     k_max::Float64 = 150.0        # 60 held 1% of the mass at the top at beta_bar 0.99 (2026-09-29)
@@ -457,6 +462,8 @@ function _params_of(c::SAGEConfig, cell)
         c.solver === :egm || error("the illiquid asset needs solver = :egm")
         ps = [update(p; illiquid = true, Rk = p.R + c.illiquid_premium, chi0 = c.chi0, death = c.death,
                      nk = c.nk, k_max = c.k_max, k_sub = c.k_sub, k_mid = c.k_mid, a_max = c.b_max, na = c.nb) for p in ps]
+        c.k_payout && (ps = [update(p; k_payout = true) for p in ps])
+        isnan(c.r_liquid) || (ps = [update(p; R = c.r_liquid) for p in ps])
     end
     (c.search_time == 0 && c.belong_u == 1 && c.time_bonus == 0) && return ps
     tf = (c.search_time == 0 && c.time_bonus == 0) ? Float64[] : [(e ? 0.0 : c.search_time) - c.time_bonus for e in emp]
