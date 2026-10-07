@@ -994,3 +994,32 @@ All owned targets met (runs 37529086794 for G+A, 37530240230 for G+S+A; files `c
 - The on/off pass in the new regime: 16 of 16 in France, in Germany and in Italy (runs 37538440810, 37538444721, 37538448491; `onoff_v3.jl floor edu trans CODE`).
 - G+E calibrated in the three countries with the floor fitted there (run 37536039819), in 28, 53 and 91 minutes, well inside the runner's limit. France MPC 0.415, hand-to-mouth 0.224, liquid 0.123; Germany 0.402, 0.222, 0.130; Italy 0.317, 0.178, 0.270. Italy's floor comes out at 0.137 with places against 0.136 without, so in this regime the two rules agree, where on the old base they did not (0.105 against 0.156 in the file's units).
 - Started: G+A+E and G+S+A+E in the three countries (G+S+E by the chain), run 37546002483; Italy's four configurations without places again with the floor of G+E, run 37546005118; accuracy, the private share and the spending tests for France and Germany in the new regime.
+
+**Night of 6 to 7 October: the checks in the new regime, and steps 5 and 6 started.**
+
+| check | France | Germany | Italy |
+|---|---|---|---|
+| on/off pass (`onoff_v3.jl floor edu trans`) | 16 of 16 | 16 of 16 | 16 of 16 (again on the refitted files) |
+| accuracy (`numerics_base.jl CODE v3fet`) | 7 of 7 | 7 of 7 | 7 of 7 |
+| seven properties of the MPC (`test_mpc_economics.jl CODE G v3fet`) | pass | pass | pass |
+
+Germany's one accuracy failure on the old base (participation moving with the top of the asset grid) is gone. The private share of belonging for Germany: the model's regional spread is 0.114 at 0.15 and 0.066 at 0.30 against 0.084 in the data, so about 0.24 and a multiplier of at most about 2.2 (2.3 on the old base). France has no regional volunteering series, so no bound of this kind.
+
+G+A+E calibrated in the three countries (MPC 0.417, 0.401, 0.317), and Italy's four configurations without places refitted at the floor of G+E (0.137; MPC 0.31 to 0.32, every target met). The untargeted readout for G+S+A repeats G's: MPC 0.414, 0.403, 0.319; ten points of benefit rate add 0.05, 0.02, 0.02 of hand-to-mouth households; the fall in consumption on job loss is 0.154, 0.255, 0.243 (France on the INSEE benchmark of 0.15 of section 14; Germany and Italy above the 0.07 to 0.16 of the literature).
+
+**The regional test, Italy, at its own calibration with places** (`test_place_wealth.jl GE base_trans`, run 37560238399): 3 of 3. This test failed on every earlier version (sections 18, 21, 23).
+
+| | North | Centre | South and Islands | South over North | by region (19): correlation, spread |
+|---|---|---|---|---|---|
+| hand-to-mouth, model | 0.167 | 0.179 | 0.194 | 1.16 | 0.83, 0.040 |
+| hand-to-mouth, HFCS | 0.096 | 0.151 | 0.316 | 3.28 | , 0.353 |
+| liquid-asset poverty, model | 0.356 | 0.357 | 0.366 | 1.03 | -0.17, 0.068 |
+| liquid-asset poverty, HFCS | 0.248 | 0.273 | 0.505 | 2.04 | , 0.589 |
+| income poverty, model | 0.134 | 0.166 | 0.253 | 1.89 | 0.91, 0.157 |
+| income poverty, HFCS | 0.058 | 0.096 | 0.291 | 4.98 | , 0.350 |
+
+The order is now right in the three indicators and the regions line up for the hand-to-mouth share and income poverty (correlations 0.83 and 0.91). The spread is far too small: the South has 1.16 times the North's hand-to-mouth share against 3.28. So row M6 moves from "not by region" to "the order, not the size".
+
+**Step 5, the two-asset reference** (`calibrate_two_asset_ref.jl`, runs 37566750589, 37566752617, 37566754669): the base's G with the illiquid asset, the return paid out (`k_payout`), liquid wealth earning nothing in real terms (`r_liquid = 1`, an assumption whose source is still to be fixed), one patience for everyone. Patience fitted to net wealth over income and the fixed cost to the wealthy hand-to-mouth share, by Broyden steps because a solve takes half an hour. Everything else is the test.
+
+**Step 6.** Transitions on the new base (`transition_core.jl`: the period's tax rate on the period's labour income, the job's effort levels held along the path, the floor's tax held at its steady-state amount; `test_transition_base.jl`, runs 37566865142 and 37566867174). E's environmental side as indicators (`e_environment.jl`, run 37566987193): the household footprint per head by education, status and place, the function that existed for version 2, on the base.
