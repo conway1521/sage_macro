@@ -280,6 +280,13 @@ Base.@kwdef struct SAGEConfig
     # The weight on social cohesion in the belonging payoff. NaN: the engine's (0.8758, carried from
     # the 2020 thesis). One is the normalisation: kappa absorbs it in every choice.
     Lambda::Float64 = NaN
+    # A PERMANENT COMPONENT OF INCOME (2026-10-07, V3_START.md section 36): households differ for good
+    # by a factor on their earnings and benefits, lognormal with mean one and standard deviation
+    # perm_sd of the log, at n_perm nodes (binomial nodes and weights). It is what a published income
+    # process leaves out when it is estimated on income net of observables: no risk, only dispersion.
+    # Each node is a type of household solved on its own, pooled like the patience types. Zero: none.
+    perm_sd::Float64 = 0.0
+    n_perm::Int = 3
     # The illiquid grid's dense part: with k_mid > 0, three fifths of the nodes lie on [0, k_mid] and
     # the rest run geometrically to k_max. On the exponential grid (k_mid = 0, every earlier result)
     # the nodes around median net wealth are over two years of income apart at 24 nodes, and liquid
@@ -356,8 +363,30 @@ function cells_of(c::SAGEConfig)
       ρ = pick(c.rho_cell[2], c.rho), η = pick(c.eta_cell[2], c.eta_z), sε = pick(c.sd_eps_cell[2], c.sd_eps)))
 end
 
-"Discount-factor nodes and weights implied by a config."
+"Nodes and weights of the permanent component of income (mean one)."
+function perm_nodes(c::SAGEConfig)
+    (c.perm_sd <= 0 || c.n_perm <= 1) && return ([1.0], [1.0])
+    K = c.n_perm
+    x = [c.perm_sd * sqrt(K - 1) * (2 * (k - 1) / (K - 1) - 1) for k in 1:K]
+    w = [binomial(K - 1, k - 1) / 2.0^(K - 1) for k in 1:K]
+    f = exp.(x); f ./= dot(w, f)
+    (f, w)
+end
+
+"""
+The types of household within a cell and their weights: the discount-factor nodes, each at every
+node of the permanent component of income when there is one (the first list then repeats each
+discount factor once per income node, in the order `params_of` builds them).
+"""
 function betas_of(c::SAGEConfig)
+    b, w = _betas_of(c)
+    f, wf = perm_nodes(c)
+    length(f) == 1 && return (b, w)
+    (repeat(b, inner = length(f)), [w[i] * wf[k] for i in eachindex(b) for k in eachindex(f)])
+end
+
+"Discount-factor nodes and weights implied by a config."
+function _betas_of(c::SAGEConfig)
     # two groups: a patient majority at beta_bar and an impatient minority of
     # share impatient_share at beta_low (the two-asset calibration, 2026-09-29)
     c.impatient_share > 0 && return ([c.beta_low, c.beta_bar], [c.impatient_share, 1 - c.impatient_share])
@@ -410,15 +439,16 @@ function labour_base(c::SAGEConfig)
     c1 = SAGEConfig(c; tax_mode = :lump, tax_base = NaN, sd_eps = 0.0, sd_eps_cell = (0.0, 0.0), lumptax = 0.0, subsidy = 0.0, levy_employed = 0.0,
                     S = false, cfloor = 0.0, floor_tax_given = NaN)
     get!(LABOUR_BASE_CACHE, hash(repr(c1))) do
-        cs = cells_of(c1)
+        cs = cells_of(c1); _, bw = betas_of(c1)
         sum(1:2) do g
-            p = _params_of(c1, cs[g])[1]
-            z, Π = SAGEBewley.income_process(p); π = fill(1 / length(z), length(z))
-            for _ in 1:100_000
-                πn = Π' * π; d = maximum(abs, πn - π); π = πn
-                d < 1e-14 && break
+            sum(enumerate(_params_of(c1, cs[g]))) do (k, p)
+                z, Π = SAGEBewley.income_process(p); π = fill(1 / length(z), length(z))
+                for _ in 1:100_000
+                    πn = Π' * π; d = maximum(abs, πn - π); π = πn
+                    d < 1e-14 && break
+                end
+                cs[g].share * bw[k] * sum(π[st] * p.α[st] * p.effort_set[st] * z[st] * p.Z for st in eachindex(z))
             end
-            cs[g].share * sum(π[st] * p.α[st] * p.effort_set[st] * z[st] * p.Z for st in eachindex(z))
         end
     end
 end
@@ -442,6 +472,9 @@ function _params_of(c::SAGEConfig, cell)
                         partcredit = c.partcredit, β = b + cell.dβ, pcost = c.pcost, nz = c.nz,
                         ρ = cell.ρ, η = cell.η, fL = cell.fL, rrL = c.rr_long) for b in bs]
     isnan(c.Lambda) || (ps = [update(p; Λ = c.Lambda) for p in ps])
+    let (f, _) = perm_nodes(c), K = length(perm_nodes(c)[1])
+        K > 1 && (ps = [update(p; Z = p.Z * f[(j - 1) % K + 1], transfer = p.transfer .* f[(j - 1) % K + 1]) for (j, p) in enumerate(ps)])
+    end
     (!isnan(cell.fL) && c.illiquid) && error("the long-term state is not built for two assets")
     if c.tax_mode === :prop && c.lumptax != 0
         # the same revenue per head, raised in proportion to labour income
@@ -599,7 +632,7 @@ function floor_tax_of(c::SAGEConfig)
     key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.alpha, c0.alpha_off, c0.A, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
-                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda)))
+                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm)))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
     cs = cells_of(c0); _, bw = betas_of(c0)

@@ -164,7 +164,7 @@ const SE_LIQ = V4 ? hfcs_se("liquid_kvw_to_disposable_income_ratio_of_medians") 
 const SE_MPC = V4 ? hfcs_se("mpc_mean") : NaN
 const SE_GAP = V4 ? sqrt(hfcs_se("htm_model_narrow_total", "education", "below tertiary")^2 + hfcs_se("htm_model_narrow_total", "education", "tertiary")^2) : NaN
 const E_REF_C = V3 ? num("e_ref") : NaN
-v3kw() = V3 && !isnan(ETA[]) ? merge((eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
+v3kw() = V3 && !isnan(ETA[]) ? merge(V4 ? (perm_sd = ETA[],) : (eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
                                      isnan(RHO_TRIAL) ? (;) : (rho = RHO_TRIAL,), isnan(SDEPS_TRIAL) ? (;) : (sd_eps = SDEPS_TRIAL,)) : ()
 if FLOORREG
     if CFG == FLOOR_CFG
@@ -285,7 +285,7 @@ timed_scans(args...; kw...) = (t_ = time(); out = scans(args...; kw...); LASTSCA
 function write_cal(phi, spread; kappa = nothing, sigma = nothing)
     open(OUTFILE, "w") do io
         println(io, "# written by calibrate_country.jl $(CODE) $(CFG)", V3 ? ", version 3 (effort set by the job, household replacement rate, liquid-wealth targets from the HFCS)" : "", "; read by country_config")
-        V3 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\neta_z = %.4f\n%s", phi, spread, BB[], ETA[], (FLOORREG ? @sprintf("cfloor = %.6f\n", FL[] * E_REF_C) : "") * (EDUREG ? @sprintf("beta_gap = %.4f\n", BGAP[]) : "")) :
+        V3 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\n%s = %.4f\n%s", phi, spread, BB[], V4 ? "perm_sd" : "eta_z", ETA[], (FLOORREG ? @sprintf("cfloor = %.6f\n", FL[] * E_REF_C) : "") * (EDUREG ? @sprintf("beta_gap = %.4f\n", BGAP[]) : "")) :
              @printf(io, "phi = %.2f\nbeta_spread = %.3f\nbeta_bar = %.4f\n", phi, spread, BB[])
         kappa === nothing || @printf(io, "kappa = %.2f\nsigma_m = %.2f\n", kappa, sigma)
     end
@@ -366,9 +366,10 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
     lo = [log(0.5), 0.84, 0.0, 0.05, flfree ? 0.0 : FL[], gapfree ? 0.0 : x0[6]]
     hi = [log(60.0), 0.975, nospread ? 0.0 : SPREAD_MAX, 0.40, flfree ? 0.30 : FL[], gapfree ? 0.14 : x0[6]]
     H = [0.05, 0.004, 0.01, 0.02, 0.02, 0.01]; np = 6; nm = V4 ? 6 : 5
-    # version 4: the income process is the published one, so its dispersion is not a parameter, and
-    # the floor is free wherever it is fitted, with liquid wealth in the criterion at its standard error
-    V4 && (lo[4] = hi[4] = x0[4])
+    # version 4: the income process is the published one. The fourth parameter is the dispersion of the
+    # permanent component of income (no risk), which S80/S20 identifies; the floor is free wherever
+    # it is fitted, with liquid wealth in the criterion at its standard error
+    V4 && (lo[4] = 0.0; hi[4] = 1.2; H[4] = 0.05)
     # A point where the economy has no solution (a floor that cannot be financed: Italy at 0.35,
     # 2026-10-04) is not an error of the fit: it is a point to step away from.
     function at(x)
@@ -386,8 +387,8 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
     end
     liqtol = Ref(flfree ? 0.03 : LIQ_TOL)          # the floor owns liquid wealth in G
     # the fifth moment, the gap in the hand-to-mouth share between the cells, counts in the education regime only
-    res(o) = V4 ? (r_ = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET, HGAP_TARGET, MPC_DATA]) ./ [E_TOL, SE_LIQ, SE_HTM, 1.0, SE_GAP, SE_MPC];
-                   r_[4] = 0.0; gapfree || (r_[5] = 0.0); r_) :          # version 4: in standard errors; S80/S20 is a test
+    res(o) = V4 ? (r_ = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET, HGAP_TARGET, MPC_DATA]) ./ [E_TOL, SE_LIQ, SE_HTM, 0.05, SE_GAP, SE_MPC];
+                   gapfree || (r_[5] = 0.0); r_) :          # version 4: in standard errors; effort and S80/S20, which have none, to a numerical tolerance
              (r_ = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET, EDUREG ? HGAP_TARGET : 0.0]) ./ [E_TOL, liqtol[], HTM_TOL, S8020_TOL, HGAP_TOL];
               gapfree || (r_[5] = 0.0); r_)
     # Resumable: with places on, one step of the fit takes half an hour on a runner and sixteen
@@ -445,8 +446,8 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
         end
         FLOORREG && @printf("    floor %.4f of reference earnings\n", x[5])
         EDUREG && @printf("    patience gap %.4f | hand-to-mouth, below tertiary less tertiary %.4f (HFCS %.4f), %+.2f bands\n", x[6], o.m[5], HGAP_TARGET, F[5])
-        V4 ? @printf("    fit %2d: phi %.3f, top patience %.4f | effort %.4f, liquid/income %.4f, hand-to-mouth %.4f, MPC %.4f | misses in standard errors: liquid %+.2f, hand-to-mouth %+.2f, by education %+.2f, MPC %+.2f | criterion %.2f | S80/S20 %.2f (test)\n",
-                     it, exp(x[1]), x[2], o.m[1], o.m[2], o.m[3], o.m[6], F[2], F[3], F[5], F[6], sum(abs2, F), o.m[4]) :
+        V4 ? @printf("    fit %2d: phi %.3f, top patience %.4f, permanent sd %.4f | effort %.4f, liquid/income %.4f, hand-to-mouth %.4f, MPC %.4f, S80/S20 %.2f | misses in standard errors: liquid %+.2f, hand-to-mouth %+.2f, by education %+.2f, MPC %+.2f | criterion %.2f\n",
+                     it, exp(x[1]), x[2], x[4], o.m[1], o.m[2], o.m[3], o.m[6], o.m[4], F[2], F[3], F[5], F[6], sum(abs2, F)) :
         @printf("    fit %2d: phi %.3f, top patience %.4f, spread %.4f, eta %.4f | effort %.4f, liquid/income %.4f, hand-to-mouth %.4f, S80/S20 %.2f | misses in bands %+.2f %+.2f %+.2f %+.2f\n",
                 it, exp(x[1]), x[2], x[3], x[4], o.m[1:4]..., F[1:4]...); flush(stdout)
         nstep += 1
@@ -462,8 +463,8 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
         Fr = res(o)
         @printf("  version 4, the criterion at its minimum: %.2f over %d moments and %d free parameters | misses in standard errors: effort (band) %+.2f, liquid wealth %+.2f, hand-to-mouth %+.2f, by education %+.2f, MPC %+.2f\n",
                 sum(abs2, Fr), count(!=(0.0), Fr), count(k -> hi[k] - lo[k] > 1e-12, 1:np), Fr[1], Fr[2], Fr[3], Fr[5], Fr[6])
-        @printf("  version 4, moments: hand-to-mouth %.4f (HFCS %.4f, s.e. %.4f) | liquid wealth over income %.4f (%.4f, %.4f) | MPC %.4f (%.4f, %.4f) | S80/S20 %.2f, a test (official %.2f)\n",
-                o.m[3], HTM_TARGET, SE_HTM, o.m[2], LIQ_TARGET, SE_LIQ, o.m[6], MPC_DATA, SE_MPC, o.m[4], S8020_TARGET)
+        @printf("  version 4, moments: hand-to-mouth %.4f (HFCS %.4f, s.e. %.4f) | liquid wealth over income %.4f (%.4f, %.4f) | MPC %.4f (%.4f, %.4f) | S80/S20 %.2f (official %.2f) with a permanent sd of %.4f\n",
+                o.m[3], HTM_TARGET, SE_HTM, o.m[2], LIQ_TARGET, SE_LIQ, o.m[6], MPC_DATA, SE_MPC, o.m[4], S8020_TARGET, xr[4])
     end
     (phi = exp(xr[1]), bb = xr[2], sp = xr[3], eta = xr[4], fl = xr[5], gap = xr[6], r = o.r, st = o.st)
 end
@@ -477,7 +478,7 @@ if ck1 === nothing && V3
         fb = joinpath(@__DIR__, "calibration_$(VTAG)_$(CODE)_$(replace(CFG, "E" => "")).txt")
         if isfile(fb)
             kv = Dict(strip(first(split(l, "="))) => parse(Float64, last(split(l, "="))) for l in eachline(fb) if occursin("=", l) && !startswith(l, "#"))
-            x0e = [log(kv["phi"]), kv["beta_bar"], kv["beta_spread"], kv["eta_z"],
+            x0e = [log(kv["phi"]), kv["beta_bar"], kv["beta_spread"], kv[V4 ? "perm_sd" : "eta_z"],
                    CFG == FLOOR_CFG ? get(kv, "cfloor", FL[] * E_REF_C) / E_REF_C : FL[], get(kv, "beta_gap", 0.0)]
             say("  starting from ", basename(fb))
         end
@@ -490,7 +491,7 @@ if ck1 === nothing && V3
             kv = Dict(strip(first(split(l, "="))) => parse(Float64, last(split(l, "="))) for l in eachline(fb) if occursin("=", l) && !startswith(l, "#"))
             # at a trial persistence the innovation starts where the variance of log income is the file's
             # (the table's persistence is 0.92 in the three countries)
-            e0 = isnan(RHO_TRIAL) ? kv["eta_z"] : clamp(kv["eta_z"] * sqrt((1 - RHO_TRIAL^2) / (1 - 0.92^2)), 0.06, 0.39)
+            e0 = V4 ? 0.30 : isnan(RHO_TRIAL) ? kv["eta_z"] : clamp(kv["eta_z"] * sqrt((1 - RHO_TRIAL^2) / (1 - 0.92^2)), 0.06, 0.39)          # version 4: where the search for the permanent dispersion starts
             x0e = [log(kv["phi"]), kv["beta_bar"] - ((V4 || !isnan(RHO_TRIAL)) ? 0.0 : 0.02), kv["beta_spread"], e0,
                    CFG == FLOOR_CFG ? get(kv, "cfloor", FL[] * E_REF_C) / E_REF_C : FL[], get(kv, "beta_gap", 0.0)]
             say("  starting from ", basename(fb), isnan(RHO_TRIAL) ? ", patience 0.02 lower" : ", the persistent innovation rescaled to the trial persistence")

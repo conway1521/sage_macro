@@ -130,6 +130,7 @@ consumption equivalent against staying in the steady state, overall and by cell.
 """
 function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80, rr_add::Vector{Float64} = Float64[])
     c.S && error("the transition solver covers S off so far")
+    c.perm_sd > 0 && error("the transition solver is not built for permanent income types yet: its tax and benefit sums read one type")
     c.E && error("the transition solver covers E off so far")
     # the job's effort levels where they are given (the floor, the transitory part, the proportional
     # tax): what a job asks does not move along the path
@@ -266,6 +267,7 @@ number of fixed-point iterations and the final gap.
 """
 function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, maxit::Int = 40, damp::Float64 = 0.5, tol::Float64 = 1e-7)
     c.S || error("transition_s is for S on; use transition")
+    c.perm_sd > 0 && error("the transition solver is not built for permanent income types yet: its tax and benefit sums read one type")
     c.E && error("the transition solver covers E off so far")
     ds = vcat(delta_scale, ones(max(0, T - length(delta_scale))))[1:T]
     r0 = solve_economy(c)
