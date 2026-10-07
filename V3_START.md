@@ -1157,7 +1157,7 @@ The base is now the regime with the floor, patience by education, the transitory
 | M5 | Spending behaviour untargeted | partly, much closer | MPC 0.41 and 0.40 against 0.39 and 0.47 in France and Germany; seven MPC properties in three countries; the benefit rate no longer moves buffers by tens of points. Left: Italy's MPC 0.31 against 0.47 (a limit of one asset there, section 32); the fall in consumption on job loss in Germany and Italy (0.25, 0.24 against 0.07 to 0.16) |
 | M6 | Who holds no buffer | partly, closer | by education met (targeted); by region the order is now right in Italy at its own calibration (correlation 0.83), the spread a fifth of the data's |
 | M7 | The wealth distribution | partly (was not met) | the two-asset reference in three countries, untargeted: Gini 0.655, 0.658, 0.664 against 0.676, 0.727, 0.640; top 10% 0.47 to 0.48 against 0.50, 0.56, 0.50. Left: the difference between countries (Germany); liquid wealth too high, an MPC of 0.11 to 0.17 and no split by education on the reference |
-| M8 | Transitions for policies and shocks | **met** on one asset without places (was not run) | G and G+A in three countries: a zero shock exact, a recession, a temporary benefit along the path, 12 of 12; S on in France exact as well (Germany and Italy running). Left: places, a permanent reform |
+| M8 | Transitions for policies and shocks | **met** on one asset without places (was not run) | G and G+A in three countries: a zero shock exact, a recession, a temporary benefit along the path, 12 of 12; G+S+A exact in the three countries as well. Left: places, a permanent reform |
 | **Numerical economists** | | | |
 | N1 | A standard, documented method | met | |
 | N2 | Exact reductions when a switch is off | met | 16 of 16 in three countries on the new base; both new settings off reproduce the old base |
@@ -1168,7 +1168,7 @@ The base is now the regime with the floor, patience by education, the transitory
 | **Beyond-GDP** | | | |
 | B1 | The dimensions are a recognised framework's | partly (was a decision) | E now carries the household footprint by education, status and place as an indicator. Left: consumption baskets by group, and local environmental exposure (no regional series in the repository) |
 | B2 | Each dimension measured on official data | met | |
-| B3 | Recognised indicators, stable and checked against official figures | partly | in-work poverty is too high in three countries (0.16 to 0.19 against 0.07 to 0.12); the table against official figures is not built |
+| B3 | Recognised indicators, stable and checked against official figures | partly | the table is built (below): 14 of 23 untargeted rows within a quarter of the official figure. Off: in-work poverty in three countries, liquid-asset poverty in France and Germany |
 | B4 | Welfare split by dimension and by group | computed, not tabulated | later, by the user's ordering |
 | B5 | Accessible | switches only | later |
 | **Use** | | | |
@@ -1208,3 +1208,22 @@ So the two versions divide the evidence between them: the one-asset base carries
 - G+S+E calibrated in France and Germany (MPC 0.414 and 0.402, multipliers 1.7 and 1.7 with places): **all eight configurations of the new regime in both countries.** Italy has six; its G+S+A+E was caught in a loop (a resumed job repeated 151 minutes of scans and then had too little budget left for the full-grid stage, three times). The script now keeps a checkpoint at the door of that stage (`pre5b`), and the run was started again (37580113063); G+S+E follows it by the chain.
 - `BASE_REGIME` is now `:floor_edu_trans`.
 - **Transitions with S on pass** (`test_transition_s.jl 40 full FR base`, run 37579944854): a zero shock stays at the steady state (participation to 2e-12, consumption to 3e-11, the first period the steady-state economy). The same recession in France G+S+A: participation falls by 0.5 points at the peak of unemployment and is back within three years; consumption -0.95% at the trough; welfare -0.37% of consumption (-0.39% without S). So row M8 holds with S on and off, one asset, places off.
+
+**Transitions with S on, Germany and Italy** (runs 37585044718, 37585047764): a zero shock exact in both (consumption to 3e-11 and 5e-11). The recession: participation falls by 0.28 points at the peak in Germany and by 0.02 in Italy, where few of the unemployed took part to begin with; welfare -0.21% and -0.32% of consumption, as without S. Row M8 holds in the three countries with S on and off.
+
+**The base's indicators against official figures (row B3)** (`indicator_table.jl GSA FR DE IT`, run 37585133233; G+S+A; Eurostat 2021 and the HFCS 2021):
+
+| | France: model, official | Germany | Italy | |
+|---|---|---|---|---|
+| S80/S20, under 65 | 4.71, 4.72 | 5.07, 5.08 | 6.02, 6.04 | targeted |
+| Gini of disposable income | 0.306, 0.296 | 0.320, 0.304 | 0.347, 0.324 | test, within a quarter |
+| below 50% of median income | 0.112, 0.097 | 0.116, 0.109 | 0.142, 0.145 | test, within a quarter |
+| below 60% of median income | 0.187, 0.156 | 0.198, 0.170 | 0.218, 0.209 | test, within a quarter |
+| in-work poverty (60%) | 0.173, 0.067 | 0.189, 0.086 | 0.193, 0.117 | test, off in the three |
+| liquid-asset poor (three months) | 0.511, 0.335 | 0.506, 0.320 | 0.361, 0.341 | test, off in France and Germany |
+| income and asset poor | 0.095, 0.064 | 0.116, 0.073 | 0.131, 0.107 | test, off in France and Germany |
+| hand-to-mouth | 0.217, 0.222 | 0.225, 0.225 | 0.179, 0.179 | targeted |
+| liquid wealth over income | 0.120, 0.059 | 0.121, 0.140 | 0.263, 0.272 | test (Italy: targeted); off in France |
+| MPC out of a month's income | 0.414, 0.392 | 0.403, 0.468 | 0.318, 0.469 | test; off in Italy |
+
+14 of 23 untargeted rows are within a quarter of the official figure (or 0.02 for a small share). Income poverty at both lines and the Gini pass in the three countries with only S80/S20 fitted. Two things are systematically off. In-work poverty is about twice the official rate: the model's low incomes are low earnings, where in the data many of the poor are not in work, and a statutory minimum wage compresses the bottom of earnings; a lognormal process fitted to S80/S20 cannot do both. And liquid-asset poverty is 0.51 against 0.33 in France and Germany: the model's single asset is liquid wealth on the narrow definition, whose median sits at the three-month line, while the survey's asset-poverty rate counts a broader set of liquid assets; the two rows are not on the same definition and the comparison should be rebuilt on one.
