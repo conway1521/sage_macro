@@ -1118,3 +1118,13 @@ The more persistent process halves the persistent innovation (to 0.14 to 0.19, f
 | Italy | -3.15 | -0.49 | +2.88 | +0.75 | -0.39 | 11.8 |
 
 No column is flat and the owned blocks are well conditioned in the three countries, so every fitted parameter of the base is identified by the moments it owns. In Italy the floor and patience are identified together and not one by one: at given patience a higher floor lowers median liquid wealth a little and raises the hand-to-mouth share (+0.59 bands), and it is the refit of patience that then raises liquid wealth; patience moves liquid wealth by +1.18 bands. The MPC and the fall in consumption on job loss respond to every parameter by less than half a band a step, which is why they are tests and not targets. What is still not identified by any of these moments is the private share of belonging (a band, section 26).
+
+**Convergence in the income grid (row N3, the part that could not be run before)** (`probe_income_grid.jl G FR DE IT`, run 37571355353). With the lump-sum tax a finer income grid had no solution (section 21); under the proportional tax it has. The base at 11, 15 and 21 persistent states, nothing refitted, the job's effort levels interpolated from the eleven-state ones:
+
+| | htm at 11, 15, 21 | MPC | S80/S20 | liquid/income | largest change from 11, in tolerance bands |
+|---|---|---|---|---|---|
+| France | 0.223, 0.223, 0.221 | 0.415, 0.415, 0.416 | 4.72, 4.62, 4.62 | 0.124, 0.123, 0.122 | 0.41 |
+| Germany | 0.226, 0.225, 0.225 | 0.405, 0.404, 0.404 | 5.08, 4.99, 4.94 | 0.128, 0.128, 0.130 | 0.53 |
+| Italy | 0.180, 0.171, 0.162 | 0.309, 0.310, 0.313 | 6.03, 6.01, 5.98 | 0.280, 0.283, 0.283 | 0.88 |
+
+No moment moves by a tolerance band on doubling the income grid. The MPC is unchanged to 0.004. Italy's hand-to-mouth share is the one that moves most (0.018, where the floor meets the lowest incomes), and S80/S20 falls by 0.1 in France and Germany; both would be absorbed by a refit on the finer grid. Eleven states stay.
