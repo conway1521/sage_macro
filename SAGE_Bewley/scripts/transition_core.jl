@@ -114,6 +114,9 @@ consumption equivalent against staying in the steady state, overall and by cell.
 function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80)
     c.S && error("the transition solver covers S off so far")
     c.E && error("the transition solver covers E off so far")
+    # the job's effort levels where they are given (the floor, the transitory part, the proportional
+    # tax): what a job asks does not move along the path
+    c = floor_effort(c)
     ds = vcat(delta_scale, ones(max(0, T - length(delta_scale))))[1:T]
     cs = cells_of(c); bs, bw = betas_of(c)
     cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
@@ -134,7 +137,16 @@ function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80)
     # the levy when levy_employed is set, which is not an insurance outlay (audit 2026-10-02)
     unemp = [SAGEBewley.income_process(base_ps[g][1])[1] .== 0 for g in 1:2]
     uicost(t) = sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2)
-    lump = [c.lumptax + uicost(t) for t in 1:T]
+    # The floor's tax is held at its steady-state amount along the path (2026-10-06): its outlay moves
+    # with the distribution, which is not known before the households are solved; the budget of the
+    # floor is then balanced in the steady state and not period by period. Zero without a floor.
+    lump = [c.lumptax + uicost(t) + floor_tax_of(c) for t in 1:T]
+    # Under a proportional tax the period's total is raised at the period's rate on the period's
+    # labour income per head, which falls when fewer are in work.
+    prop = c.tax_mode === :prop
+    zs = [SAGEBewley.income_process(base_ps[g][1])[1] for g in 1:2]
+    labour(t) = sum(cs[g].share * sum(μ[g][t][s] * base_ps[g][1].α[s] * base_ps[g][1].effort_set[s] * zs[g][s] * base_ps[g][1].Z for s in eachindex(μ[g][t])) for g in 1:2)
+    rate = prop ? [lump[t] / labour(t) for t in 1:T] : zeros(T)
     # households
     out = [(cons = zeros(T), effE = zeros(T), mE = zeros(T), assets = zeros(T), htm = zeros(T), consU = zeros(T), mU = zeros(T),
             mass = zeros(T), W1 = 0.0, Wss = 0.0, Vcss = 0.0) for _ in 1:2]
@@ -143,7 +155,8 @@ function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80)
         p0 = update(p0; social_strength = 0.0)
         ss = solve_participation_logit(p0, 1.0; theta = c.theta, full = true)
         a = ss.a
-        ps = [update(p0; lumptax = lump[t], Π_override = Πpath[g][t]) for t in 1:T]
+        ps = prop ? [update(p0; subsidy = c.subsidy - rate[t], Π_override = Πpath[g][t]) for t in 1:T] :
+                    [update(p0; lumptax = lump[t], Π_override = Πpath[g][t]) for t in 1:T]
         pols = Vector{Any}(undef, T)
         V, Va = ss.V, ss.Va
         for t in T:-1:1
@@ -172,7 +185,7 @@ function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80)
     (unemployment = mU ./ mass, cons = nat(:cons) ./ mass, effort_employed = nat(:effE) ./ mE,
      assets = nat(:assets) ./ mass, htm = nat(:htm) ./ mass,
      cons_unemployed_rel = (nat(:consU) ./ mU) ./ ((nat(:cons) .- nat(:consU)) ./ mE),
-     lumptax = lump, delta_scale = ds,
+     lumptax = lump, taxrate = rate, delta_scale = ds,
      welfare = ce(sum(cs[g].share * (welf[g, 1] - welf[g, 2]) for g in 1:2), sum(cs[g].share * welf[g, 3] for g in 1:2)),
      welfare_cell = Tuple(ce(welf[g, 1] - welf[g, 2], welf[g, 3]) for g in 1:2))
 end
