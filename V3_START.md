@@ -1142,3 +1142,40 @@ No moment moves by a tolerance band on doubling the income grid. The MPC is unch
 The frontier is steep at the top: the last fifth of the floor carries most of Italy's liquid wealth (0.175 to 0.283) and costs 0.07 of MPC. Giving Italy the liquid-wealth band of France and Germany (0.09) would put it near the second row: an MPC of about 0.37, liquid wealth at the edge of the band, and a larger fall in consumption on job loss. No level of the floor reaches the survey's 0.47. So the recommendation of section 30 stands: keep liquid wealth as Italy's target and state its MPC of 0.31 as a limit of the one-asset base for a country whose households hold much liquid wealth and report spending much of a windfall.
 
 **Transitions with S on do not pass on the base** (`test_transition_s.jl 40 full FR base`, run 37569143613): participation stays at the steady state under a zero shock (2e-12) but consumption and assets drift (0.02 and 0.11) and the welfare of the zero path is not zero, so the backward step does not return the steady state of a household with a belonging payoff in this regime. The recession it printed is void. S off is exact (above). The cause is not found yet; the version 2 zero-shock test is running again as a check on whether the repairs of tonight changed it.
+
+## 33. The scorecard on the new base (2026-10-07, morning)
+
+The base is now the regime with the floor, patience by education, the transitory part and the proportional tax (files `calibration_v3fet_*`). Calibrated at the time of writing: France and Germany in seven of eight configurations (G+S+E running), Italy in six (G+S+A+E and G+S+E running). The table of section 27, row by row:
+
+| | criterion | state on the new base | what moved, and what is left |
+|---|---|---|---|
+| **Macroeconomists** | | | |
+| M1 | Stationary equilibrium, budget balanced, closure stated | met | the proportional tax raises the benefit bill to 1e-13, with places too |
+| M2 | Standard building blocks | **met** (was partly) | CRRA, persistent and transitory income risk, unemployment, a proportional tax |
+| M3 | Every parameter from a source or identified; identification shown | partly, closer | identification table on the base, no flat column, in three countries. Left: the private share of belonging (a band); the persistent shock larger than its source (a more persistent process answers it, the user's decision, section 32); the liquid return of the two-asset reference (an assumption) |
+| M4 | Every configuration hits its own targets in every country | partly: 20 of 24 | the last four are running; every finished one meets every owned target |
+| M5 | Spending behaviour untargeted | partly, much closer | MPC 0.41 and 0.40 against 0.39 and 0.47 in France and Germany; seven MPC properties in three countries; the benefit rate no longer moves buffers by tens of points. Left: Italy's MPC 0.31 against 0.47 (a limit of one asset there, section 32); the fall in consumption on job loss in Germany and Italy (0.25, 0.24 against 0.07 to 0.16) |
+| M6 | Who holds no buffer | partly, closer | by education met (targeted); by region the order is now right in Italy at its own calibration (correlation 0.83), the spread a fifth of the data's |
+| M7 | The wealth distribution | partly (was not met) | the two-asset reference for France: Gini 0.655 against 0.676, top 10% 0.469 against 0.499, untargeted. Left: Germany and Italy (running); liquid wealth too high, MPC 0.17 and no split by education on the reference |
+| M8 | Transitions for policies and shocks | partly (was not run) | G and G+A in three countries: a zero shock exact, a recession, a temporary benefit along the path, 12 of 12. Left: S on (fails the zero-shock test), places, a permanent reform |
+| **Numerical economists** | | | |
+| N1 | A standard, documented method | met | |
+| N2 | Exact reductions when a switch is off | met | 16 of 16 in three countries on the new base; both new settings off reproduce the old base |
+| N3 | Accuracy on the base | **met** (was partly) | Euler errors, the asset grid and its top, 7 of 7 in three countries; the income grid, which could not be refined before, converged at 11 states |
+| N4 | An independent solver agrees | on version 2 only | not looked at |
+| N5 | Reproducible | mostly met | |
+| N6 | Equilibria with S counted and stable | **met** in three countries | one stable equilibrium, the solver's |
+| **Beyond-GDP** | | | |
+| B1 | The dimensions are a recognised framework's | partly (was a decision) | E now carries the household footprint by education, status and place as an indicator. Left: consumption baskets by group, and local environmental exposure (no regional series in the repository) |
+| B2 | Each dimension measured on official data | met | |
+| B3 | Recognised indicators, stable and checked against official figures | partly | in-work poverty is too high in three countries (0.16 to 0.19 against 0.07 to 0.12); the table against official figures is not built |
+| B4 | Welfare split by dimension and by group | computed, not tabulated | later, by the user's ordering |
+| B5 | Accessible | switches only | later |
+| **Use** | | | |
+| U1 | Any order of switches, each calibrated | France and Germany 7 of 8, Italy 6 of 8, running | |
+| U2 | Policy levers with honest bands | partly | multiplier bands; Germany's capped near 2.2 by regional spread; a temporary benefit along a recession as a model check |
+| U3 | A new country added by the checklist | not tried | later. The transitory size and persistence would come from the GRID database, which covers thirteen countries |
+
+Count: 8 met, 12 partly, 2 not, of 22 (7, 11, 4 before the build). The rows that changed class: M2 and N3 to met, N6 met in the third country, M7 and M8 from not to partly.
+
+**What the build did not repair, in order of weight for a macroeconomist.** (1) Italy's MPC. (2) The fall in consumption on job loss in Germany and Italy on one asset; the two-asset reference gives 0.07 for France, so this looks like a one-asset limit, to be confirmed when Germany's and Italy's references land. (3) The size of the persistent shock, with a sourced repair on the table. (4) In-work poverty. (5) Transitions with S on.
