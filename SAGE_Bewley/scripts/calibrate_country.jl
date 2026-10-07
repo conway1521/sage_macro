@@ -91,7 +91,12 @@ const TRANS = V3 && get(ENV, "SAGE_TRANS", "0") == "1"
 const VTAG0 = "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "")          # the regime without them, for the starting point
 const V3ARG = TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") :
               FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : V3)
-const VTAG = VTAG0 * (TRANS ? "t" : "")
+# A TRIAL INCOME PROCESS (SAGE_RHO, SAGE_SDEPS with SAGE_TRANS=1): the persistence of the persistent part
+# and the size of the transitory part given here in place of the country table's; files tagged with an
+# r more (V3_START.md, section 31). The fit is as always: the persistent innovation to S80/S20.
+const RHO_TRIAL = TRANS && haskey(ENV, "SAGE_RHO") ? parse(Float64, ENV["SAGE_RHO"]) : NaN
+const SDEPS_TRIAL = TRANS && haskey(ENV, "SAGE_SDEPS") ? parse(Float64, ENV["SAGE_SDEPS"]) : NaN
+const VTAG = VTAG0 * (TRANS ? "t" : "") * ((isnan(RHO_TRIAL) && isnan(SDEPS_TRIAL)) ? "" : "r")
 function hfcs_target(moment; wave = "2021")
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
         startswith(ln, "#") && continue
@@ -137,7 +142,8 @@ end
 const HGAP_TARGET = EDUREG ? hfcs_group("htm_model_narrow_total", "education", "below tertiary") - hfcs_group("htm_model_narrow_total", "education", "tertiary") : NaN
 const HGAP_TOL = 0.03
 const E_REF_C = V3 ? num("e_ref") : NaN
-v3kw() = V3 && !isnan(ETA[]) ? merge((eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;)) : ()
+v3kw() = V3 && !isnan(ETA[]) ? merge((eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
+                                     isnan(RHO_TRIAL) ? (;) : (rho = RHO_TRIAL,), isnan(SDEPS_TRIAL) ? (;) : (sd_eps = SDEPS_TRIAL,)) : ()
 if FLOORREG
     if CFG == FLOOR_CFG
         FL[] = 0.10                 # where the search for the floor starts (a configuration with places starts from the same one without)
@@ -444,9 +450,12 @@ if ck1 === nothing && V3
         fb = joinpath(@__DIR__, "calibration_$(VTAG0)_$(CODE)_$(CFG).txt")
         if isfile(fb)
             kv = Dict(strip(first(split(l, "="))) => parse(Float64, last(split(l, "="))) for l in eachline(fb) if occursin("=", l) && !startswith(l, "#"))
-            x0e = [log(kv["phi"]), kv["beta_bar"] - 0.02, kv["beta_spread"], kv["eta_z"],
+            # at a trial persistence the innovation starts where the variance of log income is the file's
+            # (the table's persistence is 0.92 in the three countries)
+            e0 = isnan(RHO_TRIAL) ? kv["eta_z"] : clamp(kv["eta_z"] * sqrt((1 - RHO_TRIAL^2) / (1 - 0.92^2)), 0.06, 0.39)
+            x0e = [log(kv["phi"]), kv["beta_bar"] - (isnan(RHO_TRIAL) ? 0.02 : 0.0), kv["beta_spread"], e0,
                    CFG == FLOOR_CFG ? get(kv, "cfloor", FL[] * E_REF_C) / E_REF_C : FL[], get(kv, "beta_gap", 0.0)]
-            say("  starting from ", basename(fb), ", patience 0.02 lower")
+            say("  starting from ", basename(fb), isnan(RHO_TRIAL) ? ", patience 0.02 lower" : ", the persistent innovation rescaled to the trial persistence")
         end
     end
     f3 = x0e === nothing ? fit_v3(E_TARGET, HTM_TARGET - GAP) : fit_v3(E_TARGET, HTM_TARGET - GAP; x0 = x0e)
