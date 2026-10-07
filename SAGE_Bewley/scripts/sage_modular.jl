@@ -287,6 +287,11 @@ Base.@kwdef struct SAGEConfig
     # Each node is a type of household solved on its own, pooled like the patience types. Zero: none.
     perm_sd::Float64 = 0.0
     n_perm::Int = 3
+    # The economy in which the job's effort levels are found (floor_effort) taxed in proportion to
+    # labour income, as the economy itself is, when tax_mode is :prop. false: taxed per head, as in
+    # the regime of 2026-10-06, whose files it reproduces. Per head, the lowest income states of a
+    # wide published process cannot pay the tax (Italy, 2026-10-07), and the levels found are erratic.
+    ref_prop::Bool = false
     # The illiquid grid's dense part: with k_mid > 0, three fifths of the nodes lie on [0, k_mid] and
     # the rest run geometrically to k_max. On the exponential grid (k_mid = 0, every earlier result)
     # the nodes around median net wealth are over two years of income apart at 24 nodes, and liquid
@@ -589,7 +594,26 @@ function floor_effort(c::SAGEConfig)
     # The same holds for the transitory part and the proportional tax (2026-10-06): the levels are
     # those of the economy with persistent risk alone and the tax raised per head.
     c1 = SAGEConfig(c; cfloor = 0.0, S = false, f_long = (NaN, NaN), sd_eps = 0.0, sd_eps_cell = (0.0, 0.0), tax_mode = :lump, tax_base = NaN)
-    lv = get!(() -> job_effort_levels(c1), FLOOR_EFFORT_CACHE, hash(repr(c1)))
+    lv = if c.ref_prop && c.tax_mode === :prop
+        # the reference economy pays its benefit bill T at a rate on labour income. The rate needs the
+        # levels (it is T over labour income per head) and the levels the rate, so the pair is found
+        # together: a few rounds, since effort hardly moves with a tax of a few percent. With the
+        # nation's base given (the place layer) the rate is known and one round is enough.
+        get!(FLOOR_EFFORT_CACHE, hash(("prop", repr(c1), c.tax_base))) do
+            T = c1.lumptax + ui_tax_of(c1); τ = isnan(c.tax_base) ? 0.0 : T / c.tax_base; lv_ = nothing
+            for _ in 1:8
+                # job_effort_levels adds the benefit tax to lumptax: taken off here, so nothing is raised per head
+                lv_ = job_effort_levels(SAGEConfig(c1; lumptax = c1.lumptax - T, subsidy = c1.subsidy - τ))
+                isnan(c.tax_base) || break
+                τn = T / labour_base(SAGEConfig(c1; effort_by_cell = lv_))
+                done = abs(τn - τ) < 1e-6; τ = τn
+                done && break
+            end
+            lv_
+        end
+    else
+        get!(() -> job_effort_levels(c1), FLOOR_EFFORT_CACHE, hash(repr(c1)))
+    end
     long && (lv = Tuple(vcat(v, zeros(length(v) ÷ 2)) for v in lv))
     SAGEConfig(c; effort_by_cell = lv)
 end
@@ -632,7 +656,7 @@ function floor_tax_of(c::SAGEConfig)
     key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.alpha, c0.alpha_off, c0.A, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
-                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm)))
+                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.ref_prop)))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
     cs = cells_of(c0); _, bw = betas_of(c0)
@@ -1246,6 +1270,7 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
             d[:sd_eps_cell] = (sqrt(manual_input(code, "var_transitory_low")), sqrt(manual_input(code, "var_transitory_high")))
             d[:qbar] = measured_qbar(code)
             d[:Lambda] = 1.0
+            d[:ref_prop] = true
         end
         cal = joinpath(@__DIR__, "calibration_$(vtag)_$(code)_$(config)" * (illq ? "_I" : "") * ".txt")
         # In the floor regime places differ by the household's income per head (:conversion_hh): what
