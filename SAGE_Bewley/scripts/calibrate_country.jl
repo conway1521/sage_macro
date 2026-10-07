@@ -606,12 +606,24 @@ end
 say("\n2-3. ", CFG, " families and technology scans, ",
     OWN_GAP ? "participation targets $(PART)" :
               @sprintf("overall participation %.4f (the cell gap is not this configuration's target), sigma held at the G+S+A value %.2f", AGG, SIGMA_FIX))
+# READY FOR THE FULL GRID (2026-10-07). A job that reaches stage 5b after the coarse scans, the solve
+# and the corrections may have too little of its budget left for the full-grid scan, and a resumed
+# job repeated all of them before reaching it again (Italy G+S+A+E with places: 151 minutes each
+# time, three jobs, never past this point). The parameters the full grid starts from are kept when
+# stage 5b is reached, and a job that finds them goes straight there.
+const PRE5B = ck_read("pre5b")
+if PRE5B !== nothing
+    phi = PRE5B["phi"]; spread = PRE5B["spread"]; BB[] = PRE5B["bb"]
+    V3 && (ETA[] = PRE5B["eta"]; FL[] = PRE5B["fl"]; BGAP[] = PRE5B["gap"])
+    say("  from checkpoint ", basename(ckfile("pre5b")), ": the coarse scans, the solve and the corrections were done in an earlier job")
+else
 budget_check("the first technology scan")
 S = timed_scans(phi, spread)
 if S[RATIO] === nothing || S[RATIO].best.loss > LOSS_STD
     say("\nNOT CALIBRATED: at the national ratio the best fit is ", S[RATIO] === nothing ? "absent" :
         @sprintf("%.4f, above the %.3f standard", S[RATIO].best.loss, LOSS_STD), ". No calibration file written.")
     mark_not_calibrated(); exit(2)
+end
 end
 
 # ------------------------------------------------------ 4 and 5. solve --
@@ -630,6 +642,7 @@ function solve_at(phi, spread, best; ugrid = UGRID_COARSE)
     flush(stdout)
     r
 end
+if PRE5B === nothing
 say("\n4. the calibrated ", CFG, " economy on its own thresholds")
 best = S[RATIO].best
 r = solve_at(phi, spread, best)
@@ -674,6 +687,8 @@ for correction in 1:2
     end
     best = S[RATIO].best
     r = solve_at(phi, spread, best)
+end
+ck_write("pre5b", Dict("phi" => phi, "spread" => spread, "bb" => BB[], "eta" => V3 ? ETA[] : NaN, "fl" => V3 ? FL[] : NaN, "gap" => V3 ? BGAP[] : NaN))
 end
 say("\n5b. the calibration on the full belonging grid (", length(UGRID_DEFAULT), " scales): technology re-scanned, economy solved and checked")
 budget_check("the full-grid scan"; factor = 2.5)
