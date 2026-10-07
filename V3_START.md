@@ -1023,3 +1023,43 @@ The order is now right in the three indicators and the regions line up for the h
 **Step 5, the two-asset reference** (`calibrate_two_asset_ref.jl`, runs 37566750589, 37566752617, 37566754669): the base's G with the illiquid asset, the return paid out (`k_payout`), liquid wealth earning nothing in real terms (`r_liquid = 1`, an assumption whose source is still to be fixed), one patience for everyone. Patience fitted to net wealth over income and the fixed cost to the wealthy hand-to-mouth share, by Broyden steps because a solve takes half an hour. Everything else is the test.
 
 **Step 6.** Transitions on the new base (`transition_core.jl`: the period's tax rate on the period's labour income, the job's effort levels held along the path, the floor's tax held at its steady-state amount; `test_transition_base.jl`, runs 37566865142 and 37566867174). E's environmental side as indicators (`e_environment.jl`, run 37566987193): the household footprint per head by education, status and place, the function that existed for version 2, on the base.
+
+## 31. The income process against published earnings dynamics, and a more persistent process as an option (2026-10-07)
+
+**The test promised in section 29, run on what the published paper gives.** Guvenen, Pistaferri and Violante (2022, Quantitative Economics 13(4), 1321-1360): the standard deviation of one-year changes in residual log earnings is 0.50 on average across the GRID countries and ranges from 0.38 for Germany to 0.66 for Mexico (p. 1339); the five-year rank-rank slope (the rank at t + 5 on the rank of permanent income at t) is 0.83 in France, 0.76 in Germany and 0.86 in Italy (Table 4, p. 1354). The model's counterparts for a household continuously in work follow from the process (persistent part with persistence rho and stationary variance s2, transitory variance e2): the variance of a one-year change is 2 s2 (1 - rho) + 2 e2, and the rank slope is the Spearman correlation implied by the correlation of a three-year average with the level five years on.
+
+| | model, base | GRID |
+|---|---|---|
+| Germany, standard deviation of one-year changes | 0.377 (0.281 without the transitory part) | 0.38 |
+| France, the same | 0.368 | not in the text of the paper |
+| Italy, the same | 0.393 | not in the text of the paper |
+| five-year rank slope, France, Germany, Italy | 0.59 to 0.61 | 0.83, 0.76, 0.86 |
+
+The transitory part puts Germany's one-year volatility on the published figure, untargeted. The five-year persistence of ranks is too low in the three countries: households move through the income distribution too fast. This is the weakness of section 28 seen from the other side. The table's persistence of 0.92 is Bayer and Juessen's, estimated beside a household fixed effect; the model has no fixed effect, so the persistence it needs is the one of a process without it, which is higher (Krueger, Mitman and Perri 2016 estimate 0.97 for the United States on that basis; from memory, to be checked).
+
+**The option this opens, with no new machinery.** A persistence of about 0.97 and a transitory standard deviation of about 0.24 reproduce both of Germany's GRID figures at the same variance of log income (by hand: one-year standard deviation 0.38, rank slope 0.78 against 0.76). France and Italy need about 0.98 and 0.985 for their rank slopes; their transitory size needs their one-year figure from the GRID database, which the paper's text does not give.
+
+**What it does to the model, at a refitted point** (`probe_transitory_tax.jl CODE 0.178,0.24 fit RHO`, runs 37567304305 and 37567306459; proportional tax; not the full calibration):
+
+| | persistence, transitory sd | top patience, gap | MPC | survey | liquid/income | fall on job loss | htm, benefit rate +10 points |
+|---|---|---|---|---|---|---|---|
+| Germany, base | 0.92, 0.178 | 0.906, 0.062 | 0.400 | 0.468 | 0.117 | 0.247 | +0.020 |
+| Germany | 0.97, 0.178 | 0.923, 0.056 | 0.430 | | 0.082 | 0.272 | +0.049 |
+| Germany | 0.97, 0.24 | 0.910, 0.078 | 0.462 | | 0.094 | 0.254 | +0.036 |
+| France, base | 0.92, 0.178 | 0.893, 0.042 | 0.412 | 0.392 | 0.109 | 0.149 | +0.041 |
+| France | 0.98, 0.178 | 0.920, 0.041 | 0.445 | | 0.077 | 0.154 | +0.061 |
+| France | 0.98, 0.24 | 0.903, 0.056 | 0.471 | | 0.087 | 0.143 | +0.043 |
+
+With the more persistent process Germany's MPC reaches its survey figure (0.46 against 0.47), patience rises by 0.01 to 0.03, and liquid wealth falls a little further below Germany's target. France's MPC goes above its survey figure (0.45 to 0.47 against 0.39) while its liquid wealth moves towards its target (0.08 against 0.06). Italy's run at 0.985 failed (an economy without a solution in the fit); to be rerun at 0.97. Full calibrations of G at these processes are running (`calibrate_trial.jl`, runs 37569204890 to 37569211661) and are evidence for the user's decision, not a change of base: files tagged v3fetr are not read by anything.
+
+**E's environmental side as indicators on the base** (`e_environment.jl GAE`, run 37566987193, 6 of 6): the household footprint per head is the official one nationally (France 6.03 tonnes of CO2 equivalent, Germany 7.94, Italy 6.80; Eurostat env_ac_ghgfp, consumption-based) and differs across groups and places by their consumption.
+
+| | below tertiary | tertiary | employed | out of work | lowest place | highest place |
+|---|---|---|---|---|---|---|
+| France | 5.34 | 7.36 | 6.09 | 5.18 | 4.88 (FRY) | 7.04 (FR1) |
+| Germany | 6.92 | 10.62 | 8.00 | 5.96 | 7.26 (DEE) | 8.59 (DE2) |
+| Italy | 6.29 | 9.21 | 6.96 | 4.75 | 5.60 (ITF6) | 8.49 (ITH1) |
+
+Two things it does not carry: the composition of consumption by group (one intensity per euro for everyone), and exposure to the local environment by place, for which no regional series is in the repository yet.
+
+**Transitions on the base: two faults found by the zero-shock test and repaired** (commit after f222ee9). With the household replacement rate of version 3 the path's tax was computed on the whole transfer, where the steady state taxes for the state-paid part only, so a zero shock drifted (consumption by 0.2 to 1%); and the backward step left dread at zero, so a path with A on did not start from its own steady state. Both predate this build and affected every version 3 transition. The first recession numbers (runs 37566865142, 37566867174) are void; the tests are running again.
