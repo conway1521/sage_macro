@@ -1108,3 +1108,13 @@ The wealth distribution is close without being fitted (row M7 for France). The r
 | Italy, trial | 0.97, 0.24 | 0.185 | 0.937, 0.037 | 0.309 | | 0.270 | | 0.218 |
 
 The more persistent process halves the persistent innovation (to 0.14 to 0.19, from 0.26 to 0.30), which answers the weakness of section 28 without a permanent type, and it is what the published rank persistence asks for. Germany's MPC then reaches its survey figure; France's rises above its own (0.445 against 0.392, inside the band of plus or minus 0.10 that section 10 gave the MPC); Italy's does not move, held by its floor as before. For the user to decide: adopting it means fixing each country's two numbers from the GRID database and recalibrating the 24 configurations, about half a day of runner time.
+
+**Identification on the base (row M3)** (`identification.jl CODE G base`, runs 37570816616, 37570819021, 37570821883): how each moment moves, in tolerance bands, for one step in each fitted parameter (effort scale +10%, top patience +0.005, persistent innovation +0.02, patience gap +0.01, floor +10%).
+
+| | effort scale on effort | top patience on the hand-to-mouth share | innovation on S80/S20 | patience gap on the difference by education | floor on liquid wealth | condition number of the owned block |
+|---|---|---|---|---|---|---|
+| France | -2.92 | -0.77 | +2.24 | +1.34 | no floor | 8.1 |
+| Germany | -2.83 | -0.82 | +2.42 | +0.96 | no floor | 11.0 |
+| Italy | -3.15 | -0.49 | +2.88 | +0.75 | -0.39 | 11.8 |
+
+No column is flat and the owned blocks are well conditioned in the three countries, so every fitted parameter of the base is identified by the moments it owns. In Italy the floor and patience are identified together and not one by one: at given patience a higher floor lowers median liquid wealth a little and raises the hand-to-mouth share (+0.59 bands), and it is the refit of patience that then raises liquid wealth; patience moves liquid wealth by +1.18 bands. The MPC and the fall in consumption on job loss respond to every parameter by less than half a band a step, which is why they are tests and not targets. What is still not identified by any of these moments is the private share of belonging (a band, section 26).
