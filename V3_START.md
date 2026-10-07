@@ -1063,3 +1063,48 @@ With the more persistent process Germany's MPC reaches its survey figure (0.46 a
 Two things it does not carry: the composition of consumption by group (one intensity per euro for everyone), and exposure to the local environment by place, for which no regional series is in the repository yet.
 
 **Transitions on the base: two faults found by the zero-shock test and repaired** (commit after f222ee9). With the household replacement rate of version 3 the path's tax was computed on the whole transfer, where the steady state taxes for the state-paid part only, so a zero shock drifted (consumption by 0.2 to 1%); and the backward step left dread at zero, so a path with A on did not start from its own steady state. Both predate this build and affected every version 3 transition. The first recession numbers (runs 37566865142, 37566867174) are void; the tests are running again.
+
+## 32. Transitions on the base, the two-asset reference for France, and the trial processes at the full calibration (2026-10-07, early morning)
+
+**Transitions (row M8), G+A, the three countries: 12 of 12** (`test_transition_base.jl GA FR DE IT`, run 37570221531). Three faults were found by the zero-shock test and repaired on the way: the path's tax was on the whole household transfer where the steady state taxes for the state-paid part; the backward step left dread at zero; and it had no means-tested floor. With them repaired a zero shock stays at the steady state to 1e-10 in the three countries, Italy with its floor included, and the path's first period is the steady-state economy.
+
+A recession (job-loss rates 50% higher for two years), and the same recession with the benefit rate ten points higher in its first three years, paid by the period's tax (`rr_add`, a temporary policy along the path):
+
+| | unemployment at its peak | consumption at its trough | tax rate at its peak | welfare of living through it | with the higher benefit | below tertiary, tertiary, with the benefit |
+|---|---|---|---|---|---|---|
+| France | +2.9 points | -0.95% | +1.74 points | -0.39% of consumption | -0.25% | -0.21%, -0.32% (from -0.45%, -0.28%) |
+| Germany | +1.3 | -0.43% | +0.52 | -0.21% | -0.07% | -0.07%, -0.08% (from -0.26%, -0.10%) |
+| Italy | +2.4 | -0.73% | +0.88 | -0.33% | -0.18% | -0.17%, -0.24% (from -0.36%, -0.20%) |
+
+The temporary benefit takes a third to two thirds off the welfare cost of the recession, all of it for the less educated; graduates in France and Italy lose a little, because they pay more of the tax than they receive. Consumption returns to within 0.1% of the steady state by year 40 in every case. Covered: S off, E off, one asset, a shock to job-loss rates and a temporary benefit rate. Not covered: a permanent reform (the path would end in another steady state), places, and S on (France running, run 37569143613).
+
+**The two-asset reference, France** (`calibrate_two_asset_ref.jl FR 0.962 0.06`, run 37566750589; file `calibration_v3fet_FR_G_I.txt`, saved from the run log). Calibrated at its starting point: patience 0.962, fixed cost 0.06 of mean annual income.
+
+| | model | HFCS 2021 | |
+|---|---|---|---|
+| net wealth over income, median | 4.66 | 4.78 | targeted |
+| wealthy hand-to-mouth | 0.191 | 0.184 | targeted |
+| poor hand-to-mouth | 0.048 | 0.038 | untargeted |
+| liquid wealth over income, median | 0.170 | 0.059 | untargeted |
+| net wealth Gini | 0.655 | 0.676 | untargeted |
+| top 10% share of net wealth | 0.469 | 0.499 | untargeted |
+| MPC | 0.170 (0.41 poor hand-to-mouth, 0.31 wealthy) | 0.392 (survey) | untargeted |
+| fall in consumption on job loss | 0.069 | 0.15 (INSEE), 0.07 to 0.16 (literature) | untargeted |
+| hand-to-mouth, below tertiary and tertiary | 0.237, 0.243 | 0.256, 0.151 | untargeted |
+| net wealth over income, the same | 4.70, 4.59 | 4.45, 5.44 | untargeted |
+
+The wealth distribution is close without being fitted (row M7 for France). The reference also gives the small fall in consumption on job loss that the one-asset base cannot: households with illiquid wealth behind them absorb a job loss. Its limits are the three stated in section 29: liquid wealth too high, an MPC of 0.17, no difference by education. Germany and Italy are still running.
+
+**The trial processes at the full calibration of G** (`calibrate_trial.jl`, runs 37569204890 to 37569211661): every owned target met in each.
+
+| | persistence, transitory sd | persistent innovation | top patience, gap | MPC | survey | liquid/income | HFCS | fall on job loss |
+|---|---|---|---|---|---|---|---|---|
+| Germany, base | 0.92, 0.178 | 0.275 | 0.904, 0.064 | 0.405 | 0.468 | 0.128 | 0.140 | 0.251 |
+| Germany, trial | 0.97, 0.24 | 0.166 | 0.917, 0.085 | 0.453 | | 0.111 | | 0.248 |
+| France, base | 0.92, 0.178 | 0.263 | 0.889, 0.043 | 0.415 | 0.392 | 0.124 | 0.059 | 0.152 |
+| France, trial | 0.98, 0.178 | 0.136 | 0.918, 0.041 | 0.445 | | 0.088 | | 0.153 |
+| France, trial | 0.97, 0.24 | 0.158 | 0.892, 0.054 | 0.476 | | 0.100 | | 0.147 |
+| Italy, base | 0.92, 0.178 | 0.295 | 0.920, 0.051 | 0.313 | 0.469 | 0.273 | 0.272 | 0.238 |
+| Italy, trial | 0.97, 0.24 | 0.185 | 0.937, 0.037 | 0.309 | | 0.270 | | 0.218 |
+
+The more persistent process halves the persistent innovation (to 0.14 to 0.19, from 0.26 to 0.30), which answers the weakness of section 28 without a permanent type, and it is what the published rank persistence asks for. Germany's MPC then reaches its survey figure; France's rises above its own (0.445 against 0.392, inside the band of 0.10 the calibration plan gave the MPC, section 9); Italy's does not move, held by its floor as before. For the user to decide: adopting it means fixing each country's two numbers from the GRID database and recalibrating the 24 configurations, about half a day of runner time.
