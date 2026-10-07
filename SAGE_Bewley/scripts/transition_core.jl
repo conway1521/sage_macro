@@ -290,7 +290,8 @@ function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, 
     prop = c.tax_mode === :prop
     zs = [SAGEBewley.income_process(base_ps[g][1])[1] for g in 1:2]
     labour(t) = sum(cs[g].share * sum(μ[g][t][s] * base_ps[g][1].α[s] * base_ps[g][1].effort_set[s] * zs[g][s] * base_ps[g][1].Z for s in eachindex(μ[g][t])) for g in 1:2)
-    rate = prop ? [lump[t] / labour(t) for t in 1:T] : nothing
+    # (named taxr: `rate` below is participation, and overwrote this until 2026-10-07, so the path was taxed at the participation rate)
+    taxr = prop ? [lump[t] / labour(t) for t in 1:T] : nothing
     argss = c.omega + (1 - c.omega) * r0.rate
     nw = [node_weights(c, cs[g].B, argss) for g in 1:2]
     nw = [w ./ sum(w) for w in nw]
@@ -302,7 +303,7 @@ function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, 
     for iter in 1:maxit
         it = iter; rel_used = rel
         outs = pmap(x -> (jb = x[1]; p = update(base_ps[jb[1]][jb[2]]; social_strength = c.ugrid[jb[3]], solver = :egm);
-                          node_path(p, x[2], rel, lump, Πpath[jb[1]], c.theta; rate = rate, sub0 = c.subsidy)), zip(jobs, sss))
+                          node_path(p, x[2], rel, lump, Πpath[jb[1]], c.theta; rate = taxr, sub0 = c.subsidy)), zip(jobs, sss))
         # participation by cell and date, the rule imposed per node and date
         rate = zeros(T)
         for (n, (g, k, j)) in enumerate(jobs)
@@ -342,7 +343,7 @@ function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, 
     (participation = participation, fabric = rel_used .* argss, converged = gap < tol, unemployment = agg[:, 11] ./ mass, cons = agg[:, 5] ./ mass,
      effort_employed = agg[:, 6] ./ agg[:, 7], assets = agg[:, 8] ./ mass, htm = agg[:, 9] ./ mass,
      cons_unemployed_rel = (agg[:, 10] ./ agg[:, 11]) ./ ((agg[:, 5] .- agg[:, 10]) ./ agg[:, 7]),
-     lumptax = lump, taxrate = (rate === nothing ? zeros(T) : rate), delta_scale = ds, iterations = it, gap = gap, steady_state_rate = r0.rate,
+     lumptax = lump, taxrate = (taxr === nothing ? zeros(T) : taxr), delta_scale = ds, iterations = it, gap = gap, steady_state_rate = r0.rate,
      steady_state = (cons = r0.consumption, htm = r0.hand_to_mouth_kvw, tax = cT.lumptax),
      welfare = x > 0 ? x^(1 / (1 - γ)) - 1 : NaN)
 end
