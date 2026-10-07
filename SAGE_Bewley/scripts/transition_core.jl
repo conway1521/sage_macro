@@ -33,6 +33,17 @@ function egm_step(p::SAGEParams, a, V, Va; theta::Float64)
     tfl = [floor_at(p, s) for s in 1:nz]
     bel = [p.social_strength * p.Λ * p.B[s] * p.qbar * belong_at(p, s) for s in 1:nz]
     D = zeros(na, nz); Dp = zeros(na, nz)
+    # dread at each next-asset node and its derivative, as in solve_participation_egm (left at zero
+    # here until 2026-10-07, so a path with A on did not start from its own steady state)
+    if p.dread > 0 && !isempty(p.dread_q)
+        for s in 1:nz, k in 1:na
+            D[k, s] = dread_at(p, s, a[k])
+            q = p.dread_q[s]
+            xh = p.R * a[k] + p.dread_hi[s]; xl = p.R * a[k] + p.dread_lo[s]
+            uh = xh > 1e-4 ? xh^(-p.γ) : 0.0; ul = xl > 1e-4 ? xl^(-p.γ) : 0.0
+            Dp[k, s] = p.Γ * p.dread * q * p.R * (uh - ul)
+        end
+    end
     con_c = (fill(NaN, na, nz), fill(NaN, na, nz)); con_e = (zeros(na, nz), zeros(na, nz))
     for s in 1:nz, d in (0, 1), i in 1:na
         c, e = egm_constrained(p, p.R * a[i] - a[1] + oth[s][d+1], wv[s], tfl[s], d; efix = isempty(p.effort_set) ? NaN : p.effort_set[s])
@@ -136,7 +147,12 @@ function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80)
     # benefits paid, over the UNEMPLOYED states only: the employed states carry minus
     # the levy when levy_employed is set, which is not an insurance outlay (audit 2026-10-02)
     unemp = [SAGEBewley.income_process(base_ps[g][1])[1] .== 0 for g in 1:2]
-    uicost(t) = sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2)
+    # Only the state-paid part of what a household's income falls to is a public outlay (version 3:
+    # rr is the household's rate, rr_public the state's part; the rest is a partner's earnings).
+    # Until 2026-10-07 the whole transfer was taxed for along the path, so with rr_public set the
+    # path's tax was above the steady state's and a zero shock did not stay put.
+    pub = isnan(c.rr_public) ? 1.0 : c.rr_public / c.rr
+    uicost(t) = pub * sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2)
     # The floor's tax is held at its steady-state amount along the path (2026-10-06): its outlay moves
     # with the distribution, which is not known before the households are solved; the budget of the
     # floor is then balanced in the steady state and not period by period. Zero without a floor.
@@ -257,7 +273,8 @@ function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, 
         μ[g] = [v]; for t in 1:T; push!(μ[g], vec(μ[g][end]' * Πpath[g][t])); end
     end
     unemp = [SAGEBewley.income_process(base_ps[g][1])[1] .== 0 for g in 1:2]      # benefits only, as in `transition`
-    lump = [c.lumptax + floor_tax_of(c) + sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2) for t in 1:T]
+    pub = isnan(c.rr_public) ? 1.0 : c.rr_public / c.rr          # the state's part of the replacement rate, as in `transition`
+    lump = [c.lumptax + floor_tax_of(c) + pub * sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2) for t in 1:T]
     # the proportional tax and the floor's tax, as in `transition`
     prop = c.tax_mode === :prop
     zs = [SAGEBewley.income_process(base_ps[g][1])[1] for g in 1:2]
