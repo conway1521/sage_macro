@@ -203,18 +203,20 @@ end
 # steady state exactly.
 
 "One node's path: backward with its scale path, forward from its steady state; per-date sums."
-function node_path(p0::SAGEParams, ss, rel, lump, Πpath, theta)
+function node_path(p0::SAGEParams, ss, rel, lump, Πpath, theta; rate = nothing, sub0 = 0.0)
     T = length(rel); a = ss.a
     pols = Vector{Any}(undef, T); V, Va = ss.V, ss.Va
+    # the period's tax: an amount per head, or (rate given) a rate on labour income
+    taxed(p, t) = rate === nothing ? update(p; lumptax = lump[t]) : update(p; subsidy = sub0 - rate[t])
     for t in T:-1:1
-        pt = update(p0; social_strength = p0.social_strength * rel[t], lumptax = lump[t], Π_override = Πpath[t])
+        pt = update(taxed(p0, t); social_strength = p0.social_strength * rel[t], Π_override = Πpath[t])
         pol = egm_step(pt, a, V, Va; theta = theta); pols[t] = pol; V, Va = pol.V, pol.Va
     end
     λ = ss.lambda
     out = zeros(T, 12)   # partE massE partU massU cons effE mE assets htm consU mU  V1(first row only)
     for t in 1:T
         pol = pols[t]; z = pol.z; nz = length(z)
-        pt = update(p0; lumptax = lump[t])
+        pt = taxed(p0, t)
         st = period_stats(pt, a, λ, pol)
         pE = 0.0; mEs = 0.0; pU = 0.0; mUs = 0.0
         @inbounds for s in 1:nz, i in 1:length(a)
@@ -240,6 +242,7 @@ function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, 
     c.E && error("the transition solver covers E off so far")
     ds = vcat(delta_scale, ones(max(0, T - length(delta_scale))))[1:T]
     r0 = solve_economy(c)
+    c = floor_effort(c)          # the job's effort levels where they are given, as in `transition`
     cs = cells_of(c); bs, bw = betas_of(c)
     cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
     base_ps = [params_of(cT, cs[g]) for g in 1:2]
@@ -254,7 +257,12 @@ function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, 
         μ[g] = [v]; for t in 1:T; push!(μ[g], vec(μ[g][end]' * Πpath[g][t])); end
     end
     unemp = [SAGEBewley.income_process(base_ps[g][1])[1] .== 0 for g in 1:2]      # benefits only, as in `transition`
-    lump = [c.lumptax + sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2) for t in 1:T]
+    lump = [c.lumptax + floor_tax_of(c) + sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2) for t in 1:T]
+    # the proportional tax and the floor's tax, as in `transition`
+    prop = c.tax_mode === :prop
+    zs = [SAGEBewley.income_process(base_ps[g][1])[1] for g in 1:2]
+    labour(t) = sum(cs[g].share * sum(μ[g][t][s] * base_ps[g][1].α[s] * base_ps[g][1].effort_set[s] * zs[g][s] * base_ps[g][1].Z for s in eachindex(μ[g][t])) for g in 1:2)
+    rate = prop ? [lump[t] / labour(t) for t in 1:T] : nothing
     argss = c.omega + (1 - c.omega) * r0.rate
     nw = [node_weights(c, cs[g].B, argss) for g in 1:2]
     nw = [w ./ sum(w) for w in nw]
@@ -266,7 +274,7 @@ function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, 
     for iter in 1:maxit
         it = iter; rel_used = rel
         outs = pmap(x -> (jb = x[1]; p = update(base_ps[jb[1]][jb[2]]; social_strength = c.ugrid[jb[3]], solver = :egm);
-                          node_path(p, x[2], rel, lump, Πpath[jb[1]], c.theta)), zip(jobs, sss))
+                          node_path(p, x[2], rel, lump, Πpath[jb[1]], c.theta; rate = rate, sub0 = c.subsidy)), zip(jobs, sss))
         # participation by cell and date, the rule imposed per node and date
         rate = zeros(T)
         for (n, (g, k, j)) in enumerate(jobs)
