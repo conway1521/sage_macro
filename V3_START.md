@@ -1128,3 +1128,17 @@ No column is flat and the owned blocks are well conditioned in the three countri
 | Italy | 0.180, 0.171, 0.162 | 0.309, 0.310, 0.313 | 6.03, 6.01, 5.98 | 0.280, 0.283, 0.283 | 0.88 |
 
 No moment moves by a tolerance band on doubling the income grid. The MPC is unchanged to 0.004. Italy's hand-to-mouth share is the one that moves most (0.018, where the floor meets the lowest incomes), and S80/S20 falls by 0.1 in France and Germany; both would be absorbed by a refit on the finer grid. Eleven states stay.
+
+**Italy's choice on one asset, as a frontier** (`probe_floor_frontier.jl IT G`, run 37572097240): for each level of the floor, patience refitted to the hand-to-mouth share (0.179 in every row), everything else at the calibration.
+
+| floor, share of the base's | patience | liquid wealth over income (target 0.272) | MPC (survey 0.469) | fall in consumption on job loss |
+|---|---|---|---|---|
+| 1.0 | 0.924 | 0.283 | 0.307 | 0.235 |
+| 0.8 | 0.897 | 0.175 | 0.378 | 0.283 |
+| 0.6 | 0.891 | 0.159 | 0.388 | 0.297 |
+| 0.4 | 0.883 | 0.140 | 0.406 | 0.309 |
+| 0 | 0.881 | 0.136 | 0.410 | 0.312 |
+
+The frontier is steep at the top: the last fifth of the floor carries most of Italy's liquid wealth (0.175 to 0.283) and costs 0.07 of MPC. Giving Italy the liquid-wealth band of France and Germany (0.09) would put it near the second row: an MPC of about 0.37, liquid wealth at the edge of the band, and a larger fall in consumption on job loss. No level of the floor reaches the survey's 0.47. So the recommendation of section 30 stands: keep liquid wealth as Italy's target and state its MPC of 0.31 as a limit of the one-asset base for a country whose households hold much liquid wealth and report spending much of a windfall.
+
+**Transitions with S on do not pass on the base** (`test_transition_s.jl 40 full FR base`, run 37569143613): participation stays at the steady state under a zero shock (2e-12) but consumption and assets drift (0.02 and 0.11) and the welfare of the zero path is not zero, so the backward step does not return the steady state of a household with a belonging payoff in this regime. The recession it printed is void. S off is exact (above). The cause is not found yet; the version 2 zero-shock test is running again as a check on whether the repairs of tonight changed it.
