@@ -1277,3 +1277,58 @@ Two readings. The two environmental sides do not coincide: the footprint is near
 **The income process from the field.** Bayer and Juessen's Table 1 gives the whole process for Germany: persistence 0.919, variance of the persistent innovation 0.0102, of the transitory term 0.0316, of the household fixed effect 0.0280. The model takes the first and the third, overrides the second by a factor of seven in variance to reach S80/S20, and has no fixed effect. The version consistent with the source: all four as published, the fixed effect entering as a permanent type of household, and the dispersion that S80/S20 still asks for (more than one earner, hours, what the two education groups do not carry) carried by the permanent type and fitted to S80/S20, not by risk. Households then face the risk the source measures.
 
 **The MPC as a target (the user: "let's target the MPC, let's do it properly").** The moment: the mean self-reported MPC out of a windfall of one month's income, HFCS 2021 (France 0.392, Germany 0.468, Italy 0.469; published for the 2017 wave by Drescher, Fessler and Lindner 2020, to be checked), which the model's statistic is already defined to match. The parameter: a spread of patience within a group, the device of Krusell and Smith (1998) and of Carroll, Slacalek, Tokuoka and White (2017), which the engine has and the base sets to zero. Feasibility is being probed before anything is built (`probe_spread_frontier.jl`, runs 37675865482, 37675869051, 37675872960): whether the spread reaches the survey figure with the hand-to-mouth share held, in each country, and what it does to liquid wealth. Two things the target will not settle and that are to be reported beside it: in the survey the MPC is nearly flat across liquid wealth (France 0.35 in the lowest fifth to 0.48 in the highest, Germany 0.50 to 0.44, Italy 0.53 to 0.40) where the model's falls steeply; and the three countries' liquid wealth on the narrow definition (0.059, 0.140, 0.272 of income) differs by where savings are kept, since on the broad definition it is 0.380, 0.442, 0.316.
+
+## 35. The citations checked, the income process in the literature, and what targeting the MPC takes (2026-10-07, evening)
+
+**The base is complete**: Italy G+S+E calibrated (run 37658556400; hand-to-mouth 0.178, liquid wealth 0.271 against 0.272, MPC 0.316), so all 24 configurations of `calibration_v3fet_*` are in. It is the base of record until the rule-compliant one below replaces it; no release tag yet.
+
+**Citations read in the source** (two separate passes on 2026-10-07; every number below was read in the paper's text, the version named; extracts kept outside the repository).
+
+| item | what the model says | what the source says | verdict |
+|---|---|---|---|
+| risk aversion 2 | Havranek (2015) | Havranek's preferred elasticity of intertemporal substitution is 1/3 (risk aversion 3); 0.5 is the uncorrected mean he attributes to reporting bias (working-paper version, Table 3 and conclusion) | not supported by the citation |
+| | | McKay, Nakamura and Steinsson (2016, AER 106(10)): "We set the coefficient of risk aversion to 2" (NBER WP 20882, p. 16, table p. 15) | supported by this source |
+| effort curvature 2 (Frisch 1/2) | Chetty et al. (2011) | Table 1: micro Frisch 0.54 on the intensive margin; they recommend 0.5 intensive, 0.25 extensive (authors' manuscript). McKay, Nakamura and Steinsson set 1/2 as well | supported |
+| return 1.02 | Holston, Laubach and Williams (2017) | euro-area natural rate 2.1 in 2007, -0.3 in 2016, 0.6 to 0.7 in 2019 to 2022: two percent is a pre-2008 level | not supported for the model's years |
+| | | Kaplan, Moll and Violante (2018, AER 108(3)), p. 722: "We set the steady-state real return on liquid assets at 2 percent per annum"; McKay, Nakamura and Steinsson: a 2% annual interest rate | supported by these, as the literature's value, not as a measured euro-area rate |
+| death 1/45 | Kaplan, Moll and Violante (2018) | p. 722 and Table 6: quarterly death rate 1/180, "average lifespan of a household is 45 years" | supported |
+| hand-to-mouth rule and shares | Kaplan, Violante and Weidner (2014) | half a pay period of income, pay every two weeks (pp. 88 to 90, 101); HFCS liquid assets: cash, sight accounts, mutual funds, shares, bonds; certificates of deposit and saving bonds illiquid (pp. 94 to 96); Table 5: poor 0.032, 0.074, 0.083, wealthy 0.173, 0.248, 0.155 | supported; saving accounts are not named either way |
+| survey MPC | Drescher, Fessler and Lindner (2020) | Table 2, HFCS 2017: France 41.8, Germany 51.3, Italy 48.1; the question is on a lottery win of one month's income, spent "over the next 12 months" | supported |
+| patience by education | Lawrance (1991), Cagetti (2003) | Lawrance: time preference 12% to 19% across income, race and education (abstract only). Cagetti: not opened; second-hand 0.948 and 0.989 by education | partly; Cagetti not verified |
+| spread of patience | Carroll, Slacalek, Tokuoka and White (2017) | seven types, uniform; annual MPC 0.42 to 0.44 when matched to liquid assets, 0.21 to 0.23 when matched to net worth (Table 3, p. 23) | supported |
+| floor | Hubbard, Skinner and Zeldes (1995) | a floor of 7,000 dollars of 1984 | supported |
+| asset poverty | Balestra and Tonkin (2018) | three months of the 50% poverty line, over individuals (p. 56, Table 6.1) | supported |
+| Bayer and Juessen (2012), Table 1 | | the discussion-paper numbers confirmed exactly; the published letter could not be opened | not yet verified in the published version |
+
+So risk aversion, the effort curvature and the two percent return keep their values and change their citation, to McKay, Nakamura and Steinsson (2016) and Kaplan, Moll and Violante (2018), whose published tables are still to be checked against the working papers read. The return is then "the literature's value" and is the same in the three countries because it is the currency union's.
+
+**The income process in the literature.** No seminal paper gives France, Germany and Italy a process on one method. The seminal ones are for the United States: Krueger, Mitman and Perri (2016): persistence 0.9695, persistent innovation variance 0.0384, transitory 0.0522, household earnings after tax, no fixed effect (confirmed in NBER WP 22319); Kaplan, Moll and Violante (2018): two jump-drift components fitted to US earnings changes, no annual persistence printed. The 2010 Review of Economic Dynamics issue has Germany and Italy with a unit root and prints no usable table; France is not in it. Bayer and Juessen (2012) cover Germany, the United Kingdom and the United States, on wages, with a fixed effect.
+
+The one published source with the three countries on one method is Ampudia, Cooper, Le Blanc and Zhu (2024, AEJ: Macroeconomics 16(3), "MPC heterogeneity and the dynamic response of consumption to monetary policy"; read as BIS WP 1102, Table 16, p. 48): household after-tax non-asset income including transfers, ECHP 1994 to 2001, an AR(1) plus a transitory shock with no fixed effect, by education.
+
+| | persistence: no college, college | persistent innovation variance | transitory variance |
+|---|---|---|---|
+| Germany | 0.895, 0.937 | 0.022, 0.020 | 0.016, 0.011 |
+| France | 0.971, 0.941 | 0.031, 0.023 | 0.006, 0.018 |
+| Italy | 0.944, 0.921 | 0.072, 0.029 | 0.020, 0.022 |
+
+It is the model's own income concept (household, after tax and transfers), its own structure (persistent plus transitory, no fixed effect) and its own two groups. The same paper estimates discount factors of about 0.79 for the less educated and 0.85 to 0.90 for graduates in these countries, close to the base's fitted 0.83 to 0.87 and 0.89 to 0.92, and takes its difference by education from Cooper and Zhu (2015). Costs: the ECHP has eight waves; it is not a seminal paper; and the two working-paper versions label the two variance columns in opposite order (the text settles it: the persistent variance is the larger, lower for graduates), so the published table has to be read before it is cited. GRID's published Table 2 (p. 1341) gives the standard deviation of one-year earnings changes as France 0.45, Germany 0.38, Italy 0.45, for the untargeted test.
+
+With this process the persistent innovation is no longer fitted, and S80/S20 becomes a test.
+
+**What targeting the MPC takes on one asset.** Two probes on the base's G (`probe_spread_frontier.jl`, runs 37675865482 to 37675872960; `probe_mpc_target.jl`, runs 37684513986 to 37684521398).
+
+A spread of patience within a group, the device I proposed, does not move the MPC when the hand-to-mouth share is held: France 0.414 at no spread to 0.393 at 0.12, Germany 0.404 to 0.392, Italy 0.307 to 0.303. The patient end rises to keep the share, and the mean MPC falls a little. So on one asset the MPC and the hand-to-mouth share are one decision, patience, and they cannot both be targets with nothing else free.
+
+Patience fitted to the survey MPC in place of the hand-to-mouth share:
+
+| | patience | MPC | hand-to-mouth, model and HFCS | liquid wealth over income, model and HFCS | fall on job loss |
+|---|---|---|---|---|---|
+| France | 0.898 (from 0.889) | 0.392 | 0.196, 0.222 | 0.142, 0.059 | 0.145 |
+| Germany | 0.881 (from 0.904) | 0.468 | 0.300, 0.225 | 0.087, 0.140 | 0.278 |
+| Italy, floor kept | 0.867 (from 0.924) | 0.469 | 0.319, 0.179 | 0.093, 0.272 | 0.306 |
+| Italy, no floor | 0.858 | 0.469 | 0.243, 0.179 | 0.091, 0.272 | 0.336 |
+
+The literature's own benchmark is in the same place: a model with a spread of patience matched to liquid assets gives an annual MPC of 0.42 to 0.44, and matched to net worth 0.21 to 0.23 (Carroll et al. 2017, Table 3). The base's 0.41 and 0.40 for France and Germany are what the field gets from matching liquid wealth; Italy's 0.31 comes with liquid wealth two to four times theirs.
+
+**The choice this leaves, for the user.** (A) The MPC is the target and the hand-to-mouth share and liquid wealth are reported (the table above). (B) The wealth side is the target and the MPC is reported (the base). (C) All of them enter one criterion weighted by their sampling variances, the simulated method of moments of the paper above (its equation 10: a diagonal weighting matrix of inverse variances), which also replaces the hand-set tolerance bands of the audit's item 10; each country then lands between (A) and (B) where its standard errors put it.
