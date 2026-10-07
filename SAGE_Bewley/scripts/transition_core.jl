@@ -128,13 +128,16 @@ of the employed, assets, poor hand-to-mouth, consumption of the unemployed
 relative to the employed, the lump-sum tax) and the welfare of the path as a
 consumption equivalent against staying in the steady state, overall and by cell.
 """
-function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80)
+function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80, rr_add::Vector{Float64} = Float64[])
     c.S && error("the transition solver covers S off so far")
     c.E && error("the transition solver covers E off so far")
     # the job's effort levels where they are given (the floor, the transitory part, the proportional
     # tax): what a job asks does not move along the path
     c = floor_effort(c)
     ds = vcat(delta_scale, ones(max(0, T - length(delta_scale))))[1:T]
+    # A TEMPORARY POLICY along the path (2026-10-07): `rr_add[t]` is added to the benefit rate in period
+    # t (zero after its end), paid by the state and covered by the period's tax like the rest.
+    ra = vcat(rr_add, zeros(max(0, T - length(rr_add))))[1:T]
     cs = cells_of(c); bs, bw = betas_of(c)
     cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
     # the unemployment path and the UI cost per period, cell by cell, exactly
@@ -157,8 +160,10 @@ function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80)
     # rr is the household's rate, rr_public the state's part; the rest is a partner's earnings).
     # Until 2026-10-07 the whole transfer was taxed for along the path, so with rr_public set the
     # path's tax was above the steady state's and a zero shock did not stay put.
-    pub = isnan(c.rr_public) ? 1.0 : c.rr_public / c.rr
-    uicost(t) = pub * sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2)
+    pub(t) = ((isnan(c.rr_public) ? c.rr : c.rr_public) + ra[t]) / c.rr
+    uicost(t) = pub(t) * sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2)
+    # the period's transfers: the benefit at the period's rate in the unemployed states
+    trs(p, g, t) = ra[t] == 0 ? p.transfer : [unemp[g][s] ? p.transfer[s] * (c.rr + ra[t]) / c.rr : p.transfer[s] for s in eachindex(p.transfer)]
     # The floor's tax is held at its steady-state amount along the path (2026-10-06): its outlay moves
     # with the distribution, which is not known before the households are solved; the budget of the
     # floor is then balanced in the steady state and not period by period. Zero without a floor.
@@ -177,8 +182,8 @@ function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80)
         p0 = update(p0; social_strength = 0.0)
         ss = solve_participation_logit(p0, 1.0; theta = c.theta, full = true)
         a = ss.a
-        ps = prop ? [update(p0; subsidy = c.subsidy - rate[t], Π_override = Πpath[g][t]) for t in 1:T] :
-                    [update(p0; lumptax = lump[t], Π_override = Πpath[g][t]) for t in 1:T]
+        ps = prop ? [update(p0; subsidy = c.subsidy - rate[t], Π_override = Πpath[g][t], transfer = trs(p0, g, t)) for t in 1:T] :
+                    [update(p0; lumptax = lump[t], Π_override = Πpath[g][t], transfer = trs(p0, g, t)) for t in 1:T]
         pols = Vector{Any}(undef, T)
         V, Va = ss.V, ss.Va
         for t in T:-1:1

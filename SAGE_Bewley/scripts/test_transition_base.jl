@@ -41,6 +41,14 @@ for code in codes
                 100 * x.welfare, 100 * x.welfare_cell[1], 100 * x.welfare_cell[2])
         check("$code recession: unemployment rises, consumption falls, welfare falls, and the path returns (consumption within 0.1% by year 40)",
               maximum(x.unemployment .- z.unemployment) > 0.005 && minimum(x.cons ./ z.cons) < 1 && x.welfare < 0 && abs(x.cons[40] / z.cons[40] - 1) < 1e-3)
+        # 3. the same recession with the benefit rate ten points higher for its first three years, paid by the period's tax
+        y = transition(c; delta_scale = [1.5, 1.5], T = 60, rr_add = [0.10, 0.10, 0.10])
+        @printf("   3. the recession with benefits ten points higher in years 1 to 3: consumption in years 1, 2, 3: %+.2f%%, %+.2f%%, %+.2f%% | tax rate in year 2 %+.4f%% | cU/cE in year 2 %.3f\n",
+                100 * (y.cons[1] / z.cons[1] - 1), 100 * (y.cons[2] / z.cons[2] - 1), 100 * (y.cons[3] / z.cons[3] - 1), 100 * (y.taxrate[2] - z.taxrate[2]), y.cons_unemployed_rel[2])
+        @printf("      welfare of living through it: %+.3f%% of consumption (below tertiary %+.3f%%, tertiary %+.3f%%), against %+.3f%% without the policy\n",
+                100 * y.welfare, 100 * y.welfare_cell[1], 100 * y.welfare_cell[2], 100 * x.welfare)
+        check("$code policy: the unemployed consume relatively more in year 2 with the higher benefit, and the path returns",
+              y.cons_unemployed_rel[2] > x.cons_unemployed_rel[2] && abs(y.cons[40] / z.cons[40] - 1) < 1e-3)
     catch err
         println("   ", first(replace(sprint(showerror, err), "\n" => " "), 400)); check("$code $cfg: runs", false)
     end
