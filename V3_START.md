@@ -1155,7 +1155,7 @@ The base is now the regime with the floor, patience by education, the transitory
 | M3 | Every parameter from a source or identified; identification shown | partly, closer | identification table on the base, no flat column, in three countries. Left: the private share of belonging (a band); the persistent shock larger than its source (a more persistent process answers it, the user's decision, section 32); the liquid return of the two-asset reference (an assumption) |
 | M4 | Every configuration hits its own targets in every country | partly: 22 of 24 | France and Germany eight of eight; Italy six, its two with S and places running; every finished one meets every owned target |
 | M5 | Spending behaviour untargeted | partly, much closer | MPC 0.41 and 0.40 against 0.39 and 0.47 in France and Germany; seven MPC properties in three countries; the benefit rate no longer moves buffers by tens of points. Left: Italy's MPC 0.31 against 0.47 (a limit of one asset there, section 32); the fall in consumption on job loss in Germany and Italy (0.25, 0.24 against 0.07 to 0.16) |
-| M6 | Who holds no buffer | partly, closer | by education met (targeted); by region the order is now right in Italy at its own calibration (correlation 0.83), the spread a fifth of the data's |
+| M6 | Who holds no buffer | partly, closer | by education met (targeted); by region the order is now right in Italy at its own calibration (correlation 0.83), the spread a fifth of the data's; by type of place in France the order is the wrong way round (rural highest in the model, cities in the HFCS) |
 | M7 | The wealth distribution | partly (was not met) | the two-asset reference in three countries, untargeted: Gini 0.655, 0.658, 0.664 against 0.676, 0.727, 0.640; top 10% 0.47 to 0.48 against 0.50, 0.56, 0.50. Left: the difference between countries (Germany); liquid wealth too high, an MPC of 0.11 to 0.17 and no split by education on the reference |
 | M8 | Transitions for policies and shocks | **met** on one asset without places (was not run) | G and G+A in three countries: a zero shock exact, a recession, a temporary benefit along the path, 12 of 12; G+S+A exact in the three countries as well. Left: places, a permanent reform |
 | **Numerical economists** | | | |
@@ -1166,7 +1166,7 @@ The base is now the regime with the floor, patience by education, the transitory
 | N5 | Reproducible | mostly met | |
 | N6 | Equilibria with S counted and stable | **met** in three countries | one stable equilibrium, the solver's |
 | **Beyond-GDP** | | | |
-| B1 | The dimensions are a recognised framework's | partly (was a decision) | E now carries the household footprint by education, status and place as an indicator. Left: consumption baskets by group, and local environmental exposure (no regional series in the repository) |
+| B1 | The dimensions are a recognised framework's | partly (was a decision) | E now carries the household footprint by education, status and place, and official exposure to pollution by type of place, as indicators. Left: consumption baskets by group; exposure by region; neither enters behaviour |
 | B2 | Each dimension measured on official data | met | |
 | B3 | Recognised indicators, stable and checked against official figures | partly | the table is built (below): 14 of 23 untargeted rows within a quarter of the official figure. Off: in-work poverty in three countries, liquid-asset poverty in France and Germany |
 | B4 | Welfare split by dimension and by group | computed, not tabulated | later, by the user's ordering |
@@ -1231,3 +1231,13 @@ So the two versions divide the evidence between them: the one-asset base carries
 **Regression on the final code (2026-10-07, 09:15 UTC).** After the night's changes to the engine, the place layer, the calibration script and the transition solver: the old base's on/off pass is 16 of 16 in France, Germany and Italy (runs 37595447954, 37595451696, 37595454882); the engine test is 12 of 12 (37595458150); the version 2 transition tests are exact again with S off and on (37595408774, 37595404822: drift 1e-9; the run of 04:52 had failed on the variable-name error, which broke version 2 too while it lasted). So nothing that worked before the build is broken by it.
 
 **Italy's last two configurations.** G+S+A+E reached the door of the full-grid stage at 08:47 with the new checkpoint and handed over; the job now running (37596094530) starts at that stage. G+S+E follows by the chain. Their files are to be fetched from the artifacts, read and committed by hand; a release tag for the base waits for them.
+
+**E's environmental side by type of place** (`e_environment.jl GAE`, second part, run 37599561026, 9 of 9). I had written in section 31 that no series on exposure was in the repository; that was wrong for the degree-of-urbanisation typology, where `data/place/place_by_degurba.csv` has the share of people reporting pollution, grime or other environmental problems where they live (Eurostat ilc_mddw05, 2023). The place layer on that typology at the base's parameters (calibrated on regions, nothing refitted; the national hand-to-mouth share stays at 0.220, 0.221, 0.178):
+
+| | footprint, t CO2e per head: cities, towns, rural | exposure to pollution, %: cities, towns, rural | hand-to-mouth, model | hand-to-mouth, HFCS |
+|---|---|---|---|---|
+| France | 6.12, 5.93, 6.02 | 24.1, 14.5, 8.6 | 0.207, 0.212, 0.243 | 0.244, 0.217, 0.154 |
+| Germany | 7.76, 8.05, 8.10 | 22.3, 14.7, 8.5 | 0.195, 0.232, 0.252 | not in the targets file |
+| Italy | 6.97, 6.73, 6.66 | 14.2, 8.6, 4.7 | 0.171, 0.181, 0.183 | not in the targets file |
+
+Two readings. The two environmental sides do not coincide: the footprint is nearly the same in the three types of place, since it follows consumption, while exposure is nearly three times higher in cities than in the countryside in the three countries. And an untargeted test the place layer fails: in France the HFCS has the most hand-to-mouth households in cities and the fewest in rural areas, and the model has the reverse, because its rural places have lower incomes and less safe jobs and nothing in it makes city households hold less liquid wealth (housing costs, younger households). Exposure is an indicator here and enters no decision; whether it should enter welfare is a question for the Beyond-GDP side.
