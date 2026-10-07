@@ -342,6 +342,7 @@ function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, 
     (participation = participation, fabric = rel_used .* argss, converged = gap < tol, unemployment = agg[:, 11] ./ mass, cons = agg[:, 5] ./ mass,
      effort_employed = agg[:, 6] ./ agg[:, 7], assets = agg[:, 8] ./ mass, htm = agg[:, 9] ./ mass,
      cons_unemployed_rel = (agg[:, 10] ./ agg[:, 11]) ./ ((agg[:, 5] .- agg[:, 10]) ./ agg[:, 7]),
-     lumptax = lump, delta_scale = ds, iterations = it, gap = gap, steady_state_rate = r0.rate,
+     lumptax = lump, taxrate = (rate === nothing ? zeros(T) : rate), delta_scale = ds, iterations = it, gap = gap, steady_state_rate = r0.rate,
+     steady_state = (cons = r0.consumption, htm = r0.hand_to_mouth_kvw, tax = cT.lumptax),
      welfare = x > 0 ? x^(1 / (1 - γ)) - 1 : NaN)
 end

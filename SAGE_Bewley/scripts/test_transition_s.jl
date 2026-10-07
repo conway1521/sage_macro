@@ -18,6 +18,8 @@ t = @elapsed z = transition_s(c; delta_scale = Float64[], T = T)
 dev(v) = maximum(abs.(v .- v[1]))
 @printf("1. zero shock (%.1f min, %d iterations, gap %.1e): participation %.8f against the families' %.8f; drift participation %.1e, consumption %.1e, assets %.1e; welfare %.1e\n",
         t / 60, z.iterations, z.gap, z.participation[1], z.steady_state_rate, dev(z.participation), dev(z.cons), dev(z.assets), z.welfare)
+@printf("   first period against the steady-state economy: consumption %.6f vs %.6f, hand-to-mouth %.6f vs %.6f | tax: amount per head %.6f vs %.6f, rate %.6f | consumption by year %s\n",
+        z.cons[1], z.steady_state.cons, z.htm[1], z.steady_state.htm, z.lumptax[1], z.steady_state.tax, z.taxrate[1], join([@sprintf("%.5f", v) for v in z.cons[1:min(T, 6)]], " "))
 flush(stdout)
 if length(ARGS) < 2 || ARGS[2] != "zero"
     t = @elapsed x = transition_s(c; delta_scale = [1.5, 1.5], T = T)
