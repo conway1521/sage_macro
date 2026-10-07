@@ -1213,8 +1213,13 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
     SAGEConfig(; d...)
 end
 
-"The base (decided 2026-10-05): version 3 with the means-tested floor and patience by education, files calibration_v3fe_*."
-const BASE_REGIME = :floor_edu
+"""
+The base (2026-10-07): version 3 with the means-tested floor, patience by education, the transitory
+income shock and the proportional tax, files calibration_v3fet_* (V3_START.md, sections 29 to 33).
+France and Germany in the eight configurations; Italy in six, its two with S and places still to
+come. The base of 2026-10-05 is the same without the last two, `:floor_edu`, files calibration_v3fe_*.
+"""
+const BASE_REGIME = :floor_edu_trans
 "`country_config` in the base regime."
 base_config(code::AbstractString; kwargs...) = country_config(code; v3 = BASE_REGIME, kwargs...)
 
