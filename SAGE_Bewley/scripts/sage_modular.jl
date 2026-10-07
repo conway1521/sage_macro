@@ -270,6 +270,16 @@ Base.@kwdef struct SAGEConfig
     # the job's effort levels (NaN: this economy's own). Needs effort_mode = :job.
     tax_mode::Symbol = :lump
     tax_base::Float64 = NaN
+    # THE INCOME PROCESS BY EDUCATION CELL (2026-10-07, V3_START.md sections 34 and 35): the persistence
+    # of the persistent part, the standard deviation of its innovation and of the transitory part, for
+    # the lower and the higher education cell, as published estimates give them. NaN: the common
+    # `rho`, `eta_z` and `sd_eps` above, as in every earlier result.
+    rho_cell::NTuple{2,Float64} = (NaN, NaN)
+    eta_cell::NTuple{2,Float64} = (NaN, NaN)
+    sd_eps_cell::NTuple{2,Float64} = (NaN, NaN)
+    # The weight on social cohesion in the belonging payoff. NaN: the engine's (0.8758, carried from
+    # the 2020 thesis). One is the normalisation: kappa absorbs it in every choice.
+    Lambda::Float64 = NaN
     # The illiquid grid's dense part: with k_mid > 0, three fifths of the nodes lie on [0, k_mid] and
     # the rest run geometrically to k_max. On the exponential grid (k_mid = 0, every earlier result)
     # the nodes around median net wealth are over two years of income apart at 24 nodes, and liquid
@@ -339,8 +349,11 @@ end
 "The effective cell parameters implied by a config: alpha and B per cell."
 function cells_of(c::SAGEConfig)
     αs = c.A ? c.alpha : (c.alpha_off, c.alpha_off)
-    ((α = αs[1], B = c.B[1], share = c.share[1], δ = c.unemployment ? c.delta[1] : 0.0, τ = c.commute[1], eset = c.effort_by_cell[1], fL = c.f_long[1], dβ = c.beta_cell[1]),
-     (α = αs[2], B = c.B[2], share = c.share[2], δ = c.unemployment ? c.delta[2] : 0.0, τ = c.commute[2], eset = c.effort_by_cell[2], fL = c.f_long[2], dβ = c.beta_cell[2]))
+    pick(v, common) = isnan(v) ? common : v          # the cell's own income process where it is given
+    ((α = αs[1], B = c.B[1], share = c.share[1], δ = c.unemployment ? c.delta[1] : 0.0, τ = c.commute[1], eset = c.effort_by_cell[1], fL = c.f_long[1], dβ = c.beta_cell[1],
+      ρ = pick(c.rho_cell[1], c.rho), η = pick(c.eta_cell[1], c.eta_z), sε = pick(c.sd_eps_cell[1], c.sd_eps)),
+     (α = αs[2], B = c.B[2], share = c.share[2], δ = c.unemployment ? c.delta[2] : 0.0, τ = c.commute[2], eset = c.effort_by_cell[2], fL = c.f_long[2], dβ = c.beta_cell[2],
+      ρ = pick(c.rho_cell[2], c.rho), η = pick(c.eta_cell[2], c.eta_z), sε = pick(c.sd_eps_cell[2], c.sd_eps)))
 end
 
 "Discount-factor nodes and weights implied by a config."
@@ -394,7 +407,7 @@ the proportional tax. From the stationary distribution of the states, so it need
 function labour_base(c::SAGEConfig)
     (c.effort_mode === :job && !isempty(c.effort_by_cell[1])) ||
         error("a proportional tax needs the job's effort levels given (effort_mode = :job, and floor_effort(c) first)")
-    c1 = SAGEConfig(c; tax_mode = :lump, tax_base = NaN, sd_eps = 0.0, lumptax = 0.0, subsidy = 0.0, levy_employed = 0.0,
+    c1 = SAGEConfig(c; tax_mode = :lump, tax_base = NaN, sd_eps = 0.0, sd_eps_cell = (0.0, 0.0), lumptax = 0.0, subsidy = 0.0, levy_employed = 0.0,
                     S = false, cfloor = 0.0, floor_tax_given = NaN)
     get!(LABOUR_BASE_CACHE, hash(repr(c1))) do
         cs = cells_of(c1)
@@ -413,21 +426,22 @@ end
 "Parameter sets for one cell, one per discount type."
 function params_of(c::SAGEConfig, cell)
     ps = _params_of(c, cell)
-    c.sd_eps > 0 ? [expand_transitory(p, c.sd_eps, c.n_eps) for p in ps] : ps
+    cell.sε > 0 ? [expand_transitory(p, cell.sε, c.n_eps) for p in ps] : ps
 end
 
 function _params_of(c::SAGEConfig, cell)
     # With a transitory part or a proportional tax the job's effort levels are those of the economy
     # without either (floor_effort): what a job asks does not move with the year's draw or with how
     # the benefit bill is raised. Found by the model here, effort would follow the draw.
-    (c.sd_eps > 0 || c.tax_mode === :prop) && c.effort_mode === :job && isempty(cell.eset) &&
+    (cell.sε > 0 || c.tax_mode === :prop) && c.effort_mode === :job && isempty(cell.eset) &&
         error("with a transitory part or a proportional tax the job's effort levels are given: floor_effort(c) first")
     c.tax_mode in (:lump, :prop) || error("tax_mode is :lump or :prop")
     bs, _ = betas_of(c)
     ps = [cell_params_u(cell.α; δ = cell.δ, f = c.f_find, rr = c.rr, na = c.na, ne = c.ne,
                         a_max = c.a_max, pexp = c.pexp, subsidy = c.subsidy, lumptax = c.lumptax,
                         partcredit = c.partcredit, β = b + cell.dβ, pcost = c.pcost, nz = c.nz,
-                        ρ = c.rho, η = c.eta_z, fL = cell.fL, rrL = c.rr_long) for b in bs]
+                        ρ = cell.ρ, η = cell.η, fL = cell.fL, rrL = c.rr_long) for b in bs]
+    isnan(c.Lambda) || (ps = [update(p; Λ = c.Lambda) for p in ps])
     (!isnan(cell.fL) && c.illiquid) && error("the long-term state is not built for two assets")
     if c.tax_mode === :prop && c.lumptax != 0
         # the same revenue per head, raised in proportion to labour income
@@ -534,14 +548,14 @@ floor on, the levels have no solution in version 3: in the lowest income states
 every household is on the floor, where an extra euro earned is taken back.
 """
 function floor_effort(c::SAGEConfig)
-    (c.effort_mode === :job && isempty(c.effort_by_cell[1]) && (c.cfloor > 0 || c.sd_eps > 0 || c.tax_mode === :prop)) || return c
+    (c.effort_mode === :job && isempty(c.effort_by_cell[1]) && (c.cfloor > 0 || any(x -> x.sε > 0, cells_of(c)) || c.tax_mode === :prop)) || return c
     # With the long-term state the economy without the floor has no solution (those households have no
     # income of their own), so the levels are those of the economy without the floor and without that
     # state, and zero in its block.
     long = !isnan(c.f_long[1])
     # The same holds for the transitory part and the proportional tax (2026-10-06): the levels are
     # those of the economy with persistent risk alone and the tax raised per head.
-    c1 = SAGEConfig(c; cfloor = 0.0, S = false, f_long = (NaN, NaN), sd_eps = 0.0, tax_mode = :lump, tax_base = NaN)
+    c1 = SAGEConfig(c; cfloor = 0.0, S = false, f_long = (NaN, NaN), sd_eps = 0.0, sd_eps_cell = (0.0, 0.0), tax_mode = :lump, tax_base = NaN)
     lv = get!(() -> job_effort_levels(c1), FLOOR_EFFORT_CACHE, hash(repr(c1)))
     long && (lv = Tuple(vcat(v, zeros(length(v) ÷ 2)) for v in lv))
     SAGEConfig(c; effort_by_cell = lv)
@@ -585,7 +599,7 @@ function floor_tax_of(c::SAGEConfig)
     key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.alpha, c0.alpha_off, c0.A, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
-                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth)))
+                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda)))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
     cs = cells_of(c0); _, bw = betas_of(c0)
@@ -1108,6 +1122,15 @@ function country_rows(file = COUNTRY_FILE)
          end for l in lines[2:end])
 end
 
+"The time participation takes, as a share of the employed's committed time: the country's own diary measure for formal volunteering, the activity the participation targets count (data/timeuse/qbar_from_data.csv, definition A)."
+function measured_qbar(code)
+    for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "timeuse", "qbar_from_data.csv"))
+        f = split(ln, r",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)")          # commas inside quoted fields are not separators
+        length(f) >= 6 && f[1] == "qbar_A_AC41" && f[2] == code && f[5] == "2010" && return parse(Float64, f[6])
+    end
+    error("no measured time cost of participation for $code")
+end
+
 "A value of data/manual_inputs.csv."
 function manual_input(code, field)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "manual_inputs.csv"))
@@ -1172,11 +1195,24 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
         # part (its size from data/manual_inputs.csv, field sd_eps) and the proportional tax
         # (V3_START.md, section 29); files with a t added to the tag, calibration_v3fet_* for the base.
         vs = v3 === true ? "" : string(v3)
-        vs in ("", "floor", "edu", "floor_edu", "trans", "floor_trans", "edu_trans", "floor_edu_trans") || error("unknown version 3 regime $v3")
-        vfl = occursin("floor", vs); ved = occursin("edu", vs); vtr = occursin("trans", vs)
-        vtag = "v3" * (vfl ? "f" : "") * (ved ? "e" : "") * (vtr ? "t" : "")
+        vs in ("", "floor", "edu", "floor_edu", "trans", "floor_trans", "edu_trans", "floor_edu_trans", "v4") || error("unknown version 3 regime $v3")
+        v4 = vs == "v4"
+        vfl = v4 || occursin("floor", vs); ved = v4 || occursin("edu", vs); vtr = v4 || occursin("trans", vs)
+        vtag = v4 ? "v4" : "v3" * (vfl ? "f" : "") * (ved ? "e" : "") * (vtr ? "t" : "")
         if vtr
             d[:sd_eps] = manual_input(code, "sd_eps"); d[:tax_mode] = :prop
+        end
+        # v3 = :v4 (2026-10-07; V3_START.md, sections 34 to 36): the floor, patience by education, the
+        # transitory part and the proportional tax, with every parameter under the rule of section 34.
+        # The income process by education cell as published (Ampudia, Cooper, Le Blanc and Zhu 2024,
+        # Table 16; data/manual_inputs.csv), nothing of it fitted; the time cost of participation the
+        # country's own measured one; the weight on social cohesion normalised to one. Files calibration_v4_*.
+        if v4
+            d[:rho_cell] = (manual_input(code, "rho_low"), manual_input(code, "rho_high"))
+            d[:eta_cell] = (sqrt(manual_input(code, "var_persistent_low")), sqrt(manual_input(code, "var_persistent_high")))
+            d[:sd_eps_cell] = (sqrt(manual_input(code, "var_transitory_low")), sqrt(manual_input(code, "var_transitory_high")))
+            d[:qbar] = measured_qbar(code)
+            d[:Lambda] = 1.0
         end
         cal = joinpath(@__DIR__, "calibration_$(vtag)_$(code)_$(config)" * (illq ? "_I" : "") * ".txt")
         # In the floor regime places differ by the household's income per head (:conversion_hh): what

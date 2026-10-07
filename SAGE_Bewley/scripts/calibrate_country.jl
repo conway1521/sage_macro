@@ -66,7 +66,16 @@ const A_ON = occursin('A', CFG)
 # so step 1 is a best fit (damped least squares) and the misses are reported.
 # The MPC is not targeted; it is printed against the survey's self-reported MPC.
 # Writes calibration_v3_<code>_<cfg>.txt. Version 2 is untouched when the flag is off.
-const V3 = get(ENV, "SAGE_V3", "0") == "1"
+# VERSION 4 (SAGE_V4=1; V3_START.md, sections 34 to 36): the regime of country_config with v3 = :v4 (the
+# floor, patience by education, the transitory part and the proportional tax, every parameter under
+# the rule of section 34: the income process as published, by education, nothing of it fitted), and
+# the fit by the simulated method of moments: one criterion over the effort of the employed, the
+# hand-to-mouth share, its difference by education, median liquid wealth over income and the MPC, each
+# HFCS moment weighted by the inverse of its sampling variance (the standard errors of
+# data/hfcs_targets.csv), as in Ampudia, Cooper, Le Blanc and Zhu (2024, equation 10). No tolerance
+# band is set by hand for a moment that has a standard error. S80/S20 is a test. Files calibration_v4_*.
+const V4 = get(ENV, "SAGE_V4", "0") == "1"
+const V3 = V4 || get(ENV, "SAGE_V3", "0") == "1"
 # THE FLOOR IN THE BASE (SAGE_FLOOR=1 with SAGE_V3=1; V3_START.md, section 22). A means-tested floor
 # (Hubbard, Skinner and Zeldes 1995), financed by the lump-sum tax, with patience the same for all
 # (no spread). In G the floor's level is the fourth parameter of the fit and median liquid wealth is
@@ -74,7 +83,7 @@ const V3 = get(ENV, "SAGE_V3", "0") == "1"
 # share a higher floor means more patient households with more liquid wealth, which the spread could
 # not give (it moves the two moments along the same line as patience). In every other configuration
 # the floor is the country's, read from its G file. Files calibration_v3f_<code>_<cfg>.txt.
-const FLOORREG = V3 && get(ENV, "SAGE_FLOOR", "0") == "1"
+const FLOORREG = V4 || (V3 && get(ENV, "SAGE_FLOOR", "0") == "1")
 # The configuration in which the country's floor is fitted (SAGE_FLOOR_FROM, default G); every other
 # configuration reads it from that one's file. One rule for every country, 2026-10-05: GE, the base
 # with places. Fitted in G, Italy's floor (0.215 of reference earnings) is too high once the poorer
@@ -84,19 +93,19 @@ const FLOOR_CFG = uppercase(get(ENV, "SAGE_FLOOR_FROM", "G"))
 # cell's discount factor lies a gap below the other's; the gap is a parameter of the fit and the
 # difference between the two cells' hand-to-mouth shares (HFCS, by education) is the moment it owns.
 # No spread within a cell. Files calibration_v3e_* and, with the floor, calibration_v3fe_*.
-const EDUREG = V3 && get(ENV, "SAGE_EDU", "0") == "1"
+const EDUREG = V4 || (V3 && get(ENV, "SAGE_EDU", "0") == "1")
 # THE TRANSITORY PART AND THE PROPORTIONAL TAX (SAGE_TRANS=1 with SAGE_V3=1; V3_START.md, section 29).
 # The same regime with both on; files with a t added to the tag (calibration_v3fet_* for the base).
-const TRANS = V3 && get(ENV, "SAGE_TRANS", "0") == "1"
-const VTAG0 = "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "")          # the regime without them, for the starting point
-const V3ARG = TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") :
+const TRANS = V4 || (V3 && get(ENV, "SAGE_TRANS", "0") == "1")
+const VTAG0 = V4 ? "v3fet" : "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "")          # the regime the starting point is read from
+const V3ARG = V4 ? :v4 : TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") :
               FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : V3)
 # A TRIAL INCOME PROCESS (SAGE_RHO, SAGE_SDEPS with SAGE_TRANS=1): the persistence of the persistent part
 # and the size of the transitory part given here in place of the country table's; files tagged with an
 # r more (V3_START.md, section 31). The fit is as always: the persistent innovation to S80/S20.
 const RHO_TRIAL = TRANS && haskey(ENV, "SAGE_RHO") ? parse(Float64, ENV["SAGE_RHO"]) : NaN
 const SDEPS_TRIAL = TRANS && haskey(ENV, "SAGE_SDEPS") ? parse(Float64, ENV["SAGE_SDEPS"]) : NaN
-const VTAG = VTAG0 * (TRANS ? "t" : "") * ((isnan(RHO_TRIAL) && isnan(SDEPS_TRIAL)) ? "" : "r")
+const VTAG = V4 ? "v4" : VTAG0 * (TRANS ? "t" : "") * ((isnan(RHO_TRIAL) && isnan(SDEPS_TRIAL)) ? "" : "r")
 function hfcs_target(moment; wave = "2021")
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
         startswith(ln, "#") && continue
@@ -141,6 +150,19 @@ function hfcs_group(moment, group, sub; wave = "2021")
 end
 const HGAP_TARGET = EDUREG ? hfcs_group("htm_model_narrow_total", "education", "below tertiary") - hfcs_group("htm_model_narrow_total", "education", "tertiary") : NaN
 const HGAP_TOL = 0.03
+# the sampling standard errors of the HFCS moments (column 7 of data/hfcs_targets.csv), the weights of version 4
+function hfcs_se(moment, group = "all", sub = "all"; wave = "2021")
+    for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
+        startswith(ln, "#") && continue
+        f = split(ln, ",")
+        length(f) >= 7 && f[1] == moment && f[2] == CODE && f[3] == wave && f[4] == group && f[5] == sub && return parse(Float64, f[7])
+    end
+    error("no HFCS standard error for $moment, $CODE, $group, $sub")
+end
+const SE_HTM = V4 ? hfcs_se("htm_model_narrow_total") : NaN
+const SE_LIQ = V4 ? hfcs_se("liquid_kvw_to_disposable_income_ratio_of_medians") : NaN
+const SE_MPC = V4 ? hfcs_se("mpc_mean") : NaN
+const SE_GAP = V4 ? sqrt(hfcs_se("htm_model_narrow_total", "education", "below tertiary")^2 + hfcs_se("htm_model_narrow_total", "education", "tertiary")^2) : NaN
 const E_REF_C = V3 ? num("e_ref") : NaN
 v3kw() = V3 && !isnan(ETA[]) ? merge((eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
                                      isnan(RHO_TRIAL) ? (;) : (rho = RHO_TRIAL,), isnan(SDEPS_TRIAL) ? (;) : (sd_eps = SDEPS_TRIAL,)) : ()
@@ -343,7 +365,10 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
     gapfree = EDUREG && !E_ON          # with places the gap is the one found without them (the cells' shares are not kept by place)
     lo = [log(0.5), 0.84, 0.0, 0.05, flfree ? 0.0 : FL[], gapfree ? 0.0 : x0[6]]
     hi = [log(60.0), 0.975, nospread ? 0.0 : SPREAD_MAX, 0.40, flfree ? 0.30 : FL[], gapfree ? 0.14 : x0[6]]
-    H = [0.05, 0.004, 0.01, 0.02, 0.02, 0.01]; np = 6; nm = 5
+    H = [0.05, 0.004, 0.01, 0.02, 0.02, 0.01]; np = 6; nm = V4 ? 6 : 5
+    # version 4: the income process is the published one, so its dispersion is not a parameter, and
+    # the floor is free wherever it is fitted, with liquid wealth in the criterion at its standard error
+    V4 && (lo[4] = hi[4] = x0[4])
     # A point where the economy has no solution (a floor that cannot be financed: Italy at 0.35,
     # 2026-10-04) is not an error of the fit: it is a point to step away from.
     function at(x)
@@ -351,15 +376,19 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
         try
             r = soff(exp(x[1]), x[3]); st = income_stats(cfg_off(exp(x[1]), x[3]))
             hc = (hasproperty(r, :pooled) && hasproperty(r.pooled[1], :hmass)) ? [sum(r.pooled[g].hmass) / sum(r.pooled[g].mass) for g in 1:2] : [NaN, NaN]   # not kept with places
-            return (r = r, st = st, m = [r.mean_effort_employed, r.wealth_p50 / r.median_income, r.hand_to_mouth_kvw, st.s8020, hc[1] - hc[2]], ok = true)
+            m = [r.mean_effort_employed, r.wealth_p50 / r.median_income, r.hand_to_mouth_kvw, st.s8020, hc[1] - hc[2]]
+            V4 && push!(m, r.mpc)
+            return (r = r, st = st, m = m, ok = true)
         catch err
             say("    no solution at floor ", round(x[5]; digits = 4), ", patience ", round(x[2]; digits = 4), ": ", first(replace(sprint(showerror, err), "\n" => " "), 160))
-            return (r = nothing, st = nothing, m = fill(NaN, 5), ok = false)
+            return (r = nothing, st = nothing, m = fill(NaN, nm), ok = false)
         end
     end
     liqtol = Ref(flfree ? 0.03 : LIQ_TOL)          # the floor owns liquid wealth in G
     # the fifth moment, the gap in the hand-to-mouth share between the cells, counts in the education regime only
-    res(o) = (r_ = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET, EDUREG ? HGAP_TARGET : 0.0]) ./ [E_TOL, liqtol[], HTM_TOL, S8020_TOL, HGAP_TOL];
+    res(o) = V4 ? (r_ = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET, HGAP_TARGET, MPC_DATA]) ./ [E_TOL, SE_LIQ, SE_HTM, 1.0, SE_GAP, SE_MPC];
+                   r_[4] = 0.0; gapfree || (r_[5] = 0.0); r_) :          # version 4: in standard errors; S80/S20 is a test
+             (r_ = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET, EDUREG ? HGAP_TARGET : 0.0]) ./ [E_TOL, liqtol[], HTM_TOL, S8020_TOL, HGAP_TOL];
               gapfree || (r_[5] = 0.0); r_)
     # Resumable: with places on, one step of the fit takes half an hour on a runner and sixteen
     # do not fit in a job (France, Italy and Germany with E, 2026-10-04: cancelled at the six-hour
@@ -377,7 +406,7 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
     end
     o.ok || error("the fit's starting point has no solution")
     F = res(o); tfit = time(); nstep = 0
-    owned(F) = maximum(abs.(flfree ? F : F[[1, 3, 4, 5]]))          # effort, hand-to-mouth, S80/S20, the gap by education (zero outside its regime); liquid wealth too where the floor is fitted
+    owned(F) = V4 ? maximum(abs.(F)) : maximum(abs.(flfree ? F : F[[1, 3, 4, 5]]))          # effort, hand-to-mouth, S80/S20, the gap by education (zero outside its regime); liquid wealth too where the floor is fitted; version 4: every moment of the criterion
     for it in it0:iters
         # Liquid wealth is not required and often cannot be reached, so the stop is on the moments
         # the calibration owns; until 2026-10-04 it was on all four and the fit ran its sixteen
@@ -388,7 +417,7 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
         # the regime's extra target: the hand-to-mouth share owns patience, liquid wealth is reported.
         if flfree && x[5] <= 1e-3 && it > it0
             flfree = false; x[5] = 0.0; lo[5] = hi[5] = 0.0; liqtol[] = LIQ_TOL; F = res(o)
-            say("    the floor is at zero: fitting on without it, liquid wealth reported")
+            say("    the floor is at zero: fitting on without it", V4 ? "" : ", liquid wealth reported")
             owned(F) <= 0.25 && break
         end
         nstep > 0 && (time() - t_start) / 60 + 1.5 * (time() - tfit) / 60 / nstep > BUDGET &&
@@ -416,17 +445,26 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
         end
         FLOORREG && @printf("    floor %.4f of reference earnings\n", x[5])
         EDUREG && @printf("    patience gap %.4f | hand-to-mouth, below tertiary less tertiary %.4f (HFCS %.4f), %+.2f bands\n", x[6], o.m[5], HGAP_TARGET, F[5])
+        V4 ? @printf("    fit %2d: phi %.3f, top patience %.4f | effort %.4f, liquid/income %.4f, hand-to-mouth %.4f, MPC %.4f | misses in standard errors: liquid %+.2f, hand-to-mouth %+.2f, by education %+.2f, MPC %+.2f | criterion %.2f | S80/S20 %.2f (test)\n",
+                     it, exp(x[1]), x[2], o.m[1], o.m[2], o.m[3], o.m[6], F[2], F[3], F[5], F[6], sum(abs2, F), o.m[4]) :
         @printf("    fit %2d: phi %.3f, top patience %.4f, spread %.4f, eta %.4f | effort %.4f, liquid/income %.4f, hand-to-mouth %.4f, S80/S20 %.2f | misses in bands %+.2f %+.2f %+.2f %+.2f\n",
                 it, exp(x[1]), x[2], x[3], x[4], o.m[1:4]..., F[1:4]...); flush(stdout)
         nstep += 1
         ck_write(tag, Dict("x1" => x[1], "x2" => x[2], "x3" => x[3], "x4" => x[4], "x5" => x[5], "x6" => x[6], "lam" => lam, "it" => Float64(it),
                            "nofloor" => (FLOORREG && CFG == FLOOR_CFG && !flfree) ? 1.0 : 0.0))
         moved || (flfree && x[5] <= 1e-3) || break
-        sum(abs2, F) > 0.98 * ss0 && owned(F) <= 1.0 && break          # no longer improving, owned moments inside their bands
+        sum(abs2, F) > 0.98 * ss0 && (V4 || owned(F) <= 1.0) && break          # no longer improving, owned moments inside their bands (version 4: the criterion is at its minimum)
     end
     xr = [log(round(exp(x[1]); digits = 3)), round(x[2]; digits = 4), round(x[3]; digits = 4), round(x[4]; digits = 4), round(x[5]; digits = 4), round(x[6]; digits = 4)]
     o = at(xr); o.ok || error("the fitted point has no solution after rounding")
     EDUREG && @printf("  hand-to-mouth by education: below tertiary less tertiary %.4f (HFCS %.4f) with a patience gap of %.4f\n", o.m[5], HGAP_TARGET, xr[6])
+    if V4
+        Fr = res(o)
+        @printf("  version 4, the criterion at its minimum: %.2f over %d moments and %d free parameters | misses in standard errors: effort (band) %+.2f, liquid wealth %+.2f, hand-to-mouth %+.2f, by education %+.2f, MPC %+.2f\n",
+                sum(abs2, Fr), count(!=(0.0), Fr), count(k -> hi[k] - lo[k] > 1e-12, 1:np), Fr[1], Fr[2], Fr[3], Fr[5], Fr[6])
+        @printf("  version 4, moments: hand-to-mouth %.4f (HFCS %.4f, s.e. %.4f) | liquid wealth over income %.4f (%.4f, %.4f) | MPC %.4f (%.4f, %.4f) | S80/S20 %.2f, a test (official %.2f)\n",
+                o.m[3], HTM_TARGET, SE_HTM, o.m[2], LIQ_TARGET, SE_LIQ, o.m[6], MPC_DATA, SE_MPC, o.m[4], S8020_TARGET)
+    end
     (phi = exp(xr[1]), bb = xr[2], sp = xr[3], eta = xr[4], fl = xr[5], gap = xr[6], r = o.r, st = o.st)
 end
 say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", round(HTM_TARGET - GAP; digits = 4))
@@ -453,7 +491,7 @@ if ck1 === nothing && V3
             # at a trial persistence the innovation starts where the variance of log income is the file's
             # (the table's persistence is 0.92 in the three countries)
             e0 = isnan(RHO_TRIAL) ? kv["eta_z"] : clamp(kv["eta_z"] * sqrt((1 - RHO_TRIAL^2) / (1 - 0.92^2)), 0.06, 0.39)
-            x0e = [log(kv["phi"]), kv["beta_bar"] - (isnan(RHO_TRIAL) ? 0.02 : 0.0), kv["beta_spread"], e0,
+            x0e = [log(kv["phi"]), kv["beta_bar"] - ((V4 || !isnan(RHO_TRIAL)) ? 0.0 : 0.02), kv["beta_spread"], e0,
                    CFG == FLOOR_CFG ? get(kv, "cfloor", FL[] * E_REF_C) / E_REF_C : FL[], get(kv, "beta_gap", 0.0)]
             say("  starting from ", basename(fb), isnan(RHO_TRIAL) ? ", patience 0.02 lower" : ", the persistent innovation rescaled to the trial persistence")
         end
@@ -513,7 +551,7 @@ if !S_ON
             r.shock_loss, r.shock_loss_income, r.consumption_drop, r.A_hardship)
     V3 && @printf("  version 3, untargeted: MPC %.3f (survey %.3f), of the hand-to-mouth %.3f, earnings response %+.4f | liquid wealth over income %.4f (HFCS %.4f) | protection if hit %.4f | income poverty %.4f\n",
                   r.mpc, MPC_DATA, hasproperty(r, :mpc_htm) ? r.mpc_htm : NaN, r.mpe, r.wealth_p50 / r.median_income, LIQ_TARGET, r.A_cond, r.income_poor)
-    if abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL || abs(r.mean_effort_employed - E_TARGET) > E_TOL
+    if (!V4 && abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL) || abs(r.mean_effort_employed - E_TARGET) > E_TOL
         say(@sprintf("\nNOT CALIBRATED: hand-to-mouth %.4f (target %.4f) or effort %.4f (target %.4f) outside tolerance. No calibration file written.",
                      r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET))
         mark_not_calibrated(); exit(2)
@@ -656,11 +694,14 @@ r = solve_at(phi, spread, best)
 # sat at the edge outside it (Italy G+S+A on egm, 2026-09-28: effort inside at
 # the coarse grid by 1e-5, outside at the full grid by 5e-5).
 for correction in 1:2
-    (abs(r.hand_to_mouth_kvw - HTM_TARGET) <= HTM_TOL / 2 && abs(r.mean_effort_employed - E_TARGET) <= E_TOL / 2) && break
+    (!V4 && abs(r.hand_to_mouth_kvw - HTM_TARGET) <= HTM_TOL / 2 && abs(r.mean_effort_employed - E_TARGET) <= E_TOL / 2) && break
     global spread, best, r, S, phi
     s0 = soff(phi, spread)
     gap_h = r.hand_to_mouth_kvw - s0.hand_to_mouth_kvw
     gap_e = r.mean_effort_employed - s0.mean_effort_employed
+    # version 4: the fit is on the economy without cohesion, so a correction is called for only when
+    # cohesion itself moves the two moments (it does not when the job sets effort and saving is unchanged)
+    (V4 && abs(gap_h) <= HTM_TOL / 2 && abs(gap_e) <= E_TOL / 2) && break
     say(@sprintf("\n5.%d hand-to-mouth off by %+.4f, effort off by %+.4f; this economy's own cohesion gaps are %+.4f and %+.4f. Correction %d of 2.",
                  correction, r.hand_to_mouth_kvw - HTM_TARGET, r.mean_effort_employed - E_TARGET, gap_h, gap_e, correction))
     ck5 = ck_read("stage5_$(correction)")
@@ -699,7 +740,7 @@ if S[RATIO] === nothing || S[RATIO].best.loss > LOSS_STD
 end
 best = S[RATIO].best
 r = solve_at(phi, spread, best; ugrid = UGRID_DEFAULT)
-if abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL || abs(r.mean_effort_employed - E_TARGET) > E_TOL
+if (!V4 && abs(r.hand_to_mouth_kvw - HTM_TARGET) > HTM_TOL) || abs(r.mean_effort_employed - E_TARGET) > E_TOL
     say(@sprintf("\nNOT CALIBRATED after two corrections: hand-to-mouth %.4f (target %.4f), effort %.4f (target %.4f). No calibration file written.",
                  r.hand_to_mouth_kvw, HTM_TARGET, r.mean_effort_employed, E_TARGET))
     mark_not_calibrated(); exit(2)
