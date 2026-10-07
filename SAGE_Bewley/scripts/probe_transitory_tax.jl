@@ -121,6 +121,7 @@ function hf(moment, grp, sub)
     end
     NaN
 end
+const RHO_FIT = length(ARGS) >= 4 ? parse(Float64, ARGS[4]) : nothing
 function bisect(f, lo, hi; n = 12)          # f decreasing in its argument, root of f = 0
     for _ in 1:n
         mid = (lo + hi) / 2
@@ -132,8 +133,12 @@ function refit(sd, prop)
     T_all = hf("htm_model_narrow_total", "all", "all")
     T_gap = hf("htm_model_narrow_total", "education", "below tertiary") - hf("htm_model_narrow_total", "education", "tertiary")
     cc = country_config(code; config = "G", v3 = :edu, S = false, A = false)
-    eta = sqrt(max(cc.eta_z^2 - sd^2 * (1 - cc.rho^2), 1e-4))
-    cc = SAGEConfig(cc; eta_z = eta)
+    # fourth argument of the script: the persistence of the persistent part, the variance of log income
+    # still held (the Global Repository of Income Dynamics gives a five-year rank persistence that the
+    # file's 0.92 is too low for: V3_START.md, section 31)
+    rho = RHO_FIT === nothing ? cc.rho : RHO_FIT
+    eta = sqrt(max(cc.eta_z^2 / (1 - cc.rho^2) - sd^2, 1e-4) * (1 - rho^2))
+    cc = SAGEConfig(cc; rho = rho, eta_z = eta)
     cc = SAGEConfig(cc; effort_by_cell = job_effort_levels(cc))
     b0 = cc.beta_bar; gap = -cc.beta_cell[1]; shift = 0.0
     at(sh, gp) = run_economy(SAGEConfig(cc; beta_bar = b0 + sh, beta_cell = (-gp, 0.0)), sd, prop)
@@ -147,6 +152,7 @@ function refit(sd, prop)
     (r = r, r2 = r2, eta = eta, top = b0 + shift, gap = gap)
 end
 if length(ARGS) >= 3 && ARGS[3] == "fit"
+    RHO_FIT === nothing || println("persistence of the persistent part set to ", RHO_FIT, ", the variance of log income held")
     @printf("%s G, one asset (v3e): each variant refitted to the hand-to-mouth share (%.3f) and its difference by education (%.3f); survey MPC %.3f\n",
             code, hf("htm_model_narrow_total", "all", "all"),
             hf("htm_model_narrow_total", "education", "below tertiary") - hf("htm_model_narrow_total", "education", "tertiary"), hf("mpc_mean", "all", "all"))
