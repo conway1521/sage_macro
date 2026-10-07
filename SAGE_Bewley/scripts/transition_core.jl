@@ -53,17 +53,23 @@ function egm_step(p::SAGEParams, a, V, Va; theta::Float64)
     cd = (zeros(na, nz), zeros(na, nz)); e_d = (zeros(na, nz), zeros(na, nz))
     a_d = (zeros(na, nz), zeros(na, nz)); vd = (zeros(na, nz), zeros(na, nz))
     aend = zeros(na); cend = zeros(na); eend = zeros(na)
+    fl = (falses(na, nz), falses(na, nz))          # on the means-tested floor, as the solver marks it
     for s in 1:nz, d in (0, 1)
         egm_branch!(cd[d+1], e_d[d+1], a_d[d+1], vd[d+1], p, a, view(EV, :, s), view(EVa, :, s),
                     s, d, wv[s], oth[s][d+1], tfl[s], bel[s], con_c[d+1], con_e[d+1], aend, cend, eend,
                     view(D, :, s), view(Dp, :, s))
+        # the floor, as in solve_participation_egm (missing here until 2026-10-07: a path in an economy
+        # with a floor did not start from its steady state)
+        p.cfloor > 0 && apply_floor!(cd[d+1], e_d[d+1], a_d[d+1], vd[d+1], fl[d+1], p, a, view(EV, :, s), s, d,
+                                     wv[s], oth[s][d+1], tfl[s], bel[s], view(D, :, s))
     end
     Vn = similar(V); Van = similar(Va); P1 = zeros(na, nz)
     @inbounds for i in eachindex(Vn)
         b0 = vd[1][i]; b1 = vd[2][i]; m = max(b0, b1)
         Vn[i] = m + theta * log(exp((b0 - m) / theta) + exp((b1 - m) / theta))
         P1[i] = b1 == -Inf ? 0.0 : (b0 == -Inf ? 1.0 : 1 / (1 + exp((b0 - b1) / theta)))
-        mu0 = b0 == -Inf ? 0.0 : cd[1][i]^(-p.γ); mu1 = b1 == -Inf ? 0.0 : cd[2][i]^(-p.γ)
+        # on the floor an extra unit of assets is taken back by the transfer: no marginal value
+        mu0 = (b0 == -Inf || fl[1][i]) ? 0.0 : cd[1][i]^(-p.γ); mu1 = (b1 == -Inf || fl[2][i]) ? 0.0 : cd[2][i]^(-p.γ)
         Van[i] = p.R * p.Γ * ((1 - P1[i]) * mu0 + P1[i] * mu1) / p.pc
     end
     (V = Vn, Va = Van, P1 = P1, e_d = e_d, a_d = a_d, c_d = cd, Π = Π, z = z_vals)
