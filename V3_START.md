@@ -1179,3 +1179,27 @@ The base is now the regime with the floor, patience by education, the transitory
 Count: 8 met, 12 partly, 2 not, of 22 (7, 11, 4 before the build). The rows that changed class: M2 and N3 to met, N6 met in the third country, M7 and M8 from not to partly.
 
 **What the build did not repair, in order of weight for a macroeconomist.** (1) Italy's MPC. (2) The fall in consumption on job loss in Germany and Italy on one asset; the two-asset reference gives 0.07 for France, so this looks like a one-asset limit, to be confirmed when Germany's and Italy's references land. (3) The size of the persistent shock, with a sourced repair on the table. (4) In-work poverty. (5) Transitions with S on.
+
+**The two-asset reference in the three countries** (`calibrate_two_asset_ref.jl`; Germany run 37566752617, Italy 37566754669, four solves each by Broyden steps; files `calibration_v3fet_{FR,DE,IT}_G_I.txt`). Patience fitted to net wealth over income and the fixed cost to the wealthy hand-to-mouth share; everything else untargeted.
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| patience, fixed cost (share of mean annual income) | 0.962, 0.060 | 0.960, 0.040 | 0.978, 0.125 |
+| net wealth over income, model and HFCS (targeted) | 4.66, 4.78 | 3.16, 3.15 | 6.87, 6.82 |
+| wealthy hand-to-mouth (targeted) | 0.191, 0.184 | 0.135, 0.151 | 0.114, 0.114 |
+| poor hand-to-mouth | 0.048, 0.038 | 0.053, 0.074 | 0.036, 0.065 |
+| net wealth Gini | 0.655, 0.676 | 0.658, 0.727 | 0.664, 0.640 |
+| top 10% share of net wealth | 0.469, 0.499 | 0.477, 0.556 | 0.479, 0.495 |
+| liquid wealth over income | 0.170, 0.059 | 0.198, 0.140 | 0.441, 0.272 |
+| MPC, model and survey | 0.170, 0.392 | 0.166, 0.468 | 0.106, 0.469 |
+| fall in consumption on job loss | 0.069 | 0.112 | 0.109 |
+| hand-to-mouth, below tertiary and tertiary, model | 0.237, 0.243 | 0.187, 0.191 | 0.149, 0.155 |
+| the same, HFCS | 0.256, 0.151 | 0.285, 0.118 | 0.196, 0.095 |
+
+- **The wealth distribution (row M7).** The Gini is within 0.02 to 0.03 of the data in France and Italy and 0.07 below it in Germany; the top 10% hold 0.47 to 0.48 against 0.50, 0.56 and 0.50. The model gives about the same inequality of wealth in the three countries (0.66), so it has the level and not the difference between countries: Germany's wealth is more unequal than its income process and patience alone produce.
+- **The fall in consumption on job loss** is 0.07 to 0.11 in the three countries, inside the 0.07 to 0.16 of the literature, where the one-asset base gives 0.15, 0.25 and 0.24. With illiquid wealth behind them households absorb a job loss. The base's excess in Germany and Italy is therefore a limit of one asset and not of the income process or the benefits.
+- **The limits, as expected.** The MPC is 0.11 to 0.17; liquid wealth is 1.4 to 3 times the data's; the poor hand-to-mouth are too few in Germany and Italy; the two education groups are alike.
+
+So the two versions divide the evidence between them: the one-asset base carries the hand-to-mouth by education, the MPC and everything S, A and E are fitted to; the two-asset reference carries the distribution of wealth and the response to a job loss. Neither does both, and the document should say so wherever a number is quoted.
+
+**Transitions with S on: the cause found** (run 37573981971). In `transition_s` the tax-rate vector was named `rate`, the name the participation loop assigns to, so from the first iteration the path was taxed at the participation rate (0.233 in place of 0.038). My error of last night, in the adaptation to the proportional tax; renamed, and the test is running again (run 37579944854).
