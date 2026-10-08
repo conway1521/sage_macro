@@ -1663,3 +1663,18 @@ Run 37820079148, France G (Germany and Italy still running).
 - **The wealth moments are not met together.** Hand-to-mouth 0.262 against 0.222 (+5.8 standard errors), liquid wealth over income 0.068 against 0.059 (+4.5), the gap by education 0.069 against 0.105 (-2.8), effort 0.649 against 0.643 (outside its band, so no file is written); criterion 64. Both wealth moments are too high at once: more patience lowers the hand-to-mouth share and raises liquid wealth, so one patience cannot repair both. The MPC, a test, is 0.466 against the survey's 0.392; the fall in consumption on job loss 0.17.
 - **What changed from version 4's France, which fitted** (hand-to-mouth 0.237, liquid wealth 0.063, MPC 0.388): the inputs. With the variances in the source's order the lower education group's transitory shock has a variance of 0.031, not 0.006, and its persistent innovation 0.006, not 0.031. Larger transitory shocks put more households at the constraint in a given year at any median buffer, and raise the MPC. Version 4's fit of France was a fit to the misreading.
 - **Open, in order.** (1) Whether the fit stopped at its minimum: it moved once and then found no better step, with effort traded against the wealth moments although effort has a parameter of its own; effort should be held as a constraint, not weighed. (2) What the published transitory variance holds: it is the residual of annual household income, measurement error included, and the model treats all of it as risk the household faces within the year. How the field splits it is the next thing to read, before any change. (3) Germany and Italy, to see whether the tension is France's or general.
+
+**Germany and Italy, G on version 5** (run 37820079148, committed 2026-10-08, 19:20 UTC). Both calibrate.
+
+| G, version 5 | France (not calibrated) | Germany | Italy |
+|---|---|---|---|
+| criterion | 64 | 7.1 | 0.08 |
+| hand-to-mouth, model and HFCS | 0.262, 0.222 | 0.208, 0.225 | 0.184, 0.179 |
+| liquid wealth over income | 0.068, 0.059 | 0.116, 0.140 | 0.275, 0.272 |
+| first and ninth decile over the median, model (official in section 44) | 0.54, 1.83 | 0.50, 1.92 | 0.43, 1.98 |
+| below half the median (official under 65: 0.092, 0.094, 0.145) | 0.085 | 0.102 | 0.146 |
+| MPC, a test (survey 0.392, 0.468, 0.469) | 0.466 | 0.369 | 0.330 |
+| fall in consumption on job loss | 0.17 | 0.26 | 0.23 |
+| in-work poverty (official 0.067, 0.086, 0.117) | 0.135 | 0.153 | 0.181 |
+
+Germany and Italy meet their wealth moments and their income distributions together on the corrected inputs; France is the one that does not (section 45), so the tension there is France's and not general. In-work poverty has come down from about twice the official rate to about 1.6 to 1.8 times, with the state out of work still to build. Started: G+A for Germany and Italy.
