@@ -10,12 +10,15 @@ include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 cfg = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "GA"
 codes = length(ARGS) >= 2 ? uppercase.(ARGS[2:end]) : ["FR", "DE", "IT"]
+regime = "V4" in codes ? :v4 : :floor_edu_trans          # `V4` among the arguments: version 4 (section 36)
+codes = filter(!=("V4"), codes); isempty(codes) && (codes = ["FR", "DE", "IT"])
+println("regime ", regime)
 results = Tuple{String,Bool}[]
 check(name, ok) = (push!(results, (name, ok)); @printf("   -> %s: %s\n", name, ok ? "PASS" : "FAIL"); flush(stdout))
 dev(v) = maximum(abs.(v .- v[1]))
 for code in codes
     try
-        c = country_config(code; config = cfg, v3 = :floor_edu_trans, S = false, A = occursin('A', cfg))
+        c = country_config(code; config = cfg, v3 = regime, S = false, A = occursin('A', cfg))
         r = solve_economy(c; cache = false)
         t = @elapsed z = transition(c; delta_scale = Float64[], T = 60)
         @printf("%s %s | 1. zero shock (%.1f min): largest drift over 60 years: unemployment %.1e, consumption %.1e, assets %.1e, hand-to-mouth %.1e, tax rate %.1e; welfare %.1e\n",

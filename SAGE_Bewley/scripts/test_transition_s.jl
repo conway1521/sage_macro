@@ -11,9 +11,11 @@ include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 T = length(ARGS) >= 1 ? parse(Int, ARGS[1]) : 60
 code = length(ARGS) >= 3 ? uppercase(ARGS[3]) : "FR"
-c = (length(ARGS) >= 4 && ARGS[4] == "base") ? country_config(code; config = "GSA", v3 = :floor_edu_trans, S = true, A = true) :
-                                               country_config(code; config = "GSA", S = true, A = true)
-println(code, " G+S+A", (length(ARGS) >= 4 && ARGS[4] == "base") ? ", base regime" : ", version 2")
+mode = length(ARGS) >= 4 ? ARGS[4] : ""
+c = mode == "v4" ? country_config(code; config = "GSA", v3 = :v4, S = true, A = true) :
+    mode == "base" ? country_config(code; config = "GSA", v3 = :floor_edu_trans, S = true, A = true) :
+                     country_config(code; config = "GSA", S = true, A = true)
+println(code, " G+S+A", mode == "v4" ? ", version 4" : mode == "base" ? ", base regime" : ", version 2")
 t = @elapsed z = transition_s(c; delta_scale = Float64[], T = T)
 dev(v) = maximum(abs.(v .- v[1]))
 @printf("1. zero shock (%.1f min, %d iterations, gap %.1e): participation %.8f against the families' %.8f; drift participation %.1e, consumption %.1e, assets %.1e; welfare %.1e\n",

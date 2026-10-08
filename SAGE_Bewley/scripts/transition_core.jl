@@ -130,7 +130,6 @@ consumption equivalent against staying in the steady state, overall and by cell.
 """
 function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80, rr_add::Vector{Float64} = Float64[])
     c.S && error("the transition solver covers S off so far")
-    c.perm_sd > 0 && error("the transition solver is not built for permanent income types yet: its tax and benefit sums read one type")
     c.E && error("the transition solver covers E off so far")
     # the job's effort levels where they are given (the floor, the transitory part, the proportional
     # tax): what a job asks does not move along the path
@@ -162,7 +161,9 @@ function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80, rr
     # Until 2026-10-07 the whole transfer was taxed for along the path, so with rr_public set the
     # path's tax was above the steady state's and a zero shock did not stay put.
     pub(t) = ((isnan(c.rr_public) ? c.rr : c.rr_public) + ra[t]) / c.rr
-    uicost(t) = pub(t) * sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2)
+    # Summed over the types of a cell (version 4, 2026-10-08): permanent income types differ in pay and
+    # in benefit, with a mean of one over the types, so one type's sum is not the cell's.
+    uicost(t) = pub(t) * sum(cs[g].share * bw[k] * sum(μ[g][t][s] * transfer_at(base_ps[g][k], s) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2, k in eachindex(bw))
     # the period's transfers: the benefit at the period's rate in the unemployed states
     trs(p, g, t) = ra[t] == 0 ? p.transfer : [unemp[g][s] ? p.transfer[s] * (c.rr + ra[t]) / c.rr : p.transfer[s] for s in eachindex(p.transfer)]
     # The floor's tax is held at its steady-state amount along the path (2026-10-06): its outlay moves
@@ -173,7 +174,7 @@ function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80, rr
     # labour income per head, which falls when fewer are in work.
     prop = c.tax_mode === :prop
     zs = [SAGEBewley.income_process(base_ps[g][1])[1] for g in 1:2]
-    labour(t) = sum(cs[g].share * sum(μ[g][t][s] * base_ps[g][1].α[s] * base_ps[g][1].effort_set[s] * zs[g][s] * base_ps[g][1].Z for s in eachindex(μ[g][t])) for g in 1:2)
+    labour(t) = sum(cs[g].share * bw[k] * sum(μ[g][t][s] * base_ps[g][k].α[s] * base_ps[g][k].effort_set[s] * zs[g][s] * base_ps[g][k].Z for s in eachindex(μ[g][t])) for g in 1:2, k in eachindex(bw))
     rate = prop ? [lump[t] / labour(t) for t in 1:T] : zeros(T)
     # households
     out = [(cons = zeros(T), effE = zeros(T), mE = zeros(T), assets = zeros(T), htm = zeros(T), consU = zeros(T), mU = zeros(T),
@@ -267,7 +268,6 @@ number of fixed-point iterations and the final gap.
 """
 function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, maxit::Int = 40, damp::Float64 = 0.5, tol::Float64 = 1e-7)
     c.S || error("transition_s is for S on; use transition")
-    c.perm_sd > 0 && error("the transition solver is not built for permanent income types yet: its tax and benefit sums read one type")
     c.E && error("the transition solver covers E off so far")
     ds = vcat(delta_scale, ones(max(0, T - length(delta_scale))))[1:T]
     r0 = solve_economy(c)
@@ -287,11 +287,11 @@ function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, 
     end
     unemp = [SAGEBewley.income_process(base_ps[g][1])[1] .== 0 for g in 1:2]      # benefits only, as in `transition`
     pub = isnan(c.rr_public) ? 1.0 : c.rr_public / c.rr          # the state's part of the replacement rate, as in `transition`
-    lump = [c.lumptax + floor_tax_of(c) + pub * sum(cs[g].share * sum(μ[g][t][s] * transfer_at(base_ps[g][1], s) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2) for t in 1:T]
+    lump = [c.lumptax + floor_tax_of(c) + pub * sum(cs[g].share * bw[k] * sum(μ[g][t][s] * transfer_at(base_ps[g][k], s) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2, k in eachindex(bw)) for t in 1:T]
     # the proportional tax and the floor's tax, as in `transition`
     prop = c.tax_mode === :prop
     zs = [SAGEBewley.income_process(base_ps[g][1])[1] for g in 1:2]
-    labour(t) = sum(cs[g].share * sum(μ[g][t][s] * base_ps[g][1].α[s] * base_ps[g][1].effort_set[s] * zs[g][s] * base_ps[g][1].Z for s in eachindex(μ[g][t])) for g in 1:2)
+    labour(t) = sum(cs[g].share * bw[k] * sum(μ[g][t][s] * base_ps[g][k].α[s] * base_ps[g][k].effort_set[s] * zs[g][s] * base_ps[g][k].Z for s in eachindex(μ[g][t])) for g in 1:2, k in eachindex(bw))
     # (named taxr: `rate` below is participation, and overwrote this until 2026-10-07, so the path was taxed at the participation rate)
     taxr = prop ? [lump[t] / labour(t) for t in 1:T] : nothing
     argss = c.omega + (1 - c.omega) * r0.rate
