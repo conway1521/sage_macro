@@ -1682,3 +1682,25 @@ Germany and Italy meet their wealth moments and their income distributions toget
 ## 46. The specs of S, A and E (2026-10-08, 19:30 UTC)
 
 `DIMENSIONS_SPEC.md` (copied to the vault): one page a dimension, the designs of 27 and 29 September as they stand in the code, what tests each, and what is open. I had told the user that A and E were "not closed"; more exactly, each has an agreed design and specific open questions. The decisions put to the user: A1, what the A switch is (as today, the pay premium by education with dread measured; or the premium in G and A as dread, measured or acting on choices; recommended: test dread in choices on the corrected inputs, adopt it if the wealth moments still hold, keep today's switch if not); E1, the natural environment (indicators now, into wellbeing once a published valuation is chosen); E2, housing cost by place as a sixth channel from official data, for the failed test by type of place and the short regional spread; S1, the private share of the fabric stays a band; S2, S exactly off. Nothing is built on these until the user decides.
+
+## 47. The user's decisions on S, A and E, and France (2026-10-08, 19:45 UTC)
+
+**Decided** (recorded in `DIMENSIONS_SPEC.md`): A1, dread in choices is tested on the corrected inputs and adopted if the wealth moments still hold, with the pay premium then moving to G; otherwise the switch stays. E1, the natural environment as consequences for wellbeing and not decisions (the user: "not a decision but a wellbeing consequence, similar to dread"): exposure to pollution in the household's own wellbeing once a valuation is chosen, the footprint beside it since others bear it. E2, housing cost by place as a sixth channel. S1, the multiplier stays a band. S2, S exactly off. Then: France.
+
+**France: where its pair of wealth moments comes from.** The HFCS aggregates for 2021, narrow and broad liquid wealth (broad counts saving accounts):
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| median liquid wealth, narrow, euro and over income | 1,552; 0.059 | 4,739; 0.140 | 6,014; 0.272 |
+| the same, broad | 10,000; 0.380 | 15,000; 0.442 | 7,000; 0.316 |
+| broad over narrow | 6.4 | 3.2 | 1.2 |
+| hand-to-mouth, narrow (below tertiary, tertiary) | 0.222 (0.256, 0.151) | 0.225 (0.285, 0.118) | 0.179 (0.196, 0.095) |
+| hand-to-mouth, broad | 0.114 (0.143, 0.054) | 0.146 (0.190, 0.067) | 0.141 (0.151, 0.092) |
+
+On the narrow definition France is the outlier: a median of three weeks of income in liquid form, with only 22% under one week. Half of French households then hold between one and three weeks of income, which is a current-account working balance and not a buffer. France's liquid savings sit in regulated saving accounts with instant access, which the narrow definition counts as illiquid because the HFCS pools them with time deposits (Kaplan, Violante and Weidner 2014; `hfcs_protocol/HFCS_READINESS.md`). On the broad definition the three countries are alike (medians 0.32 to 0.44, hand-to-mouth 0.11 to 0.15). Italy's narrow and broad nearly coincide, and Italy is the country that fits exactly. So the hypothesis for France: the narrow moments describe where the French keep their money, and a buffer-stock household facing France's income risk cannot hold that distribution. It bore on version 4 too, hidden by the misread inputs.
+
+**Two diagnostics started.**
+- `probe_wealth_frontier.jl FR` (run 37831856634): G of version 5 on a grid of top patience (0.90 to 0.97) by patience gap (0 to 0.12), the types and effort scale given: the hand-to-mouth share in total and by education, median liquid wealth, the MPC. Whether France's narrow pair, or its broad one, lies on the surface the model spans.
+- `probe_fit_broad.jl` for the three countries (runs 37831843814, 37831847860, 37831851952): the version 5 fit of G on the broad moments (`SAGE_LIQ_DEF=broad` in the calibration script, a diagnostic setting). What the three countries look like on one definition under which they are comparable, and the MPC that then comes out.
+
+Which definition the model is fitted to is the user's decision, with a published definition behind it in either case; nothing is changed until the diagnostics are read. Also to check before proposing anything: the definition used for the euro area in Slacalek, Tristani and Violante (2020), which I recall as counting all deposits and have not verified.

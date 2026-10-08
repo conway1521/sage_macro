@@ -110,12 +110,16 @@ Written 2026-10-08. One page per dimension: the concept and its source, what the
 - **E3, the community elasticity** is estimated on the data it explains. Proposed: estimate on Italy with a standard error, test on Germany's Lander against the Freiwilligensurvey once Germany has a source for infrastructure, and on France at a finer geography.
 - **E4, order.** E is rerun only when G is closed on version 5, since each place configuration costs hours.
 
-## Decisions needed
+## Decisions taken (8 October 2026)
 
-| | decision | recommendation |
+| | decision | what was decided |
 |---|---|---|
-| A1 | what the A switch is | test dread in choices on the corrected inputs. Option 3 if it holds, option 1 if not |
-| E1 | the natural environment | indicators now. Into wellbeing once a published valuation is chosen |
-| E2 | housing cost as a channel of place | yes, from official data, tested on the HFCS by place |
-| S1 | the private share of the social fabric | keep the band, narrow it with regional evidence |
+| A1 | what the A switch is | test dread acting on choices on the corrected inputs. If the hand-to-mouth share and liquid wealth still hold, A is the security dimension and the pay premium by education moves to G. If not, the switch stays as it is today |
+| E1 | the natural environment | consequences for wellbeing, not decisions (below) |
+| E2 | housing cost as a channel of place | yes, from official data, tested on the HFCS by place. Built when G is closed |
+| S1 | the private share of the social fabric | the multiplier stays a band, narrowed with regional evidence once E is rerun |
 | S2 | S exactly off | yes |
+
+**E1, as decided.** Neither part of the natural environment is a choice the household makes in this model: there is no moving between places and one consumption good. Both are consequences, the way dread is in A. They differ in who bears them.
+- **Exposure to pollution is borne by the household.** It can enter the household's own wellbeing as a measured cost, exactly as dread does, once a published valuation is chosen.
+- **The footprint is borne by others, later and elsewhere.** It is counted beside the household's wellbeing, in tonnes first and at official carbon values second, and never added to it (the rule of 29 September, already built).
