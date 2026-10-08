@@ -129,8 +129,14 @@ const E_ON = occursin('E', CFG)
 const ROW = country_rows()[CODE]
 num(k) = parse(Float64, ROW[k])
 const E_TARGET = num("effort_target")
-const HTM_TARGET = V3 ? hfcs_target("htm_model_narrow_total") : num("htm_target")
-const LIQ_TARGET = V3 ? hfcs_target("liquid_kvw_to_disposable_income_ratio_of_medians") : NaN
+# WHICH LIQUID WEALTH (SAGE_LIQ_DEF, a diagnostic; V3_START.md section 47). narrow, the default: sight
+# accounts and directly held securities, after Kaplan, Violante and Weidner (2014). broad: saving
+# accounts as well. The hand-to-mouth share, its gap by education and the median follow the choice.
+const LIQ_BROAD = lowercase(get(ENV, "SAGE_LIQ_DEF", "narrow")) == "broad"
+const HTM_NAME = LIQ_BROAD ? "htm_model_broad_total" : "htm_model_narrow_total"
+const LIQ_NAME = LIQ_BROAD ? "liquid_broad_to_disposable_income_ratio_of_medians" : "liquid_kvw_to_disposable_income_ratio_of_medians"
+const HTM_TARGET = V3 ? hfcs_target(HTM_NAME) : num("htm_target")
+const LIQ_TARGET = V3 ? hfcs_target(LIQ_NAME) : NaN
 const MPC_DATA = V3 ? hfcs_target("mpc_mean") : NaN
 # The dispersion of the income process (the standard deviation eta of the
 # innovation to its persistent part) is fitted in version 3 to the official
@@ -155,7 +161,7 @@ function hfcs_group(moment, group, sub; wave = "2021")
     end
     error("no HFCS target $moment for $CODE, $group, $sub")
 end
-const HGAP_TARGET = EDUREG ? hfcs_group("htm_model_narrow_total", "education", "below tertiary") - hfcs_group("htm_model_narrow_total", "education", "tertiary") : NaN
+const HGAP_TARGET = EDUREG ? hfcs_group(HTM_NAME, "education", "below tertiary") - hfcs_group(HTM_NAME, "education", "tertiary") : NaN
 const HGAP_TOL = 0.03
 # the sampling standard errors of the HFCS moments (column 7 of data/hfcs_targets.csv), the weights of version 4
 function hfcs_se(moment, group = "all", sub = "all"; wave = "2021")
@@ -166,11 +172,11 @@ function hfcs_se(moment, group = "all", sub = "all"; wave = "2021")
     end
     error("no HFCS standard error for $moment, $CODE, $group, $sub")
 end
-const SE_HTM = V4 ? hfcs_se("htm_model_narrow_total") : NaN
-const SE_LIQ = V4 ? hfcs_se("liquid_kvw_to_disposable_income_ratio_of_medians") : NaN
+const SE_HTM = V4 ? hfcs_se(HTM_NAME) : NaN
+const SE_LIQ = V4 ? hfcs_se(LIQ_NAME) : NaN
 # SAGE_NO_MPC=1 (a diagnostic, probe_fit_no_mpc.jl): the MPC out of the criterion, reported as the model gives it
 const SE_MPC = V4 ? ((V5 || get(ENV, "SAGE_NO_MPC", "0") == "1") ? Inf : hfcs_se("mpc_mean")) : NaN          # version 5: the MPC is a test
-const SE_GAP = V4 ? sqrt(hfcs_se("htm_model_narrow_total", "education", "below tertiary")^2 + hfcs_se("htm_model_narrow_total", "education", "tertiary")^2) : NaN
+const SE_GAP = V4 ? sqrt(hfcs_se(HTM_NAME, "education", "below tertiary")^2 + hfcs_se(HTM_NAME, "education", "tertiary")^2) : NaN
 const E_REF_C = V3 ? num("e_ref") : NaN
 # the permanent types of version 5 and their weights (fitted in G and G+A, read by the others)
 const PF = Ref(Float64[]); const PW = Ref(Float64[])
