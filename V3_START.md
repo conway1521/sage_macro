@@ -1332,3 +1332,48 @@ Patience fitted to the survey MPC in place of the hand-to-mouth share:
 The literature's own benchmark is in the same place: a model with a spread of patience matched to liquid assets gives an annual MPC of 0.42 to 0.44, and matched to net worth 0.21 to 0.23 (Carroll et al. 2017, Table 3). The base's 0.41 and 0.40 for France and Germany are what the field gets from matching liquid wealth; Italy's 0.31 comes with liquid wealth two to four times theirs.
 
 **The choice this leaves, for the user.** (A) The MPC is the target and the hand-to-mouth share and liquid wealth are reported (the table above). (B) The wealth side is the target and the MPC is reported (the base). (C) All of them enter one criterion weighted by their sampling variances, the simulated method of moments of the paper above (its equation 10: a diagonal weighting matrix of inverse variances), which also replaces the hand-set tolerance bands of the audit's item 10; each country then lands between (A) and (B) where its standard errors put it.
+
+## 36. Version 4: the model under the rule (2026-10-07 and 08, decided by the user)
+
+**The user's decisions.** (1) The MPC is a target, by option C of section 35: one criterion over all the moments, each HFCS moment weighted by the inverse of its sampling variance. (2) The income process is the published one of Ampudia, Cooper, Le Blanc and Zhu (2024), by country and education. (3) Then, once every version 4 configuration is calibrated: every remaining parameter at its measured value (the open items of section 34), and the MPC and the rest made to work in every country, not only France.
+
+**What version 4 is** (`country_config(code; v3 = :v4)`, files `calibration_v4_*`, calibration with `SAGE_V4=1`, workflow input `v4=1`; the earlier regimes and their files are untouched and still reproduce: engine test 12 of 12 after every step below).
+
+| piece | in the code | source or moment |
+|---|---|---|
+| income process by education cell: persistence, persistent innovation, transitory shock | `rho_cell`, `eta_cell`, `sd_eps_cell`; `data/manual_inputs.csv` rows `rho_low`, `var_persistent_low`, `var_transitory_low` and `_high` | Ampudia et al. (2024), Table 16 of BIS WP 1102; nothing fitted. **The published table is still to be read by the user** |
+| permanent component of income | `perm_sd`, `n_perm = 3`: types of household inside a cell (`perm_nodes`, `betas_of`), earnings and benefits scaled, no risk | fitted to S80/S20 (Eurostat, under 65), to a numerical tolerance |
+| time cost of participation | `measured_qbar`: France 0.0119, Germany 0.0466, Italy 0.0216 | each country's diary measure for formal volunteering (`data/timeuse/qbar_from_data.csv`, definition A, wave 2010) |
+| weight on social cohesion | `Lambda = 1` | a normalisation |
+| the job's effort levels | `ref_prop = true`: found in the economy without floor and transitory part, taxed in proportion like the economy itself (rate and levels found together) | per head, the lowest states of Italy's process could not pay and the levels were erratic |
+| the fit | `fit_v3` in version 4: parameters effort scale, top patience, patience gap, permanent dispersion, floor (where fitted); criterion over effort and S80/S20 (numerical tolerance), and the hand-to-mouth share, its gap by education, median liquid wealth and the MPC in standard errors (`SE_HTM`, `SE_GAP`, `SE_LIQ`, `SE_MPC`) | simulated method of moments, diagonal inverse-variance weights (Ampudia et al. 2024, equation 10) |
+| risk aversion 2, effort curvature 2, return 2% | unchanged | re-cited to McKay, Nakamura and Steinsson (2016) and Kaplan, Moll and Violante (2018); published tables to check |
+
+Transitions refuse an economy with permanent types (their tax and benefit sums read one type); the two-asset reference is not moved to version 4 yet.
+
+**G under version 4** (run 37697334357; France and Germany committed, Italy still running at the time of writing). Misses in standard errors in brackets.
+
+| | France | Germany |
+|---|---|---|
+| top patience, gap | 0.926, 0.029 | 0.941, 0.044 |
+| permanent dispersion (sd of log) | 0.19 | 0.48 |
+| S80/S20, model and official | 4.73, 4.72 | 5.08, 5.08 |
+| MPC, model and survey | 0.388, 0.392 (-0.7) | 0.393, 0.468 (-7.1) |
+| hand-to-mouth, model and HFCS | 0.237, 0.222 (+2.3) | 0.263, 0.225 (+3.4) |
+| liquid wealth over income | 0.063, 0.059 (+1.7) | 0.082, 0.140 (-5.1) |
+| gap by education | 0.093, 0.105 (-0.9) | 0.175, 0.167 (+0.4) |
+| criterion (6 moments, 4 parameters) | 9.6 | 87.6 |
+| fall in consumption on job loss | 0.177 | 0.289 |
+| in-work poverty, model and official | 0.171, 0.067 | 0.194, 0.086 |
+
+- **France** is the best fit of any version: the MPC and liquid wealth on target together, which the old base could not do (liquid wealth twice its target), at a patience of 0.93.
+- **Germany** is rejected on the MPC by seven standard errors: it cannot be raised without more hand-to-mouth households and less liquid wealth, both already off. Without the permanent component Germany's S80/S20 was 2.38 against 5.08 (the published process alone is far too compressed); with it inequality is right.
+- **Italy** without the permanent component (first pass, run 37687657872): the criterion drops the floor, MPC 0.412 against 0.469, hand-to-mouth 0.194 against 0.179, liquid wealth 0.101 against 0.272, S80/S20 5.76 against 6.04. With the permanent component the first fit failed on the effort levels (the per-head reference), which `ref_prop` repairs.
+
+**Started**: France and Germany G+A and G+S+A (run 37707846432; G+S by the chain) and G+E with the floor fitted there (run 37707849048). Italy follows its G. Version 4 has three types of household per cell, so about three times the compute of the old base; the checkpoint at the door of the full-grid stage (`pre5b`) carries the long ones over the six-hour limit.
+
+**Open under version 4, for the stage the user asked for next.**
+1. The MPC in Germany (and Italy at its liquid wealth): on one asset the MPC, the hand-to-mouth share and liquid wealth are tied by patience (section 35). What is left to examine, each from a source and not by hand: the definition of liquid wealth across countries (narrow 0.059, 0.140, 0.272 against broad 0.380, 0.442, 0.316: the narrow one counts where savings are kept); the survey MPC's flat profile across liquid wealth; a spread of patience fitted jointly (it did not move the MPC at a given hand-to-mouth share, but it is free in the criterion); the 2017 wave against the 2021 one.
+2. The audit's remaining items (section 34): the private share of belonging, the place elasticity, the job-finding rate, the window of the illiquid premium, the liquid return of the two-asset reference, Cagetti (2003), the published versions of every table read as a working paper.
+3. In-work poverty about twice the official rate in every version.
+4. Transitions and the two-asset reference on version 4.
