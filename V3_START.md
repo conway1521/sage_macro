@@ -1495,3 +1495,5 @@ The bottom of the income distribution is too heavy in the three countries with S
 - Partly: M3 (parameters: the audit's remaining items), M4 (16 of 24 calibrated; Germany and Italy rejected by the criterion), M5 (the MPC's properties hold; its level in Germany and Italy and the fall on job loss do not), M6 (regions to rerun), N2 (exact but for the residual participation with S off in France and Italy), B1, B3 (7 of 18), B4, B5, U1 (16 of 24), U2.
 - To rerun: M7 (the two-asset reference, still on the old base).
 - Not: N4 (independent solver), U3 (a new country).
+
+**09:30 UTC.** Germany G+S+A+E handed over at the door of the full-grid stage after 313 minutes (run 37722782934 to 37751641948), as the `pre5b` checkpoint intends. France G+S+A+E was cancelled at the six-hour limit: its first stage ended at 301 minutes, the budget check before the scans let it go on by five minutes' margin (301 + 39 against 345), and the scans did not finish. Its stage-one checkpoint was kept, so it is restarted from there with a budget of 330 (resumed from run 37722782934).
