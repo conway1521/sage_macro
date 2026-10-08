@@ -1519,3 +1519,10 @@ Candidates to examine at that stage, each to be read at its source before any us
 3. **What the criterion weights.** The standard errors used are sampling errors of the survey mean. They do not carry the distance between a hypothetical question and the model's object, so the criterion treats the MPC as known to 0.006 to 0.019. Reporting the fit with and without the MPC row, and the MPC by hand-to-mouth status against the survey's, is a presentation that hides nothing and claims no more than the data support.
 
 **The two-asset reference on version 4 (row M7)** waits for the parameter stage: with three types of household per cell a solve takes about three times the old 35 minutes, the script's search does not resume across jobs, and its liquid return is the audit's unsourced item 2, to be replaced before the reference is run again.
+
+## 40. Version 4 at 18 of 24 (2026-10-08, 16:50 UTC)
+
+- **Germany G+S+A+E** (runs 37722782934 and 37751641948, two jobs through the `pre5b` checkpoint): participation 0.280 with both education groups on target (0.254, 0.349 against 0.252, 0.349), multiplier 1.8 with places (band 1.3 to 2.6); the household moments as G+A+E (MPC 0.395, hand-to-mouth 0.263, liquid wealth 0.080). G+S+E follows by the chain (run 37788483241).
+- **Italy G+E** (runs 37740255946 and 37772002755): the fit that keeps every evaluation handed over after four evaluations (288 minutes, about 70 minutes each with 21 regions and the floor on) and finished in the second job. Floor 0.035 with places against 0.042 in G, an outlay of 1e-5 per head in both; MPC 0.403 against 0.469 (-3.5), hand-to-mouth 0.210 against 0.179 (+1.1), liquid wealth 0.107 against 0.272 (-5.9), S80/S20 6.03 against 6.04; criterion 48.4, as G. The two floors differ in the third decimal; the configurations without places are not refitted for it now, since everything is calibrated again at the parameter stage.
+- France G+S+A+E is in its last job (run 37775745111). Italy G+A+E and G+S+A+E are started with the floor from G+E.
+- **18 of 24**: France and Germany have six and seven (G, G+A, G+S, G+S+A, G+E, G+A+E; Germany also G+S+A+E), Italy five.
