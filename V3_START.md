@@ -1377,3 +1377,10 @@ Transitions refuse an economy with permanent types (their tax and benefit sums r
 2. The audit's remaining items (section 34): the private share of belonging, the place elasticity, the job-finding rate, the window of the illiquid premium, the liquid return of the two-asset reference, Cagetti (2003), the published versions of every table read as a working paper.
 3. In-work poverty about twice the official rate in every version.
 4. Transitions and the two-asset reference on version 4.
+
+**Italy G under version 4, and G+A in France and Germany** (runs 37697334357 and 37707846432, committed 2026-10-08).
+- Italy G: top patience 0.939, gap 0.106, permanent dispersion 0.11, a small floor (0.042); S80/S20 6.03 against 6.04; MPC 0.410 against 0.469 (-3.2 standard errors); hand-to-mouth 0.196 against 0.179 (+0.6); liquid wealth 0.101 against 0.272 (-6.1); criterion 47.9. The criterion gives up Italy's liquid wealth for its MPC, as the standard errors tell it to, and reaches neither. Fall in consumption on job loss 0.32.
+- France G+A: criterion 4.8, MPC 0.388, hand-to-mouth 0.233, liquid wealth 0.061, S80/S20 4.73; the permanent dispersion falls to 0.08 because the agency shares already separate the two education groups.
+- Germany G+A: as G (MPC 0.394, criterion 87.5).
+
+Running: France and Germany G+S+A and G+E (37707846432, 37707849048), Italy G+A, G+S+A and G+E (37710406114, 37710408485). Then G+A+E and G+S+A+E for each (G+S and G+S+E by the chain).
