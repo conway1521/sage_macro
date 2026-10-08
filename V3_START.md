@@ -1704,3 +1704,32 @@ On the narrow definition France is the outlier: a median of three weeks of incom
 - `probe_fit_broad.jl` for the three countries (runs 37831843814, 37831847860, 37831851952): the version 5 fit of G on the broad moments (`SAGE_LIQ_DEF=broad` in the calibration script, a diagnostic setting). What the three countries look like on one definition under which they are comparable, and the MPC that then comes out.
 
 Which definition the model is fitted to is the user's decision, with a published definition behind it in either case; nothing is changed until the diagnostics are read. Also to check before proposing anything: the definition used for the euro area in Slacalek, Tristani and Violante (2020), which I recall as counting all deposits and have not verified.
+
+## 48. The pay premium by education moves to G (2026-10-08, 20:20 UTC; decided by the user)
+
+**Decided.** "yes move the premium to G, go ahead." The reasons put to the user: pay by education is the skill premium, a fact about the economy; with hours set by the job it cannot stand for influencing one's fortunes through one's own effort; A's tested prediction on participation was a prediction about income. A is then the security dimension (dread, protection, expected loss, room to manoeuvre), and the other half of the concept is to be restored later by whether a household can choose its hours, which needs official data on who decides working time (to scope, not built). Agreed in the same exchange, as a rule: a dimension or a named combination may bring the theory it needs, declared beforehand in `DIMENSIONS_SPEC.md`, the same in every country, with off still exactly the base; the base does not change with what is combined.
+
+**Built** (version 5; no solver file touched).
+- `SAGEConfig.premium_base` (true under `v3 = :v5`): the two education cells earn `alpha` with A on or off. Version 4 and earlier are unchanged (checked by loading: version 4 G pays 1.0 and 1.0, version 5 G 0.86 and 1.27 in France).
+- A configuration with A reads the calibration file of the same one without A (`country_config`), since A adds no parameter while dread is measured without entering choices. `calibrate_country.jl` refuses a version 5 configuration with A.
+- G+S owns the participation of both cells (`OWN_GAP`), as G+S+A did: the taste dispersion is fitted there and not carried over.
+- The permanent types are fitted in G only and read by the others.
+- So a country has four calibrations, G, G+S, G+E and G+S+E, and each dimension depends on G alone.
+
+**Consequences for what was run.** The two version 5 G files of section 45 (Germany, Italy) were fitted without the premium; they are removed from the repository, their numbers staying in section 45. The G+A runs for the two countries (run 37830479778) had finished before they could be cancelled; they have the premium but took the floor from the old G, so they are not committed, and they show what the new G will give (below). G is started again for the three countries on the new definition. The broad-definition and frontier diagnostics of section 47 were launched before the change and describe G without the premium; they are read for the mechanism, and France's is redone if it decides anything.
+
+**What the premium in the base does to the fit: Germany and Italy** (run 37830479778, G+A of the old definition, which is G of the new one but for the floor's origin).
+
+| the pay premium in | Germany | Italy |
+|---|---|---|
+| criterion | 8.7 | 0.03 |
+| hand-to-mouth, model and HFCS | 0.207, 0.225 | 0.176, 0.179 |
+| liquid wealth over income | 0.112, 0.140 | 0.273, 0.272 |
+| first and ninth decile over the median (official 0.50, 1.95; 0.44, 1.99) | 0.49, 1.95 | 0.42, 2.01 |
+| S80/S20 (official under 65: 5.08, 6.04) | 4.87 | 5.81 |
+| MPC, a test (survey 0.468, 0.469) | 0.370 | 0.323 |
+| fall in consumption on job loss | 0.27 | 0.23 |
+
+Both fit with the premium in as they did without it, and Italy's inequality, which stood at 6.35 against 6.04 with A on in version 4 with nothing left to lower it (section 36), is 5.81: the misread variances were its cause, as section 43 supposed.
+
+**Italy on broad liquid wealth** (`probe_fit_broad.jl IT`, run 37831851952): criterion 0.14; hand-to-mouth 0.147 against 0.141, liquid wealth 0.324 against 0.316; MPC 0.30. Italy fits on either definition, as its two definitions nearly coincide. France and Germany on the broad definition, and France's frontier, are still running.
