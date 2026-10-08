@@ -1421,3 +1421,9 @@ A fifth item for the stage after the calibrations: **Italy's income inequality w
 Count on version 4: 4 met, 9 partly, 6 to rerun (met or partly on the old base; the reruns are tests, not builds), 3 not. The rows that decide whether version 4 passes the old base are M4 and M5 in Germany and Italy, and M8.
 
 **France G+S+A and Germany G+S under version 4** (runs 37707846432 and 37713471498, committed 2026-10-08, 02:40 UTC). France G+S+A: participation 0.232 with both cells on target (0.201, 0.290 against 0.203, 0.291), multiplier 1.6 (band 1.2 to 2.3), the G+A moments unchanged. Germany G+S: participation 0.279, multiplier 1.9; the two cells are not separated without A (0.277, 0.284 against 0.252, 0.349), as on the old base. 10 of 24 configurations of version 4 are in; G+S in France and Italy and G+E in the three countries are running.
+
+**G+E in France and Germany, G+S in Italy under version 4** (runs 37707849048 and 37713633280, committed 2026-10-08, 03:35 UTC).
+- France G+E (14 regions, national moments): MPC 0.388 against 0.392, hand-to-mouth 0.238 against 0.222, liquid wealth 0.063 against 0.059, S80/S20 4.73; criterion 11.0. The floor fitted with places is zero, as in G, so the configurations without places need no refit.
+- Germany G+E: as G (MPC 0.393, hand-to-mouth 0.262, liquid wealth 0.082, criterion 86.3); floor zero as in G.
+- Italy G+S: participation 0.124, multiplier 1.2; without A the permanent dispersion is 0.12 and S80/S20 is on target (6.05 against 6.04), which confirms that Italy's overshoot of inequality comes with the agency shares.
+- 13 of 24 configurations of version 4 are in. Started: G+A+E and G+S+A+E in France and Germany with the floor from G+E (G+S+E by the chain). Running: Italy G+E, France G+S.
