@@ -114,7 +114,7 @@ Written 2026-10-08. One page per dimension: the concept and its source, what the
 
 | | decision | what was decided |
 |---|---|---|
-| A1 | what the A switch is | test dread acting on choices on the corrected inputs. If the hand-to-mouth share and liquid wealth still hold, A is the security dimension and the pay premium by education moves to G. If not, the switch stays as it is today |
+| A1 | what the A switch is | **the pay premium by education is in G** (decided the same evening, whatever the test of dread gives). A is the security dimension: dread of job loss and the protection indicators. Dread acting on choices is tested on the corrected inputs and adopted if the hand-to-mouth share and liquid wealth still hold. Later, to restore the other half of the concept (influencing one's fortunes through one's own effort): whether a household can choose its hours, from official data on who decides working time, to be scoped |
 | E1 | the natural environment | consequences for wellbeing, not decisions (below) |
 | E2 | housing cost as a channel of place | yes, from official data, tested on the HFCS by place. Built when G is closed |
 | S1 | the private share of the social fabric | the multiplier stays a band, narrowed with regional evidence once E is rerun |
@@ -123,3 +123,9 @@ Written 2026-10-08. One page per dimension: the concept and its source, what the
 **E1, as decided.** Neither part of the natural environment is a choice the household makes in this model: there is no moving between places and one consumption good. Both are consequences, the way dread is in A. They differ in who bears them.
 - **Exposure to pollution is borne by the household.** It can enter the household's own wellbeing as a measured cost, exactly as dread does, once a published valuation is chosen.
 - **The footprint is borne by others, later and elsewhere.** It is counted beside the household's wellbeing, in tonnes first and at official carbon values second, and never added to it (the rule of 29 September, already built).
+
+## What follows from the premium in G
+
+- **Each dimension depends on G alone.** G+S reaches the participation of both education groups without A, since the groups now differ in pay in G. S, A and E are each scoped, calibrated and tested on their own (G+S, G+A, G+E), and the combinations are a check of consistency.
+- **A has no calibration of its own while dread is only measured.** A configuration with A reads the file of the same configuration without it and adds the indicators. Four calibrations a country, not eight: G, G+S, G+E, G+S+E.
+- **A rule for what a switch may bring** (agreed 8 October): a dimension, or a named combination, may bring the theory it needs. That theory is part of the switch, declared here beforehand with its reason and source, the same in every country, and off still gives the base exactly. The base itself does not change with what is combined.

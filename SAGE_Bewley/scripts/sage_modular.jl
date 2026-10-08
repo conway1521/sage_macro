@@ -57,6 +57,11 @@ Base.@kwdef struct SAGEConfig
     # the two education cells
     alpha::NTuple{2,Float64} = (0.765, 0.911)   # when A is on
     alpha_off::Float64       = 0.838            # both cells when A is off
+    # THE PAY PREMIUM BY EDUCATION IN THE BASE (version 5, decided by the user on 2026-10-08;
+    # DIMENSIONS_SPEC.md, V3_START.md section 48). When true the two cells earn `alpha` whether A is
+    # on or off: pay by education is a fact about the economy and belongs to G. A is then the
+    # security dimension alone (dread of job loss and the protection indicators).
+    premium_base::Bool       = false
     B::NTuple{2,Float64}     = (0.80, 0.94)     # belonging taste, when S is on
     share::NTuple{2,Float64} = (0.5, 0.5)
     # extensions
@@ -356,7 +361,7 @@ function describe(c::SAGEConfig)
     c.lumptax > 0 && push!(ext, @sprintf("lump tax %.5f", c.lumptax))
     c.levy_employed > 0 && push!(ext, @sprintf("levy on the employed %.5f", c.levy_employed))
     s = @sprintf("%-6s alpha %s  B %s", dims,
-                 c.A ? @sprintf("%.3f/%.3f", c.alpha...) : @sprintf("%.3f", c.alpha_off),
+                 (c.A || c.premium_base) ? @sprintf("%.3f/%.3f", c.alpha...) : @sprintf("%.3f", c.alpha_off),
                  c.S ? @sprintf("%.2f/%.2f, kappa %.2f sigma %.3f omega %.2f",
                                 c.B..., c.kappa, c.sigma_m, c.omega) : "(no social payoff)")
     isempty(ext) ? s : s * " | " * join(ext, ", ")
@@ -365,7 +370,7 @@ end
 # --------------------------------------------------------------- internals --
 "The effective cell parameters implied by a config: alpha and B per cell."
 function cells_of(c::SAGEConfig)
-    αs = c.A ? c.alpha : (c.alpha_off, c.alpha_off)
+    αs = (c.A || c.premium_base) ? c.alpha : (c.alpha_off, c.alpha_off)
     pick(v, common) = isnan(v) ? common : v          # the cell's own income process where it is given
     ((α = αs[1], B = c.B[1], share = c.share[1], δ = c.unemployment ? c.delta[1] : 0.0, τ = c.commute[1], eset = c.effort_by_cell[1], fL = c.f_long[1], dβ = c.beta_cell[1],
       ρ = pick(c.rho_cell[1], c.rho), η = pick(c.eta_cell[1], c.eta_z), sε = pick(c.sd_eps_cell[1], c.sd_eps)),
@@ -659,7 +664,7 @@ function floor_tax_of(c::SAGEConfig)
     isnan(c.floor_tax_given) || return c.floor_tax_given
     c.effort_mode === :job || error("the means-tested floor needs effort_mode = :job")
     c0 = floor_effort(SAGEConfig(c; S = false, E = false, cfloor = c.cfloor))
-    key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.alpha, c0.alpha_off, c0.A, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
+    key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
                      c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.ref_prop)))
@@ -1283,8 +1288,12 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
             d[:qbar] = measured_qbar(code)
             d[:Lambda] = 1.0
             d[:ref_prop] = true
+            v5 && (d[:premium_base] = true)
         end
-        cal = joinpath(@__DIR__, "calibration_$(vtag)_$(code)_$(config)" * (illq ? "_I" : "") * ".txt")
+        # Version 5: the pay premium is in the base and dread is measured without entering choices, so
+        # A adds no parameter of its own and a configuration with A reads the file of the same one
+        # without it (G+A the file of G, G+S+A that of G+S, and so with places).
+        cal = joinpath(@__DIR__, "calibration_$(vtag)_$(code)_$(v5 ? replace(config, "A" => "") : config)" * (illq ? "_I" : "") * ".txt")
         # In the floor regime places differ by the household's income per head (:conversion_hh): what
         # is not unemployment in a low employment rate stays in the place's income, so a poor place is
         # poor against the national floor and not only riskier (V3_START.md, sections 21 and 22).
