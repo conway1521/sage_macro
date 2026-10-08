@@ -1774,3 +1774,26 @@ France calibrates: the share, its split and effort are met, the median is a week
 **The hand-to-mouth share first: Germany** (run 37845399249, G without the premium). With the floor searched from 0.10 and not from the zero of the version 4 file, Germany meets the four moments together: hand-to-mouth 0.224 against 0.225, the median 0.139 against 0.140, the gap by education and effort on target (criterion 0.02), at a floor of 0.27 of reference earnings. The MPC is 0.343 against the survey's 0.468, the fall in consumption on job loss 0.23. On the standard criterion Germany had ended at a floor of zero with both wealth moments two standard errors short; that was the starting point and not the economy.
 
 So under the variant, without the premium: Italy and Germany exact with floors of 0.22 and 0.27 of reference earnings, France with its floor at zero, the share met and the median a test. The floors found in Germany and Italy are of the order of the statutory minimum incomes (0.20 and 0.27 of the gross average wage, 0.32 and 0.38 of the net; `data/benefits/floor_and_replacement.md`), which is not a result yet: the units and the household types have to be set side by side before saying so. The note of 2 October that Germany's minimum income is already inside its replacement rate bears on whether Germany's floor counts it twice, and is to be reread against this.
+
+## 50. G of version 5 with the premium in, on the two rules of fit (2026-10-08, 22:55 UTC; for the user's decision)
+
+Runs at commit fcaa705: the standard criterion (37851044843) and the hand-to-mouth share first (37851048451, 37851051885, 37851055312). Nothing of either is committed until the user chooses.
+
+| | France: standard, share first | Germany | Italy | data |
+|---|---|---|---|---|
+| criterion | 69.5, 0.01 | 8.5, 0.07 | 0.01, 0.08 | |
+| floor, share of reference earnings | 0, 0 | 0, 0.30 | 0.21, about the same | |
+| hand-to-mouth share | 0.263, 0.221 | 0.208, 0.228 | 0.176, 0.172 | 0.222, 0.225, 0.179 |
+| median liquid wealth over income | 0.068, 0.089 | 0.112, 0.141 | 0.272, 0.273 | 0.059, 0.140, 0.272 |
+| effort | off its band, on target | on, on | on, on | |
+| MPC, a test | 0.467, 0.434 | 0.371, 0.330 | 0.323, 0.324 | survey 0.392, 0.468, 0.469 |
+| fall in consumption on job loss, a test | 0.172, 0.158 | 0.267, 0.225 | 0.236, 0.236 | literature 0.07 to 0.16 |
+| below half the median income, a test | 0.081, 0.082 | 0.103, 0.104 | 0.153, 0.152 | 0.092, 0.094, 0.145 |
+| in-work poverty, a test | 0.124, 0.125 | 0.156, 0.155 | 0.191, 0.190 | 0.067, 0.086, 0.117 |
+| S80/S20 under 65, a test | 4.26, 4.27 | 4.81, 4.66 | 5.66, 5.79 | 4.72, 5.08, 6.04 |
+
+- **The premium changes little** in either rule: the figures are those of sections 45 and 49 to the second decimal, as the G+A runs had indicated.
+- **Share first: the three countries calibrate.** Italy and Germany meet the four moments with floors of about 0.21 and 0.30 of reference earnings. France meets the share, its split and effort with its floor at zero, and its median is 0.089 against 0.059.
+- **Standard: France does not calibrate, Germany ends short on both wealth moments** at a floor of zero it starts from, and Italy is the same under both.
+- **The tests.** The income distribution is close in the three countries on both rules. In-work poverty is 1.6 to 1.9 times the official rate, the state out of work still unbuilt. The fall in consumption on job loss is inside the literature's range in France and above it in Germany and Italy. The MPC is below the survey's in Germany and Italy by 0.14 and above it in France by 0.04: under the share-first rule the three models give 0.32 to 0.43 where the survey gives 0.39 to 0.47, and the model's order of countries is the reverse of the survey's.
+- **What the two rules differ in** is narrow: where the search for the floor starts (the same point in every country, or the old file's value), and what is done with the median when the floor is at zero (reported, or weighed by its sampling error). The first is hard to defend as anything but an oversight. The second is the choice put to the user.
