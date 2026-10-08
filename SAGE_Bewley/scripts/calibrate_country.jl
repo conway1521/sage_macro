@@ -133,6 +133,15 @@ const E_TARGET = num("effort_target")
 # accounts and directly held securities, after Kaplan, Violante and Weidner (2014). broad: saving
 # accounts as well. The hand-to-mouth share, its gap by education and the median follow the choice.
 const LIQ_BROAD = lowercase(get(ENV, "SAGE_LIQ_DEF", "narrow")) == "broad"
+# THE HAND-TO-MOUTH SHARE FIRST (SAGE_HTM_FIRST=1, a variant put to the user; V3_START.md section 49).
+# Patience and its gap by education are identified by the hand-to-mouth share and its split, the
+# floor by median liquid wealth. Where the floor is positive the four are met together (Italy).
+# Where it is at zero, median liquid wealth has no parameter left: the standard criterion then
+# trades the hand-to-mouth share against it by their sampling errors, and France's median is so
+# precisely measured (0.002) that four points of the share are given up for 0.02 of the median.
+# With this setting the floor is searched from 0.10 in every country and, where it ends at zero,
+# median liquid wealth is reported as a test and not weighed, as before version 4.
+const HTM_FIRST = get(ENV, "SAGE_HTM_FIRST", "0") == "1"
 const HTM_NAME = LIQ_BROAD ? "htm_model_broad_total" : "htm_model_narrow_total"
 const LIQ_NAME = LIQ_BROAD ? "liquid_broad_to_disposable_income_ratio_of_medians" : "liquid_kvw_to_disposable_income_ratio_of_medians"
 const HTM_TARGET = V3 ? hfcs_target(HTM_NAME) : num("htm_target")
@@ -207,7 +216,9 @@ const RATIOS = CFG == "GSA" ? vcat(RATIO, [x for x in (0.486, 0.574, 0.857, 0.93
 # dispersion sigma, which the gap pins down, is held at the country's G+S+A
 # value (the unemployed ratio cannot pin it: it is imposed as a rule, and
 # probe_gs_identification.jl shows what it does when it is not).
-const OWN_GAP = A_ON
+# Version 5: the pay premium by education is in the base, so the two cells differ in pay with A off
+# and G+S has what it takes to reach both; the participation of each cell is its own target there too.
+const OWN_GAP = A_ON || V5
 const AGG_TOL = 0.005
 const LOSS_STD = OWN_GAP ? 0.035 : AGG_TOL
 # STABILITY GATE. The calibrated equilibrium must sit away from a fold: a
@@ -431,7 +442,7 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
     end
     # the fifth moment, the gap in the hand-to-mouth share between the cells, counts in the education regime only
     res(o) = V4 ? (r_ = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET, HGAP_TARGET, MPC_DATA]) ./ [E_TOL, SE_LIQ, SE_HTM, 0.05, SE_GAP, SE_MPC];
-                   gapfree || (r_[5] = 0.0); V5 && (r_[4] = 0.0); r_) :          # version 5: the income distribution is fitted apart, by the permanent types; version 4: in standard errors; effort and S80/S20, which have none, to a numerical tolerance
+                   gapfree || (r_[5] = 0.0); V5 && (r_[4] = 0.0); (HTM_FIRST && !flfree) && (r_[2] = 0.0); r_) :          # version 5: the income distribution is fitted apart, by the permanent types; version 4: in standard errors; effort and S80/S20, which have none, to a numerical tolerance
              (r_ = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET, EDUREG ? HGAP_TARGET : 0.0]) ./ [E_TOL, liqtol[], HTM_TOL, S8020_TOL, HGAP_TOL];
               gapfree || (r_[5] = 0.0); r_)
     # Resumable: with places on, one step of the fit takes half an hour on a runner and sixteen
@@ -512,14 +523,17 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
     (phi = exp(xr[1]), bb = xr[2], sp = xr[3], eta = xr[4], fl = xr[5], gap = xr[6], r = o.r, st = o.st)
 end
 say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", round(HTM_TARGET - GAP; digits = 4))
-# VERSION 5: the permanent types. Fitted to the official deciles in G and in G+A (below); every other
-# configuration reads them from the file of G (A off) or of G+A (A on), since neither S nor the
-# places are meant to move the income distribution.
-const PERM_FITTED = V5 && CFG in ("G", "GA")
+# VERSION 5: the permanent types. Fitted to the official deciles in G (below), where the pay premium
+# by education now is; every other configuration reads them from G's file, since neither S nor the
+# places are meant to move the income distribution. A adds no parameter while dread is measured
+# without entering choices, so a configuration with A is not calibrated: it reads the file of the
+# same configuration without A (country_config).
+V5 && A_ON && error("version 5: a configuration with A has no calibration of its own (the pay premium is in G and dread does not enter choices); calibrate $(replace(CFG, "A" => "")) instead")
+const PERM_FITTED = V5 && CFG == "G"
 if V5
     ETA[] = 0.0
     if !PERM_FITTED
-        fbp = joinpath(@__DIR__, "calibration_v5_$(CODE)_$(A_ON ? "GA" : "G").txt")
+        fbp = joinpath(@__DIR__, "calibration_v5_$(CODE)_G.txt")
         isfile(fbp) || error("version 5: the permanent types are read from $(basename(fbp)), which does not exist; calibrate it first")
         for l in eachline(fbp)
             startswith(l, "perm_f") && (PF[] = parse.(Float64, split(last(split(l, "=")))))
@@ -555,7 +569,7 @@ if ck1 === nothing && V3
             # (the table's persistence is 0.92 in the three countries)
             e0 = V4 ? 0.30 : isnan(RHO_TRIAL) ? kv["eta_z"] : clamp(kv["eta_z"] * sqrt((1 - RHO_TRIAL^2) / (1 - 0.92^2)), 0.06, 0.39)          # version 4: where the search for the permanent dispersion starts
             x0e = [log(kv["phi"]), kv["beta_bar"] - ((V4 || !isnan(RHO_TRIAL)) ? 0.0 : 0.02), kv["beta_spread"], e0,
-                   CFG == FLOOR_CFG ? get(kv, "cfloor", FL[] * E_REF_C) / E_REF_C : FL[], get(kv, "beta_gap", 0.0)]
+                   CFG == FLOOR_CFG ? (HTM_FIRST ? 0.10 : get(kv, "cfloor", FL[] * E_REF_C) / E_REF_C) : FL[], get(kv, "beta_gap", 0.0)]
             say("  starting from ", basename(fb), isnan(RHO_TRIAL) ? ", patience 0.02 lower" : ", the persistent innovation rescaled to the trial persistence")
         end
     end

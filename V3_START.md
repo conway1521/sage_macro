@@ -1733,3 +1733,22 @@ Which definition the model is fitted to is the user's decision, with a published
 Both fit with the premium in as they did without it, and Italy's inequality, which stood at 6.35 against 6.04 with A on in version 4 with nothing left to lower it (section 36), is 5.81: the misread variances were its cause, as section 43 supposed.
 
 **Italy on broad liquid wealth** (`probe_fit_broad.jl IT`, run 37831851952): criterion 0.14; hand-to-mouth 0.147 against 0.141, liquid wealth 0.324 against 0.316; MPC 0.30. Italy fits on either definition, as its two definitions nearly coincide. France and Germany on the broad definition, and France's frontier, are still running.
+
+## 49. France's wealth moments on the surface one asset spans (2026-10-08, 21:15 UTC)
+
+`probe_wealth_frontier.jl FR` (run 37831856634): G of version 5 without the premium, effort scale 7.0, forty points of top patience by patience gap. The rows near France's data:
+
+| top patience, gap | hand-to-mouth (below tertiary, tertiary) | median liquid wealth over income | MPC | fall on job loss |
+|---|---|---|---|---|
+| HFCS narrow | 0.222 (0.256, 0.151) | 0.059 | survey 0.392 | |
+| 0.92, 0.03 | 0.233 (0.259, 0.183) | 0.081 | 0.447 | 0.165 |
+| 0.93, 0.03 | 0.197 (0.223, 0.145) | 0.101 | 0.417 | 0.155 |
+| HFCS broad | 0.114 (0.143, 0.054) | 0.380 | | |
+| 0.96, 0.03 | 0.124 (0.164, 0.047) | 0.219 | 0.298 | 0.111 |
+| 0.96, 0.00 | 0.061 (0.069, 0.047) | 0.424 | 0.184 | 0.078 |
+
+- **On the narrow definition the model reaches France's hand-to-mouth share and its split by education** (between the two rows: about 0.22, with 0.25 and 0.16), and its median liquid wealth is then about 0.09 of annual income against 0.059: four and a half weeks of income against three. The MPC there is about 0.43 against the survey's 0.39.
+- **The broad definition does not fit better.** At the broad hand-to-mouth share the model's median is about 0.25 against 0.38, and the MPC about 0.29. France's narrow pair is more compressed than the model's and its broad pair more spread; the model's surface passes between them, nearer the narrow. So the definition explains why France's narrow figures look odd (section 47) and changing it is not the repair. The narrow definition stays.
+- **Why the fit failed.** The criterion weighs each moment by its sampling error. France's median is measured to 0.002, its hand-to-mouth share to 0.007, so the fit gave up four points of the share (0.262 against 0.222) to bring the median from about 0.09 to 0.068. A distance of a week and a half of income in a current-account balance was bought with a fifth of the hand-to-mouth households. The sampling error of the median does not contain what makes the two objects differ (which accounts the money sits in), so its weight is too large for what it measures.
+
+**A variant put to the user: the hand-to-mouth share first** (`SAGE_HTM_FIRST=1`, `probe_fit_htm_first.jl`). Patience and its gap are identified by the hand-to-mouth share and its split; the floor by median liquid wealth. The floor is searched from 0.10 in every country (in Germany and France it had started at zero, from the version 4 file, and was never tried). Where it stays positive the four moments are met together, as in Italy; where it goes to zero the median has no parameter left and is reported as a test with its miss, as the MPC is. This is the rule the calibration had before version 4, and it rests on what the moment is for: the share and kind of hand-to-mouth households is what determines the average MPC in this class of model (Kaplan and Violante 2022). Started for the three countries; the standard criterion's G is running beside it (run 37841169403), and the two are shown to the user side by side.
