@@ -1678,3 +1678,7 @@ Run 37820079148, France G (Germany and Italy still running).
 | in-work poverty (official 0.067, 0.086, 0.117) | 0.135 | 0.153 | 0.181 |
 
 Germany and Italy meet their wealth moments and their income distributions together on the corrected inputs; France is the one that does not (section 45), so the tension there is France's and not general. In-work poverty has come down from about twice the official rate to about 1.6 to 1.8 times, with the state out of work still to build. Started: G+A for Germany and Italy.
+
+## 46. The specs of S, A and E (2026-10-08, 19:30 UTC)
+
+`DIMENSIONS_SPEC.md` (copied to the vault): one page a dimension, the designs of 27 and 29 September as they stand in the code, what tests each, and what is open. I had told the user that A and E were "not closed"; more exactly, each has an agreed design and specific open questions. The decisions put to the user: A1, what the A switch is (as today, the pay premium by education with dread measured; or the premium in G and A as dread, measured or acting on choices; recommended: test dread in choices on the corrected inputs, adopt it if the wealth moments still hold, keep today's switch if not); E1, the natural environment (indicators now, into wellbeing once a published valuation is chosen); E2, housing cost by place as a sixth channel from official data, for the failed test by type of place and the short regional spread; S1, the private share of the fabric stays a band; S2, S exactly off. Nothing is built on these until the user decides.
