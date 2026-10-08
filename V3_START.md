@@ -1497,3 +1497,25 @@ The bottom of the income distribution is too heavy in the three countries with S
 - Not: N4 (independent solver), U3 (a new country).
 
 **09:30 UTC.** Germany G+S+A+E handed over at the door of the full-grid stage after 313 minutes (run 37722782934 to 37751641948), as the `pre5b` checkpoint intends. France G+S+A+E was cancelled at the six-hour limit: its first stage ended at 301 minutes, the budget check before the scans let it go on by five minutes' margin (301 + 39 against 345), and the scans did not finish. Its stage-one checkpoint was kept, so it is restarted from there with a budget of 330 (resumed from run 37722782934).
+
+## 39. Notes towards the MPC in Germany and Italy (2026-10-08; nothing adopted)
+
+What the runs of sections 36 and 38 establish, set side by side:
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| survey MPC (HFCS 2021) | 0.392 | 0.468 | 0.469 |
+| hand-to-mouth share | 0.222 | 0.225 | 0.179 |
+| median liquid wealth over income | 0.059 | 0.140 | 0.272 |
+| model MPC at the fitted point | 0.388 | 0.393 | 0.410 |
+| model MPC, lowest to highest fifth of liquid wealth | 0.56 to 0.18 | 0.58 to 0.17 | 0.64 to 0.17 |
+| survey MPC across liquid wealth (section 35) | 0.35 to 0.48 | 0.50 to 0.44 | 0.53 to 0.40 |
+
+Across the three countries the survey MPC is higher where liquid wealth is higher and the hand-to-mouth share no larger. A buffer-stock household does the reverse, so no value of patience, and no mapping applied alike in the three countries, fits the three at once: whatever raises Germany's and Italy's MPC to the survey's at their liquid wealth takes France's above its own. The gap sits with households that hold liquid wealth: the survey has them spending 0.40 to 0.48 of a windfall, the model 0.17 to 0.30.
+
+Candidates to examine at that stage, each to be read at its source before any use:
+1. **Spending against consumption.** The survey asks what share of the windfall would be spent on goods and services within twelve months, durables included; the model's MPC is out of a flow of consumption. Laibson, Maxted and Moll (2022, NBER Working Paper 29664, "A Simple Mapping from MPCs to MPXs") give the mapping from one to the other with the durable share of spending, the real rate and the depreciation rate of durables; the durable share is in the national accounts by country. It raises the model's figure for every household, the wealthy included, which is where the gap is. Two limits known before reading it: it is a working paper (I found no journal version on 2026-10-08), so its use needs the user's acceptance; and a factor of about the same size in the three countries moves France off its target as it moves Germany towards its own.
+2. **The survey question by country.** The MPC question is not a core HFCS variable and national questionnaires differ; Drescher, Fessler and Lindner (2020) is the published comparison for the 2017 wave. Whether France's lower figure is a difference of wording or of households is to be read there, with the 2017 wave against the 2021 one (collected during and after the pandemic, when liquid balances were unusually high).
+3. **What the criterion weights.** The standard errors used are sampling errors of the survey mean. They do not carry the distance between a hypothetical question and the model's object, so the criterion treats the MPC as known to 0.006 to 0.019. Reporting the fit with and without the MPC row, and the MPC by hand-to-mouth status against the survey's, is a presentation that hides nothing and claims no more than the data support.
+
+**The two-asset reference on version 4 (row M7)** waits for the parameter stage: with three types of household per cell a solve takes about three times the old 35 minutes, the script's search does not resume across jobs, and its liquid return is the audit's unsourced item 2, to be replaced before the reference is run again.
