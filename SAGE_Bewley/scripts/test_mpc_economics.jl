@@ -121,7 +121,13 @@ if length(bs) > 1
     for k in eachindex(bs)
         @printf("   beta %.4f: MPC %.3f\n", bs[k], rb[k].mpc)
     end
-    check("MPC falls with patience", all(rb[k].mpc >= rb[k+1].mpc - 1e-4 for k in 1:length(bs)-1))
+    # version 4: the types of a cell are permanent income types of one patience, and the MPC of a
+    # scaled household is the same up to the floor and the grid; nothing to rank
+    if maximum(bs) - minimum(bs) < 1e-8
+        @printf("   one patience, %d permanent income types: MPC within %.4f of each other\n", length(bs), maximum(x.mpc for x in rb) - minimum(x.mpc for x in rb))
+    else
+        check("MPC falls with patience", all(rb[k].mpc >= rb[k+1].mpc - 1e-4 for k in 1:length(bs)-1))
+    end
 end
 println("7. by education cell")
 for g in 1:2

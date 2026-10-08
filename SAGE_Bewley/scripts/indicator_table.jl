@@ -38,8 +38,8 @@ for code in codes
             ("liquid-asset poor (3 months)", r.asset_poor, hf(code, "asset_poor_disp_persons"), "HFCS", false),
             ("income and asset poor", r.both, hf(code, "hardship_disp_persons"), "HFCS", false),
             ("hand-to-mouth", r.hand_to_mouth_kvw, hf(code, "htm_model_narrow_total"), "HFCS", true),
-            ("liquid wealth over income", r.wealth_p50 / r.median_income, hf(code, "liquid_kvw_to_disposable_income_ratio_of_medians"), "HFCS", c.cfloor > 0),
-            ("MPC out of a month's income", r.mpc, hf(code, "mpc_mean"), "HFCS, self-reported", false)]
+            ("liquid wealth over income", r.wealth_p50 / r.median_income, hf(code, "liquid_kvw_to_disposable_income_ratio_of_medians"), "HFCS", c.cfloor > 0 || REGIME === :v4),
+            ("MPC out of a month's income", r.mpc, hf(code, "mpc_mean"), "HFCS, self-reported", REGIME === :v4)]      # version 4 fits both, weighted by standard errors
     @printf("\n%s %s, the base\n%-30s %8s %9s  %-22s %-9s %s\n", code, cfg, "indicator", "model", "official", "source", "", "")
     for (nm, m, d, src, tg) in rows
         ok = isnan(d) ? false : (d < 0.08 ? abs(m - d) <= 0.02 : abs(m - d) <= 0.25 * d)
