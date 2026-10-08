@@ -1640,3 +1640,16 @@ Not in version 5 yet: the state out of work sized to the official count; the mea
 - The paper's sentences (pp. 12 and 47, the same in both versions) say the opposite of its heading: "permanent shocks to income are lower for college graduates" holds in the four countries only for the first column, and "the transitory component is usually lower for households with a college degree (with the exception of France)" only for the second. So the paper contradicts itself, and it cannot settle the question alone.
 - Its robustness table (Table 23, p. 57) re-estimates the process with government transfers left out of income. Both variance columns rise in most cells (the first from 0.092 to 0.135 in Spain's lower group, 0.031 to 0.047 in France's, 0.072 to 0.117 in Italy's; the second from 0.016 to 0.031 in Germany's and 0.020 to 0.039 in Italy's), so it does not tell the two readings apart.
 - With the evidence outside the paper (the cross-sectional variances the estimates imply, section 42; the official distribution, section 43; the sizes found in the field) three lines favour the heading (with the heading itself, four) and one, the sentences, the first reading. Version 5 stays on the heading's order. The journal version (AEJ: Macroeconomics 16(3), 2024) is the one copy not yet seen.
+
+**The fit without the MPC, France and Italy** (`probe_fit_no_mpc.jl`, runs 37815710565 and 37815727578; version 4's inputs, so the old reading of the variances). With Germany (section 43), the three countries:
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| criterion (with the MPC in: 9.6, 87.6, 47.9) | 8.8 | 7.0 | 0.05 |
+| hand-to-mouth, model and HFCS | 0.235, 0.222 | 0.207, 0.225 | 0.175, 0.179 |
+| liquid wealth over income | 0.063, 0.059 | 0.118, 0.140 | 0.271, 0.272 |
+| floor, share of reference earnings | 0 | 0 | 0.20 |
+| MPC the model then gives, and the survey's | 0.386, 0.392 | 0.342, 0.468 | 0.290, 0.469 |
+| fall in consumption on job loss | 0.18 | 0.26 | 0.23 |
+
+With the MPC a test, the wealth moments are met in the three countries to within two standard errors, Italy's exactly and with its floor back at 0.20 of reference earnings (the MPC in the criterion had driven it to 0.04). The MPC as a test is then on the survey's figure in France and below it by 0.13 in Germany and 0.18 in Italy. This is the picture of section 39 with the roles of target and test exchanged, on inputs now known to be wrong; version 5 gives the figures to keep.
