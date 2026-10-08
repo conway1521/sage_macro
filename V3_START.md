@@ -1427,3 +1427,22 @@ Count on version 4: 4 met, 9 partly, 6 to rerun (met or partly on the old base; 
 - Germany G+E: as G (MPC 0.393, hand-to-mouth 0.262, liquid wealth 0.082, criterion 86.3); floor zero as in G.
 - Italy G+S: participation 0.124, multiplier 1.2; without A the permanent dispersion is 0.12 and S80/S20 is on target (6.05 against 6.04), which confirms that Italy's overshoot of inequality comes with the agency shares.
 - 13 of 24 configurations of version 4 are in. Started: G+A+E and G+S+A+E in France and Germany with the floor from G+E (G+S+E by the chain). Running: Italy G+E, France G+S.
+
+## 37. Measured values prepared for the stage after the calibrations (2026-10-08)
+
+The user's order: finish every version 4 configuration, then put every remaining parameter at its measured value, then make the MPC and the rest hold in every country. This section collects the measured values while the calibrations run; **nothing here is in the model yet**, and every change below means one more calibration of everything.
+
+**Audit item 12, the job-finding rate.** The model uses 1 less the share of the unemployed out of work a year or more (OECD 2023): 0.755, 0.689, 0.440 for France, Germany and Italy. Eurostat measures the annual transition itself in the Labour Force Survey's longitudinal data (table `lfsi_long_a`, status a year apart, both sexes; read through the Eurostat API on 2026-10-08; 2021 is missing in the three countries, the survey's break year):
+
+| share of those unemployed a year earlier | France 2019, 2023 | Germany 2019, 2023 | Italy 2019, 2023 |
+|---|---|---|---|
+| in work | 0.361, 0.410 | 0.409, 0.467 | 0.247, 0.288 |
+| still unemployed | 0.398, 0.337 | 0.317, 0.264 | 0.390, 0.363 |
+| out of the labour force | 0.241, 0.254 | 0.274, 0.269 | 0.362, 0.349 |
+| in work, among those still in the labour force | 0.475, 0.549 | 0.563, 0.639 | 0.388, 0.443 |
+| the model's mapping (OECD 2023) | 0.755 | 0.689 | 0.440 |
+| employed a year earlier, now unemployed (labour force) | 0.029, 0.030 | 0.012, 0.013 | 0.021, 0.015 |
+
+The model has no state out of the labour force, so the row to use is the one among those still in the labour force: 0.55, 0.64 and 0.44 in 2023. Italy's mapping agrees with the measured rate; France's and Germany's are above it (0.755 against 0.55, 0.689 against 0.64). The mapping overstates the rate in France because the long-term share counts spells in progress, and a person who found work and lost it again within the year is not long-term unemployed but is unemployed at both dates. EU-SILC's table of the same transition (`ilc_lvhl30`, self-declared status) gives lower rates still (0.31, 0.25, 0.25 in work a year later) and is the less suitable one: its status is the main activity over the income year. Under the rule the measured rate replaces the mapping; the separation rate by education then follows from the unemployment rates as now (u f / (1 - u)). For France this lowers both rates by about a quarter: spells are fewer and longer, which bears on the precautionary motive and on the fall in consumption on job loss. The year (2023, as the unemployment rates, or an average of years around the HFCS wave) is to be fixed by one rule for every labour-market input.
+
+**Italy's inequality with A on (section 36).** The agency shares are the pay premium by education (below tertiary 0.90, tertiary 1.46 of mean pay in Italy). With A off the two groups have the same mean pay and the permanent dispersion fitted to S80/S20 stands in for the premium (0.11 in Italy, 0.19 in France); with A on the premium is in, and in Italy the published process within the groups plus the premium gives 6.35 against 6.04. The published persistent variance for Italy's lower group (0.072 a year at a persistence of 0.944) implies a stationary variance of the log of 0.66, against 0.19 for the tertiary group and 0.11 to 0.52 in the other cells. Two things to settle before any remedy: the published table (whether 0.072 is the number in the journal version), and the income concept of the estimate (the model sets its income after a proportional tax against an official ratio of disposable income, which progressive taxes compress).
