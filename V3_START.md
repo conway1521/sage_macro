@@ -1526,3 +1526,38 @@ Candidates to examine at that stage, each to be read at its source before any us
 - **Italy G+E** (runs 37740255946 and 37772002755): the fit that keeps every evaluation handed over after four evaluations (288 minutes, about 70 minutes each with 21 regions and the floor on) and finished in the second job. Floor 0.035 of reference earnings with places against 0.058 in G (0.025 against 0.042 in the model's income units), an outlay of the order of 1e-5 per head in G; MPC 0.403 against 0.469 (-3.5), hand-to-mouth 0.210 against 0.179 (+1.1), liquid wealth 0.107 against 0.272 (-5.9), S80/S20 6.03 against 6.04; criterion 48.4, as G. The two floors differ (by 0.02 of reference earnings), and by the rule of section 36 the configurations without places would be refitted with the floor from G+E; they are not refitted now, since the floor pays out almost nothing at either value and everything is calibrated again at the parameter stage. Italy's G+A+E and G+S+A+E take the floor from G+E.
 - France G+S+A+E is in its last job (run 37775745111). Italy G+A+E and G+S+A+E are started with the floor from G+E.
 - **18 of 24**: France and Germany have six and seven (G, G+A, G+S, G+S+A, G+E, G+A+E; Germany also G+S+A+E), Italy five.
+
+## 41. Where the base goes wrong on income, measured (2026-10-08, 17:30 UTC)
+
+The user's question (8 October): are the misfits at the base or in S, A and E; why is the bottom of the income distribution too heavy; can each country's income distribution be reproduced. The misfits are at the base: the household moments are the same to the second decimal with S, A and E on (Germany's MPC 0.393 in G, 0.395 with every switch on).
+
+**The official distribution** (Eurostat 2021, read through the API on 8 October into `data/validation/income_shape.csv`: decile cut-offs and shares of equivalised disposable income, `ilc_di01`; the share of people under 65 below 40, 50, 60 and 70% of the median, `ilc_li02`; people under 65 in households with very low work intensity, `ilc_lvhl11n`) **against the model** (`probe_income_shape.jl`, runs 37815707110 for G and 37815698521 for G+A; raw income states, not smoothed, so the model's quantiles are lumpy):
+
+| G+A | France: model, official | Germany | Italy |
+|---|---|---|---|
+| first decile over the median | 0.44, 0.54 | 0.48, 0.50 | 0.42, 0.44 |
+| second decile | 0.62, 0.67 | 0.58, 0.65 | 0.51, 0.60 |
+| eighth decile | 1.59, 1.45 | 1.66, 1.53 | 1.62, 1.55 |
+| ninth decile | 1.97, 1.83 | 2.05, 1.95 | 2.25, 1.99 |
+| share of the top tenth, % | 21.8, 24.2 | 23.8, 24.7 | 24.7, 24.9 |
+| below 40% of the median | 0.072, 0.042 | 0.054, 0.052 | 0.088, 0.101 |
+| below 50% | 0.128, 0.092 | 0.135, 0.094 | 0.149, 0.145 |
+| below 60% | 0.172, 0.152 | 0.204, 0.151 | 0.212, 0.214 |
+| of the model's share below 50%: the unemployed | 0.020 | 0.011 | 0.041 |
+| variance of the log of income, model | 0.32 | 0.33 | 0.46 |
+| the same implied by the official cut-offs (a lognormal through each) | 0.19 to 0.26 | 0.25 to 0.33 | 0.27 to 0.58 |
+| not in work: model; official very low work intensity | 0.066, 0.108 | 0.029, 0.095 | 0.072, 0.108 |
+
+What it shows.
+1. **S80/S20 is the wrong single target.** The official distributions have a body close to a lognormal with a standard deviation of the log of 0.43 to 0.51 in France and 0.50 to 0.58 in Germany, and a top tenth that holds more than such a body gives (24 to 25%). The model reaches the same S80/S20 with a symmetric distribution that is wider everywhere (0.56 and 0.57): the eighth and ninth deciles are too high in the three countries, the first and second too low in France and Germany, and the top tenth's share too low. The ratio is matched and the shape is not.
+2. **Where the excess width comes from differs by country.** In Germany it is the permanent component: three symmetric nodes at a dispersion of 0.45 to 0.48 put a quarter of households at about half the typical income, and that node is 83 to 88% of the lowest fifth. In France it is the published process of the lower education group itself: the variance of the log of income among its employed is 0.32 to 0.35 with a small permanent component, more than the whole official body (0.19 to 0.26). In Italy the bottom is right (the shares below 40 to 70% of the median are within a point of the official ones) and the upper half is too wide.
+3. **The unemployed are a small part of the model's poor**: 1 to 4 points of the 13 to 15% below half the median. The heavy bottom is among the employed of the lower education group. The model has too few households out of work against the official count of people in households with very low work intensity (3 to 7% against 9.5 to 10.8%), which bears on in-work poverty (the model's poor are workers, the data's largely are not) more than on the shape.
+4. **Not a missing tax.** The published process is household income after tax with transfers (ECHP 1994 to 2001), so the reading of sections 37 and 38, that taxes and transfers were not compressing it, was wrong.
+
+**What follows for the design, proposed to the user and not built.**
+- The income distribution is fitted to the official deciles, not to S80/S20: the permanent component takes free nodes and weights (an asymmetric distribution, with a small top type for the top tenth's share, the device of Castaneda, Diaz-Gimenez and Rios-Rull 2003), chosen so that the model's deciles are the official ones. Every EU country has the same table.
+- The pay premium by education belongs to the base in every configuration; A's switch then adds only protection and dread, and no switch moves the income distribution.
+- A permanent component can only add dispersion. Where the published risk alone is wider than the official body (France's lower education group, the upper half in Italy), the decile fit will not close the gap, and the cause is upstream: a process with a persistence of 0.94 to 0.97 and no fixed effect, used as the stationary process of a household that lives for ever, spreads further than the cross-section of people of working age does. How the field handles that in a model without a life cycle, and the journal version of the table, are the two things to read before building.
+- The state out of work sized to the official count of jobless households is needed for in-work poverty and is second in order.
+
+**The fit without the MPC** (`probe_fit_no_mpc.jl`, runs 37815710565, 37815714541, 37815727578): running; it shows whether the hand-to-mouth share and median liquid wealth can be met together in Germany and Italy once the MPC is out of the criterion.
