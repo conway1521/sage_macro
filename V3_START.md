@@ -1754,3 +1754,19 @@ Both fit with the premium in as they did without it, and Italy's inequality, whi
 **A variant put to the user: the hand-to-mouth share first** (`SAGE_HTM_FIRST=1`, `probe_fit_htm_first.jl`). Patience and its gap are identified by the hand-to-mouth share and its split; the floor by median liquid wealth. The floor is searched from 0.10 in every country (in Germany and France it had started at zero, from the version 4 file, and was never tried). Where it stays positive the four moments are met together, as in Italy; where it goes to zero the median has no parameter left and is reported as a test with its miss, as the MPC is. This is the rule the calibration had before version 4, and it rests on what the moment is for: the share and kind of hand-to-mouth households is what determines the average MPC in this class of model (Kaplan and Violante 2022). Started for the three countries; the standard criterion's G is running beside it (run 37841169403), and the two are shown to the user side by side.
 
 **An error of mine, found at 22:05 UTC.** The commit announced in section 48 (8e4c722) held only the removal of the two files: the `git add` that should have staged `sage_modular.jl` and the spec failed on the two paths already removed, with its error message silenced, and the commit went ahead without them. So the premium was not in the repository until commit fcaa705 (22:10 UTC), and every run started in between was without it: the three G calibrations of run 37841169403 (their numbers are those of section 45 to the last digit, which is how it was noticed; the two files they wrote are not committed) and the first three runs of the hand-to-mouth-first variant (37845395417, 37845399249, 37845403024), which stand as the variant on G without the premium. What section 48 says about the G+A runs of the old definition holds: they did have the premium, by A. Started again with the premium in: G on the standard criterion for the three countries, and the variant for the three. Checked this time on the remote before launching (`premium_base` in `origin/main`), and the runs' commit is fcaa705.
+
+**The hand-to-mouth share first: France and Italy** (runs 37845395417 and 37845403024; G without the premium, see the note above).
+
+| the variant | France | Italy |
+|---|---|---|
+| floor | goes to zero | 0.22 of reference earnings |
+| hand-to-mouth, model and HFCS | 0.220, 0.222 | 0.184, 0.179 |
+| its gap by education, miss in standard errors | -0.2 | -0.05 |
+| effort | on target | on target |
+| median liquid wealth over income | 0.089, 0.059 (a test) | 0.274, 0.272 (fitted by the floor) |
+| MPC, a test (survey 0.392, 0.469) | 0.433 | 0.330 |
+| fall in consumption on job loss | 0.155 | 0.231 |
+
+France calibrates: the share, its split and effort are met, the median is a week and a half of income above the data's, the MPC 0.04 above the survey's, and the fall in consumption on job loss is inside the literature's 0.07 to 0.16 for the first time on one asset. Italy is as on the standard criterion, since its floor is positive and all four moments are met either way. Germany is running; then the same with the premium in.
+
+**France on broad liquid wealth** (`probe_fit_broad.jl FR`, run 37831843814): criterion 26; hand-to-mouth 0.090 against 0.114, the median 0.342 against 0.380, the MPC 0.226. As the grid said, the broad definition fits France worse and takes the MPC further from the survey.
