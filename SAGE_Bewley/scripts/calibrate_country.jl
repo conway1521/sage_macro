@@ -386,6 +386,30 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
         end
     end
     liqtol = Ref(flfree ? 0.03 : LIQ_TOL)          # the floor owns liquid wealth in G
+    # EVERY EVALUATION KEPT (2026-10-08). With places, a floor and three types of household per cell one
+    # step of the fit (the point, a column per free parameter, the trial steps) did not fit in a job:
+    # Italy G+E of version 4 was cancelled at the six-hour limit inside its first step with nothing
+    # kept. The moments of every point evaluated are appended to a checkpoint file, a resumed job reads
+    # them back, and the run hands over before an evaluation that would not finish inside the budget.
+    memo = Dict{String,Tuple{Bool,Vector{Float64}}}(); mfile = ckfile(tag * "_evals"); leval = Ref(0.0)
+    if isfile(mfile)
+        for ln in eachline(mfile)
+            q = split(ln, "|"); length(q) == 3 || continue
+            memo[q[1]] = (q[2] == "1", [parse(Float64, v) for v in split(q[3], ",")])
+        end
+        isempty(memo) || say("    ", length(memo), " evaluations of the fit read from the checkpoint")
+    end
+    function atm(x)
+        key = join((@sprintf("%.10g", v) for v in x), ",")
+        haskey(memo, key) && (e = memo[key]; return (r = nothing, st = nothing, m = e[2], ok = e[1]))
+        leval[] > 0 && (time() - t_start) / 60 + 1.3 * leval[] > BUDGET &&
+            (say(@sprintf("\nTIME BUDGET: %.0f of %.0f minutes used inside the fit, %d evaluations kept; to resume in a new job.",
+                          (time() - t_start) / 60, BUDGET, length(memo))); exit(3))
+        t_ = time(); o_ = at(x); leval[] = max(leval[], (time() - t_) / 60)
+        memo[key] = (o_.ok, o_.m)
+        open(io -> println(io, key, "|", o_.ok ? 1 : 0, "|", join((@sprintf("%.12g", v) for v in o_.m), ",")), mfile, "a")
+        o_
+    end
     # the fifth moment, the gap in the hand-to-mouth share between the cells, counts in the education regime only
     res(o) = V4 ? (r_ = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET, HGAP_TARGET, MPC_DATA]) ./ [E_TOL, SE_LIQ, SE_HTM, 0.05, SE_GAP, SE_MPC];
                    gapfree || (r_[5] = 0.0); r_) :          # version 4: in standard errors; effort and S80/S20, which have none, to a numerical tolerance
@@ -401,9 +425,9 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
         get(ckf, "nofloor", 0.0) == 1.0 && (flfree = false; lo[5] = hi[5] = 0.0; liqtol[] = LIQ_TOL)
         say("    fit resumed after step ", it0 - 1)
     end
-    o = at(x)
+    o = atm(x)
     while !o.ok && x[5] > lo[5]          # a start with no solution: halve the floor
-        x[5] = max(lo[5], x[5] / 2 - 1e-3); o = at(x)
+        x[5] = max(lo[5], x[5] / 2 - 1e-3); o = atm(x)
     end
     o.ok || error("the fit's starting point has no solution")
     F = res(o); tfit = time(); nstep = 0
@@ -429,16 +453,16 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
         for k in 1:np
             hi[k] - lo[k] < 1e-12 && continue          # a fixed parameter: no column, no solve
             xk = copy(x); h = (xk[k] + H[k] > hi[k]) ? -H[k] : H[k]; xk[k] += h
-            ok_ = at(xk)
+            ok_ = atm(xk)
             if !ok_.ok && x[k] - H[k] >= lo[k]          # no solution on that side: the other
-                xk = copy(x); h = -H[k]; xk[k] += h; ok_ = at(xk)
+                xk = copy(x); h = -H[k]; xk[k] += h; ok_ = atm(xk)
             end
             ok_.ok && (J[:, k] = (res(ok_) .- F) ./ h)
         end
         moved = false
         for _ in 1:6
             A = J' * J; d = -((A + lam * Diagonal(diag(A)) + 1e-10 * I) \ (J' * F))
-            xn = clamp.(x .+ d, lo, hi); on = at(xn); Fn = res(on)
+            xn = clamp.(x .+ d, lo, hi); on = atm(xn); Fn = res(on)
             if on.ok && sum(abs2, Fn) < sum(abs2, F) - 1e-6
                 x = xn; o = on; F = Fn; lam = max(lam / 3, 1e-4); moved = true; break
             end
