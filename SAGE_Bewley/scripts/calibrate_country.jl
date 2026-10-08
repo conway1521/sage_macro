@@ -161,7 +161,8 @@ function hfcs_se(moment, group = "all", sub = "all"; wave = "2021")
 end
 const SE_HTM = V4 ? hfcs_se("htm_model_narrow_total") : NaN
 const SE_LIQ = V4 ? hfcs_se("liquid_kvw_to_disposable_income_ratio_of_medians") : NaN
-const SE_MPC = V4 ? hfcs_se("mpc_mean") : NaN
+# SAGE_NO_MPC=1 (a diagnostic, probe_fit_no_mpc.jl): the MPC out of the criterion, reported as the model gives it
+const SE_MPC = V4 ? (get(ENV, "SAGE_NO_MPC", "0") == "1" ? Inf : hfcs_se("mpc_mean")) : NaN
 const SE_GAP = V4 ? sqrt(hfcs_se("htm_model_narrow_total", "education", "below tertiary")^2 + hfcs_se("htm_model_narrow_total", "education", "tertiary")^2) : NaN
 const E_REF_C = V3 ? num("e_ref") : NaN
 v3kw() = V3 && !isnan(ETA[]) ? merge(V4 ? (perm_sd = ETA[],) : (eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
