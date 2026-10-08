@@ -1419,3 +1419,5 @@ A fifth item for the stage after the calibrations: **Italy's income inequality w
 | U3 a new country | not tried | later |
 
 Count on version 4: 4 met, 9 partly, 6 to rerun (met or partly on the old base; the reruns are tests, not builds), 3 not. The rows that decide whether version 4 passes the old base are M4 and M5 in Germany and Italy, and M8.
+
+**France G+S+A and Germany G+S under version 4** (runs 37707846432 and 37713471498, committed 2026-10-08, 02:40 UTC). France G+S+A: participation 0.232 with both cells on target (0.201, 0.290 against 0.203, 0.291), multiplier 1.6 (band 1.2 to 2.3), the G+A moments unchanged. Germany G+S: participation 0.279, multiplier 1.9; the two cells are not separated without A (0.277, 0.284 against 0.252, 0.349), as on the old base. 10 of 24 configurations of version 4 are in; G+S in France and Italy and G+E in the three countries are running.
