@@ -1384,3 +1384,38 @@ Transitions refuse an economy with permanent types (their tax and benefit sums r
 - Germany G+A: as G (MPC 0.394, criterion 87.5).
 
 Running: France and Germany G+S+A and G+E (37707846432, 37707849048), Italy G+A, G+S+A and G+E (37710406114, 37710408485). Then G+A+E and G+S+A+E for each (G+S and G+S+E by the chain).
+
+**Germany G+S+A, Italy G+A and G+S+A under version 4** (runs 37707846432 and 37710406114, committed 2026-10-08, 01:50 UTC).
+- Germany G+S+A: participation 0.278 with both education cells on target (0.251, 0.350 against 0.252, 0.349), multiplier 1.9 (band 1.3 to 3.1); the G+A moments unchanged (MPC 0.394 against 0.468, hand-to-mouth 0.264 against 0.225, liquid wealth 0.081 against 0.140, criterion 87.4).
+- Italy G+A: top patience 0.935, gap 0.104, **permanent dispersion at its lower bound of zero and S80/S20 6.35 against 6.04**. With A on, the agency shares differ by education and add dispersion between the two groups, as in France, where the permanent dispersion fell from 0.19 to 0.08. In Italy the published process and those shares together already give more inequality than the official figure, so nothing is left for the fit to take away. MPC 0.415 against 0.469 (-2.9), hand-to-mouth 0.197 against 0.179 (+0.6), liquid wealth 0.097 against 0.272 (-6.3), criterion 86.8, of which about 38 is the S80/S20 miss. In-work poverty 0.211 against 0.117; fall in consumption on job loss 0.33.
+- Italy G+S+A: participation 0.124 with both cells on target (0.116, 0.165), multiplier 1.2 (band 1.1 to 1.6).
+
+A fifth item for the stage after the calibrations: **Italy's income inequality with A on** (5% above the official figure with no parameter left to lower it). The low-education persistent variance read for Italy (0.072) is three times that of the other cells, which makes the check of the published table of Ampudia et al. (2024) the first thing to do there.
+
+**The scorecard on version 4 (2026-10-08, 02:00 UTC).** The old base (files `v3fet`) stays at 9 met, 11 partly, 2 not, of 22 (section 33), but it carries parameters the rule of section 34 excludes. Version 4 is the line that can be defended, and it has to earn each row again:
+
+| | on version 4 now | what closes it |
+|---|---|---|
+| M1 budget and closure | to retest | the engine test with permanent types and the cell processes |
+| M2 standard blocks | met | a published income process by education, permanent types |
+| M3 every parameter sourced or identified | partly, closer | income process, cohesion threshold and weight now sourced or normalised; the audit's items of section 34 left |
+| M4 every configuration on its targets | partly: 8 of 24 calibrated | France passes the criterion; Germany rejected (MPC, liquid wealth); Italy rejected (liquid wealth, MPC, S80/S20 with A) |
+| M5 spending behaviour | partly | MPC now a target: France on it, Italy 0.41 (was 0.31), Germany 0.39 against 0.47; the fall on job loss 0.18, 0.29, 0.33 against 0.07 to 0.16 |
+| M6 who holds no buffer | partly | by education fitted; regions and types of place to rerun |
+| M7 wealth distribution | to rerun | the two-asset reference is on the old base |
+| M8 transitions | not on version 4 | the code refuses permanent types; sums over types to write |
+| N1 method | met | |
+| N2 exact reductions | to rerun | on/off pass with the new settings |
+| N3 accuracy | to rerun | Euler errors and grids with three types per cell |
+| N4 independent solver | not | version 2 only |
+| N5 reproducible | mostly met | |
+| N6 equilibria with S | to rerun | the count in three countries |
+| B1 recognised dimensions | partly | unchanged |
+| B2 official data | met | |
+| B3 indicators against official figures | to rerun | in-work poverty still about twice official (0.17 to 0.21 against 0.07 to 0.12) |
+| B4 welfare tables, B5 accessible | partly | later, by the user's ordering |
+| U1 any order of switches | partly: 8 of 24 | |
+| U2 policy levers with bands | partly | multipliers 1.9 (Germany), 1.2 (Italy) with bands |
+| U3 a new country | not tried | later |
+
+Count on version 4: 4 met, 9 partly, 6 to rerun (met or partly on the old base; the reruns are tests, not builds), 3 not. The rows that decide whether version 4 passes the old base are M4 and M5 in Germany and Italy, and M8.
