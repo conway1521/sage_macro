@@ -46,6 +46,7 @@
 # exits 3. Nothing is tuned by hand.
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf, Statistics, SHA
+include(joinpath(@__DIR__, "decile_fit.jl"))          # the permanent types fitted to the official deciles (version 5)
 say(args...) = (println(args...); flush(stdout))
 
 const CODE = ARGS[1]
@@ -74,7 +75,13 @@ const A_ON = occursin('A', CFG)
 # HFCS moment weighted by the inverse of its sampling variance (the standard errors of
 # data/hfcs_targets.csv), as in Ampudia, Cooper, Le Blanc and Zhu (2024, equation 10). No tolerance
 # band is set by hand for a moment that has a standard error. S80/S20 is a test. Files calibration_v4_*.
-const V4 = get(ENV, "SAGE_V4", "0") == "1"
+# VERSION 5 (SAGE_V5=1; V3_START.md, sections 41 to 44): version 4 with (1) the published variances in the
+# order of the source's equation (the regime v3 = :v5 of country_config), (2) the permanent component
+# of income as five types fitted to the official decile cut-offs (decile_fit.jl) in G and in G+A, and
+# read from those files by the other configurations, in place of one dispersion fitted to S80/S20,
+# (3) the MPC a test and not a moment of the criterion (the user, 2026-10-08). Files calibration_v5_*.
+const V5 = get(ENV, "SAGE_V5", "0") == "1"
+const V4 = V5 || get(ENV, "SAGE_V4", "0") == "1"
 const V3 = V4 || get(ENV, "SAGE_V3", "0") == "1"
 # THE FLOOR IN THE BASE (SAGE_FLOOR=1 with SAGE_V3=1; V3_START.md, section 22). A means-tested floor
 # (Hubbard, Skinner and Zeldes 1995), financed by the lump-sum tax, with patience the same for all
@@ -97,15 +104,15 @@ const EDUREG = V4 || (V3 && get(ENV, "SAGE_EDU", "0") == "1")
 # THE TRANSITORY PART AND THE PROPORTIONAL TAX (SAGE_TRANS=1 with SAGE_V3=1; V3_START.md, section 29).
 # The same regime with both on; files with a t added to the tag (calibration_v3fet_* for the base).
 const TRANS = V4 || (V3 && get(ENV, "SAGE_TRANS", "0") == "1")
-const VTAG0 = V4 ? "v3fet" : "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "")          # the regime the starting point is read from
-const V3ARG = V4 ? :v4 : TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") :
+const VTAG0 = V5 ? "v4" : V4 ? "v3fet" : "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "")          # the regime the starting point is read from
+const V3ARG = V5 ? :v5 : V4 ? :v4 : TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") :
               FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : V3)
 # A TRIAL INCOME PROCESS (SAGE_RHO, SAGE_SDEPS with SAGE_TRANS=1): the persistence of the persistent part
 # and the size of the transitory part given here in place of the country table's; files tagged with an
 # r more (V3_START.md, section 31). The fit is as always: the persistent innovation to S80/S20.
 const RHO_TRIAL = TRANS && haskey(ENV, "SAGE_RHO") ? parse(Float64, ENV["SAGE_RHO"]) : NaN
 const SDEPS_TRIAL = TRANS && haskey(ENV, "SAGE_SDEPS") ? parse(Float64, ENV["SAGE_SDEPS"]) : NaN
-const VTAG = V4 ? "v4" : VTAG0 * (TRANS ? "t" : "") * ((isnan(RHO_TRIAL) && isnan(SDEPS_TRIAL)) ? "" : "r")
+const VTAG = V5 ? "v5" : V4 ? "v4" : VTAG0 * (TRANS ? "t" : "") * ((isnan(RHO_TRIAL) && isnan(SDEPS_TRIAL)) ? "" : "r")
 function hfcs_target(moment; wave = "2021")
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
         startswith(ln, "#") && continue
@@ -162,10 +169,12 @@ end
 const SE_HTM = V4 ? hfcs_se("htm_model_narrow_total") : NaN
 const SE_LIQ = V4 ? hfcs_se("liquid_kvw_to_disposable_income_ratio_of_medians") : NaN
 # SAGE_NO_MPC=1 (a diagnostic, probe_fit_no_mpc.jl): the MPC out of the criterion, reported as the model gives it
-const SE_MPC = V4 ? (get(ENV, "SAGE_NO_MPC", "0") == "1" ? Inf : hfcs_se("mpc_mean")) : NaN
+const SE_MPC = V4 ? ((V5 || get(ENV, "SAGE_NO_MPC", "0") == "1") ? Inf : hfcs_se("mpc_mean")) : NaN          # version 5: the MPC is a test
 const SE_GAP = V4 ? sqrt(hfcs_se("htm_model_narrow_total", "education", "below tertiary")^2 + hfcs_se("htm_model_narrow_total", "education", "tertiary")^2) : NaN
 const E_REF_C = V3 ? num("e_ref") : NaN
-v3kw() = V3 && !isnan(ETA[]) ? merge(V4 ? (perm_sd = ETA[],) : (eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
+# the permanent types of version 5 and their weights (fitted in G and G+A, read by the others)
+const PF = Ref(Float64[]); const PW = Ref(Float64[])
+v3kw() = V3 && !isnan(ETA[]) ? merge(V5 ? (perm_sd = 0.0, perm_f = PF[], perm_w = PW[]) : V4 ? (perm_sd = ETA[],) : (eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
                                      isnan(RHO_TRIAL) ? (;) : (rho = RHO_TRIAL,), isnan(SDEPS_TRIAL) ? (;) : (sd_eps = SDEPS_TRIAL,)) : ()
 if FLOORREG
     if CFG == FLOOR_CFG
@@ -286,6 +295,8 @@ timed_scans(args...; kw...) = (t_ = time(); out = scans(args...; kw...); LASTSCA
 function write_cal(phi, spread; kappa = nothing, sigma = nothing)
     open(OUTFILE, "w") do io
         println(io, "# written by calibrate_country.jl $(CODE) $(CFG)", V3 ? ", version 3 (effort set by the job, household replacement rate, liquid-wealth targets from the HFCS)" : "", "; read by country_config")
+        V5 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\nperm_f = %s\nperm_w = %s\n%s", phi, spread, BB[], join([@sprintf("%.5f", v) for v in PF[]], " "), join([@sprintf("%.5f", v) for v in PW[]], " "),
+                     (FLOORREG ? @sprintf("cfloor = %.6f\n", FL[] * E_REF_C) : "") * (EDUREG ? @sprintf("beta_gap = %.4f\n", BGAP[]) : "")) :
         V3 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\n%s = %.4f\n%s", phi, spread, BB[], V4 ? "perm_sd" : "eta_z", ETA[], (FLOORREG ? @sprintf("cfloor = %.6f\n", FL[] * E_REF_C) : "") * (EDUREG ? @sprintf("beta_gap = %.4f\n", BGAP[]) : "")) :
              @printf(io, "phi = %.2f\nbeta_spread = %.3f\nbeta_bar = %.4f\n", phi, spread, BB[])
         kappa === nothing || @printf(io, "kappa = %.2f\nsigma_m = %.2f\n", kappa, sigma)
@@ -371,6 +382,7 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
     # permanent component of income (no risk), which S80/S20 identifies; the floor is free wherever
     # it is fitted, with liquid wealth in the criterion at its standard error
     V4 && (lo[4] = 0.0; hi[4] = 1.2; H[4] = 0.05)
+    V5 && (lo[4] = hi[4] = 0.0)          # version 5: the permanent types are given (fitted to the deciles before the fit)
     # A point where the economy has no solution (a floor that cannot be financed: Italy at 0.35,
     # 2026-10-04) is not an error of the fit: it is a point to step away from.
     function at(x)
@@ -413,7 +425,7 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
     end
     # the fifth moment, the gap in the hand-to-mouth share between the cells, counts in the education regime only
     res(o) = V4 ? (r_ = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET, HGAP_TARGET, MPC_DATA]) ./ [E_TOL, SE_LIQ, SE_HTM, 0.05, SE_GAP, SE_MPC];
-                   gapfree || (r_[5] = 0.0); r_) :          # version 4: in standard errors; effort and S80/S20, which have none, to a numerical tolerance
+                   gapfree || (r_[5] = 0.0); V5 && (r_[4] = 0.0); r_) :          # version 5: the income distribution is fitted apart, by the permanent types; version 4: in standard errors; effort and S80/S20, which have none, to a numerical tolerance
              (r_ = (o.m .- [aim_e, LIQ_TARGET, aim_h, S8020_TARGET, EDUREG ? HGAP_TARGET : 0.0]) ./ [E_TOL, liqtol[], HTM_TOL, S8020_TOL, HGAP_TOL];
               gapfree || (r_[5] = 0.0); r_)
     # Resumable: with places on, one step of the fit takes half an hour on a runner and sixteen
@@ -494,6 +506,25 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
     (phi = exp(xr[1]), bb = xr[2], sp = xr[3], eta = xr[4], fl = xr[5], gap = xr[6], r = o.r, st = o.st)
 end
 say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", round(HTM_TARGET - GAP; digits = 4))
+# VERSION 5: the permanent types. Fitted to the official deciles in G and in G+A (below); every other
+# configuration reads them from the file of G (A off) or of G+A (A on), since neither S nor the
+# places are meant to move the income distribution.
+const PERM_FITTED = V5 && CFG in ("G", "GA")
+if V5
+    ETA[] = 0.0
+    if !PERM_FITTED
+        fbp = joinpath(@__DIR__, "calibration_v5_$(CODE)_$(A_ON ? "GA" : "G").txt")
+        isfile(fbp) || error("version 5: the permanent types are read from $(basename(fbp)), which does not exist; calibrate it first")
+        for l in eachline(fbp)
+            startswith(l, "perm_f") && (PF[] = parse.(Float64, split(last(split(l, "=")))))
+            startswith(l, "perm_w") && (PW[] = parse.(Float64, split(last(split(l, "=")))))
+        end
+        (length(PF[]) > 0 && length(PF[]) == length(PW[])) || error("version 5: no permanent types in $(basename(fbp))")
+        say("  permanent types from ", basename(fbp), ": ", join([@sprintf("%.3f", v) for v in PF[]], " "), " | weights ", join([@sprintf("%.3f", v) for v in PW[]], " "))
+    elseif (ckp = ck_read("perm")) !== nothing
+        PF[] = [ckp["f$k"] for k in 1:5]; PW[] = [ckp["w$k"] for k in 1:5]
+    end
+end
 ck1 = ck_read("stage1")
 if ck1 === nothing && V3
     # with E on, start at the calibration of the same configuration without places, which is close:
@@ -502,8 +533,8 @@ if ck1 === nothing && V3
     if E_ON
         fb = joinpath(@__DIR__, "calibration_$(VTAG)_$(CODE)_$(replace(CFG, "E" => "")).txt")
         if isfile(fb)
-            kv = Dict(strip(first(split(l, "="))) => parse(Float64, last(split(l, "="))) for l in eachline(fb) if occursin("=", l) && !startswith(l, "#"))
-            x0e = [log(kv["phi"]), kv["beta_bar"], kv["beta_spread"], kv[V4 ? "perm_sd" : "eta_z"],
+            kv = Dict(strip(first(split(l, "="))) => parse(Float64, last(split(l, "="))) for l in eachline(fb) if occursin("=", l) && !startswith(l, "#") && !startswith(l, "perm_") && !startswith(l, "effort_cell"))
+            x0e = [log(kv["phi"]), kv["beta_bar"], kv["beta_spread"], get(kv, V4 ? "perm_sd" : "eta_z", 0.0),
                    CFG == FLOOR_CFG ? get(kv, "cfloor", FL[] * E_REF_C) / E_REF_C : FL[], get(kv, "beta_gap", 0.0)]
             say("  starting from ", basename(fb))
         end
@@ -513,7 +544,7 @@ if ck1 === nothing && V3
         # little lower (the refit of section 28 found 0.02 to 0.03)
         fb = joinpath(@__DIR__, "calibration_$(VTAG0)_$(CODE)_$(CFG).txt")
         if isfile(fb)
-            kv = Dict(strip(first(split(l, "="))) => parse(Float64, last(split(l, "="))) for l in eachline(fb) if occursin("=", l) && !startswith(l, "#"))
+            kv = Dict(strip(first(split(l, "="))) => parse(Float64, last(split(l, "="))) for l in eachline(fb) if occursin("=", l) && !startswith(l, "#") && !startswith(l, "perm_") && !startswith(l, "effort_cell"))
             # at a trial persistence the innovation starts where the variance of log income is the file's
             # (the table's persistence is 0.92 in the three countries)
             e0 = V4 ? 0.30 : isnan(RHO_TRIAL) ? kv["eta_z"] : clamp(kv["eta_z"] * sqrt((1 - RHO_TRIAL^2) / (1 - 0.92^2)), 0.06, 0.39)          # version 4: where the search for the permanent dispersion starts
@@ -522,7 +553,24 @@ if ck1 === nothing && V3
             say("  starting from ", basename(fb), isnan(RHO_TRIAL) ? ", patience 0.02 lower" : ", the persistent innovation rescaled to the trial persistence")
         end
     end
-    f3 = x0e === nothing ? fit_v3(E_TARGET, HTM_TARGET - GAP) : fit_v3(E_TARGET, HTM_TARGET - GAP; x0 = x0e)
+    if PERM_FITTED
+        # the types at the starting point, the fit, the types again at the fitted point, the fit again:
+        # the income distribution depends on the other parameters only through effort and asset income
+        x0v = x0e === nothing ? [log(7.5), 0.93, 0.0, 0.0, FL[], 0.03] : copy(x0e); x0v[3] = 0.0; x0v[4] = 0.0
+        BB[] = x0v[2]; FL[] = x0v[5]; BGAP[] = x0v[6]
+        say("  the permanent types, fitted to the official decile cut-offs at the starting point")
+        P1 = fit_permanent(cfg_off(exp(x0v[1]), 0.0), CODE); PF[] = P1.f; PW[] = P1.w; show_permanent(P1)
+        f3a = fit_v3(E_TARGET, HTM_TARGET - GAP; x0 = x0v)
+        BB[] = f3a.bb; FL[] = f3a.fl; BGAP[] = f3a.gap
+        say("  the permanent types again, at the fitted point")
+        P2 = fit_permanent(cfg_off(f3a.phi, 0.0), CODE)
+        @printf("  largest move of a type between the two passes: %.3f in the log of its factor, %.3f in its weight\n", maximum(abs.(log.(P2.f ./ P1.f))), maximum(abs.(P2.w .- P1.w)))
+        PF[] = P2.f; PW[] = P2.w; show_permanent(P2)
+        ck_write("perm", merge(Dict("f$k" => PF[][k] for k in 1:5), Dict("w$k" => PW[][k] for k in 1:5)))
+        f3 = fit_v3(E_TARGET, HTM_TARGET - GAP; x0 = [log(f3a.phi), f3a.bb, 0.0, 0.0, f3a.fl, f3a.gap], tag = "fit3b")
+    else
+        f3 = x0e === nothing ? fit_v3(E_TARGET, HTM_TARGET - GAP) : fit_v3(E_TARGET, HTM_TARGET - GAP; x0 = x0e)
+    end
     phi = f3.phi; spread = f3.sp; BB[] = f3.bb; ETA[] = f3.eta; FL[] = f3.fl; BGAP[] = f3.gap; edge = false
     chk_e, chk_h = f3.r.mean_effort_employed, f3.r.hand_to_mouth_kvw
     ck_write("stage1", Dict("phi" => phi, "spread" => spread, "edge" => 0.0, "effort" => chk_e, "htm" => chk_h, "bb" => BB[], "eta" => ETA[], "fl" => FL[], "gap" => BGAP[]))

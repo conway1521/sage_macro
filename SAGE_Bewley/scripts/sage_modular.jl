@@ -287,6 +287,11 @@ Base.@kwdef struct SAGEConfig
     # Each node is a type of household solved on its own, pooled like the patience types. Zero: none.
     perm_sd::Float64 = 0.0
     n_perm::Int = 3
+    # Explicit permanent types (version 5, V3_START.md section 44): factors on income with mean one
+    # and their weights, fitted to the official decile cut-offs. When given they replace the
+    # symmetric nodes of perm_sd.
+    perm_f::Vector{Float64} = Float64[]
+    perm_w::Vector{Float64} = Float64[]
     # The economy in which the job's effort levels are found (floor_effort) taxed in proportion to
     # labour income, as the economy itself is, when tax_mode is :prop. false: taxed per head, as in
     # the regime of 2026-10-06, whose files it reproduces. Per head, the lowest income states of a
@@ -370,6 +375,7 @@ end
 
 "Nodes and weights of the permanent component of income (mean one)."
 function perm_nodes(c::SAGEConfig)
+    isempty(c.perm_f) || return (c.perm_f, c.perm_w)
     (c.perm_sd <= 0 || c.n_perm <= 1) && return ([1.0], [1.0])
     K = c.n_perm
     x = [c.perm_sd * sqrt(K - 1) * (2 * (k - 1) / (K - 1) - 1) for k in 1:K]
@@ -656,7 +662,7 @@ function floor_tax_of(c::SAGEConfig)
     key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.alpha, c0.alpha_off, c0.A, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
-                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.ref_prop)))
+                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.ref_prop)))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
     cs = cells_of(c0); _, bw = betas_of(c0)
@@ -1252,10 +1258,10 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
         # part (its size from data/manual_inputs.csv, field sd_eps) and the proportional tax
         # (V3_START.md, section 29); files with a t added to the tag, calibration_v3fet_* for the base.
         vs = v3 === true ? "" : string(v3)
-        vs in ("", "floor", "edu", "floor_edu", "trans", "floor_trans", "edu_trans", "floor_edu_trans", "v4") || error("unknown version 3 regime $v3")
-        v4 = vs == "v4"
+        vs in ("", "floor", "edu", "floor_edu", "trans", "floor_trans", "edu_trans", "floor_edu_trans", "v4", "v5") || error("unknown version 3 regime $v3")
+        v5 = vs == "v5"; v4 = vs == "v4" || v5          # version 5 is version 4 with the corrections below
         vfl = v4 || occursin("floor", vs); ved = v4 || occursin("edu", vs); vtr = v4 || occursin("trans", vs)
-        vtag = v4 ? "v4" : "v3" * (vfl ? "f" : "") * (ved ? "e" : "") * (vtr ? "t" : "")
+        vtag = v5 ? "v5" : v4 ? "v4" : "v3" * (vfl ? "f" : "") * (ved ? "e" : "") * (vtr ? "t" : "")
         if vtr
             d[:sd_eps] = manual_input(code, "sd_eps"); d[:tax_mode] = :prop
         end
@@ -1266,8 +1272,14 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
         # country's own measured one; the weight on social cohesion normalised to one. Files calibration_v4_*.
         if v4
             d[:rho_cell] = (manual_input(code, "rho_low"), manual_input(code, "rho_high"))
-            d[:eta_cell] = (sqrt(manual_input(code, "var_persistent_low")), sqrt(manual_input(code, "var_persistent_high")))
-            d[:sd_eps_cell] = (sqrt(manual_input(code, "var_transitory_low")), sqrt(manual_input(code, "var_transitory_high")))
+            # WHICH VARIANCE IS WHICH (2026-10-08, V3_START.md sections 42 and 43). Until then the source's
+            # two variance columns were entered the other way round: the larger as the persistent
+            # innovation. data/manual_inputs.csv now has them in the order of the source's equation.
+            # Version 4's files were fitted on the old reading and version 4 keeps it, so that they
+            # reproduce; version 5 uses the corrected one.
+            pk, tk = v5 ? ("var_persistent", "var_transitory") : ("var_transitory", "var_persistent")
+            d[:eta_cell] = (sqrt(manual_input(code, pk * "_low")), sqrt(manual_input(code, pk * "_high")))
+            d[:sd_eps_cell] = (sqrt(manual_input(code, tk * "_low")), sqrt(manual_input(code, tk * "_high")))
             d[:qbar] = measured_qbar(code)
             d[:Lambda] = 1.0
             d[:ref_prop] = true
@@ -1287,6 +1299,8 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
             k, v = strip.(split(t, "="))
             if startswith(k, "effort_cell")           # effort levels by state, one line per education cell (two assets, version 3)
                 ec[parse(Int, k[end:end])] = parse.(Float64, split(v))
+            elseif k in ("perm_f", "perm_w")          # the permanent types and their weights (version 5)
+                d[Symbol(k)] = parse.(Float64, split(v))
             elseif k == "beta_gap"                  # patience of the lower-education cell below the other's
                 d[:beta_cell] = (-parse(Float64, v), 0.0)
             else
