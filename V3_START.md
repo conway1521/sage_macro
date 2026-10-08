@@ -1604,3 +1604,33 @@ What that changes in what was reported: France's "published process wider than t
 **Germany without the MPC in the criterion** (`probe_fit_no_mpc.jl DE`, run 37815714541; version 4's inputs): criterion 7.0 where it was 87.6. Hand-to-mouth 0.207 against 0.225 (-1.6 standard errors), liquid wealth 0.118 against 0.140 (-1.9), S80/S20 on target, top patience 0.954; the MPC the model then gives is 0.34 against the survey's 0.47. So in Germany the wealth moments are met together to within two standard errors once the MPC is not pulling on them, which is the user's decision of section 42 seen at work. France and Italy are running. All three are to be redone on the corrected inputs.
 
 **Started: the permanent component fitted to the deciles** (`probe_decile_fit.jl`, a design probe). With effort set by the job and benefits and tax in proportion, a household with permanent factor f is the household of factor one scaled, so one solve per education cell gives the income distribution of any permanent distribution as a mixture. Three forms are fitted to the decile cut-offs, P5, P95 and the top tenth's share: three symmetric nodes (version 4's form), three free nodes, five free nodes. It says how many types the redesign needs, which sets its compute with S on.
+
+## 44. Version 5: the corrected inputs, the income distribution fitted to the deciles, the MPC a test (2026-10-08, evening)
+
+**The design probe** (`probe_decile_fit.jl`, runs 37819067289 for G+A and 37819083403 for G; corrected variances, no floor). The published process alone is narrower than the official distribution in the three countries (variance of the log 0.08 to 0.21 against 0.19 to 0.58); a permanent component fills the difference. Three forms of it fitted to Eurostat's cut-offs (P5, the deciles, P95, over the median) and the top tenth's share:
+
+| G+A | France | Germany | Italy |
+|---|---|---|---|
+| loss: three symmetric types, three free, five free | 0.020, 0.014, 0.0007 | 0.018, 0.012, 0.0003 | 0.109, 0.046, 0.004 |
+| five types: factors on income (mean one) | 0.39, 0.82, 0.91, 1.17, 3.38 | 0.39, 0.71, 0.93, 1.30, 3.39 | 0.35, 0.88, 0.99, 1.14, 3.18 |
+| their weights | 0.08, 0.32, 0.26, 0.30, 0.03 | 0.11, 0.29, 0.28, 0.30, 0.03 | 0.12, 0.29, 0.25, 0.31, 0.03 |
+| first and ninth decile over the median: model, official | 0.54, 0.54; 1.84, 1.83 | 0.50, 0.50; 1.95, 1.95 | 0.43, 0.44; 2.04, 1.99 |
+| top tenth's share, % | 24.0, 24.2 | 24.7, 24.7 | 25.0, 24.9 |
+| below 50% of the median, not fitted (official under 65) | 0.075, 0.092 | 0.094, 0.094 | 0.142, 0.145 |
+| below 60%, not fitted | 0.132, 0.152 | 0.163, 0.151 | 0.207, 0.214 |
+| in-work poverty, not fitted (official) | 0.119, 0.067 | 0.154, 0.086 | 0.182, 0.117 |
+
+- Five types reproduce every cut-off to within 1 to 3% and the top tenth's share, in the three countries; the shares below 40 to 70% of the median for people under 65, which are not in the fit, come within 2 points. Three types, symmetric or free, do not (losses 20 to 60 times larger).
+- The five types have the same form in the three countries without being asked to: a low type of 8 to 12% of households at 0.35 to 0.4 of mean income, three types in the middle, and a top type of 3% at over three times the mean (the device of Castaneda, Diaz-Gimenez and Rios-Rull 2003 for the top). The low type's weight is the official share of people under 65 in households with very low work intensity (0.108, 0.095, 0.108). That is an observation and not yet a result; it says what the state out of work should be when it is built, and why in-work poverty is still half as high again as the official rate: in the model the low type works.
+- Limits. The cut-offs are of all persons, pensioners included (the table has no breakdown by age); S80/S20 for people under 65 (4.72, 5.08, 6.04) is above what the fit gives (4.25, 4.73, 5.76), close to the all-person ratio the same table implies (4.39, 4.99, 5.80). Income in the model is the household's; the official figure is equivalised.
+
+**Version 5, built** (commit d2090a4; no solver file touched, so no running checkpoint is disturbed).
+- `data/manual_inputs.csv`: the two variances in the order of the source's equation. `country_config` with `v3 = :v5` reads them so; `:v4` reads them crosswise, as it always did, so that the version 4 files reproduce (checked by loading: version 4 France 0.031, 0.023 persistent; version 5 0.006, 0.018).
+- `SAGEConfig.perm_f`, `perm_w`: explicit permanent types; `perm_nodes` returns them when given.
+- `decile_fit.jl`: `fit_permanent` (one solve per education cell without permanent component or floor, the mixture, Nelder-Mead on five types) and its table.
+- `calibrate_country.jl` with `SAGE_V5=1` (workflow input `v5=1`): in G and G+A the types are fitted at the starting point, the other parameters fitted, the types fitted again at the fitted point and the fit repeated; every other configuration reads the types from the file of G (A off) or G+A (A on). The criterion: effort, the hand-to-mouth share, its gap by education and median liquid wealth, the last three in standard errors; the MPC and S80/S20 reported. Files `calibration_v5_*` with lines `perm_f`, `perm_w`.
+- The pay premium by education stays with A (section 42): with A off the types stand in for it, with A on they are refitted around it, and in both the income distribution is the official one.
+
+**Started**: G in the three countries (run 37820079148). Then G+A, which reads G's floor.
+
+Not in version 5 yet: the state out of work sized to the official count; the measured job-finding rate and the audit's other items (section 37); S's residual participation when off; the two-asset reference; every test of section 38 to rerun.
