@@ -9,6 +9,9 @@ include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 cfg = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "GSA"
 codes = length(ARGS) >= 2 ? uppercase.(ARGS[2:end]) : ["FR", "DE", "IT"]
+REGIME = "V4" in codes ? :v4 : BASE_REGIME               # `V4` among the arguments: version 4 (section 36)
+codes = filter(!=("V4"), codes); isempty(codes) && (codes = ["FR", "DE", "IT"])
+println("regime ", REGIME)
 function hf(code, moment)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
         startswith(ln, "#") && continue
@@ -25,7 +28,7 @@ function eu(code, ind)
 end
 tot = [0, 0]
 for code in codes
-    c = country_config(code; config = cfg, v3 = BASE_REGIME, S = occursin('S', cfg), A = occursin('A', cfg))
+    c = country_config(code; config = cfg, v3 = REGIME, S = occursin('S', cfg), A = occursin('A', cfg))
     r = solve_economy(c; cache = false); st = income_stats(c)
     rows = [("S80/S20, under 65", st.s8020, eu(code, "s80s20_under65"), "Eurostat ilc_di11", true),
             ("Gini of disposable income", st.gini, eu(code, "gini_disposable"), "Eurostat ilc_di12", false),

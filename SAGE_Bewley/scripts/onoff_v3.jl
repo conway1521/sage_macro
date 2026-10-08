@@ -28,12 +28,13 @@
 #   julia --project=scripts/run_env scripts/onoff_v3.jl [floor] [edu] [trans] [CODE ...]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
-FLOORREG = any(a -> lowercase(a) == "floor", ARGS)
-EDUREG = any(a -> lowercase(a) == "edu", ARGS)          # patience by education (V3_START.md section 24)
-TRANS = any(a -> lowercase(a) == "trans", ARGS)        # the transitory part and the proportional tax (V3_START.md section 29)
-V3ARG = TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") : FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : true)
-VTAG = "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "") * (TRANS ? "t" : "")
-codes = (cc = [uppercase(a) for a in ARGS if !(lowercase(a) in ("floor", "edu", "trans"))]; isempty(cc) ? ["FR", "DE", "IT"] : cc)
+V4 = any(a -> lowercase(a) == "v4", ARGS)              # version 4 (V3_START.md section 36): the floor, education and transitory regimes implied
+FLOORREG = V4 || any(a -> lowercase(a) == "floor", ARGS)
+EDUREG = V4 || any(a -> lowercase(a) == "edu", ARGS)    # patience by education (V3_START.md section 24)
+TRANS = V4 || any(a -> lowercase(a) == "trans", ARGS)  # the transitory part and the proportional tax (V3_START.md section 29)
+V3ARG = V4 ? :v4 : TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") : FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : true)
+VTAG = V4 ? "v4" : "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "") * (TRANS ? "t" : "")
+codes = (cc = [uppercase(a) for a in ARGS if !(lowercase(a) in ("floor", "edu", "trans", "v4"))]; isempty(cc) ? ["FR", "DE", "IT"] : cc)
 (FLOORREG || EDUREG || TRANS) && println("regime: ", VTAG)
 function hfcs(code, moment)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
@@ -78,7 +79,9 @@ for code in codes
         isfile(f) || (println(nm, "      no calibration file yet"); push!(results, ("$code 4. $nm has a calibration", false)); continue)
         r = solve_economy(country_config(code; v3 = V3ARG, config = nm, S = S_, A = A_)); row(nm, r)
         ok = abs(r.mean_effort_employed - E) <= 0.005 && abs(r.hand_to_mouth_kvw - H) <= 0.02 && (!S_ || abs(r.rate - P) <= 0.005)
-        check("$code 4. $nm hits its own targets", ok)
+        # version 4 fits the hand-to-mouth share inside a criterion weighted by standard errors, so the old band of 0.02 is a
+        # reading of how far that fit lands, reported with the same check
+        check("$code 4. $nm hits its own targets" * (V4 ? " (effort, participation; hand-to-mouth within 0.02)" : ""), ok)
         check("$code 5. $nm: the budget balances" * (FLOORREG ? " (to 0.05% of mean income with S on)" : ""), abs(r.budget_gap) < (FLOORREG && S_ ? 5e-4 * r.mean_income : 1e-8))
         FLOORREG && @printf("      floor %.4f, outlay per head %.5f, budget gap %+.1e\n", r.config.cfloor, r.floor_outlay, r.budget_gap)
         check("$code 6. $nm: MPC between 0.2 and 0.5", 0.2 <= r.mpc <= 0.5)

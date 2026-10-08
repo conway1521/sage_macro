@@ -23,8 +23,8 @@ code = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "FR"
 cfg = length(ARGS) >= 2 ? uppercase(ARGS[2]) : "G"
 occursin('S', cfg) && error("S off only: with S on the households are families over belonging scales")
 REG = length(ARGS) >= 3 ? lowercase(ARGS[3]) : ""          # third argument: v3, or a regime of it (v3f the floor, v3e patience by education, v3fe both)
-V3 = REG in ("v3", "v3f", "v3e", "v3fe", "v3fet", "v3et"); V3F = REG in ("v3f", "v3fe", "v3fet")
-c = floor_effort(country_config(code; config = cfg, v3 = get(Dict("v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu, "v3fet" => :floor_edu_trans, "v3et" => :edu_trans), REG, V3), S = false, A = occursin('A', cfg)))
+V3 = REG in ("v3", "v3f", "v3e", "v3fe", "v3fet", "v3et", "v4"); V3F = REG in ("v3f", "v3fe", "v3fet", "v4")
+c = floor_effort(country_config(code; config = cfg, v3 = get(Dict("v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu, "v3fet" => :floor_edu_trans, "v3et" => :edu_trans, "v4" => :v4), REG, V3), S = false, A = occursin('A', cfg)))
 c.illiquid && error("one asset only")
 cs = cells_of(c); bs, bw = betas_of(c)
 cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
