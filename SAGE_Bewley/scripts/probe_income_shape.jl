@@ -10,6 +10,11 @@ include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 cfg = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "GA"
 codes = length(ARGS) >= 2 ? uppercase.(ARGS[2:end]) : ["FR", "DE", "IT"]
+# SWAP among the arguments: the two published variances exchanged (the persistent innovation takes the
+# value read as transitory and the reverse; section 42: which column of the source's table is which).
+# NOPERM: no permanent component, so the published process stands alone.
+SWAP = "SWAP" in codes; NOPERM = "NOPERM" in codes
+codes = filter(x -> !(x in ("SWAP", "NOPERM")), codes); isempty(codes) && (codes = ["FR", "DE", "IT"])
 function official(code, ind)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "validation", "income_shape.csv"))
         f = split(ln, ","); length(f) >= 4 && f[1] == ind && f[2] == code && return parse(Float64, f[4])
@@ -37,6 +42,10 @@ function records(c)
 end
 for code in codes
     c = country_config(code; config = cfg, v3 = :v4, S = false, A = occursin('A', cfg))
+    SWAP && (c = SAGEConfig(c; eta_cell = c.sd_eps_cell, sd_eps_cell = c.eta_cell))
+    NOPERM && (c = SAGEConfig(c; perm_sd = 0.0))
+    @printf("\n%s: persistence %.3f, %.3f | variance of the persistent innovation %.3f, %.3f | of the transitory shock %.3f, %.3f | stationary variance of the persistent part %.3f, %.3f%s\n",
+            code, c.rho_cell..., (c.eta_cell .^ 2)..., (c.sd_eps_cell .^ 2)..., (c.eta_cell[1]^2 / (1 - c.rho_cell[1]^2)), (c.eta_cell[2]^2 / (1 - c.rho_cell[2]^2)), SWAP ? " (SWAPPED)" : "")
     R = records(c); o = sortperm(R.y); y = R.y[o]; w = R.w[o]; e = R.e[o]; g = R.g[o]; k = R.k[o]; cw = cumsum(w)
     q(p) = y[findfirst(>=(p), cw)]; med = q(0.5)
     println("\n================ ", code, " ", cfg, ", version 4 | permanent sd ", c.perm_sd, " | household disposable income, the model against Eurostat 2021")
