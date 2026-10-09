@@ -1948,3 +1948,18 @@ The income rows all pass, the Gini to 0.01. What is off: in-work poverty in the 
 **G+S on the G of section 54** (runs 37872100408 and 37872872342; files committed; Italy's is in its last stage). France: participation 0.233, the two education groups 0.202 and 0.292 against 0.203 and 0.291, multiplier 1.7 (band 1.2 to 2.6); the hand-to-mouth share 0.221 and effort on target. Germany: 0.278, 0.251 and 0.349 against 0.252 and 0.349, multiplier 1.9 (1.3 to 3.2). Both without A.
 
 G+S+A was started by the chain for the three countries (runs 37878866710, 37881812209, 37883790732). The tests that need it (on and off, accuracy, equilibria, transitions with S) follow.
+
+## 57. The return on the one asset (audit items 2 and 3; 2026-10-09, 04:45 UTC; a diagnostic, for the user's decision)
+
+The single asset of the base is narrow liquid wealth: sight accounts and directly held securities. The engine pays 2% a year on it in real terms, the figure macro models use for a broad safe asset (re-cited in section 35 to McKay, Nakamura and Steinsson 2016 and Kaplan, Moll and Violante 2018). What sight accounts have paid is measured: the ECB's interest rate statistics give the rate on households' overnight deposits by country (series `MIR.M.<country>.B.L21.A.R.A.2250.EUR.N`), and Eurostat the HICP (`prc_hicp_aind`). Yearly, 2003 (the series' start) to 2021 (the HFCS wave):
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| overnight deposits, nominal, % | 0.09 | 0.67 | 0.40 |
+| HICP inflation, % | 1.51 | 1.57 | 1.57 |
+| real return, % | -1.39 | -0.88 | -1.14 |
+| 2003 to 2023; 2010 to 2021 | -1.78; -1.21 | -1.43; -1.21 | -1.67; -0.99 |
+
+Kaplan and Violante (2014) use -1.48% for liquid wealth in the United States, so the figure is the field's for a liquid account and the base's 2% is not. Recorded in `data/manual_inputs.csv` (field `r_deposits_real`), which also settles audit item 2 for the two-asset reference, whose liquid return was an assumption of zero.
+
+For the one-asset base it is a choice with consequences, so it is run as a diagnostic first (`probe_fit_return.jl`, `SAGE_RLIQ=deposits`, config field `R_one`; runs 37884117801, 37884119842, 37884122062): G of version 5 with the asset earning the measured deposit return. Expected: patience fitted higher, since less is saved at a given patience when the asset loses value; what happens to the median, the MPC and the fall in consumption on job loss is what the run is for. Not counted: the minority's directly held securities, which earn more.
