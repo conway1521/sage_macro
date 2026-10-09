@@ -705,6 +705,17 @@ def build_E_groups(df):
     """
     df["g_education"] = df["edu_rp"].map({1: "below tertiary", 2: "below tertiary", 3: "below tertiary", 5: "tertiary"})
     df["g_labour"] = df["lab_rp"].map({1: "employed", 2: "employed", 3: "unemployed", 4: "retired", 5: "other"})
+    # THE MODEL'S POPULATION (2026-10-08). The model's households are in the labour force. Households
+    # with a retired reference person, about a third of the sample, hold more liquid wealth and are
+    # less often hand-to-mouth, so a moment over all households is not the model population's.
+    # labour_force: reference person an employee, self-employed or unemployed. not_retired adds the
+    # other non-retired (for the state out of work, when the model has one). The education split is
+    # repeated within each, since the calibration uses the gap between the education groups.
+    lf = df["lab_rp"].isin([1, 2, 3]); nr = df["lab_rp"].isin([1, 2, 3, 5])
+    df["g_labour_force"] = pd.Series("in the labour force", index=df.index).where(lf)
+    df["g_not_retired"] = pd.Series("not retired", index=df.index).where(nr)
+    df["g_education_lf"] = df["g_education"].where(lf)
+    df["g_education_nr"] = df["g_education"].where(nr)
     df["g_region"] = df["region"]
     df["g_macro_region"] = df["region"].map(IT_MACRO)
     df["g_degurba"] = df["degurba"].map({1: "cities", 2: "towns and suburbs", 3: "rural"})
@@ -821,7 +832,7 @@ def build_all(df, country, wave):
     return quant
 
 
-GROUP_VARS = ["all", "education", "labour", "region", "macro_region", "degurba", "liquid_quintile", "htm_status"]
+GROUP_VARS = ["all", "education", "labour", "labour_force", "not_retired", "education_lf", "education_nr", "region", "macro_region", "degurba", "liquid_quintile", "htm_status"]
 
 # =============================================================================
 # 4. ESTIMATION: weights, replicate weights, Rubin's rules

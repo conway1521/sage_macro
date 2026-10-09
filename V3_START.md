@@ -1842,3 +1842,22 @@ G+S was started by the chain for the three countries (runs 37865476136, 37866926
 - By type of place: the median share of disposable income spent on housing (Eurostat `ilc_lvho08b`, 2023): cities, towns, rural 15.3, 11.2, 9.7 in France; 20.6, 19.4, 17.6 in Germany; 10.9, 9.6, 9.1 in Italy. Cities cost most in the three countries, by half as much again in France, which is the direction the failed test of the hand-to-mouth share by type of place needs (most in cities in the HFCS, most in rural places in the model).
 - By region: the housing cost overburden rate by NUTS 2 region (`ilc_lvho07_r`, from 2021) covers Germany and Italy and gives France only as a whole, so a French regional series has to come from a national source or the channel is by type of place in France.
 - To add through `data/place/collect_place_data.py` and `build_tl2.py` when E is taken up, not by hand.
+
+## 53. Whose moments: the survey targets on the model's population (2026-10-09, 01:40 UTC; for the user's decision)
+
+The HFCS targets were taken over every household of the survey. A third of them have a retired reference person, and the model's households are in the labour force. `hfcs_protocol/hfcs_moments.py` now also reports every moment for households whose reference person is employed, self-employed or unemployed (`labour_force`), for the not retired (`not_retired`, which adds the other non-retired), and the education split within each. Run on the microdata in `~/hfcs_secure` on 9 October (aggregates only, into `~/hfcs_secure/out_2026-10-08`); `data/hfcs_targets.csv` rebuilt by `make_targets.py`: the 1,904 existing rows unchanged to the last digit, 626 rows added, none on fewer than 30 households.
+
+| HFCS 2021 | France: all, labour force | Germany | Italy |
+|---|---|---|---|
+| hand-to-mouth share | 0.222, 0.256 | 0.225, 0.249 | 0.179, 0.166 |
+| below tertiary, tertiary | 0.256, 0.151; 0.330, 0.164 | 0.285, 0.118; 0.327, 0.131 | 0.196, 0.095; 0.185, 0.106 |
+| median liquid wealth over income | 0.059, 0.051 | 0.140, 0.127 | 0.272, 0.227 |
+| survey MPC | 0.392, 0.322 | 0.468, 0.462 | 0.469, 0.484 |
+| below half the median income | 0.097, 0.100 | 0.109, 0.088 | 0.145, 0.147 |
+| net wealth Gini | 0.676, 0.716 | 0.727, 0.741 | 0.640, 0.673 |
+
+By status of the reference person the hand-to-mouth share is 0.23, 0.24, 0.14 for the employed, 0.54, 0.66, 0.67 for the unemployed and 0.14, 0.16, 0.12 for the retired; the survey MPC of the retired is 0.50, 0.48, 0.43.
+
+What it changes. In France the labour force is more often hand-to-mouth (0.256 against 0.222), holds a little less (0.051 against 0.059), and its survey MPC is 0.32 and not 0.39, because France's retired report the highest MPC of any group. Its education gap is 0.17 and not 0.10. Germany moves the same way by less; Italy's labour force is slightly less often hand-to-mouth. So the test of the MPC reads differently by country on the right population: France's model MPC of 0.43 to 0.47 is then well above the survey's 0.32 where it was near 0.39, and Germany's and Italy's remain below theirs.
+
+`SAGE_POP=labour_force` in the calibration script takes the targets over the labour force; the default is unchanged (all households). A diagnostic fit of G on the labour-force targets is started for the three countries (`probe_fit_population.jl`). Which population the base is fitted to is the user's decision; my recommendation is the labour force, since a target over a population the model does not contain is the same kind of error as a parameter without a source.

@@ -515,6 +515,66 @@ htm_model_broad_total,IT,2021,education,below tertiary,0.15099,0.03274,4400
 htm_model_broad_total,IT,2021,education,tertiary,0.0923,0.03058,1839
 htm_model_broad_total,IT,2023,education,below tertiary,0.14166,0.00962,7030
 htm_model_broad_total,IT,2023,education,tertiary,0.05026,0.02186,2611
+htm_model_broad_total,DE,2010,education_lf,below tertiary,0.28973,0.01839,1088
+htm_model_broad_total,DE,2010,education_lf,tertiary,0.08848,0.01564,861
+htm_model_broad_total,DE,2014,education_lf,below tertiary,0.30749,0.01627,1437
+htm_model_broad_total,DE,2014,education_lf,tertiary,0.12035,0.01524,1351
+htm_model_broad_total,DE,2017,education_lf,below tertiary,0.29898,0.01387,1465
+htm_model_broad_total,DE,2017,education_lf,tertiary,0.08989,0.01105,1571
+htm_model_broad_total,DE,2021,education_lf,below tertiary,0.21749,0.01879,1060
+htm_model_broad_total,DE,2021,education_lf,tertiary,0.07646,0.01505,1330
+htm_model_broad_total,DE,2023,education_lf,below tertiary,0.24868,0.01883,959
+htm_model_broad_total,DE,2023,education_lf,tertiary,0.07978,0.01542,1261
+htm_model_broad_total,FR,2010,education_lf,below tertiary,0.1533,0.00818,5452
+htm_model_broad_total,FR,2010,education_lf,tertiary,0.04965,0.0087,3010
+htm_model_broad_total,FR,2014,education_lf,below tertiary,0.18449,0.00903,3725
+htm_model_broad_total,FR,2014,education_lf,tertiary,0.06113,0.00646,3831
+htm_model_broad_total,FR,2017,education_lf,below tertiary,0.19704,0.00987,4284
+htm_model_broad_total,FR,2017,education_lf,tertiary,0.06648,0.00637,4603
+htm_model_broad_total,FR,2021,education_lf,below tertiary,0.17852,0.01098,2884
+htm_model_broad_total,FR,2021,education_lf,tertiary,0.05684,0.00849,3748
+htm_model_broad_total,FR,2023,education_lf,below tertiary,0.17397,0.00977,2994
+htm_model_broad_total,FR,2023,education_lf,tertiary,0.04053,0.00457,4284
+htm_model_broad_total,IT,2010,education_lf,below tertiary,0.22558,0.00979,3541
+htm_model_broad_total,IT,2010,education_lf,tertiary,0.10277,0.0175,632
+htm_model_broad_total,IT,2014,education_lf,below tertiary,0.25008,0.0106,3347
+htm_model_broad_total,IT,2014,education_lf,tertiary,0.08112,0.01109,738
+htm_model_broad_total,IT,2017,education_lf,below tertiary,0.22173,0.0113,3016
+htm_model_broad_total,IT,2017,education_lf,tertiary,0.08496,0.01591,623
+htm_model_broad_total,IT,2021,education_lf,below tertiary,0.16966,0.05634,2141
+htm_model_broad_total,IT,2021,education_lf,tertiary,0.10502,0.03558,1396
+htm_model_broad_total,IT,2023,education_lf,below tertiary,0.15334,0.01386,3280
+htm_model_broad_total,IT,2023,education_lf,tertiary,0.05087,0.0241,1823
+htm_model_broad_total,DE,2010,education_nr,below tertiary,0.29988,0.01735,1214
+htm_model_broad_total,DE,2010,education_nr,tertiary,0.08742,0.01488,890
+htm_model_broad_total,DE,2014,education_nr,below tertiary,0.30707,0.01569,1562
+htm_model_broad_total,DE,2014,education_nr,tertiary,0.12366,0.01499,1379
+htm_model_broad_total,DE,2017,education_nr,below tertiary,0.30761,0.01378,1561
+htm_model_broad_total,DE,2017,education_nr,tertiary,0.09116,0.01098,1595
+htm_model_broad_total,DE,2021,education_nr,below tertiary,0.22549,0.0183,1127
+htm_model_broad_total,DE,2021,education_nr,tertiary,0.07627,0.01477,1354
+htm_model_broad_total,DE,2023,education_nr,below tertiary,0.25131,0.01834,1036
+htm_model_broad_total,DE,2023,education_nr,tertiary,0.08393,0.01581,1295
+htm_model_broad_total,FR,2010,education_nr,below tertiary,0.1597,0.00768,6068
+htm_model_broad_total,FR,2010,education_nr,tertiary,0.05111,0.00839,3080
+htm_model_broad_total,FR,2014,education_nr,below tertiary,0.19514,0.00861,4056
+htm_model_broad_total,FR,2014,education_nr,tertiary,0.06107,0.00624,3924
+htm_model_broad_total,FR,2017,education_nr,below tertiary,0.21233,0.00909,4634
+htm_model_broad_total,FR,2017,education_nr,tertiary,0.06999,0.0062,4707
+htm_model_broad_total,FR,2021,education_nr,below tertiary,0.19629,0.01117,3095
+htm_model_broad_total,FR,2021,education_nr,tertiary,0.0594,0.00855,3820
+htm_model_broad_total,FR,2023,education_nr,below tertiary,0.18185,0.00945,3272
+htm_model_broad_total,FR,2023,education_nr,tertiary,0.04613,0.00528,4365
+htm_model_broad_total,IT,2010,education_nr,below tertiary,0.22989,0.00998,3649
+htm_model_broad_total,IT,2010,education_nr,tertiary,0.10235,0.01744,635
+htm_model_broad_total,IT,2014,education_nr,below tertiary,0.26831,0.00985,4248
+htm_model_broad_total,IT,2014,education_nr,tertiary,0.09069,0.01144,750
+htm_model_broad_total,IT,2017,education_nr,below tertiary,0.24585,0.01084,3935
+htm_model_broad_total,IT,2017,education_nr,tertiary,0.08494,0.0155,635
+htm_model_broad_total,IT,2021,education_nr,below tertiary,0.1904,0.0453,2624
+htm_model_broad_total,IT,2021,education_nr,tertiary,0.10248,0.03458,1415
+htm_model_broad_total,IT,2023,education_nr,below tertiary,0.17297,0.01245,4066
+htm_model_broad_total,IT,2023,education_nr,tertiary,0.05248,0.02386,1856
 htm_model_broad_total,DE,2010,labour,employed,0.18091,0.01446,2038
 htm_model_broad_total,DE,2010,labour,other,0.32253,0.0463,170
 htm_model_broad_total,DE,2010,labour,retired,0.09663,0.01528,1195
@@ -575,6 +635,21 @@ htm_model_broad_total,IT,2023,labour,employed,0.11081,0.01089,4852
 htm_model_broad_total,IT,2023,labour,other,0.27392,0.02899,819
 htm_model_broad_total,IT,2023,labour,retired,0.07854,0.01004,3719
 htm_model_broad_total,IT,2023,labour,unemployed,0.55991,0.0783,251
+htm_model_broad_total,DE,2010,labour_force,in the labour force,0.21197,0.014,2185
+htm_model_broad_total,DE,2014,labour_force,in the labour force,0.24211,0.01097,2819
+htm_model_broad_total,DE,2017,labour_force,in the labour force,0.22461,0.00982,3058
+htm_model_broad_total,DE,2021,labour_force,in the labour force,0.16147,0.01179,2400
+htm_model_broad_total,DE,2023,labour_force,in the labour force,0.1788,0.01276,2223
+htm_model_broad_total,FR,2010,labour_force,in the labour force,0.11987,0.00633,8462
+htm_model_broad_total,FR,2014,labour_force,in the labour force,0.13869,0.00616,7658
+htm_model_broad_total,FR,2017,labour_force,in the labour force,0.14488,0.00704,8889
+htm_model_broad_total,FR,2021,labour_force,in the labour force,0.12454,0.00769,6632
+htm_model_broad_total,FR,2023,labour_force,in the labour force,0.11091,0.00573,7278
+htm_model_broad_total,IT,2010,labour_force,in the labour force,0.20841,0.00837,4266
+htm_model_broad_total,IT,2014,labour_force,in the labour force,0.21953,0.00885,4085
+htm_model_broad_total,IT,2017,labour_force,in the labour force,0.19706,0.01023,3639
+htm_model_broad_total,IT,2021,labour_force,in the labour force,0.15419,0.04542,3537
+htm_model_broad_total,IT,2023,labour_force,in the labour force,0.12912,0.01168,5103
 htm_model_broad_total,IT,2017,macro_region,IT Centre,0.15941,0.01362,1605
 htm_model_broad_total,IT,2017,macro_region,IT North,0.12626,0.00842,3196
 htm_model_broad_total,IT,2017,macro_region,IT South and Islands,0.30904,0.01351,2619
@@ -584,6 +659,21 @@ htm_model_broad_total,IT,2021,macro_region,IT South and Islands,0.24533,0.02798,
 htm_model_broad_total,IT,2023,macro_region,IT Centre,0.12646,0.0227,1511
 htm_model_broad_total,IT,2023,macro_region,IT North,0.06734,0.00984,3768
 htm_model_broad_total,IT,2023,macro_region,IT South and Islands,0.21332,0.01756,4362
+htm_model_broad_total,DE,2010,not_retired,not retired,0.22183,0.01309,2358
+htm_model_broad_total,DE,2014,not_retired,not retired,0.2455,0.01098,2976
+htm_model_broad_total,DE,2017,not_retired,not retired,0.23329,0.00974,3182
+htm_model_broad_total,DE,2021,not_retired,not retired,0.16774,0.01167,2492
+htm_model_broad_total,DE,2023,not_retired,not retired,0.1842,0.01281,2336
+htm_model_broad_total,FR,2010,not_retired,not retired,0.12669,0.00604,9148
+htm_model_broad_total,FR,2014,not_retired,not retired,0.1465,0.00603,8112
+htm_model_broad_total,FR,2017,not_retired,not retired,0.15824,0.00672,9343
+htm_model_broad_total,FR,2021,not_retired,not retired,0.13887,0.008,6915
+htm_model_broad_total,FR,2023,not_retired,not retired,0.1206,0.00573,7637
+htm_model_broad_total,IT,2010,not_retired,not retired,0.21302,0.00863,4387
+htm_model_broad_total,IT,2014,not_retired,not retired,0.24005,0.0084,4998
+htm_model_broad_total,IT,2017,not_retired,not retired,0.22071,0.00984,4570
+htm_model_broad_total,IT,2021,not_retired,not retired,0.17205,0.03779,4039
+htm_model_broad_total,IT,2023,not_retired,not retired,0.14769,0.01069,5922
 htm_model_broad_total,DE,2017,region,DENW,0.17958,0.01875,774
 htm_model_broad_total,DE,2017,region,DEOS,0.24606,0.01913,896
 htm_model_broad_total,DE,2017,region,DESW,0.14789,0.0132,1965
@@ -712,6 +802,36 @@ htm_model_narrow_poor,IT,2014,all,all,0.10048,0.00478,8156
 htm_model_narrow_poor,IT,2017,all,all,0.08758,0.00555,7420
 htm_model_narrow_poor,IT,2021,all,all,0.06529,0.02987,6239
 htm_model_narrow_poor,IT,2023,all,all,0.05507,0.00589,9641
+htm_model_narrow_poor,DE,2010,labour_force,in the labour force,0.09339,0.00855,2185
+htm_model_narrow_poor,DE,2014,labour_force,in the labour force,0.11206,0.00841,2819
+htm_model_narrow_poor,DE,2017,labour_force,in the labour force,0.08964,0.00742,3058
+htm_model_narrow_poor,DE,2021,labour_force,in the labour force,0.07848,0.00882,2400
+htm_model_narrow_poor,DE,2023,labour_force,in the labour force,0.08586,0.01021,2223
+htm_model_narrow_poor,FR,2010,labour_force,in the labour force,0.03583,0.00389,8462
+htm_model_narrow_poor,FR,2014,labour_force,in the labour force,0.03655,0.00391,7658
+htm_model_narrow_poor,FR,2017,labour_force,in the labour force,0.04128,0.00375,8889
+htm_model_narrow_poor,FR,2021,labour_force,in the labour force,0.03615,0.00385,6632
+htm_model_narrow_poor,FR,2023,labour_force,in the labour force,0.02839,0.00304,7278
+htm_model_narrow_poor,IT,2010,labour_force,in the labour force,0.0958,0.00636,4266
+htm_model_narrow_poor,IT,2014,labour_force,in the labour force,0.11808,0.00682,4085
+htm_model_narrow_poor,IT,2017,labour_force,in the labour force,0.10001,0.0076,3639
+htm_model_narrow_poor,IT,2021,labour_force,in the labour force,0.0744,0.04717,3537
+htm_model_narrow_poor,IT,2023,labour_force,in the labour force,0.06061,0.00739,5103
+htm_model_narrow_poor,DE,2010,not_retired,not retired,0.10304,0.00817,2358
+htm_model_narrow_poor,DE,2014,not_retired,not retired,0.11803,0.00873,2976
+htm_model_narrow_poor,DE,2017,not_retired,not retired,0.10194,0.00736,3182
+htm_model_narrow_poor,DE,2021,not_retired,not retired,0.08359,0.00904,2492
+htm_model_narrow_poor,DE,2023,not_retired,not retired,0.0927,0.01051,2336
+htm_model_narrow_poor,FR,2010,not_retired,not retired,0.03937,0.00375,9148
+htm_model_narrow_poor,FR,2014,not_retired,not retired,0.0428,0.00393,8112
+htm_model_narrow_poor,FR,2017,not_retired,not retired,0.04783,0.00391,9343
+htm_model_narrow_poor,FR,2021,not_retired,not retired,0.04329,0.00393,6915
+htm_model_narrow_poor,FR,2023,not_retired,not retired,0.0355,0.00329,7637
+htm_model_narrow_poor,IT,2010,not_retired,not retired,0.09723,0.00644,4387
+htm_model_narrow_poor,IT,2014,not_retired,not retired,0.12732,0.00629,4998
+htm_model_narrow_poor,IT,2017,not_retired,not retired,0.10714,0.0076,4570
+htm_model_narrow_poor,IT,2021,not_retired,not retired,0.08742,0.03982,4039
+htm_model_narrow_poor,IT,2023,not_retired,not retired,0.07054,0.00701,5922
 htm_model_narrow_total,DE,2010,all,all,0.34713,0.01343,3565
 htm_model_narrow_total,DE,2014,all,all,0.35277,0.01086,4461
 htm_model_narrow_total,DE,2017,all,all,0.32273,0.00872,4942
@@ -763,6 +883,66 @@ htm_model_narrow_total,IT,2021,education,below tertiary,0.19629,0.03351,4400
 htm_model_narrow_total,IT,2021,education,tertiary,0.0946,0.0305,1839
 htm_model_narrow_total,IT,2023,education,below tertiary,0.17049,0.01139,7030
 htm_model_narrow_total,IT,2023,education,tertiary,0.05906,0.02271,2611
+htm_model_narrow_total,DE,2010,education_lf,below tertiary,0.49112,0.022,1088
+htm_model_narrow_total,DE,2010,education_lf,tertiary,0.21552,0.02304,861
+htm_model_narrow_total,DE,2014,education_lf,below tertiary,0.46381,0.01768,1437
+htm_model_narrow_total,DE,2014,education_lf,tertiary,0.25141,0.01935,1351
+htm_model_narrow_total,DE,2017,education_lf,below tertiary,0.44688,0.01492,1465
+htm_model_narrow_total,DE,2017,education_lf,tertiary,0.18677,0.01774,1571
+htm_model_narrow_total,DE,2021,education_lf,below tertiary,0.32674,0.02012,1060
+htm_model_narrow_total,DE,2021,education_lf,tertiary,0.13067,0.01969,1330
+htm_model_narrow_total,DE,2023,education_lf,below tertiary,0.33295,0.01825,959
+htm_model_narrow_total,DE,2023,education_lf,tertiary,0.14807,0.01734,1261
+htm_model_narrow_total,FR,2010,education_lf,below tertiary,0.29317,0.01039,5452
+htm_model_narrow_total,FR,2010,education_lf,tertiary,0.13969,0.01254,3010
+htm_model_narrow_total,FR,2014,education_lf,below tertiary,0.34083,0.01061,3725
+htm_model_narrow_total,FR,2014,education_lf,tertiary,0.1847,0.01209,3831
+htm_model_narrow_total,FR,2017,education_lf,below tertiary,0.34855,0.01195,4284
+htm_model_narrow_total,FR,2017,education_lf,tertiary,0.2025,0.01044,4603
+htm_model_narrow_total,FR,2021,education_lf,below tertiary,0.33016,0.01341,2884
+htm_model_narrow_total,FR,2021,education_lf,tertiary,0.1639,0.0109,3748
+htm_model_narrow_total,FR,2023,education_lf,below tertiary,0.32021,0.01134,2994
+htm_model_narrow_total,FR,2023,education_lf,tertiary,0.15287,0.00843,4284
+htm_model_narrow_total,IT,2010,education_lf,below tertiary,0.25518,0.01003,3541
+htm_model_narrow_total,IT,2010,education_lf,tertiary,0.11161,0.01827,632
+htm_model_narrow_total,IT,2014,education_lf,below tertiary,0.28488,0.0106,3347
+htm_model_narrow_total,IT,2014,education_lf,tertiary,0.09562,0.01205,738
+htm_model_narrow_total,IT,2017,education_lf,below tertiary,0.25353,0.01176,3016
+htm_model_narrow_total,IT,2017,education_lf,tertiary,0.09243,0.01636,623
+htm_model_narrow_total,IT,2021,education_lf,below tertiary,0.18479,0.05636,2141
+htm_model_narrow_total,IT,2021,education_lf,tertiary,0.10574,0.03553,1396
+htm_model_narrow_total,IT,2023,education_lf,below tertiary,0.16471,0.01419,3280
+htm_model_narrow_total,IT,2023,education_lf,tertiary,0.06104,0.02491,1823
+htm_model_narrow_total,DE,2010,education_nr,below tertiary,0.48654,0.02063,1214
+htm_model_narrow_total,DE,2010,education_nr,tertiary,0.21145,0.02225,890
+htm_model_narrow_total,DE,2014,education_nr,below tertiary,0.45575,0.01688,1562
+htm_model_narrow_total,DE,2014,education_nr,tertiary,0.25564,0.01899,1379
+htm_model_narrow_total,DE,2017,education_nr,below tertiary,0.44861,0.01457,1561
+htm_model_narrow_total,DE,2017,education_nr,tertiary,0.18623,0.01759,1595
+htm_model_narrow_total,DE,2021,education_nr,below tertiary,0.32937,0.01981,1127
+htm_model_narrow_total,DE,2021,education_nr,tertiary,0.1291,0.01921,1354
+htm_model_narrow_total,DE,2023,education_nr,below tertiary,0.33492,0.01767,1036
+htm_model_narrow_total,DE,2023,education_nr,tertiary,0.15082,0.01737,1295
+htm_model_narrow_total,FR,2010,education_nr,below tertiary,0.29612,0.00986,6068
+htm_model_narrow_total,FR,2010,education_nr,tertiary,0.14045,0.01234,3080
+htm_model_narrow_total,FR,2014,education_nr,below tertiary,0.34568,0.00977,4056
+htm_model_narrow_total,FR,2014,education_nr,tertiary,0.18435,0.01188,3924
+htm_model_narrow_total,FR,2017,education_nr,below tertiary,0.35829,0.01064,4634
+htm_model_narrow_total,FR,2017,education_nr,tertiary,0.20713,0.01022,4707
+htm_model_narrow_total,FR,2021,education_nr,below tertiary,0.34231,0.0127,3095
+htm_model_narrow_total,FR,2021,education_nr,tertiary,0.1651,0.01092,3820
+htm_model_narrow_total,FR,2023,education_nr,below tertiary,0.33024,0.01147,3272
+htm_model_narrow_total,FR,2023,education_nr,tertiary,0.15774,0.00865,4365
+htm_model_narrow_total,IT,2010,education_nr,below tertiary,0.26253,0.00998,3649
+htm_model_narrow_total,IT,2010,education_nr,tertiary,0.11115,0.01819,635
+htm_model_narrow_total,IT,2014,education_nr,below tertiary,0.32465,0.00994,4248
+htm_model_narrow_total,IT,2014,education_nr,tertiary,0.10488,0.01224,750
+htm_model_narrow_total,IT,2017,education_nr,below tertiary,0.29715,0.01103,3935
+htm_model_narrow_total,IT,2017,education_nr,tertiary,0.09228,0.01595,635
+htm_model_narrow_total,IT,2021,education_nr,below tertiary,0.22903,0.04463,2624
+htm_model_narrow_total,IT,2021,education_nr,tertiary,0.10318,0.03454,1415
+htm_model_narrow_total,IT,2023,education_nr,below tertiary,0.19751,0.01356,4066
+htm_model_narrow_total,IT,2023,education_nr,tertiary,0.06256,0.02472,1856
 htm_model_narrow_total,DE,2010,labour,employed,0.36582,0.0178,2038
 htm_model_narrow_total,DE,2010,labour,other,0.39025,0.05042,170
 htm_model_narrow_total,DE,2010,labour,retired,0.25388,0.02365,1195
@@ -823,6 +1003,21 @@ htm_model_narrow_total,IT,2023,labour,employed,0.12063,0.01128,4852
 htm_model_narrow_total,IT,2023,labour,other,0.36627,0.02985,819
 htm_model_narrow_total,IT,2023,labour,retired,0.11299,0.01219,3719
 htm_model_narrow_total,IT,2023,labour,unemployed,0.60089,0.07388,251
+htm_model_narrow_total,DE,2010,labour_force,in the labour force,0.38794,0.0168,2185
+htm_model_narrow_total,DE,2014,labour_force,in the labour force,0.38892,0.01315,2819
+htm_model_narrow_total,DE,2017,labour_force,in the labour force,0.35317,0.01099,3058
+htm_model_narrow_total,DE,2021,labour_force,in the labour force,0.24868,0.01417,2400
+htm_model_narrow_total,DE,2023,labour_force,in the labour force,0.2566,0.01265,2223
+htm_model_narrow_total,FR,2010,labour_force,in the labour force,0.24367,0.00834,8462
+htm_model_narrow_total,FR,2014,labour_force,in the labour force,0.28143,0.00774,7658
+htm_model_narrow_total,FR,2017,labour_force,in the labour force,0.29032,0.00866,8889
+htm_model_narrow_total,FR,2021,labour_force,in the labour force,0.2564,0.00922,6632
+htm_model_narrow_total,FR,2023,labour_force,in the labour force,0.24113,0.0073,7278
+htm_model_narrow_total,IT,2010,labour_force,in the labour force,0.23469,0.00868,4266
+htm_model_narrow_total,IT,2014,labour_force,in the labour force,0.25066,0.0089,4085
+htm_model_narrow_total,IT,2017,labour_force,in the labour force,0.22447,0.01053,3639
+htm_model_narrow_total,IT,2021,labour_force,in the labour force,0.16587,0.04556,3537
+htm_model_narrow_total,IT,2023,labour_force,in the labour force,0.14021,0.01199,5103
 htm_model_narrow_total,IT,2017,macro_region,IT Centre,0.21349,0.01502,1605
 htm_model_narrow_total,IT,2017,macro_region,IT North,0.13731,0.00884,3196
 htm_model_narrow_total,IT,2017,macro_region,IT South and Islands,0.41584,0.01518,2619
@@ -832,6 +1027,21 @@ htm_model_narrow_total,IT,2021,macro_region,IT South and Islands,0.31629,0.03333
 htm_model_narrow_total,IT,2023,macro_region,IT Centre,0.14957,0.02306,1511
 htm_model_narrow_total,IT,2023,macro_region,IT North,0.07557,0.01108,3768
 htm_model_narrow_total,IT,2023,macro_region,IT South and Islands,0.26571,0.01937,4362
+htm_model_narrow_total,DE,2010,not_retired,not retired,0.38815,0.01614,2358
+htm_model_narrow_total,DE,2014,not_retired,not retired,0.38801,0.01291,2976
+htm_model_narrow_total,DE,2017,not_retired,not retired,0.35744,0.01073,3182
+htm_model_narrow_total,DE,2021,not_retired,not retired,0.2517,0.01409,2492
+htm_model_narrow_total,DE,2023,not_retired,not retired,0.26121,0.01245,2336
+htm_model_narrow_total,FR,2010,not_retired,not retired,0.2488,0.00796,9148
+htm_model_narrow_total,FR,2014,not_retired,not retired,0.28632,0.00732,8112
+htm_model_narrow_total,FR,2017,not_retired,not retired,0.30095,0.0081,9343
+htm_model_narrow_total,FR,2021,not_retired,not retired,0.26798,0.00886,6915
+htm_model_narrow_total,FR,2023,not_retired,not retired,0.25239,0.00752,7637
+htm_model_narrow_total,IT,2010,not_retired,not retired,0.24198,0.00872,4387
+htm_model_narrow_total,IT,2014,not_retired,not retired,0.28969,0.00857,4998
+htm_model_narrow_total,IT,2017,not_retired,not retired,0.26514,0.00999,4570
+htm_model_narrow_total,IT,2021,not_retired,not retired,0.20276,0.03737,4039
+htm_model_narrow_total,IT,2023,not_retired,not retired,0.1692,0.01145,5922
 htm_model_narrow_total,DE,2017,region,DENW,0.32565,0.02852,774
 htm_model_narrow_total,DE,2017,region,DEOS,0.34934,0.02064,896
 htm_model_narrow_total,DE,2017,region,DESW,0.25902,0.01551,1965
@@ -945,6 +1155,36 @@ htm_model_narrow_wealthy,IT,2014,all,all,0.1669,0.00523,8156
 htm_model_narrow_wealthy,IT,2017,all,all,0.15469,0.00576,7420
 htm_model_narrow_wealthy,IT,2021,all,all,0.11357,0.01317,6239
 htm_model_narrow_wealthy,IT,2023,all,all,0.09681,0.00808,9641
+htm_model_narrow_wealthy,DE,2010,labour_force,in the labour force,0.29455,0.01626,2185
+htm_model_narrow_wealthy,DE,2014,labour_force,in the labour force,0.27687,0.01241,2819
+htm_model_narrow_wealthy,DE,2017,labour_force,in the labour force,0.26352,0.0103,3058
+htm_model_narrow_wealthy,DE,2021,labour_force,in the labour force,0.1702,0.01175,2400
+htm_model_narrow_wealthy,DE,2023,labour_force,in the labour force,0.17075,0.01201,2223
+htm_model_narrow_wealthy,FR,2010,labour_force,in the labour force,0.20785,0.00789,8462
+htm_model_narrow_wealthy,FR,2014,labour_force,in the labour force,0.24488,0.00746,7658
+htm_model_narrow_wealthy,FR,2017,labour_force,in the labour force,0.24904,0.0075,8889
+htm_model_narrow_wealthy,FR,2021,labour_force,in the labour force,0.22025,0.00848,6632
+htm_model_narrow_wealthy,FR,2023,labour_force,in the labour force,0.21274,0.00724,7278
+htm_model_narrow_wealthy,IT,2010,labour_force,in the labour force,0.13889,0.0072,4266
+htm_model_narrow_wealthy,IT,2014,labour_force,in the labour force,0.13257,0.00647,4085
+htm_model_narrow_wealthy,IT,2017,labour_force,in the labour force,0.12445,0.00758,3639
+htm_model_narrow_wealthy,IT,2021,labour_force,in the labour force,0.09147,0.01164,3537
+htm_model_narrow_wealthy,IT,2023,labour_force,in the labour force,0.0796,0.00953,5103
+htm_model_narrow_wealthy,DE,2010,not_retired,not retired,0.28511,0.01577,2358
+htm_model_narrow_wealthy,DE,2014,not_retired,not retired,0.26998,0.01217,2976
+htm_model_narrow_wealthy,DE,2017,not_retired,not retired,0.2555,0.01008,3182
+htm_model_narrow_wealthy,DE,2021,not_retired,not retired,0.16811,0.01144,2492
+htm_model_narrow_wealthy,DE,2023,not_retired,not retired,0.16851,0.01174,2336
+htm_model_narrow_wealthy,FR,2010,not_retired,not retired,0.20943,0.00757,9148
+htm_model_narrow_wealthy,FR,2014,not_retired,not retired,0.24352,0.00713,8112
+htm_model_narrow_wealthy,FR,2017,not_retired,not retired,0.25312,0.00707,9343
+htm_model_narrow_wealthy,FR,2021,not_retired,not retired,0.22469,0.00821,6915
+htm_model_narrow_wealthy,FR,2023,not_retired,not retired,0.21689,0.00741,7637
+htm_model_narrow_wealthy,IT,2010,not_retired,not retired,0.14475,0.00732,4387
+htm_model_narrow_wealthy,IT,2014,not_retired,not retired,0.16236,0.00609,4998
+htm_model_narrow_wealthy,IT,2017,not_retired,not retired,0.158,0.00747,4570
+htm_model_narrow_wealthy,IT,2021,not_retired,not retired,0.11533,0.01327,4039
+htm_model_narrow_wealthy,IT,2023,not_retired,not retired,0.09866,0.00974,5922
 illiquid_broad_to_disposable_income_ratio_of_medians,DE,2014,all,all,1.24212,0.09025,4460
 illiquid_broad_to_disposable_income_ratio_of_medians,DE,2017,all,all,1.33834,0.07403,4942
 illiquid_broad_to_disposable_income_ratio_of_medians,DE,2021,all,all,1.58403,0.14831,4119
@@ -1051,6 +1291,17 @@ income_poor50_disp_persons,IT,2023,labour,employed,0.1105,0.00995,4852
 income_poor50_disp_persons,IT,2023,labour,other,0.54642,0.04901,819
 income_poor50_disp_persons,IT,2023,labour,retired,0.06844,0.00847,3719
 income_poor50_disp_persons,IT,2023,labour,unemployed,0.84383,0.06272,251
+income_poor50_disp_persons,DE,2014,labour_force,in the labour force,0.09501,0.00906,2819
+income_poor50_disp_persons,DE,2017,labour_force,in the labour force,0.10642,0.01009,3058
+income_poor50_disp_persons,DE,2021,labour_force,in the labour force,0.0881,0.01212,2400
+income_poor50_disp_persons,FR,2014,labour_force,in the labour force,0.09758,0.00555,7658
+income_poor50_disp_persons,FR,2017,labour_force,in the labour force,0.12413,0.00597,8889
+income_poor50_disp_persons,FR,2021,labour_force,in the labour force,0.10003,0.00569,6632
+income_poor50_disp_persons,IT,2010,labour_force,in the labour force,0.12689,0.00718,4266
+income_poor50_disp_persons,IT,2014,labour_force,in the labour force,0.14964,0.00686,4085
+income_poor50_disp_persons,IT,2017,labour_force,in the labour force,0.145,0.00881,3639
+income_poor50_disp_persons,IT,2021,labour_force,in the labour force,0.14682,0.02011,3537
+income_poor50_disp_persons,IT,2023,labour_force,in the labour force,0.138,0.01117,5103
 income_poor50_disp_persons,IT,2017,macro_region,IT Centre,0.08131,0.01034,1605
 income_poor50_disp_persons,IT,2017,macro_region,IT North,0.07835,0.00887,3196
 income_poor50_disp_persons,IT,2017,macro_region,IT South and Islands,0.25777,0.01433,2619
@@ -1060,6 +1311,17 @@ income_poor50_disp_persons,IT,2021,macro_region,IT South and Islands,0.291,0.031
 income_poor50_disp_persons,IT,2023,macro_region,IT Centre,0.13784,0.02435,1511
 income_poor50_disp_persons,IT,2023,macro_region,IT North,0.06439,0.01202,3768
 income_poor50_disp_persons,IT,2023,macro_region,IT South and Islands,0.25222,0.01885,4362
+income_poor50_disp_persons,DE,2014,not_retired,not retired,0.1108,0.00886,2976
+income_poor50_disp_persons,DE,2017,not_retired,not retired,0.12347,0.00933,3182
+income_poor50_disp_persons,DE,2021,not_retired,not retired,0.10526,0.01258,2492
+income_poor50_disp_persons,FR,2014,not_retired,not retired,0.10643,0.00583,8112
+income_poor50_disp_persons,FR,2017,not_retired,not retired,0.13907,0.00605,9343
+income_poor50_disp_persons,FR,2021,not_retired,not retired,0.11787,0.00622,6915
+income_poor50_disp_persons,IT,2010,not_retired,not retired,0.1359,0.00749,4387
+income_poor50_disp_persons,IT,2014,not_retired,not retired,0.17312,0.00706,4998
+income_poor50_disp_persons,IT,2017,not_retired,not retired,0.16999,0.00823,4570
+income_poor50_disp_persons,IT,2021,not_retired,not retired,0.17239,0.01995,4039
+income_poor50_disp_persons,IT,2023,not_retired,not retired,0.16824,0.01147,5922
 income_poor50_disp_persons,DE,2017,region,DENW,0.11082,0.01798,774
 income_poor50_disp_persons,DE,2017,region,DEOS,0.13785,0.01711,896
 income_poor50_disp_persons,DE,2017,region,DESW,0.09501,0.01158,1965
@@ -1167,6 +1429,28 @@ liquid_broad_to_disposable_income_ratio_of_medians,IT,2014,all,all,0.26426,0.012
 liquid_broad_to_disposable_income_ratio_of_medians,IT,2017,all,all,0.27475,0.0135,7420
 liquid_broad_to_disposable_income_ratio_of_medians,IT,2021,all,all,0.31639,0.03814,6239
 liquid_broad_to_disposable_income_ratio_of_medians,IT,2023,all,all,0.37454,0.02772,9641
+liquid_broad_to_disposable_income_ratio_of_medians,DE,2014,labour_force,in the labour force,0.19298,0.01576,2819
+liquid_broad_to_disposable_income_ratio_of_medians,DE,2017,labour_force,in the labour force,0.22735,0.01291,3058
+liquid_broad_to_disposable_income_ratio_of_medians,DE,2021,labour_force,in the labour force,0.34285,0.02956,2400
+liquid_broad_to_disposable_income_ratio_of_medians,FR,2014,labour_force,in the labour force,0.25871,0.01065,7658
+liquid_broad_to_disposable_income_ratio_of_medians,FR,2017,labour_force,in the labour force,0.24663,0.00919,8889
+liquid_broad_to_disposable_income_ratio_of_medians,FR,2021,labour_force,in the labour force,0.32776,0.01867,6632
+liquid_broad_to_disposable_income_ratio_of_medians,IT,2010,labour_force,in the labour force,0.20725,0.01417,4266
+liquid_broad_to_disposable_income_ratio_of_medians,IT,2014,labour_force,in the labour force,0.21501,0.01189,4085
+liquid_broad_to_disposable_income_ratio_of_medians,IT,2017,labour_force,in the labour force,0.22501,0.0064,3639
+liquid_broad_to_disposable_income_ratio_of_medians,IT,2021,labour_force,in the labour force,0.27132,0.02979,3537
+liquid_broad_to_disposable_income_ratio_of_medians,IT,2023,labour_force,in the labour force,0.32132,0.03012,5103
+liquid_broad_to_disposable_income_ratio_of_medians,DE,2014,not_retired,not retired,0.19689,0.01507,2976
+liquid_broad_to_disposable_income_ratio_of_medians,DE,2017,not_retired,not retired,0.2108,0.01588,3182
+liquid_broad_to_disposable_income_ratio_of_medians,DE,2021,not_retired,not retired,0.32087,0.02499,2492
+liquid_broad_to_disposable_income_ratio_of_medians,FR,2014,not_retired,not retired,0.24791,0.01099,8112
+liquid_broad_to_disposable_income_ratio_of_medians,FR,2017,not_retired,not retired,0.23071,0.00992,9343
+liquid_broad_to_disposable_income_ratio_of_medians,FR,2021,not_retired,not retired,0.28641,0.01125,6915
+liquid_broad_to_disposable_income_ratio_of_medians,IT,2010,not_retired,not retired,0.20624,0.01173,4387
+liquid_broad_to_disposable_income_ratio_of_medians,IT,2014,not_retired,not retired,0.20343,0.01388,4998
+liquid_broad_to_disposable_income_ratio_of_medians,IT,2017,not_retired,not retired,0.2391,0.00918,4570
+liquid_broad_to_disposable_income_ratio_of_medians,IT,2021,not_retired,not retired,0.24176,0.03486,4039
+liquid_broad_to_disposable_income_ratio_of_medians,IT,2023,not_retired,not retired,0.2857,0.01598,5922
 liquid_broad_to_income_ratio_of_medians,DE,2010,all,all,0.26459,0.02016,3565
 liquid_broad_to_income_ratio_of_medians,DE,2014,all,all,0.20025,0.01371,4460
 liquid_broad_to_income_ratio_of_medians,DE,2017,all,all,0.20703,0.01008,4942
@@ -1215,6 +1499,116 @@ liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,education,below tertiar
 liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,education,tertiary,0.41923,0.08989,1839
 liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,education,below tertiary,0.26457,0.01385,7030
 liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,education,tertiary,0.5309,0.06299,2611
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2014,education_lf,below tertiary,0.03076,0.00496,1437
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2014,education_lf,tertiary,0.09755,0.01576,1351
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2017,education_lf,below tertiary,0.03622,0.00266,1465
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2017,education_lf,tertiary,0.12988,0.01293,1571
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2021,education_lf,below tertiary,0.0644,0.00473,1060
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2021,education_lf,tertiary,0.28423,0.03125,1330
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2014,education_lf,below tertiary,0.03892,0.00217,3725
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2014,education_lf,tertiary,0.06802,0.00281,3831
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2017,education_lf,below tertiary,0.03705,0.00181,4284
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2017,education_lf,tertiary,0.0574,0.00185,4603
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,education_lf,below tertiary,0.04211,0.00164,2884
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,education_lf,tertiary,0.07028,0.00394,3748
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2010,education_lf,below tertiary,0.17844,0.01103,3541
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2010,education_lf,tertiary,0.30212,0.04089,632
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2014,education_lf,below tertiary,0.14552,0.00422,3347
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2014,education_lf,tertiary,0.26749,0.02949,738
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2017,education_lf,below tertiary,0.16909,0.01492,3016
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2017,education_lf,tertiary,0.29101,0.02741,623
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,education_lf,below tertiary,0.22261,0.04195,2141
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,education_lf,tertiary,0.35485,0.09175,1396
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,education_lf,below tertiary,0.2227,0.01546,3280
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,education_lf,tertiary,0.51387,0.06521,1823
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2014,education_nr,below tertiary,0.02878,0.0045,1562
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2014,education_nr,tertiary,0.0934,0.01466,1379
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2017,education_nr,below tertiary,0.03768,0.00233,1561
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2017,education_nr,tertiary,0.12871,0.01282,1595
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2021,education_nr,below tertiary,0.06662,0.00584,1127
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2021,education_nr,tertiary,0.26758,0.02818,1354
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2014,education_nr,below tertiary,0.03592,0.0012,4056
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2014,education_nr,tertiary,0.06738,0.00247,3924
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2017,education_nr,below tertiary,0.03591,0.0015,4634
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2017,education_nr,tertiary,0.0581,0.00241,4707
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,education_nr,below tertiary,0.03707,0.00178,3095
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,education_nr,tertiary,0.06863,0.00419,3820
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2010,education_nr,below tertiary,0.18332,0.0113,3649
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2010,education_nr,tertiary,0.30244,0.04025,635
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2014,education_nr,below tertiary,0.13728,0.01371,4248
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2014,education_nr,tertiary,0.25959,0.02877,750
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2017,education_nr,below tertiary,0.16942,0.00562,3935
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2017,education_nr,tertiary,0.29275,0.02675,635
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,education_nr,below tertiary,0.20576,0.04996,2624
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,education_nr,tertiary,0.34944,0.08508,1415
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,education_nr,below tertiary,0.2392,0.01916,4066
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,education_nr,tertiary,0.52528,0.06628,1856
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2014,labour,employed,0.04906,0.00293,2694
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2014,labour,other,0.04642,0.01195,155
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2014,labour,retired,0.08019,0.00957,1476
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2014,labour,unemployed,0.00069,0.00236,124
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2017,labour,employed,0.06206,0.00332,2953
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2017,labour,other,0.03579,0.00913,120
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2017,labour,retired,0.09876,0.0119,1754
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2017,labour,unemployed,0.00615,0.00244,105
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2021,labour,employed,0.13368,0.01297,2306
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2021,labour,other,0.10277,0.06359,90
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2021,labour,retired,0.17979,0.01864,1616
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2021,labour,unemployed,0.00218,0.0122,92
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2014,labour,employed,0.05225,0.00181,7039
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2014,labour,other,0.02657,0.00309,454
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2014,labour,retired,0.07121,0.00303,3923
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2014,labour,unemployed,0.02176,0.00213,619
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2017,labour,employed,0.04793,0.00204,8265
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2017,labour,other,0.02324,0.00325,454
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2017,labour,retired,0.06193,0.00161,4342
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2017,labour,unemployed,0.0174,0.00277,624
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,labour,employed,0.05217,0.00142,6238
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,labour,other,0.02714,0.00403,283
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,labour,retired,0.07727,0.00502,3338
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,labour,unemployed,0.01631,0.00313,394
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2010,labour,employed,0.20453,0.00306,4073
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2010,labour,other,0.02308,0.07966,121
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2010,labour,retired,0.3097,0.00963,3564
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2010,labour,unemployed,0.0,0.0,193
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2014,labour,employed,0.18013,0.01297,3841
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2014,labour,other,0.0,0.00944,913
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2014,labour,retired,0.33702,0.02456,3158
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2014,labour,unemployed,0.0,0.0,244
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2017,labour,employed,0.20983,0.00936,3378
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2017,labour,other,0.02536,0.02602,931
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2017,labour,retired,0.33626,0.02231,2850
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2017,labour,unemployed,0.0,0.0,261
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,labour,employed,0.25092,0.02683,3397
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,labour,other,0.09884,0.06696,502
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,labour,retired,0.4384,0.05523,2200
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,labour,unemployed,0.0,0.00598,140
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,labour,employed,0.29491,0.02599,4852
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,labour,other,0.1067,0.03485,819
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,labour,retired,0.4767,0.04402,3719
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,labour,unemployed,0.0,12.72377,251
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2014,labour_force,in the labour force,0.04448,0.00521,2819
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2017,labour_force,in the labour force,0.06337,0.00193,3058
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2021,labour_force,in the labour force,0.12727,0.01205,2400
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2014,labour_force,in the labour force,0.04613,0.00165,7658
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2017,labour_force,in the labour force,0.04361,0.00182,8889
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,labour_force,in the labour force,0.05096,0.0022,6632
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2010,labour_force,in the labour force,0.20896,0.00594,4266
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2014,labour_force,in the labour force,0.17808,0.0113,4085
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2017,labour_force,in the labour force,0.20465,0.01124,3639
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,labour_force,in the labour force,0.22733,0.02687,3537
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,labour_force,in the labour force,0.27543,0.01712,5103
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2014,not_retired,not retired,0.04232,0.00453,2976
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2017,not_retired,not retired,0.06513,0.00451,3182
+liquid_kvw_to_disposable_income_ratio_of_medians,DE,2021,not_retired,not retired,0.11734,0.01157,2492
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2014,not_retired,not retired,0.04383,0.00108,8112
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2017,not_retired,not retired,0.04022,0.00101,9343
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,not_retired,not retired,0.04646,0.00179,6915
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2010,not_retired,not retired,0.21347,0.00861,4387
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2014,not_retired,not retired,0.15562,0.00608,4998
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2017,not_retired,not retired,0.18432,0.01657,4570
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,not_retired,not retired,0.22932,0.0398,4039
+liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,not_retired,not retired,0.2586,0.02429,5922
 liquid_kvw_to_income_ratio_of_medians,DE,2010,all,all,0.04215,0.00453,3565
 liquid_kvw_to_income_ratio_of_medians,DE,2014,all,all,0.03999,0.00405,4460
 liquid_kvw_to_income_ratio_of_medians,DE,2017,all,all,0.05257,0.00106,4942
@@ -1241,6 +1635,72 @@ median_income_disposable,IT,2014,all,all,20147.12166,204.51597,8156
 median_income_disposable,IT,2017,all,all,20018.31261,129.12499,7420
 median_income_disposable,IT,2021,all,all,22124.79094,1033.21484,6239
 median_income_disposable,IT,2023,all,all,24029.28934,392.42349,9641
+median_income_disposable,DE,2014,labour,employed,32254.488,469.01292,2694
+median_income_disposable,DE,2014,labour,other,11045.56,1638.8753,155
+median_income_disposable,DE,2014,labour,retired,22410.712,702.07684,1476
+median_income_disposable,DE,2014,labour,unemployed,12000.0,1374.23489,124
+median_income_disposable,DE,2017,labour,employed,34004.264,709.73106,2953
+median_income_disposable,DE,2017,labour,other,11552.096,1679.18803,120
+median_income_disposable,DE,2017,labour,retired,25850.44,815.32001,1754
+median_income_disposable,DE,2017,labour,unemployed,12000.0,1913.3428,105
+median_income_disposable,DE,2021,labour,employed,37650.4,840.56634,2306
+median_income_disposable,DE,2021,labour,other,12403.984,2533.63517,90
+median_income_disposable,DE,2021,labour,retired,29340.456,881.3764,1616
+median_income_disposable,DE,2021,labour,unemployed,19420.0,3665.10201,92
+median_income_disposable,FR,2014,labour,employed,29255.44,342.38411,7039
+median_income_disposable,FR,2014,labour,other,13898.28,424.74442,454
+median_income_disposable,FR,2014,labour,retired,23704.856,326.13102,3923
+median_income_disposable,FR,2014,labour,unemployed,14542.48,502.5832,619
+median_income_disposable,FR,2017,labour,employed,30814.12,412.59645,8265
+median_income_disposable,FR,2017,labour,other,13621.64,625.07532,454
+median_income_disposable,FR,2017,labour,retired,25554.2,376.06127,4342
+median_income_disposable,FR,2017,labour,unemployed,15155.28,599.03445,624
+median_income_disposable,FR,2021,labour,employed,30333.6,422.16908,6238
+median_income_disposable,FR,2021,labour,other,13603.0,416.8471,283
+median_income_disposable,FR,2021,labour,retired,25094.4,393.26098,3338
+median_income_disposable,FR,2021,labour,unemployed,16167.04,598.24902,394
+median_income_disposable,IT,2010,labour,employed,25790.46561,382.15733,4073
+median_income_disposable,IT,2010,labour,other,9140.31722,1553.62202,121
+median_income_disposable,IT,2010,labour,retired,17032.6752,338.44273,3564
+median_income_disposable,IT,2010,labour,unemployed,3366.57177,1221.41672,193
+median_income_disposable,IT,2014,labour,employed,24232.274,348.22639,3841
+median_income_disposable,IT,2014,labour,other,9840.0,311.89363,913
+median_income_disposable,IT,2014,labour,retired,19830.1088,402.83221,3158
+median_income_disposable,IT,2014,labour,unemployed,830.0,735.41377,244
+median_income_disposable,IT,2017,labour,employed,23750.0,552.40325,3378
+median_income_disposable,IT,2017,labour,other,10400.0,215.10023,931
+median_income_disposable,IT,2017,labour,retired,19683.26408,307.0802,2850
+median_income_disposable,IT,2017,labour,unemployed,56.9795,1024.56531,261
+median_income_disposable,IT,2021,labour,employed,27030.98901,988.91869,3397
+median_income_disposable,IT,2021,labour,other,10140.0,496.58683,502
+median_income_disposable,IT,2021,labour,retired,21047.90939,1128.71871,2200
+median_income_disposable,IT,2021,labour,unemployed,5520.0,1682.28816,140
+median_income_disposable,IT,2023,labour,employed,28619.07211,547.72366,4852
+median_income_disposable,IT,2023,labour,other,9887.83982,478.10508,819
+median_income_disposable,IT,2023,labour,retired,22131.35927,541.00863,3719
+median_income_disposable,IT,2023,labour,unemployed,6.27185,1206.00802,251
+median_income_disposable,DE,2014,labour_force,in the labour force,31506.576,579.62877,2819
+median_income_disposable,DE,2017,labour_force,in the labour force,33296.648,607.89963,3058
+median_income_disposable,DE,2021,labour_force,in the labour force,37050.76,858.66032,2400
+median_income_disposable,FR,2014,labour_force,in the labour force,27443.6,325.27131,7658
+median_income_disposable,FR,2017,labour_force,in the labour force,29027.08,479.44756,8889
+median_income_disposable,FR,2021,labour_force,in the labour force,28984.4,447.62847,6632
+median_income_disposable,IT,2010,labour_force,in the labour force,25244.39978,468.05142,4266
+median_income_disposable,IT,2014,labour_force,in the labour force,23025.80811,456.42007,4085
+median_income_disposable,IT,2017,labour_force,in the labour force,22220.95429,402.32193,3639
+median_income_disposable,IT,2021,labour_force,in the labour force,25800.00004,1178.1202,3537
+median_income_disposable,IT,2023,labour_force,in the labour force,28009.50956,592.84709,5103
+median_income_disposable,DE,2014,not_retired,not retired,29915.872,618.95622,2976
+median_income_disposable,DE,2017,not_retired,not retired,32398.72,587.24528,3182
+median_income_disposable,DE,2021,not_retired,not retired,35966.408,689.37621,2492
+median_income_disposable,FR,2014,not_retired,not retired,26574.64,303.01394,8112
+median_income_disposable,FR,2017,not_retired,not retired,27306.68,437.33856,9343
+median_income_disposable,FR,2021,not_retired,not retired,27247.248,469.46431,6915
+median_income_disposable,IT,2010,not_retired,not retired,24597.89561,492.68507,4387
+median_income_disposable,IT,2014,not_retired,not retired,20337.84029,261.25104,4998
+median_income_disposable,IT,2017,not_retired,not retired,20032.98753,176.01237,4570
+median_income_disposable,IT,2021,not_retired,not retired,23002.78862,1709.80517,4039
+median_income_disposable,IT,2023,not_retired,not retired,25002.94567,576.56432,5922
 median_income_gross,DE,2010,all,all,32543.0,731.18861,3565
 median_income_gross,DE,2014,all,all,35458.0,693.26654,4460
 median_income_gross,DE,2017,all,all,40140.0,724.7385,4942
@@ -1393,6 +1853,36 @@ median_liquid_kvw,IT,2014,all,all,4220.0,162.53552,8156
 median_liquid_kvw,IT,2017,all,all,4690.72365,174.95888,7420
 median_liquid_kvw,IT,2021,all,all,6013.5,543.05297,6239
 median_liquid_kvw,IT,2023,all,all,7385.0,317.06607,9641
+median_liquid_kvw,DE,2010,labour_force,in the labour force,1266.0,150.0773,2185
+median_liquid_kvw,DE,2014,labour_force,in the labour force,1401.35,162.33392,2819
+median_liquid_kvw,DE,2017,labour_force,in the labour force,2110.0,56.41795,3058
+median_liquid_kvw,DE,2021,labour_force,in the labour force,4714.5,421.03605,2400
+median_liquid_kvw,DE,2023,labour_force,in the labour force,4901.1,403.29327,2223
+median_liquid_kvw,FR,2010,labour_force,in the labour force,1458.143,53.05734,8462
+median_liquid_kvw,FR,2014,labour_force,in the labour force,1266.0,48.67957,7658
+median_liquid_kvw,FR,2017,labour_force,in the labour force,1266.0,56.77239,8889
+median_liquid_kvw,FR,2021,labour_force,in the labour force,1477.0,72.88177,6632
+median_liquid_kvw,FR,2023,labour_force,in the labour force,1628.92,84.40578,7278
+median_liquid_kvw,IT,2010,labour_force,in the labour force,5275.0,139.34919,4266
+median_liquid_kvw,IT,2014,labour_force,in the labour force,4100.41463,264.23647,4085
+median_liquid_kvw,IT,2017,labour_force,in the labour force,4547.5,252.61952,3639
+median_liquid_kvw,IT,2021,labour_force,in the labour force,5865.00875,676.96369,3537
+median_liquid_kvw,IT,2023,labour_force,in the labour force,7714.62353,417.08584,5103
+median_liquid_kvw,DE,2010,not_retired,not retired,1122.811,117.15269,2358
+median_liquid_kvw,DE,2014,not_retired,not retired,1266.0,136.36828,2976
+median_liquid_kvw,DE,2017,not_retired,not retired,2110.0,141.28031,3182
+median_liquid_kvw,DE,2021,not_retired,not retired,4220.0,406.69899,2492
+median_liquid_kvw,DE,2023,not_retired,not retired,4528.3,341.63856,2336
+median_liquid_kvw,FR,2010,not_retired,not retired,1298.123,41.41069,9148
+median_liquid_kvw,FR,2014,not_retired,not retired,1164.72,28.99567,8112
+median_liquid_kvw,FR,2017,not_retired,not retired,1098.255,29.08321,9343
+median_liquid_kvw,FR,2021,not_retired,not retired,1266.0,57.85741,6915
+median_liquid_kvw,FR,2023,not_retired,not retired,1582.5,23.23992,7637
+median_liquid_kvw,IT,2010,not_retired,not retired,5250.92462,218.53074,4387
+median_liquid_kvw,IT,2014,not_retired,not retired,3165.0,121.70514,4998
+median_liquid_kvw,IT,2017,not_retired,not retired,3692.5,337.85984,4570
+median_liquid_kvw,IT,2021,not_retired,not retired,5275.0,835.49306,4039
+median_liquid_kvw,IT,2023,not_retired,not retired,6465.84402,573.24684,5922
 median_networth,DE,2010,all,all,51358.0,3133.36007,3565
 median_networth,DE,2014,all,all,60790.0,3723.87383,4461
 median_networth,DE,2017,all,all,70780.0,3277.01574,4942
@@ -1548,6 +2038,42 @@ mpc_mean,IT,2021,education,below tertiary,0.46726,0.02235,4400
 mpc_mean,IT,2021,education,tertiary,0.47921,0.02294,1839
 mpc_mean,IT,2023,education,below tertiary,0.44378,0.00972,7030
 mpc_mean,IT,2023,education,tertiary,0.41487,0.01715,2611
+mpc_mean,DE,2017,education_lf,below tertiary,0.49659,0.01238,1465
+mpc_mean,DE,2017,education_lf,tertiary,0.49254,0.01468,1570
+mpc_mean,DE,2021,education_lf,below tertiary,0.46407,0.01763,1059
+mpc_mean,DE,2021,education_lf,tertiary,0.45835,0.01683,1329
+mpc_mean,DE,2023,education_lf,below tertiary,0.45219,0.01727,959
+mpc_mean,DE,2023,education_lf,tertiary,0.42962,0.01668,1261
+mpc_mean,FR,2017,education_lf,below tertiary,0.35246,0.00787,4284
+mpc_mean,FR,2017,education_lf,tertiary,0.35802,0.00791,4603
+mpc_mean,FR,2021,education_lf,below tertiary,0.31062,0.00952,2884
+mpc_mean,FR,2021,education_lf,tertiary,0.33668,0.00889,3748
+mpc_mean,FR,2023,education_lf,below tertiary,0.31772,0.0087,2994
+mpc_mean,FR,2023,education_lf,tertiary,0.34182,0.00784,4284
+mpc_mean,IT,2017,education_lf,below tertiary,0.51664,0.00952,3016
+mpc_mean,IT,2017,education_lf,tertiary,0.44968,0.01685,623
+mpc_mean,IT,2021,education_lf,below tertiary,0.48185,0.03445,2141
+mpc_mean,IT,2021,education_lf,tertiary,0.4896,0.02616,1396
+mpc_mean,IT,2023,education_lf,below tertiary,0.46803,0.01246,3280
+mpc_mean,IT,2023,education_lf,tertiary,0.41858,0.01847,1823
+mpc_mean,DE,2017,education_nr,below tertiary,0.50421,0.01205,1561
+mpc_mean,DE,2017,education_nr,tertiary,0.49304,0.01457,1594
+mpc_mean,DE,2021,education_nr,below tertiary,0.46765,0.01681,1126
+mpc_mean,DE,2021,education_nr,tertiary,0.45838,0.01646,1353
+mpc_mean,DE,2023,education_nr,below tertiary,0.45798,0.01663,1036
+mpc_mean,DE,2023,education_nr,tertiary,0.42679,0.01625,1295
+mpc_mean,FR,2017,education_nr,below tertiary,0.35475,0.00766,4634
+mpc_mean,FR,2017,education_nr,tertiary,0.35805,0.00765,4707
+mpc_mean,FR,2021,education_nr,below tertiary,0.32568,0.00982,3095
+mpc_mean,FR,2021,education_nr,tertiary,0.3392,0.00903,3820
+mpc_mean,FR,2023,education_nr,below tertiary,0.33289,0.0093,3272
+mpc_mean,FR,2023,education_nr,tertiary,0.33853,0.00773,4365
+mpc_mean,IT,2017,education_nr,below tertiary,0.51593,0.00826,3935
+mpc_mean,IT,2017,education_nr,tertiary,0.44928,0.01652,635
+mpc_mean,IT,2021,education_nr,below tertiary,0.48518,0.02881,2624
+mpc_mean,IT,2021,education_nr,tertiary,0.48957,0.02555,1415
+mpc_mean,IT,2023,education_nr,below tertiary,0.47097,0.01172,4066
+mpc_mean,IT,2023,education_nr,tertiary,0.41896,0.0182,1856
 mpc_mean,DE,2017,htm_status,not HtM,0.50711,0.00823,3619
 mpc_mean,DE,2017,htm_status,poor HtM,0.56711,0.032,216
 mpc_mean,DE,2017,htm_status,wealthy HtM,0.51234,0.02327,620
@@ -1611,6 +2137,15 @@ mpc_mean,IT,2023,labour,employed,0.4536,0.01089,4852
 mpc_mean,IT,2023,labour,other,0.48534,0.02967,819
 mpc_mean,IT,2023,labour,retired,0.39152,0.01664,3719
 mpc_mean,IT,2023,labour,unemployed,0.52077,0.03602,251
+mpc_mean,DE,2017,labour_force,in the labour force,0.49521,0.00999,3057
+mpc_mean,DE,2021,labour_force,in the labour force,0.46226,0.01317,2398
+mpc_mean,DE,2023,labour_force,in the labour force,0.44281,0.01209,2223
+mpc_mean,FR,2017,labour_force,in the labour force,0.35465,0.006,8889
+mpc_mean,FR,2021,labour_force,in the labour force,0.32218,0.00707,6632
+mpc_mean,FR,2023,labour_force,in the labour force,0.32911,0.00564,7278
+mpc_mean,IT,2017,labour_force,in the labour force,0.50456,0.00872,3639
+mpc_mean,IT,2021,labour_force,in the labour force,0.48371,0.02706,3537
+mpc_mean,IT,2023,labour_force,in the labour force,0.45634,0.01088,5103
 mpc_mean,DE,2017,liquid_quintile,Q1,0.5522,0.0185,662
 mpc_mean,DE,2017,liquid_quintile,Q2,0.50668,0.02118,674
 mpc_mean,DE,2017,liquid_quintile,Q3,0.52667,0.01709,836
@@ -1665,6 +2200,15 @@ mpc_mean,IT,2021,macro_region,IT South and Islands,0.532,0.01437,2188
 mpc_mean,IT,2023,macro_region,IT Centre,0.43151,0.01508,1511
 mpc_mean,IT,2023,macro_region,IT North,0.40142,0.01294,3768
 mpc_mean,IT,2023,macro_region,IT South and Islands,0.49887,0.01179,4362
+mpc_mean,DE,2017,not_retired,not retired,0.5005,0.00992,3181
+mpc_mean,DE,2021,not_retired,not retired,0.46449,0.01262,2490
+mpc_mean,DE,2023,not_retired,not retired,0.44512,0.01177,2336
+mpc_mean,FR,2017,not_retired,not retired,0.35598,0.00595,9343
+mpc_mean,FR,2021,not_retired,not retired,0.33135,0.00724,6915
+mpc_mean,FR,2023,not_retired,not retired,0.33543,0.00588,7637
+mpc_mean,IT,2017,not_retired,not retired,0.50551,0.00775,4570
+mpc_mean,IT,2021,not_retired,not retired,0.4861,0.0235,4039
+mpc_mean,IT,2023,not_retired,not retired,0.46006,0.01046,5922
 mpc_mean,DE,2017,region,DENW,0.54173,0.01948,773
 mpc_mean,DE,2017,region,DEOS,0.53492,0.01757,896
 mpc_mean,DE,2017,region,DESW,0.48977,0.01353,1964
@@ -1814,6 +2358,36 @@ networth_gini,IT,2014,all,all,0.6025,0.00659,8156
 networth_gini,IT,2017,all,all,0.60636,0.00743,7420
 networth_gini,IT,2021,all,all,0.63953,0.02985,6239
 networth_gini,IT,2023,all,all,0.64644,0.01844,9641
+networth_gini,DE,2010,labour_force,in the labour force,0.7824,0.01809,2185
+networth_gini,DE,2014,labour_force,in the labour force,0.78238,0.01266,2819
+networth_gini,DE,2017,labour_force,in the labour force,0.75626,0.01195,3058
+networth_gini,DE,2021,labour_force,in the labour force,0.74129,0.01081,2400
+networth_gini,DE,2023,labour_force,in the labour force,0.74089,0.01444,2223
+networth_gini,FR,2010,labour_force,in the labour force,0.70958,0.01251,8462
+networth_gini,FR,2014,labour_force,in the labour force,0.7329,0.01087,7581
+networth_gini,FR,2017,labour_force,in the labour force,0.71002,0.00975,8889
+networth_gini,FR,2021,labour_force,in the labour force,0.71628,0.0076,6632
+networth_gini,FR,2023,labour_force,in the labour force,0.7084,0.00755,7278
+networth_gini,IT,2010,labour_force,in the labour force,0.64004,0.00883,4266
+networth_gini,IT,2014,labour_force,in the labour force,0.63147,0.00843,4085
+networth_gini,IT,2017,labour_force,in the labour force,0.63079,0.01139,3639
+networth_gini,IT,2021,labour_force,in the labour force,0.67273,0.03698,3537
+networth_gini,IT,2023,labour_force,in the labour force,0.67959,0.02174,5103
+networth_gini,DE,2010,not_retired,not retired,0.79417,0.01704,2358
+networth_gini,DE,2014,not_retired,not retired,0.79094,0.01214,2976
+networth_gini,DE,2017,not_retired,not retired,0.76625,0.01153,3182
+networth_gini,DE,2021,not_retired,not retired,0.74933,0.01032,2492
+networth_gini,DE,2023,not_retired,not retired,0.748,0.01387,2336
+networth_gini,FR,2010,not_retired,not retired,0.72107,0.01158,9148
+networth_gini,FR,2014,not_retired,not retired,0.73955,0.00999,8035
+networth_gini,FR,2017,not_retired,not retired,0.72272,0.00925,9343
+networth_gini,FR,2021,not_retired,not retired,0.72831,0.00722,6915
+networth_gini,FR,2023,not_retired,not retired,0.72039,0.00706,7637
+networth_gini,IT,2010,not_retired,not retired,0.64255,0.00929,4387
+networth_gini,IT,2014,not_retired,not retired,0.63701,0.00835,4998
+networth_gini,IT,2017,not_retired,not retired,0.63428,0.01021,4570
+networth_gini,IT,2021,not_retired,not retired,0.67918,0.0343,4039
+networth_gini,IT,2023,not_retired,not retired,0.6866,0.02075,5922
 networth_to_disposable_income_ratio_of_medians,DE,2014,all,all,2.19584,0.13303,4460
 networth_to_disposable_income_ratio_of_medians,DE,2017,all,all,2.34732,0.10987,4942
 networth_to_disposable_income_ratio_of_medians,DE,2021,all,all,3.14532,0.18327,4119
@@ -1847,6 +2421,28 @@ networth_to_disposable_income_ratio_of_medians,IT,2021,education,below tertiary,
 networth_to_disposable_income_ratio_of_medians,IT,2021,education,tertiary,7.42224,0.91084,1839
 networth_to_disposable_income_ratio_of_medians,IT,2023,education,below tertiary,6.57651,0.23552,7030
 networth_to_disposable_income_ratio_of_medians,IT,2023,education,tertiary,7.50146,0.53616,2611
+networth_to_disposable_income_ratio_of_medians,DE,2014,labour_force,in the labour force,1.90769,0.15531,2819
+networth_to_disposable_income_ratio_of_medians,DE,2017,labour_force,in the labour force,2.12268,0.12274,3058
+networth_to_disposable_income_ratio_of_medians,DE,2021,labour_force,in the labour force,2.82454,0.26124,2400
+networth_to_disposable_income_ratio_of_medians,FR,2014,labour_force,in the labour force,2.80947,0.11336,7581
+networth_to_disposable_income_ratio_of_medians,FR,2017,labour_force,in the labour force,3.04188,0.16985,8889
+networth_to_disposable_income_ratio_of_medians,FR,2021,labour_force,in the labour force,3.22025,0.15854,6632
+networth_to_disposable_income_ratio_of_medians,IT,2010,labour_force,in the labour force,6.59481,0.19945,4266
+networth_to_disposable_income_ratio_of_medians,IT,2014,labour_force,in the labour force,5.83259,0.19904,4085
+networth_to_disposable_income_ratio_of_medians,IT,2017,labour_force,in the labour force,5.71533,0.23199,3639
+networth_to_disposable_income_ratio_of_medians,IT,2021,labour_force,in the labour force,6.20155,0.86821,3537
+networth_to_disposable_income_ratio_of_medians,IT,2023,labour_force,in the labour force,5.91228,0.22849,5103
+networth_to_disposable_income_ratio_of_medians,DE,2014,not_retired,not retired,1.71716,0.14478,2976
+networth_to_disposable_income_ratio_of_medians,DE,2017,not_retired,not retired,1.88472,0.12606,3182
+networth_to_disposable_income_ratio_of_medians,DE,2021,not_retired,not retired,2.37608,0.21511,2492
+networth_to_disposable_income_ratio_of_medians,FR,2014,not_retired,not retired,2.71454,0.10842,8035
+networth_to_disposable_income_ratio_of_medians,FR,2017,not_retired,not retired,2.76489,0.16351,9343
+networth_to_disposable_income_ratio_of_medians,FR,2021,not_retired,not retired,2.95516,0.18949,6915
+networth_to_disposable_income_ratio_of_medians,IT,2010,not_retired,not retired,6.74854,0.20666,4387
+networth_to_disposable_income_ratio_of_medians,IT,2014,not_retired,not retired,6.02326,0.18678,4998
+networth_to_disposable_income_ratio_of_medians,IT,2017,not_retired,not retired,5.73053,0.23939,4570
+networth_to_disposable_income_ratio_of_medians,IT,2021,not_retired,not retired,6.17316,0.7973,4039
+networth_to_disposable_income_ratio_of_medians,IT,2023,not_retired,not retired,5.9193,0.23766,5922
 networth_to_income_ratio_of_medians,DE,2010,all,all,1.57832,0.09451,3565
 networth_to_income_ratio_of_medians,DE,2014,all,all,1.7145,0.10456,4460
 networth_to_income_ratio_of_medians,DE,2017,all,all,1.76339,0.08235,4942
@@ -1877,6 +2473,36 @@ networth_top10_share,IT,2014,all,all,0.42805,0.00772,8156
 networth_top10_share,IT,2017,all,all,0.43379,0.00979,7420
 networth_top10_share,IT,2021,all,all,0.49543,0.04201,6239
 networth_top10_share,IT,2023,all,all,0.51299,0.02594,9641
+networth_top10_share,DE,2010,labour_force,in the labour force,0.63381,0.03056,2185
+networth_top10_share,DE,2014,labour_force,in the labour force,0.63564,0.02171,2819
+networth_top10_share,DE,2017,labour_force,in the labour force,0.58223,0.01785,3058
+networth_top10_share,DE,2021,labour_force,in the labour force,0.58001,0.01876,2400
+networth_top10_share,DE,2023,labour_force,in the labour force,0.55254,0.02223,2223
+networth_top10_share,FR,2010,labour_force,in the labour force,0.53036,0.01957,8462
+networth_top10_share,FR,2014,labour_force,in the labour force,0.57364,0.01725,7581
+networth_top10_share,FR,2017,labour_force,in the labour force,0.53234,0.01153,8889
+networth_top10_share,FR,2021,labour_force,in the labour force,0.54987,0.0121,6632
+networth_top10_share,FR,2023,labour_force,in the labour force,0.54577,0.01163,7278
+networth_top10_share,IT,2010,labour_force,in the labour force,0.47614,0.01245,4266
+networth_top10_share,IT,2014,labour_force,in the labour force,0.45145,0.01123,4085
+networth_top10_share,IT,2017,labour_force,in the labour force,0.45151,0.01511,3639
+networth_top10_share,IT,2021,labour_force,in the labour force,0.53282,0.05332,3537
+networth_top10_share,IT,2023,labour_force,in the labour force,0.55133,0.03092,5103
+networth_top10_share,DE,2010,not_retired,not retired,0.64344,0.02922,2358
+networth_top10_share,DE,2014,not_retired,not retired,0.64272,0.0214,2976
+networth_top10_share,DE,2017,not_retired,not retired,0.59123,0.0176,3182
+networth_top10_share,DE,2021,not_retired,not retired,0.58666,0.01816,2492
+networth_top10_share,DE,2023,not_retired,not retired,0.55834,0.02132,2336
+networth_top10_share,FR,2010,not_retired,not retired,0.5386,0.0186,9148
+networth_top10_share,FR,2014,not_retired,not retired,0.58093,0.01628,8035
+networth_top10_share,FR,2017,not_retired,not retired,0.54474,0.01124,9343
+networth_top10_share,FR,2021,not_retired,not retired,0.56085,0.01158,6915
+networth_top10_share,FR,2023,not_retired,not retired,0.55571,0.01116,7637
+networth_top10_share,IT,2010,not_retired,not retired,0.47994,0.01308,4387
+networth_top10_share,IT,2014,not_retired,not retired,0.45615,0.01071,4998
+networth_top10_share,IT,2017,not_retired,not retired,0.4546,0.01377,4570
+networth_top10_share,IT,2021,not_retired,not retired,0.5393,0.05076,4039
+networth_top10_share,IT,2023,not_retired,not retired,0.55559,0.02988,5922
 share_any_illiquid,DE,2010,all,all,0.70933,0.01037,3565
 share_any_illiquid,DE,2014,all,all,0.70014,0.00706,4461
 share_any_illiquid,DE,2017,all,all,0.68078,0.00683,4942
