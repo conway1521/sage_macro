@@ -42,13 +42,19 @@ const SHAPE_QS = (("P5", 0.05), ("D1", 0.1), ("D2", 0.2), ("D3", 0.3), ("D4", 0.
 function mix_stats(R, lf, wk)
     n = length(R.l); K = length(lf)
     l = vcat([R.l .+ lf[k] for k in 1:K]...); mE = vcat([R.m[:, 1] .* wk[k] for k in 1:K]...); mU = vcat([R.m[:, 2] .* wk[k] for k in 1:K]...)
-    o = sortperm(l); l = l[o]; mE = mE[o]; mU = mU[o]; m = mE .+ mU; cw = cumsum(m); y = exp.(l)
+    kk = vcat([fill(k, n) for k in 1:K]...)
+    o = sortperm(l); l = l[o]; mE = mE[o]; mU = mU[o]; kk = kk[o]; m = mE .+ mU; cw = cumsum(m); y = exp.(l)
     q(p) = y[min(searchsortedfirst(cw, p), length(y))]; med = q(0.5); tot = dot(m, y); cy = cumsum(m .* y)
     share(lo, hi) = (i1 = searchsortedfirst(cw, lo); i2 = min(searchsortedfirst(cw, hi), length(y)); (cy[i2] - (i1 > 1 ? cy[i1-1] : 0.0)) / tot)
     below(t, mm) = sum(mm[i] for i in eachindex(y) if y[i] < t * med; init = 0.0)
     mu = dot(m, l)
     (cut = [q(p) / med for (_, p) in SHAPE_QS], top10 = 100 * share(0.9, 1.0), s8020 = share(0.8, 1.0) / share(0.0, 0.2),
-     below = [below(t, m) for t in (0.4, 0.5, 0.6, 0.7)], inwork60 = below(0.6, mE) / sum(mE), varlog = dot(m, (l .- mu) .^ 2))
+     below = [below(t, m) for t in (0.4, 0.5, 0.6, 0.7)], inwork60 = below(0.6, mE) / sum(mE), varlog = dot(m, (l .- mu) .^ 2),
+     # the same among the employed of every type but the lowest, and the lowest type's place in the distribution
+     # (for the state out of work, V3_START.md section 55)
+     inwork60_above = K > 1 ? sum(mE[i] for i in eachindex(y) if kk[i] > 1 && y[i] < 0.6 * med; init = 0.0) / sum(mE[kk .> 1]) : NaN,
+     low_below60 = K > 1 ? sum(m[i] for i in eachindex(y) if kk[i] == 1 && y[i] < 0.6 * med; init = 0.0) / sum(m[kk .== 1]) : NaN,
+     low_median = K > 1 ? (c1 = cumsum(m[kk .== 1]); y[kk .== 1][min(searchsortedfirst(c1, 0.5 * c1[end]), length(c1))] / med) : NaN)
 end
 function nelder_mead(f, x0; step = 0.3, iters = 1500)
     n = length(x0); X = [copy(x0) for _ in 1:n+1]; for i in 1:n; X[i+1][i] += step; end
