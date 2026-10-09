@@ -1963,3 +1963,24 @@ The single asset of the base is narrow liquid wealth: sight accounts and directl
 Kaplan and Violante (2014) use -1.48% for liquid wealth in the United States, so the figure is the field's for a liquid account and the base's 2% is not. Recorded in `data/manual_inputs.csv` (field `r_deposits_real`), which also settles audit item 2 for the two-asset reference, whose liquid return was an assumption of zero.
 
 For the one-asset base it is a choice with consequences, so it is run as a diagnostic first (`probe_fit_return.jl`, `SAGE_RLIQ=deposits`, config field `R_one`; runs 37884117801, 37884119842, 37884122062): G of version 5 with the asset earning the measured deposit return. Expected: patience fitted higher, since less is saved at a given patience when the asset loses value; what happens to the median, the MPC and the fall in consumption on job loss is what the run is for. Not counted: the minority's directly held securities, which earn more.
+
+## 58. More of version 5 calibrated, and three diagnostics read (2026-10-09, 06:00 UTC)
+
+**Calibrated and committed**: Italy G+S (participation 0.125, the two groups 0.117 and 0.165 against 0.116 and 0.165, multiplier 1.3, band 1.1 to 1.9) and Germany G+S+A (0.278, 0.250 and 0.349, multiplier 1.9, band 1.3 to 3.4; hand-to-mouth 0.225). France's and Italy's G+S+A are running. Ten of 24 files (no places yet).
+
+**Transitions on G+A, dread in choices** (run 37883944555): 12 of 12. The recession costs more with dread on: 0.38%, 0.14% and 0.40% of consumption against 0.25%, 0.08% and 0.24% in G.
+
+**The deposit return in place of 2%** (section 57; runs 37884117801, 37884119842, 37884122062).
+
+| G, version 5 | France: 2%, deposit return | Germany | Italy |
+|---|---|---|---|
+| top patience | 0.934, 0.966 | 0.954, 0.978 | 0.945, 0.977 |
+| patience times the gross return | 0.953, 0.953 | 0.973, 0.969 | 0.964, 0.966 |
+| hand-to-mouth | 0.220, 0.222 | 0.224, 0.225 | 0.175, 0.176 |
+| median liquid wealth over income | 0.094, 0.093 | 0.142, 0.102 (floor at zero) | 0.276, 0.273 |
+| MPC | 0.423, 0.416 | 0.331, 0.378 | 0.320, 0.319 |
+| fall in consumption on job loss | 0.165, 0.164 | 0.228, 0.277 | 0.234, 0.235 |
+
+The return's level is taken up by patience: the product of the two is the same to 0.004, and in France and Italy every moment and test is where it was. What changes is what patience is: 0.97 to 0.98 a year, the range the field reports, where the base's 0.93 to 0.95 had to be read as a low patience for a liquid account. Germany's row differs for a reason of search and not of economics: the floor touched zero on the way and the rule then fixed it there, with the median below the data's. The rule now puts the floor back once when that happens (`fit_v3`), and Germany is run again. Proposed to the user: the measured return in the base. It costs one more calibration of everything.
+
+**Germany on the labour-force targets** (run 37870276007): calibrates, hand-to-mouth 0.243 against 0.249, the median 0.124 against 0.127, MPC 0.350 against the labour force's 0.462. So on the labour-force targets the three countries calibrate (sections 54 and 55 for Italy and France), with model MPCs of 0.43, 0.35, 0.36 against 0.32, 0.46, 0.48.

@@ -482,7 +482,7 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
         x[5] = max(lo[5], x[5] / 2 - 1e-3); o = atm(x)
     end
     o.ok || error("the fit's starting point has no solution")
-    F = res(o); tfit = time(); nstep = 0
+    F = res(o); tfit = time(); nstep = 0; floor_back = 0
     owned(F) = V4 ? maximum(abs.(F)) : maximum(abs.(flfree ? F : F[[1, 3, 4, 5]]))          # effort, hand-to-mouth, S80/S20, the gap by education (zero outside its regime); liquid wealth too where the floor is fitted; version 4: every moment of the criterion
     for it in it0:iters
         # Liquid wealth is not required and often cannot be reached, so the stop is on the moments
@@ -493,9 +493,19 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
         # whose minimum income is already inside the replacement rate). The fit goes on as without
         # the regime's extra target: the hand-to-mouth share owns patience, liquid wealth is reported.
         if flfree && x[5] <= 1e-3 && it > it0
-            flfree = false; x[5] = 0.0; lo[5] = hi[5] = 0.0; liqtol[] = LIQ_TOL; F = res(o)
-            say("    the floor is at zero: fitting on without it", V4 ? "" : ", liquid wealth reported")
-            owned(F) <= 0.25 && break
+            # A floor that reaches zero on the way is not yet a floor the country does not want (2026-10-09:
+            # Germany with the deposit return ended at zero with its median below the data's, where a
+            # floor raises the median). If the median is below its target the floor is put back once,
+            # at its starting value, with the other parameters where they are; only if it comes back
+            # to zero, or the median is above its target, is it fixed there.
+            if V5 && floor_back == 0 && o.m[2] < LIQ_TARGET
+                floor_back = 1; x[5] = 0.10; o = atm(x); F = res(o)
+                say("    the floor reached zero with the median below its target: put back to 0.10 once")
+            else
+                flfree = false; x[5] = 0.0; lo[5] = hi[5] = 0.0; liqtol[] = LIQ_TOL; F = res(o)
+                say("    the floor is at zero: fitting on without it", V4 ? "" : ", liquid wealth reported")
+                owned(F) <= 0.25 && break
+            end
         end
         nstep > 0 && (time() - t_start) / 60 + 1.5 * (time() - tfit) / 60 / nstep > BUDGET &&
             (say(@sprintf("\nTIME BUDGET: %.0f of %.0f minutes used inside the fit, after step %d; checkpoint kept, to resume in a new job.",
