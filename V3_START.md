@@ -2010,3 +2010,39 @@ The return's level is taken up by patience: the product of the two is the same t
 | indicators, G+S+A, tests within a quarter | 12 of 17 over the two | 4 of 8 | (with France) |
 
 **The Euler-error check failed on Germany and the fault was the check's** (run 37890999670: mean error 10^-1.7 to 10^-2.1). It evaluated the plain Euler equation, and with dread in choices the household's condition has a further term, the marginal effect of saving on dread (c^-gamma = beta R E mu - D'(a') / Gamma, `egm_core.jl`). The check read that wedge as an error. It now includes the term (`numerics_base.jl`), and the three countries are run again; the other six checks of the German run pass.
+
+## 61. The scorecard on version 5 (2026-10-09, 14:00 UTC)
+
+France's transitions with S on are exact as well (run 37903403202: a zero shock to 4e-12 in participation; the recession costs 0.38% of consumption). The accuracy test is too long for one job with five types of household a cell (Germany's took four hours, France's and Italy's were heading past six); it now runs in parts (`numerics_base.jl CODE v5 PART`), started for the three countries with the corrected Euler check.
+
+| | criterion | on version 5 | what is left |
+|---|---|---|---|
+| **Macroeconomists** | | | |
+| M1 | stationary equilibrium, budget balanced | **met** | the budget balances in the twelve configurations (on/off, 16 of 16 a country) |
+| M2 | standard building blocks | **met** | |
+| M3 | every parameter sourced or identified | partly, much closer | the income process in the source's order (the journal's table still to see), the labour inputs measured, the income distribution on Eurostat's deciles, dread at its published weight. Left: the return on the asset (measured, awaiting the user), whose moments (the user), the private share of belonging, the place elasticity |
+| M4 | every configuration on its own targets | partly: 12 of 24 | the four without places in the three countries, each on every target it owns. The twelve with places not started |
+| M5 | spending behaviour | partly | the MPC's properties hold (7 of 7). Its level: 0.42 to 0.45 in France against the survey's 0.39; 0.33 and 0.32 in Germany and Italy against 0.47. The fall in consumption on job loss: in the literature's range in France in G (0.17), above it in Germany and Italy (0.23) and everywhere with dread on (0.19 to 0.28) |
+| M6 | who holds no buffer | partly | by education exact (fitted). By region and type of place not rerun (E) |
+| M7 | the wealth distribution | to rerun | the two-asset reference is on the base of 7 October. Its liquid return now has a source |
+| M8 | transitions | **met** | S off (G, G+A) and S on (G+S+A), a zero shock exact in the three countries, with dread in choices |
+| **Numerical economists** | | | |
+| N1 | a standard, documented method | **met** | |
+| N2 | exact reductions when a switch is off | **met** | participation with S off is zero, not small |
+| N3 | accuracy | Germany's grid passes; the rest running | the Euler check corrected for the dread term |
+| N4 | an independent solver | not | version 2 only |
+| N5 | reproducible | mostly met | |
+| N6 | equilibria with S counted | Germany one stable; France and Italy running | |
+| **Beyond-GDP** | | | |
+| B1 | recognised dimensions | partly, clearer | `DIMENSIONS_SPEC.md`: S on its own, A the security dimension acting on choices, E's natural environment as consequences. To build: housing cost by place, choice over hours |
+| B2 | official data | **met** | |
+| B3 | indicators against official figures | partly: 13 of 22 on G | every income row passes (the Gini to 0.01). Off: in-work poverty (the state out of work), the liquid-asset poor (definitions), the MPC in Germany and Italy |
+| B4, B5 | welfare tables, accessibility | partly | later, by the user's ordering |
+| **Use** | | | |
+| U1 | any order of switches | partly: 12 of 24 | S, A and their combination now each sit on G alone |
+| U2 | policy levers with bands | partly | multipliers 1.7, 1.9, 1.3 with bands; a recession and a benefit along it as checks |
+| U3 | a new country | not tried | closer: the income side needs only Eurostat tables |
+
+**Count: 7 met, 10 partly, 3 to rerun or running (M7, N3, N6), 2 not, of 22.** Version 4 stood at 8, 11, 1, 2 on inputs now known to be misread; the base of 7 October at 9, 11, 2 with parameters the rule excludes. When N3 and N6 come in as they did on version 4, version 5 is at 9 met on defensible inputs.
+
+**What decides the next steps.** Three decisions of the user's (whose moments; the return on the asset; the journal's table), each a recalibration, best taken together. Then, in order: the state out of work (in-work poverty), the configurations with places and E's sixth channel, the two-asset reference.
