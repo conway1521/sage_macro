@@ -281,7 +281,8 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
                                          wv[s], oth[s][d+1], tfl[s], bel[s], view(D, :, s))
         end
         @inbounds for i in eachindex(V)
-            b0 = vd[1][i]; b1 = vd[2][i]
+            # S exactly off (2026-10-08): with no belonging payoff there is no participation choice, where the logit left a residual
+            b0 = vd[1][i]; b1 = p.social_strength == 0 ? -Inf : vd[2][i]
             m = max(b0, b1)
             Vn[i] = m + theta * log(exp((b0 - m) / theta) + exp((b1 - m) / theta))
             P1[i] = b1 == -Inf ? 0.0 : (b0 == -Inf ? 1.0 : 1 / (1 + exp((b0 - b1) / theta)))

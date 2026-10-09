@@ -65,7 +65,7 @@ function egm_step(p::SAGEParams, a, V, Va; theta::Float64)
     end
     Vn = similar(V); Van = similar(Va); P1 = zeros(na, nz)
     @inbounds for i in eachindex(Vn)
-        b0 = vd[1][i]; b1 = vd[2][i]; m = max(b0, b1)
+        b0 = vd[1][i]; b1 = p.social_strength == 0 ? -Inf : vd[2][i]; m = max(b0, b1)          # S exactly off, as in the steady-state solvers
         Vn[i] = m + theta * log(exp((b0 - m) / theta) + exp((b1 - m) / theta))
         P1[i] = b1 == -Inf ? 0.0 : (b0 == -Inf ? 1.0 : 1 / (1 + exp((b0 - b1) / theta)))
         # on the floor an extra unit of assets is taken back by the transfer: no marginal value

@@ -133,7 +133,7 @@ const E_TARGET = num("effort_target")
 # accounts and directly held securities, after Kaplan, Violante and Weidner (2014). broad: saving
 # accounts as well. The hand-to-mouth share, its gap by education and the median follow the choice.
 const LIQ_BROAD = lowercase(get(ENV, "SAGE_LIQ_DEF", "narrow")) == "broad"
-# THE HAND-TO-MOUTH SHARE FIRST (SAGE_HTM_FIRST=1, a variant put to the user; V3_START.md section 49).
+# THE HAND-TO-MOUTH SHARE FIRST (V3_START.md section 49).
 # Patience and its gap by education are identified by the hand-to-mouth share and its split, the
 # floor by median liquid wealth. Where the floor is positive the four are met together (Italy).
 # Where it is at zero, median liquid wealth has no parameter left: the standard criterion then
@@ -141,7 +141,8 @@ const LIQ_BROAD = lowercase(get(ENV, "SAGE_LIQ_DEF", "narrow")) == "broad"
 # precisely measured (0.002) that four points of the share are given up for 0.02 of the median.
 # With this setting the floor is searched from 0.10 in every country and, where it ends at zero,
 # median liquid wealth is reported as a test and not weighed, as before version 4.
-const HTM_FIRST = get(ENV, "SAGE_HTM_FIRST", "0") == "1"
+# Adopted by the user on 2026-10-08 as the rule of version 5 (V3_START.md, sections 49 to 51); SAGE_HTM_FIRST=0 gives the earlier criterion back.
+const HTM_FIRST = get(ENV, "SAGE_HTM_FIRST", V5 ? "1" : "0") == "1"
 const HTM_NAME = LIQ_BROAD ? "htm_model_broad_total" : "htm_model_narrow_total"
 const LIQ_NAME = LIQ_BROAD ? "liquid_broad_to_disposable_income_ratio_of_medians" : "liquid_kvw_to_disposable_income_ratio_of_medians"
 const HTM_TARGET = V3 ? hfcs_target(HTM_NAME) : num("htm_target")

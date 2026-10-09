@@ -35,6 +35,7 @@ if [ "$kind" = 1 ]; then
   case "$cfg" in
     GSA)  run1 "$code" GS ;;
     GSAE) run1 "$code" GSE ;;
+    G)    if [ "$v5" = 1 ]; then run1 "$code" GS; fi ;;        # version 5: every dimension sits on G alone; G+S reads G's permanent types and floor
   esac
 else
   case "$cfg" in

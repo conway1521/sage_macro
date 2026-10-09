@@ -188,7 +188,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
             end
         end
         @inbounds for x in eachindex(Vin)
-            b0 = vin[1][x]; b1 = vin[2][x]; mx = max(b0, b1)
+            b0 = vin[1][x]; b1 = p.social_strength == 0 ? -Inf : vin[2][x]; mx = max(b0, b1)          # S exactly off: no participation choice without a payoff
             Vin[x] = mx == -Inf ? -Inf : mx + theta * log(exp((b0 - mx) / theta) + exp((b1 - mx) / theta))
             P1in[x] = b1 == -Inf ? 0.0 : (b0 == -Inf ? 1.0 : 1 / (1 + exp((b0 - b1) / theta)))
             mu0 = b0 == -Inf ? 0.0 : cin[1][x]^(-p.γ); mu1 = b1 == -Inf ? 0.0 : cin[2][x]^(-p.γ)

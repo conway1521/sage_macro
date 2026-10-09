@@ -1797,3 +1797,15 @@ Runs at commit fcaa705: the standard criterion (37851044843) and the hand-to-mou
 - **Standard: France does not calibrate, Germany ends short on both wealth moments** at a floor of zero it starts from, and Italy is the same under both.
 - **The tests.** The income distribution is close in the three countries on both rules. In-work poverty is 1.6 to 1.9 times the official rate, the state out of work still unbuilt. The fall in consumption on job loss is inside the literature's range in France and above it in Germany and Italy. The MPC is below the survey's in Germany and Italy by 0.14 and above it in France by 0.04: under the share-first rule the three models give 0.32 to 0.43 where the survey gives 0.39 to 0.47, and the model's order of countries is the reverse of the survey's.
 - **What the two rules differ in** is narrow: where the search for the floor starts (the same point in every country, or the old file's value), and what is done with the median when the floor is at zero (reported, or weighed by its sampling error). The first is hard to defend as anything but an oversight. The second is the choice put to the user.
+
+## 51. The rule of fit adopted, S exactly off, and G of version 5 for the record (2026-10-08, 23:10 UTC)
+
+**Decided by the user** ("go ahead"): the hand-to-mouth share first is the rule of version 5 (section 49). `HTM_FIRST` is on by default under `SAGE_V5=1`; `SAGE_HTM_FIRST=0` gives the earlier criterion back.
+
+**S exactly off (decision S2).** With no belonging payoff the household has no participation choice: the branch is closed where the logit left a residual (0.002 of households in France, 0.0003 in Italy, with the measured time cost). In the one-asset solvers (`egm_core.jl`, `proto_participation_core.jl`), the two-asset solver (`egm2_core.jl`) and the transition step (`transition_core.jl`). Three of these are solver files, so every cached family and checkpoint is void from here; nothing was running that could resume. It changes every economy with S off by that residual, and the node of the belonging grid at zero with S on; the regression is the suite on GitHub and the version 4 tests, to rerun.
+
+**The chain.** Under version 5 a finished G starts G+S of the same country (`.github/chain.sh`), which reads G's permanent types and floor from the run's artifact.
+
+**Started**: G for the three countries through the calibration workflow, so that the files can be committed (the variant's runs of section 50 went through the probe workflow, which keeps only the log). G+S follows by the chain.
+
+**Still open on G, in order**: whether Germany's floor of 0.30 counts its minimum income twice (the note of 2 October on what is inside the replacement rate); the state out of work, for in-work poverty; the measured job-finding rate and the audit's other items; the fall in consumption on job loss in Germany and Italy; the two-asset reference.

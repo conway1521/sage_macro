@@ -379,6 +379,8 @@ function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64
                     x = r1 + ev; (x > b1) && (b1 = x; kb1 = k)
                 end
             end
+            # S exactly off (2026-10-08): with no belonging payoff there is no participation choice, where the logit left a residual
+            p.social_strength == 0 && (b1 = -Inf)
             v0[i_a, i_z] = b0; v1[i_a, i_z] = b1; k0[i_a, i_z] = kb0; k1[i_a, i_z] = kb1
             m = max(b0, b1)
             Vn[i_a, i_z] = m + theta * log(exp((b0 - m) / theta) + exp((b1 - m) / theta))
