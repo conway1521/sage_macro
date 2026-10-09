@@ -1811,3 +1811,27 @@ Runs at commit fcaa705: the standard criterion (37851044843) and the hand-to-mou
 **Still open on G, in order**: whether Germany's floor of 0.30 counts its minimum income twice (the note of 2 October on what is inside the replacement rate); the state out of work, for in-work poverty; the measured job-finding rate and the audit's other items; the fall in consumption on job loss in Germany and Italy; the two-asset reference.
 
 **Germany's floor and the minimum income inside its replacement rate: not counted twice.** The floor in the model is a minimum on a household's resources: it pays the shortfall, max(0, floor less resources), and nothing to a household above it (`floor_transfer`). A household whose benefit already contains the minimum income receives the difference up to the floor and no more, so the two do not add. The note of 2 October warned against adding a floor on top of the replacement rate as a second payment, which this is not. What the floor adds in Germany is what the replacement rate cannot carry: a minimum for households in work on low incomes and for those whose benefit has run down. Its fitted level, 0.30 of reference earnings, is beside the statutory amounts of the same note (OECD TaxBEN 2023, jobless, with housing support: 0.20 of the gross average wage for a single person, 0.30 for a couple); Italy's 0.21 beside 0.27 under the scheme in force until 2023. The units (reference earnings of the model's household against the gross average wage of one worker) are not yet aligned, so this is recorded as of the right order and no more. France's fitted floor is zero where its statutory minimum is 0.23 to 0.31: at France's hand-to-mouth share a floor would raise a median that is already above the data's.
+
+## 52. Version 5: G calibrated in the three countries (2026-10-09, 01:30 UTC)
+
+Run 37863331951 at commit 6fe869b: the premium in the base, the hand-to-mouth share first, S exactly off. The three files are committed (`calibration_v5_{FR,DE,IT}_G.txt`).
+
+| G, version 5 | France | Germany | Italy | data |
+|---|---|---|---|---|
+| top patience, gap by education | 0.931, 0.044 | 0.954, 0.034 | 0.946, 0.044 | |
+| floor, share of reference earnings | 0 | 0.30 | 0.21 | |
+| hand-to-mouth | 0.220 | 0.225 | 0.172 | 0.222, 0.225, 0.179 |
+| median liquid wealth over income | 0.089 (a test) | 0.141 | 0.274 | 0.059, 0.140, 0.272 |
+| effort | 0.6432 | 0.6087 | 0.7240 | 0.6432, 0.6087, 0.7252 |
+| participation with S off | 0.0000 | 0.0000 | 0.0000 | |
+| MPC, a test | 0.434 | 0.333 | 0.325 | survey 0.392, 0.468, 0.469 |
+| fall in consumption on job loss, a test | 0.158 | 0.225 | 0.235 | 0.07 to 0.16 |
+| below half the median income, a test | 0.081 | 0.104 | 0.152 | 0.092, 0.094, 0.145 |
+| in-work poverty, a test | 0.125 | 0.156 | 0.189 | 0.067, 0.086, 0.117 |
+| S80/S20 under 65, a test | 4.24 | 4.68 | 5.72 | 4.72, 5.08, 6.04 |
+
+**The solver change holds.** Participation with S off is zero to four decimals in the three countries (it was 0.002 in France). The engine test of the old regimes is 12 of 12 (run 37863336718) and the suite on GitHub passes (37863324088), so nothing earlier moved by more than the residual. Version 4's on/off pass for France is running.
+
+G+S was started by the chain for the three countries (runs 37865476136, 37866926839, 37868460503), on this G.
+
+**Next on G, tonight**: the measured labour inputs (the job-finding rate of section 37; the 2022 pay ratio by education), then G again and G+S on it; and the targets on the model's own population (below).

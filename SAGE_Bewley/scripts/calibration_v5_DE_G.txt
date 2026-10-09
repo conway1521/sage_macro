@@ -1,0 +1,8 @@
+# written by calibrate_country.jl DE G, version 3 (effort set by the job, household replacement rate, liquid-wealth targets from the HFCS); read by country_config
+phi = 9.077
+beta_spread = 0.0000
+beta_bar = 0.9536
+perm_f = 0.37273 0.71639 0.93035 1.29675 3.18861
+perm_w = 0.10436 0.28833 0.27702 0.29406 0.03622
+cfloor = 0.179801
+beta_gap = 0.0336
