@@ -2046,3 +2046,10 @@ France's transitions with S on are exact as well (run 37903403202: a zero shock 
 **Count: 7 met, 10 partly, 3 to rerun or running (M7, N3, N6), 2 not, of 22.** Version 4 stood at 8, 11, 1, 2 on inputs now known to be misread; the base of 7 October at 9, 11, 2 with parameters the rule excludes. When N3 and N6 come in as they did on version 4, version 5 is at 9 met on defensible inputs.
 
 **What decides the next steps.** Three decisions of the user's (whose moments; the return on the asset; the journal's table), each a recalibration, best taken together. Then, in order: the state out of work (in-work poverty), the configurations with places and E's sixth channel, the two-asset reference.
+
+**Accuracy and equilibria on version 5** (`numerics_base.jl` in parts, runs 37940340360 to 37940370181; 2026-10-09, 15:45 UTC).
+- **Euler errors, with the dread term in the check**: mean 10^-5.2 to 10^-6.2 in Germany, 10^-5.3 to 10^-6.1 in France, 10^-4.8 to 10^-6.1 in Italy, over every household problem of G+S+A; the worst single state 10^-3.0. Passes in the three. The failure of section 60 was the check's.
+- **The asset grid, G+A**: doubled, the hand-to-mouth share moves by 0.0004 (France) and 0.0001 (Italy), the median by 0.0014 and 0.0029, the MPC by 0.0001; its top doubled, less. Passes. Germany passed both G+A and G+S+A (section 60). France's and Italy's G+S+A are the two parts still running.
+- **Equilibria**: one stable participation equilibrium, the solver's, in G+S and G+S+A, in France (0.233) and Italy (0.125) as in Germany (0.278). **Row N6 is met.**
+
+The scorecard of this section then reads **8 met, 10 partly, 2 running or to rerun (N3's last two parts, M7), 2 not**.
