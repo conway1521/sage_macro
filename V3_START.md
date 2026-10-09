@@ -1933,3 +1933,18 @@ The official rate lies between the two readings in the three countries. Counting
 | MPC | 0.423, 0.392 | 0.331, 0.468 (off) | 0.320, 0.469 (off) |
 
 The income rows all pass, the Gini to 0.01. What is off: in-work poverty in the three (the state out of work); the liquid-asset poor in France and Germany, a row whose two sides are still on different definitions (section 33); and the MPC in Germany and Italy.
+
+## 56. G+A and G+S of version 5 (2026-10-09, 04:30 UTC)
+
+**G+A, dread in choices** (run 37876640775; files committed). The three calibrate, Germany exactly now that the floor's search bound is out of the way.
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| hand-to-mouth (HFCS 0.222, 0.225, 0.179) | 0.220 | 0.226 | 0.178 |
+| median liquid wealth over income (0.059, 0.140, 0.272) | 0.085 (a test) | 0.140 | 0.276 |
+| MPC, a test | 0.445 | 0.337 | 0.320 |
+| fall in consumption on job loss, a test | 0.194 | 0.254 | 0.276 |
+
+**G+S on the G of section 54** (runs 37872100408 and 37872872342; files committed; Italy's is in its last stage). France: participation 0.233, the two education groups 0.202 and 0.292 against 0.203 and 0.291, multiplier 1.7 (band 1.2 to 2.6); the hand-to-mouth share 0.221 and effort on target. Germany: 0.278, 0.251 and 0.349 against 0.252 and 0.349, multiplier 1.9 (1.3 to 3.2). Both without A.
+
+G+S+A was started by the chain for the three countries (runs 37878866710, 37881812209, 37883790732). The tests that need it (on and off, accuracy, equilibria, transitions with S) follow.
