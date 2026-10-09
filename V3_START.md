@@ -1861,3 +1861,24 @@ By status of the reference person the hand-to-mouth share is 0.23, 0.24, 0.14 fo
 What it changes. In France the labour force is more often hand-to-mouth (0.256 against 0.222), holds a little less (0.051 against 0.059), and its survey MPC is 0.32 and not 0.39, because France's retired report the highest MPC of any group. Its education gap is 0.17 and not 0.10. Germany moves the same way by less; Italy's labour force is slightly less often hand-to-mouth. So the test of the MPC reads differently by country on the right population: France's model MPC of 0.43 to 0.47 is then well above the survey's 0.32 where it was near 0.39, and Germany's and Italy's remain below theirs.
 
 `SAGE_POP=labour_force` in the calibration script takes the targets over the labour force; the default is unchanged (all households). A diagnostic fit of G on the labour-force targets is started for the three countries (`probe_fit_population.jl`). Which population the base is fitted to is the user's decision; my recommendation is the labour force, since a target over a population the model does not contain is the same kind of error as a parameter without a source.
+
+## 54. G on the measured labour inputs, and the first G+S of version 5 (2026-10-09, 02:10 UTC)
+
+**G, version 5, measured labour inputs** (run 37869742882 at edaeb6a; the three files committed, replacing those of section 52).
+
+| | France | Germany | Italy | data |
+|---|---|---|---|---|
+| top patience, gap | 0.934, 0.041 | 0.954, 0.034 | 0.945, 0.042 | |
+| floor, share of reference earnings | 0 | 0.30 | 0.22 | |
+| hand-to-mouth | 0.220 | 0.224 | 0.175 | 0.222, 0.225, 0.179 |
+| median liquid wealth over income | 0.094 (a test) | 0.142 | 0.276 | 0.059, 0.140, 0.272 |
+| MPC, a test | 0.423 | 0.331 | 0.320 | survey 0.392, 0.468, 0.469 |
+| fall in consumption on job loss, a test | 0.165 | 0.228 | 0.234 | 0.07 to 0.16 |
+| below half the median income, a test | 0.082 | 0.103 | 0.152 | 0.092, 0.094, 0.145 |
+| in-work poverty, a test | 0.126 | 0.157 | 0.189 | 0.067, 0.086, 0.117 |
+
+The measured job-finding rate and the 2022 pay ratio move little: France's MPC from 0.434 to 0.423, its fall on job loss from 0.158 to 0.165, its median from 0.089 to 0.094; Germany and Italy to the third decimal. Longer and fewer spells in France roughly cancel in these statistics.
+
+**G+S without A reaches both education groups** (runs 37866926839 and 37865476136, on the G of section 52; the runs on the new G are in progress). Germany: participation 0.278, the two groups 0.251 and 0.349 against 0.252 and 0.349, multiplier 1.8 (band 1.3 to 3.0), the hand-to-mouth share and effort where G left them. Italy: 0.124, 0.116 and 0.165 against 0.116 and 0.165, multiplier 1.3 (1.1 to 1.8). So with the pay premium in G, S stands on G alone, as section 48 intended; in version 4 the same configuration reached 0.277 and 0.284 in Germany and needed A.
+
+**Italy on the labour-force targets** (`probe_fit_population.jl IT`, run 37870278704): calibrates, hand-to-mouth 0.157 against 0.166, the median 0.230 against 0.227, a floor again; MPC 0.358 against the labour force's survey figure of 0.484; fall on job loss 0.26. France and Germany are running.
