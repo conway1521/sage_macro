@@ -2065,3 +2065,20 @@ The scorecard of this section then reads **8 met, 10 partly, 2 running or to rer
 **Built.** Under `SAGE_V5=1` the calibration takes its HFCS targets over the labour force by default (`SAGE_POP`), and `country_config` with `v3 = :v5` sets the return (`R_one`) from `data/manual_inputs.csv`. The on/off test and the indicator table read the labour force's figures under version 5 (the indicator table falls back to all households where an aggregate was not computed for the labour force, as for the shares below 60% of the median). The twelve version 5 files of sections 54 to 59 were fitted to all households at 2% and are removed from the repository; their numbers stay in those sections. G is started again for the three countries, and the chain carries on to G+S, G+A and G+S+A.
 
 **My recommendation on dread, as given to the user: measure it, do not put it in choices, in the base.** Reasons. (a) Nothing in the targets tells dread in choices apart from patience: with it on the fit lowers patience by 0.02 to 0.03 and lands on the same hand-to-mouth share and median, so the term adds behaviour the data here cannot discipline. (b) Its weight is Pagel's (2017) loss-aversion weight for news about consumption, applied here to the employment lottery: a published number, used outside the setting it was estimated in, which the rule of section 34 calls a transfer. (c) It moves a test that already fails further off: the fall in consumption on job loss goes from 0.17, 0.23, 0.23 to 0.19, 0.27, 0.28 against the literature's 0.07 to 0.16. (d) It doubles the calibrations. Measured only, A still reports protection, the expected loss and the cost of insecurity, and those move with benefits. The version with dread in choices stays as a variant behind one setting, to be taken up when there is a moment that identifies it. This reverses the adoption of section 55, which followed the rule agreed beforehand to the letter; the rule tested whether the wealth moments still held and did not ask what the term cost elsewhere. Until the user answers, the code keeps dread in choices and the chain calibrates G+A and G+S+A with it, which serves either answer (the base, or the variant).
+
+## 63. G of version 5 on the labour force's moments and the measured return (2026-10-09, 23:00 UTC)
+
+Run 37996379933 at e41deef; the three files committed.
+
+| G | France | Germany | Italy | data (labour force) |
+|---|---|---|---|---|
+| top patience | 0.967 | 0.983 | 0.971 | |
+| floor, share of reference earnings | 0 | 0.31 | 0.14 | |
+| hand-to-mouth | 0.256 | 0.247 | 0.161 | 0.256, 0.249, 0.166 |
+| median liquid wealth over income | 0.085 (a test) | 0.126 | 0.227 | 0.051, 0.127, 0.227 |
+| MPC, a test | 0.427 | 0.334 | 0.353 | survey 0.322, 0.462, 0.484 |
+| fall in consumption on job loss, a test | 0.168 | 0.231 | 0.260 | literature 0.07 to 0.16 |
+| below half the median income, a test | 0.080 | 0.100 | 0.149 | under 65: 0.092, 0.094, 0.145 |
+| in-work poverty, a test | 0.124 | 0.153 | 0.187 | 0.067, 0.086, 0.117 |
+
+The three calibrate, the gap by education and effort on target in each. Patience is 0.97 to 0.98. The chain has started G+S and G+A for the three countries (runs 38000178684, 38001477597, 38001701151).
