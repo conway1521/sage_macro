@@ -1984,3 +1984,13 @@ For the one-asset base it is a choice with consequences, so it is run as a diagn
 The return's level is taken up by patience: the product of the two is the same to 0.004, and in France and Italy every moment and test is where it was. What changes is what patience is: 0.97 to 0.98 a year, the range the field reports, where the base's 0.93 to 0.95 had to be read as a low patience for a liquid account. Germany's row differs for a reason of search and not of economics: the floor touched zero on the way and the rule then fixed it there, with the median below the data's. The rule now puts the floor back once when that happens (`fit_v3`), and Germany is run again. Proposed to the user: the measured return in the base. It costs one more calibration of everything.
 
 **Germany on the labour-force targets** (run 37870276007): calibrates, hand-to-mouth 0.243 against 0.249, the median 0.124 against 0.127, MPC 0.350 against the labour force's 0.462. So on the labour-force targets the three countries calibrate (sections 54 and 55 for Italy and France), with model MPCs of 0.43, 0.35, 0.36 against 0.32, 0.46, 0.48.
+
+## 59. Version 5: the four configurations without places, in the three countries (2026-10-09, 08:15 UTC)
+
+**G+S+A in France and Italy** (runs 37883790732 and 37878866710; committed). France: participation 0.233, the two education groups 0.204 and 0.291 against 0.203 and 0.291, multiplier 1.7, hand-to-mouth 0.223. Italy: 0.125, 0.117 and 0.165 against 0.116 and 0.165, multiplier 1.3, hand-to-mouth 0.179. **Twelve of 24 files: G, G+A, G+S and G+S+A in the three countries.** The twelve with places wait for G to be closed (E4 of the spec).
+
+**On and off, Germany** (`onoff_v3.jl v5 DE`, run 37890996649): 16 of 16. Participation with S off zero, no belonging in welfare; the gap in participation between the education groups 0.098 without A and 0.099 with it; every configuration on its own targets, its budget balanced, its MPC in range.
+
+**Indicators, Germany G+S+A** (run 37891004549): the income rows within a quarter (Gini 0.298 against 0.304, below half the median 0.103 against 0.109, S80/S20 4.48 against 5.08); off, as in G: in-work poverty, the liquid-asset poor, the MPC.
+
+**The deposit return, Germany again** (run 37890994382, with the floor put back once): exact (hand-to-mouth 0.223 against 0.225, the median 0.139 against 0.140), MPC 0.33, fall on job loss 0.23. With section 58: under the measured return the three countries are where they are under 2% in every moment and test, with patience at 0.97 to 0.98.
