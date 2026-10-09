@@ -27,6 +27,13 @@ function euler_error(p, s)
         ap = s.a_d[d+1][i, j]
         (s.floor_d[d+1][i, j] || ap <= a[1] + 1e-9 || ap >= a[end]) && continue
         rhs = p.β * p.R * sum(Π[j, k] * SAGEBewley.interp_lin(a, view(mu, :, k), ap) for k in 1:nz)
+        # Dread in choices (version 5, A on): the household's condition is c^-gamma = beta R E mu - D'(a') / Gamma,
+        # D the dread of next year's employment lottery, which falls as savings rise (egm_core.jl). Without the
+        # term the plain Euler residual reads the dread wedge as an error (10^-1.7 on Germany, run 37890999670).
+        if p.dread > 0 && !isempty(p.dread_q) && p.dread_q[j] > 0
+            xh = p.R * ap + p.dread_hi[j]; xl = p.R * ap + p.dread_lo[j]
+            rhs -= p.dread * p.dread_q[j] * p.R * ((xh > 1e-4 ? xh^(-p.γ) : 0.0) - (xl > 1e-4 ? xl^(-p.γ) : 0.0))
+        end
         rhs > 0 || continue
         err = abs(1 - rhs^(-1 / p.γ) / s.c_d[d+1][i, j])
         num += m * err; den += m; worst = max(worst, err)
