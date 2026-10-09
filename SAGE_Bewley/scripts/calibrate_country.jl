@@ -206,7 +206,10 @@ const PF = Ref(Float64[]); const PW = Ref(Float64[])
 # job loss when they choose, at the published weight, where A until then only measured it. Such a
 # configuration has a fit of its own. SAGE_DREAD_CHOICE=0 refuses it, as before the adoption.
 const DREAD_CHOICE = V5 && get(ENV, "SAGE_DREAD_CHOICE", "1") == "1"
-v3kw() = V3 && !isnan(ETA[]) ? merge(DREAD_CHOICE ? (dread_mode = :behaviour,) : (;), V5 ? (perm_sd = 0.0, perm_f = PF[], perm_w = PW[]) : V4 ? (perm_sd = ETA[],) : (eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
+# THE RETURN ON THE ONE ASSET (SAGE_RLIQ=deposits, a diagnostic; V3_START.md section 57): the measured real
+# return on households' overnight deposits by country in place of the engine's 2%.
+const R_DEPOSITS = get(ENV, "SAGE_RLIQ", "") == "deposits" ? manual_input(CODE, "r_deposits_real") : NaN
+v3kw() = V3 && !isnan(ETA[]) ? merge(DREAD_CHOICE ? (dread_mode = :behaviour,) : (;), isnan(R_DEPOSITS) ? (;) : (R_one = R_DEPOSITS,), V5 ? (perm_sd = 0.0, perm_f = PF[], perm_w = PW[]) : V4 ? (perm_sd = ETA[],) : (eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
                                      isnan(RHO_TRIAL) ? (;) : (rho = RHO_TRIAL,), isnan(SDEPS_TRIAL) ? (;) : (sd_eps = SDEPS_TRIAL,)) : ()
 if FLOORREG
     if CFG == FLOOR_CFG
@@ -417,6 +420,7 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
     # it is fitted, with liquid wealth in the criterion at its standard error
     V4 && (lo[4] = 0.0; hi[4] = 1.2; H[4] = 0.05)
     V5 && (lo[4] = hi[4] = 0.0)          # version 5: the permanent types are given (fitted to the deciles before the fit)
+    isnan(R_DEPOSITS) || (hi[2] = 0.995)     # with a return below one the most patient type can be more patient and beta R still be below one
     (V5 && flfree) && (hi[5] = 0.60)     # a search bound, raised from 0.30 where Germany's floor sat on it (2026-10-09); it is not to bind
     # A point where the economy has no solution (a floor that cannot be financed: Italy at 0.35,
     # 2026-10-04) is not an error of the fit: it is a point to step away from.

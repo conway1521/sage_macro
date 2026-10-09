@@ -297,6 +297,10 @@ Base.@kwdef struct SAGEConfig
     # symmetric nodes of perm_sd.
     perm_f::Vector{Float64} = Float64[]
     perm_w::Vector{Float64} = Float64[]
+    # The gross real return on the single asset when it is not the engine's 1.02 (V3_START.md section
+    # 57): the one asset is narrow liquid wealth, mostly sight accounts, whose measured real return
+    # is the deposit rate less inflation (data/manual_inputs.csv, field r_deposits_real). NaN: 1.02.
+    R_one::Float64 = NaN
     # The economy in which the job's effort levels are found (floor_effort) taxed in proportion to
     # labour income, as the economy itself is, when tax_mode is :prop. false: taxed per head, as in
     # the regime of 2026-10-06, whose files it reproduces. Per head, the lowest income states of a
@@ -520,6 +524,7 @@ function _params_of(c::SAGEConfig, cell)
     c.effort_mode === :free || (c.effort_mode === :job ? (ps = [update(p; job_effort = true) for p in ps]) : error("effort_mode is :free or :job"))
     isempty(cell.eset) || (ps = [update(p; job_effort = true, effort_set = cell.eset) for p in ps])
     c.cfloor == 0 || (ps = [update(p; cfloor = c.cfloor) for p in ps])
+    isnan(c.R_one) || (ps = [update(p; R = c.R_one) for p in ps])
     c.qbar == 0.10 || (ps = [update(p; qbar = c.qbar) for p in ps])
     if c.illiquid
         c.solver === :egm || error("the illiquid asset needs solver = :egm")
@@ -667,7 +672,7 @@ function floor_tax_of(c::SAGEConfig)
     key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
-                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.ref_prop)))
+                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop)))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
     cs = cells_of(c0); _, bw = betas_of(c0)
