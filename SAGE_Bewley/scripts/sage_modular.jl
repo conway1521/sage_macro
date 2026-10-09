@@ -1289,6 +1289,21 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
             d[:Lambda] = 1.0
             d[:ref_prop] = true
             v5 && (d[:premium_base] = true)
+            if v5
+                # MEASURED LABOUR INPUTS (2026-10-08; V3_START.md section 52). The yearly rate of leaving
+                # unemployment for work is the Labour Force Survey's own year-on-year transition (Eurostat
+                # lfsi_long_a, 2023, among those still in the labour force), not 1 less the long-term
+                # share of the unemployed; the separation rates follow from the unemployment rates by
+                # education as before, u f / (1 - u). The pay ratio between the education groups is that
+                # of the Structure of Earnings Survey 2022 (the country table's alpha_ratio_ses2022),
+                # the two groups' pay averaging to one.
+                fm = manual_input(code, "f_find_lfs")
+                d[:f_find] = fm
+                d[:delta] = (num("u_low") * fm / (1 - num("u_low")), num("u_high") * fm / (1 - num("u_high")))
+                ratio = num("alpha_ratio_ses2022")
+                ah5 = 1 / ((1 - sh) * ratio + sh)
+                d[:alpha] = (ratio * ah5, ah5)
+            end
         end
         # Version 5: the pay premium is in the base and dread is measured without entering choices, so
         # A adds no parameter of its own and a configuration with A reads the file of the same one

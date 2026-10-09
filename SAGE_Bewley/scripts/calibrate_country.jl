@@ -113,13 +113,22 @@ const V3ARG = V5 ? :v5 : V4 ? :v4 : TRANS ? Symbol((FLOORREG ? "floor_" : "") * 
 const RHO_TRIAL = TRANS && haskey(ENV, "SAGE_RHO") ? parse(Float64, ENV["SAGE_RHO"]) : NaN
 const SDEPS_TRIAL = TRANS && haskey(ENV, "SAGE_SDEPS") ? parse(Float64, ENV["SAGE_SDEPS"]) : NaN
 const VTAG = V5 ? "v5" : V4 ? "v4" : VTAG0 * (TRANS ? "t" : "") * ((isnan(RHO_TRIAL) && isnan(SDEPS_TRIAL)) ? "" : "r")
+# WHOSE MOMENTS (SAGE_POP; V3_START.md section 53). all, the default: every household of the survey.
+# labour_force: households whose reference person is employed, self-employed or unemployed, which is
+# who the model's households are; retired households, a third of the survey, hold more liquid wealth
+# and are less often hand-to-mouth. not_retired adds the other non-retired. The hand-to-mouth share,
+# its split by education, median liquid wealth and the survey MPC all follow the choice.
+const POP = lowercase(get(ENV, "SAGE_POP", "all"))
+POP in ("all", "labour_force", "not_retired") || error("SAGE_POP must be all, labour_force or not_retired, got $POP")
+const POP_GROUP = POP == "all" ? ("all", "all") : POP == "labour_force" ? ("labour_force", "in the labour force") : ("not_retired", "not retired")
+const POP_EDU = POP == "all" ? "education" : POP == "labour_force" ? "education_lf" : "education_nr"
 function hfcs_target(moment; wave = "2021")
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
         startswith(ln, "#") && continue
         f = split(ln, ",")
-        length(f) >= 6 && f[1] == moment && f[2] == CODE && f[3] == wave && f[4] == "all" && return parse(Float64, f[6])
+        length(f) >= 6 && f[1] == moment && f[2] == CODE && f[3] == wave && f[4] == POP_GROUP[1] && f[5] == POP_GROUP[2] && return parse(Float64, f[6])
     end
-    error("no HFCS target $moment for $CODE in $wave")
+    error("no HFCS target $moment for $CODE in $wave, population $POP")
 end
 # E ON (2026-09-29): the economy over places (TL2 by default, place_layer.jl).
 # E fits nothing: the national targets are the same as with E off, and the place
@@ -171,10 +180,10 @@ function hfcs_group(moment, group, sub; wave = "2021")
     end
     error("no HFCS target $moment for $CODE, $group, $sub")
 end
-const HGAP_TARGET = EDUREG ? hfcs_group(HTM_NAME, "education", "below tertiary") - hfcs_group(HTM_NAME, "education", "tertiary") : NaN
+const HGAP_TARGET = EDUREG ? hfcs_group(HTM_NAME, POP_EDU, "below tertiary") - hfcs_group(HTM_NAME, POP_EDU, "tertiary") : NaN
 const HGAP_TOL = 0.03
 # the sampling standard errors of the HFCS moments (column 7 of data/hfcs_targets.csv), the weights of version 4
-function hfcs_se(moment, group = "all", sub = "all"; wave = "2021")
+function hfcs_se(moment, group = POP_GROUP[1], sub = POP_GROUP[2]; wave = "2021")
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
         startswith(ln, "#") && continue
         f = split(ln, ",")
@@ -186,7 +195,7 @@ const SE_HTM = V4 ? hfcs_se(HTM_NAME) : NaN
 const SE_LIQ = V4 ? hfcs_se(LIQ_NAME) : NaN
 # SAGE_NO_MPC=1 (a diagnostic, probe_fit_no_mpc.jl): the MPC out of the criterion, reported as the model gives it
 const SE_MPC = V4 ? ((V5 || get(ENV, "SAGE_NO_MPC", "0") == "1") ? Inf : hfcs_se("mpc_mean")) : NaN          # version 5: the MPC is a test
-const SE_GAP = V4 ? sqrt(hfcs_se(HTM_NAME, "education", "below tertiary")^2 + hfcs_se(HTM_NAME, "education", "tertiary")^2) : NaN
+const SE_GAP = V4 ? sqrt(hfcs_se(HTM_NAME, POP_EDU, "below tertiary")^2 + hfcs_se(HTM_NAME, POP_EDU, "tertiary")^2) : NaN
 const E_REF_C = V3 ? num("e_ref") : NaN
 # the permanent types of version 5 and their weights (fitted in G and G+A, read by the others)
 const PF = Ref(Float64[]); const PW = Ref(Float64[])
