@@ -12,6 +12,10 @@
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf, LinearAlgebra
 code = uppercase(ARGS[1]); reg = length(ARGS) >= 2 ? lowercase(ARGS[2]) : "v3fe"
+# A third argument runs one part alone: 1 (Euler errors), 2ga and 2gsa (the grid, G+A and G+S+A), 3 (equilibria).
+# With five types of household a cell the whole does not fit in a six-hour job (version 5, 2026-10-09).
+PART = length(ARGS) >= 3 ? lowercase(ARGS[3]) : "all"
+part(x) = PART == "all" || PART == x
 V3ARG = Dict("v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu, "v3" => true, "v3fet" => :floor_edu_trans, "v3et" => :edu_trans, "v4" => :v4, "v5" => :v5)[reg]
 results = Tuple{String,Bool}[]
 check(name, ok) = (push!(results, (name, ok)); @printf("   -> %s: %s\n", name, ok ? "PASS" : "FAIL"); flush(stdout))
@@ -42,6 +46,7 @@ function euler_error(p, s)
 end
 
 println(code, ", regime ", reg)
+if part("1")
 println("\n1. Euler-equation errors, G+S+A household problems (log10 of the relative consumption error)")
 c = floor_effort(country_config(code; v3 = V3ARG, config = "GSA", S = true, A = true))
 cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
@@ -56,12 +61,14 @@ for (g, cell) in enumerate(cells_of(cT)), (k, p0) in enumerate(params_of(cT, cel
     flush(stdout)
 end
 check("mean Euler error below 10^-3 in every household problem", worst_mean < -3)
+end
 
 println("\n2. convergence in the asset grid")
 mom(r, S_) = (htm = r.hand_to_mouth_kvw, liq = r.wealth_p50 / r.median_income, mpc = r.mpc, eff = r.mean_effort_employed,
               part = S_ ? r.rate : 0.0, mult = S_ ? 1 / (1 - r.slope) : 1.0, drop = r.consumption_drop)
 TOL = (htm = 0.02, liq = 0.03, mpc = 0.02, eff = 0.005, part = 0.005, mult = 0.2, drop = 0.02)
 for cfg in ("GA", "GSA")
+    part("2" * lowercase(cfg)) || continue
     S_ = cfg == "GSA"
     c0 = country_config(code; v3 = V3ARG, config = cfg, S = S_, A = true)
     @printf("   %s: asset grid %d points to %.1f\n", cfg, c0.na, c0.a_max)
@@ -90,6 +97,7 @@ function stable_points(c, fams)
     pts
 end
 for cfg in ("GS", "GSA")
+    part("3") || continue
     c0 = country_config(code; v3 = V3ARG, config = cfg, S = true, A = cfg == "GSA")
     b0 = solve_economy(c0); thr = [(b0.ypov, b0.abar)]
     sp = stable_points(c0, families(c0; thresholds = thr))
