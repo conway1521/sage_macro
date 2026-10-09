@@ -28,13 +28,14 @@
 #   julia --project=scripts/run_env scripts/onoff_v3.jl [floor] [edu] [trans] [CODE ...]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
-V4 = any(a -> lowercase(a) == "v4", ARGS)              # version 4 (V3_START.md section 36): the floor, education and transitory regimes implied
+V5 = any(a -> lowercase(a) == "v5", ARGS)              # version 5 (V3_START.md sections 44 to 52): as version 4 in what it implies here
+V4 = V5 || any(a -> lowercase(a) == "v4", ARGS)        # version 4 (V3_START.md section 36): the floor, education and transitory regimes implied
 FLOORREG = V4 || any(a -> lowercase(a) == "floor", ARGS)
 EDUREG = V4 || any(a -> lowercase(a) == "edu", ARGS)    # patience by education (V3_START.md section 24)
 TRANS = V4 || any(a -> lowercase(a) == "trans", ARGS)  # the transitory part and the proportional tax (V3_START.md section 29)
-V3ARG = V4 ? :v4 : TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") : FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : true)
-VTAG = V4 ? "v4" : "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "") * (TRANS ? "t" : "")
-codes = (cc = [uppercase(a) for a in ARGS if !(lowercase(a) in ("floor", "edu", "trans", "v4"))]; isempty(cc) ? ["FR", "DE", "IT"] : cc)
+V3ARG = V5 ? :v5 : V4 ? :v4 : TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") : FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : true)
+VTAG = V5 ? "v5" : V4 ? "v4" : "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "") * (TRANS ? "t" : "")
+codes = (cc = [uppercase(a) for a in ARGS if !(lowercase(a) in ("floor", "edu", "trans", "v4", "v5"))]; isempty(cc) ? ["FR", "DE", "IT"] : cc)
 (FLOORREG || EDUREG || TRANS) && println("regime: ", VTAG)
 function hfcs(code, moment)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
@@ -72,10 +73,12 @@ for code in codes
     end
     gap(r) = r.pooled[2].rate - r.pooled[1].rate
     @printf("   participation gap between the cells: %.4f without A, %.4f with A\n", gap(fx["GS"]), gap(fx["GSA"]))
-    check("$code 3. A widens the participation gap between the cells", gap(fx["GSA"]) > gap(fx["GS"]))
+    # version 5: the pay premium by education is in G, so the gap is there without A and A, which only measures dread, leaves it where it is
+    V5 ? check("$code 3. the participation gap between the cells is there without A, and A leaves it unchanged", gap(fx["GS"]) > 0 && abs(gap(fx["GSA"]) - gap(fx["GS"])) < 1e-6) :
+         check("$code 3. A widens the participation gap between the cells", gap(fx["GSA"]) > gap(fx["GS"]))
     println("own calibration (each configuration at its own file)")
     for (nm, S_, A_) in CFGS
-        f = joinpath(@__DIR__, "calibration_$(VTAG)_$(code)_$(nm).txt")
+        f = joinpath(@__DIR__, "calibration_$(VTAG)_$(code)_$(V5 ? replace(nm, "A" => "") : nm).txt")          # version 5: a configuration with A reads the file without it
         isfile(f) || (println(nm, "      no calibration file yet"); push!(results, ("$code 4. $nm has a calibration", false)); continue)
         r = solve_economy(country_config(code; v3 = V3ARG, config = nm, S = S_, A = A_)); row(nm, r)
         ok = abs(r.mean_effort_employed - E) <= 0.005 && abs(r.hand_to_mouth_kvw - H) <= 0.02 && (!S_ || abs(r.rate - P) <= 0.005)

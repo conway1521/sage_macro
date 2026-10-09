@@ -10,8 +10,8 @@ include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 cfg = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "GA"
 codes = length(ARGS) >= 2 ? uppercase.(ARGS[2:end]) : ["FR", "DE", "IT"]
-regime = "V4" in codes ? :v4 : :floor_edu_trans          # `V4` among the arguments: version 4 (section 36)
-codes = filter(!=("V4"), codes); isempty(codes) && (codes = ["FR", "DE", "IT"])
+regime = "V5" in codes ? :v5 : "V4" in codes ? :v4 : :floor_edu_trans          # `V4` among the arguments: version 4 (section 36)
+codes = filter(x -> !(x in ("V4", "V5")), codes); isempty(codes) && (codes = ["FR", "DE", "IT"])
 println("regime ", regime)
 results = Tuple{String,Bool}[]
 check(name, ok) = (push!(results, (name, ok)); @printf("   -> %s: %s\n", name, ok ? "PASS" : "FAIL"); flush(stdout))
