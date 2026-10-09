@@ -1294,6 +1294,9 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
             d[:Lambda] = 1.0
             d[:ref_prop] = true
             v5 && (d[:premium_base] = true)
+            # The return on the one asset is the measured real return on households' overnight deposits
+            # (decided by the user on 2026-10-09; V3_START.md sections 57 and 62), not the engine's 2%.
+            v5 && (d[:R_one] = manual_input(code, "r_deposits_real"))
             if v5
                 # MEASURED LABOUR INPUTS (2026-10-08; V3_START.md section 52). The yearly rate of leaving
                 # unemployment for work is the Labour Force Survey's own year-on-year transition (Eurostat

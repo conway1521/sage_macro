@@ -20,6 +20,17 @@ function hf(code, moment)
     end
     NaN
 end
+# the same over the households in the labour force, which version 5 is fitted to (2026-10-09); NaN where the
+# aggregate was not computed for that population, and the row then keeps the all-household figure
+function hf_lf(code, moment)
+    for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
+        startswith(ln, "#") && continue
+        f = split(ln, ",")
+        length(f) >= 6 && f[1] == moment && f[2] == code && f[3] == "2021" && f[4] == "labour_force" && return parse(Float64, f[6])
+    end
+    NaN
+end
+hfx(code, moment) = (REGIME === :v5 && !isnan(hf_lf(code, moment))) ? hf_lf(code, moment) : hf(code, moment)
 function eu(code, ind)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "validation", "income_distribution.csv"))
         f = split(ln, ","); length(f) >= 4 && f[1] == ind && f[2] == code && f[3] == "2021" && return parse(Float64, f[4])
@@ -32,14 +43,14 @@ for code in codes
     r = solve_economy(c; cache = false); st = income_stats(c)
     rows = [("S80/S20, under 65", st.s8020, eu(code, "s80s20_under65"), "Eurostat ilc_di11", REGIME !== :v5),          # version 5 fits the decile cut-offs of all persons; this ratio for the under 65 is then a test
             ("Gini of disposable income", st.gini, eu(code, "gini_disposable"), "Eurostat ilc_di12", false),
-            ("below 50% of median income", st.p50, hf(code, "income_poor50_disp_persons"), "HFCS", false),
-            ("below 60% of median income", st.p60, hf(code, "income_poor60_disp_persons"), "HFCS", false),
+            ("below 50% of median income", st.p50, hfx(code, "income_poor50_disp_persons"), "HFCS", false),
+            ("below 60% of median income", st.p60, hfx(code, "income_poor60_disp_persons"), "HFCS", false),
             ("in-work poverty (60%)", st.inwork60, eu(code, "inwork_poverty60"), "Eurostat ilc_iw01", false),
-            ("liquid-asset poor (3 months)", r.asset_poor, hf(code, "asset_poor_disp_persons"), "HFCS", false),
-            ("income and asset poor", r.both, hf(code, "hardship_disp_persons"), "HFCS", false),
-            ("hand-to-mouth", r.hand_to_mouth_kvw, hf(code, "htm_model_narrow_total"), "HFCS", true),
-            ("liquid wealth over income", r.wealth_p50 / r.median_income, hf(code, "liquid_kvw_to_disposable_income_ratio_of_medians"), "HFCS", c.cfloor > 0 || REGIME === :v4),
-            ("MPC out of a month's income", r.mpc, hf(code, "mpc_mean"), "HFCS, self-reported", REGIME === :v4)]      # version 4 fits both, weighted by standard errors
+            ("liquid-asset poor (3 months)", r.asset_poor, hfx(code, "asset_poor_disp_persons"), "HFCS", false),
+            ("income and asset poor", r.both, hfx(code, "hardship_disp_persons"), "HFCS", false),
+            ("hand-to-mouth", r.hand_to_mouth_kvw, hfx(code, "htm_model_narrow_total"), "HFCS", true),
+            ("liquid wealth over income", r.wealth_p50 / r.median_income, hfx(code, "liquid_kvw_to_disposable_income_ratio_of_medians"), "HFCS", c.cfloor > 0 || REGIME === :v4),
+            ("MPC out of a month's income", r.mpc, hfx(code, "mpc_mean"), "HFCS, self-reported", REGIME === :v4)]      # version 4 fits both, weighted by standard errors
     @printf("\n%s %s, the base\n%-30s %8s %9s  %-22s %-9s %s\n", code, cfg, "indicator", "model", "official", "source", "", "")
     for (nm, m, d, src, tg) in rows
         ok = isnan(d) ? false : (d < 0.08 ? abs(m - d) <= 0.02 : abs(m - d) <= 0.25 * d)

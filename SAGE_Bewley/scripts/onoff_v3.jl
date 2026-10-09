@@ -41,7 +41,8 @@ function hfcs(code, moment)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
         startswith(ln, "#") && continue
         f = split(ln, ",")
-        length(f) >= 6 && f[1] == moment && f[2] == code && f[3] == "2021" && f[4] == "all" && return parse(Float64, f[6])
+        # version 5 is fitted to the households in the labour force (2026-10-09)
+        length(f) >= 6 && f[1] == moment && f[2] == code && f[3] == "2021" && f[4] == (V5 ? "labour_force" : "all") && return parse(Float64, f[6])
     end
     NaN
 end

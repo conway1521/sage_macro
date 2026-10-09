@@ -120,7 +120,8 @@ const VTAG = V5 ? "v5" : V4 ? "v4" : VTAG0 * (TRANS ? "t" : "") * ((isnan(RHO_TR
 # who the model's households are; retired households, a third of the survey, hold more liquid wealth
 # and are less often hand-to-mouth. not_retired adds the other non-retired. The hand-to-mouth share,
 # its split by education, median liquid wealth and the survey MPC all follow the choice.
-const POP = lowercase(get(ENV, "SAGE_POP", "all"))
+# Decided by the user on 2026-10-09: version 5 is fitted to the households in the labour force.
+const POP = lowercase(get(ENV, "SAGE_POP", V5 ? "labour_force" : "all"))
 POP in ("all", "labour_force", "not_retired") || error("SAGE_POP must be all, labour_force or not_retired, got $POP")
 const POP_GROUP = POP == "all" ? ("all", "all") : POP == "labour_force" ? ("labour_force", "in the labour force") : ("not_retired", "not retired")
 const POP_EDU = POP == "all" ? "education" : POP == "labour_force" ? "education_lf" : "education_nr"
@@ -208,7 +209,8 @@ const PF = Ref(Float64[]); const PW = Ref(Float64[])
 const DREAD_CHOICE = V5 && get(ENV, "SAGE_DREAD_CHOICE", "1") == "1"
 # THE RETURN ON THE ONE ASSET (SAGE_RLIQ=deposits, a diagnostic; V3_START.md section 57): the measured real
 # return on households' overnight deposits by country in place of the engine's 2%.
-const R_DEPOSITS = get(ENV, "SAGE_RLIQ", "") == "deposits" ? manual_input(CODE, "r_deposits_real") : NaN
+# Decided by the user on 2026-10-09: version 5 has the measured return (country_config sets it under v3 = :v5).
+const R_DEPOSITS = (V5 || get(ENV, "SAGE_RLIQ", "") == "deposits") ? manual_input(CODE, "r_deposits_real") : NaN
 v3kw() = V3 && !isnan(ETA[]) ? merge(DREAD_CHOICE ? (dread_mode = :behaviour,) : (;), isnan(R_DEPOSITS) ? (;) : (R_one = R_DEPOSITS,), V5 ? (perm_sd = 0.0, perm_f = PF[], perm_w = PW[]) : V4 ? (perm_sd = ETA[],) : (eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
                                      isnan(RHO_TRIAL) ? (;) : (rho = RHO_TRIAL,), isnan(SDEPS_TRIAL) ? (;) : (sd_eps = SDEPS_TRIAL,)) : ()
 if FLOORREG
