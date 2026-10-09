@@ -95,7 +95,9 @@ const FLOORREG = V4 || (V3 && get(ENV, "SAGE_FLOOR", "0") == "1")
 # configuration reads it from that one's file. One rule for every country, 2026-10-05: GE, the base
 # with places. Fitted in G, Italy's floor (0.215 of reference earnings) is too high once the poorer
 # regions are in, and no configuration with places then meets the hand-to-mouth share.
-const FLOOR_CFG = uppercase(get(ENV, "SAGE_FLOOR_FROM", "G"))
+# Version 5: the floor is fitted in G, and again in G+A, where dread changes how much is saved; the
+# configurations with S or places read it from G or from G+A according to whether A is on.
+const FLOOR_CFG = V5 ? (occursin('A', CFG) ? "GA" : "G") : uppercase(get(ENV, "SAGE_FLOOR_FROM", "G"))
 # PATIENCE BY EDUCATION (SAGE_EDU=1 with SAGE_V3=1; V3_START.md, section 24). The lower-education
 # cell's discount factor lies a gap below the other's; the gap is a parameter of the fit and the
 # difference between the two cells' hand-to-mouth shares (HFCS, by education) is the moment it owns.
@@ -199,11 +201,11 @@ const SE_GAP = V4 ? sqrt(hfcs_se(HTM_NAME, POP_EDU, "below tertiary")^2 + hfcs_s
 const E_REF_C = V3 ? num("e_ref") : NaN
 # the permanent types of version 5 and their weights (fitted in G and G+A, read by the others)
 const PF = Ref(Float64[]); const PW = Ref(Float64[])
-# DREAD IN CHOICES (SAGE_DREAD_CHOICE=1 with a configuration that has A; decision A1, DIMENSIONS_SPEC.md):
-# the employed bear the cost of their exposure to job loss when they choose, at the published weight,
-# where the base only measures it. A test of whether the wealth moments can still be met; it failed
-# on the inputs of September. Only then does a version 5 configuration with A have a fit of its own.
-const DREAD_CHOICE = V5 && get(ENV, "SAGE_DREAD_CHOICE", "0") == "1"
+# DREAD IN CHOICES (decision A1, DIMENSIONS_SPEC.md; adopted 2026-10-09 after the test of V3_START.md
+# section 55): in version 5 a configuration with A has the employed bear the cost of their exposure to
+# job loss when they choose, at the published weight, where A until then only measured it. Such a
+# configuration has a fit of its own. SAGE_DREAD_CHOICE=0 refuses it, as before the adoption.
+const DREAD_CHOICE = V5 && get(ENV, "SAGE_DREAD_CHOICE", "1") == "1"
 v3kw() = V3 && !isnan(ETA[]) ? merge(DREAD_CHOICE ? (dread_mode = :behaviour,) : (;), V5 ? (perm_sd = 0.0, perm_f = PF[], perm_w = PW[]) : V4 ? (perm_sd = ETA[],) : (eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
                                      isnan(RHO_TRIAL) ? (;) : (rho = RHO_TRIAL,), isnan(SDEPS_TRIAL) ? (;) : (sd_eps = SDEPS_TRIAL,)) : ()
 if FLOORREG
@@ -415,6 +417,7 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
     # it is fitted, with liquid wealth in the criterion at its standard error
     V4 && (lo[4] = 0.0; hi[4] = 1.2; H[4] = 0.05)
     V5 && (lo[4] = hi[4] = 0.0)          # version 5: the permanent types are given (fitted to the deciles before the fit)
+    (V5 && flfree) && (hi[5] = 0.60)     # a search bound, raised from 0.30 where Germany's floor sat on it (2026-10-09); it is not to bind
     # A point where the economy has no solution (a floor that cannot be financed: Italy at 0.35,
     # 2026-10-04) is not an error of the fit: it is a point to step away from.
     function at(x)
@@ -543,7 +546,7 @@ say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", r
 # places are meant to move the income distribution. A adds no parameter while dread is measured
 # without entering choices, so a configuration with A is not calibrated: it reads the file of the
 # same configuration without A (country_config).
-V5 && A_ON && !DREAD_CHOICE && error("version 5: a configuration with A has no calibration of its own (the pay premium is in G and dread does not enter choices); calibrate $(replace(CFG, "A" => "")) instead")
+V5 && A_ON && !DREAD_CHOICE && error("version 5 with SAGE_DREAD_CHOICE=0: a configuration with A has no calibration of its own (the pay premium is in G and dread does not enter choices); calibrate $(replace(CFG, "A" => "")) instead")
 const PERM_FITTED = V5 && CFG == "G"
 if V5
     ETA[] = 0.0

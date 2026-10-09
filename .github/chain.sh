@@ -33,9 +33,10 @@ run2() { gh workflow run calibrate2.yml --ref "$GITHUB_REF_NAME" -f countries="$
          echo "started two-asset $1 $2 ${3:+(chi0 from $3)}, with $file from run $GITHUB_RUN_ID"; }
 if [ "$kind" = 1 ]; then
   case "$cfg" in
-    GSA)  run1 "$code" GS ;;
-    GSAE) run1 "$code" GSE ;;
-    G)    if [ "$v5" = 1 ]; then run1 "$code" GS; fi ;;        # version 5: every dimension sits on G alone; G+S reads G's permanent types and floor
+    GSA)  if [ "$v5" != 1 ]; then run1 "$code" GS; fi ;;        # before version 5 G+S took its taste dispersion from G+S+A
+    GSAE) if [ "$v5" != 1 ]; then run1 "$code" GSE; fi ;;
+    G)    if [ "$v5" = 1 ]; then run1 "$code" "GS GA"; fi ;;   # version 5: every dimension sits on G alone; G+S and G+A read G's permanent types (G+S its floor too)
+    GA)   if [ "$v5" = 1 ]; then run1 "$code" GSA; fi ;;       # version 5: G+S+A reads G+A's floor
   esac
 else
   case "$cfg" in

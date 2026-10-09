@@ -73,12 +73,12 @@ for code in codes
     end
     gap(r) = r.pooled[2].rate - r.pooled[1].rate
     @printf("   participation gap between the cells: %.4f without A, %.4f with A\n", gap(fx["GS"]), gap(fx["GSA"]))
-    # version 5: the pay premium by education is in G, so the gap is there without A and A, which only measures dread, leaves it where it is
-    V5 ? check("$code 3. the participation gap between the cells is there without A, and A leaves it unchanged", gap(fx["GS"]) > 0 && abs(gap(fx["GSA"]) - gap(fx["GS"])) < 1e-6) :
+    # version 5: the pay premium by education is in G, so the gap between the cells is there without A
+    V5 ? check("$code 3. the participation gap between the cells is there without A", gap(fx["GS"]) > 0.01) :
          check("$code 3. A widens the participation gap between the cells", gap(fx["GSA"]) > gap(fx["GS"]))
     println("own calibration (each configuration at its own file)")
     for (nm, S_, A_) in CFGS
-        f = joinpath(@__DIR__, "calibration_$(VTAG)_$(code)_$(V5 ? replace(nm, "A" => "") : nm).txt")          # version 5: a configuration with A reads the file without it
+        f = joinpath(@__DIR__, "calibration_$(VTAG)_$(code)_$(nm).txt")
         isfile(f) || (println(nm, "      no calibration file yet"); push!(results, ("$code 4. $nm has a calibration", false)); continue)
         r = solve_economy(country_config(code; v3 = V3ARG, config = nm, S = S_, A = A_)); row(nm, r)
         ok = abs(r.mean_effort_employed - E) <= 0.005 && abs(r.hand_to_mouth_kvw - H) <= 0.02 && (!S_ || abs(r.rate - P) <= 0.005)

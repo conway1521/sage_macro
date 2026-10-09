@@ -1882,3 +1882,39 @@ The measured job-finding rate and the 2022 pay ratio move little: France's MPC f
 **G+S without A reaches both education groups** (runs 37866926839 and 37865476136, on the G of section 52; the runs on the new G are in progress). Germany: participation 0.278, the two groups 0.251 and 0.349 against 0.252 and 0.349, multiplier 1.8 (band 1.3 to 3.0), the hand-to-mouth share and effort where G left them. Italy: 0.124, 0.116 and 0.165 against 0.116 and 0.165, multiplier 1.3 (1.1 to 1.8). So with the pay premium in G, S stands on G alone, as section 48 intended; in version 4 the same configuration reached 0.277 and 0.284 in Germany and needed A.
 
 **Italy on the labour-force targets** (`probe_fit_population.jl IT`, run 37870278704): calibrates, hand-to-mouth 0.157 against 0.166, the median 0.230 against 0.227, a floor again; MPC 0.358 against the labour force's survey figure of 0.484; fall on job loss 0.26. France and Germany are running.
+
+## 55. Dread in choices tested and adopted; the lowest type and households out of work; the first tests on G (2026-10-09, 03:00 UTC)
+
+**Decision A1, the test** (`probe_fit_dread.jl`, runs 37873036032, 37873040752, 37873045245): G+A of version 5 with the dread of job loss in the household's problem at the published weight (Pagel 2017), the floor free, the permanent types those of G.
+
+| | France: G, with dread in choices | Germany | Italy |
+|---|---|---|---|
+| top patience | 0.934, 0.908 | 0.954, 0.938 | 0.945, 0.929 |
+| floor, share of reference earnings | 0, 0 | 0.30, 0.30 (the search's bound) | 0.22, 0.28 |
+| hand-to-mouth (HFCS 0.222, 0.225, 0.179) | 0.220, 0.221 | 0.224, 0.213 | 0.175, 0.179 |
+| median liquid wealth over income (0.059, 0.140, 0.272) | 0.094, 0.084 | 0.142, 0.130 | 0.276, 0.275 |
+| MPC, a test | 0.423, 0.446 | 0.331, 0.358 | 0.320, 0.319 |
+| fall in consumption on job loss, a test | 0.165, 0.194 | 0.228, 0.271 | 0.234, 0.275 |
+
+- **The wealth moments still hold**: exactly in France and Italy, within about one standard error in Germany, where the floor stopped at 0.30, the upper bound of its search (a hand-set bound; raised to 0.60 for version 5, and it is not to bind). In September, on the old inputs, the same term had put Germany's and Italy's hand-to-mouth shares out of reach.
+- **What dread does.** Households save more for a given patience, so the patience that reproduces the hand-to-mouth share is lower by 0.02 to 0.03. With less patience and the same buffers on average, the fall in consumption on job loss is larger (0.19, 0.27, 0.28 against 0.17, 0.23, 0.23) and further from the literature's 0.07 to 0.16. That is a cost of the adoption and is reported as one.
+- **Adopted, by the user's rule** (section 47: adopt if the wealth moments still hold). In version 5 a configuration with A has dread in choices (`dread_mode = :behaviour` under `v3 = :v5`) and a calibration of its own again; the floor is fitted in G and again in G+A, and read from one or the other by the configurations with S or places. Eight calibrations a country, each dimension still on G alone: G+A is G refitted with dread on, G+S is G with participation, G+S+A reads G+A's floor. The chain: G starts G+S and G+A, G+A starts G+S+A. `SAGE_DREAD_CHOICE=0` gives the measured-only A back.
+
+**The lowest permanent type and the households out of work** (`probe_out_of_work.jl`, run 37873134089; a reading of the calibrated G, no fit).
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| weight of the lowest type | 0.095 | 0.104 | 0.126 |
+| people under 65 in households with very low work intensity (Eurostat) | 0.108 | 0.095 | 0.108 |
+| the lowest type's median income over the national median | 0.45 | 0.42 | 0.35 |
+| in-work poverty, all the employed | 0.119 | 0.151 | 0.172 |
+| in-work poverty, the employed of the other four types | 0.049 | 0.070 | 0.074 |
+| in-work poverty, official | 0.067 | 0.086 | 0.117 |
+
+The official rate lies between the two readings in the three countries. Counting the whole lowest type as in work gives 1.5 to 1.8 times the official rate; counting none of it gives 0.6 to 0.8 of it. So the type the deciles ask for is mostly, and not entirely, households out of work, which is what the state out of work has to be built from: a part of that type with no job and income from transfers, sized to the official count, the rest of it low-paid work.
+
+**Tests on G of version 5** (on the files of section 54).
+- Transitions (`test_transition_base.jl G V5`, run 37873050072): 12 of 12. A zero shock stays put, a recession lowers consumption and welfare (0.25%, 0.08%, 0.24% of consumption, the lower education group losing more), a higher benefit along the path reduces the loss.
+- The MPC's properties (`test_mpc_economics.jl`, runs 37873038442, 37873043048, 37873047479): 7 of 7 in each country. By liquid wealth 0.59 to 0.20 (France), 0.51 to 0.13 (Germany), 0.53 to 0.14 (Italy); the hand-to-mouth 0.56, 0.51, 0.52 against 0.38, 0.28, 0.28 for the others; the unemployed 0.77, 0.63, 0.57 against 0.40, 0.32, 0.30 for the employed. The survey has the unemployed at 0.34, 0.61, 0.64 and the employed at 0.32, 0.46, 0.48: the model's order by status is the survey's in Germany and Italy, and France's unemployed report far less than the model gives.
+
+**France on the labour-force targets** (run 37870273535): calibrates, hand-to-mouth 0.256 against 0.256, the floor at zero and the median a test at 0.085 against 0.051; MPC 0.434 against the labour force's 0.322; fall on job loss 0.17.

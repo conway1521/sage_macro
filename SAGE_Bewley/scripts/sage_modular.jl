@@ -1305,10 +1305,11 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
                 d[:alpha] = (ratio * ah5, ah5)
             end
         end
-        # Version 5: the pay premium is in the base and dread is measured without entering choices, so
-        # A adds no parameter of its own and a configuration with A reads the file of the same one
-        # without it (G+A the file of G, G+S+A that of G+S, and so with places).
-        cal = joinpath(@__DIR__, "calibration_$(vtag)_$(code)_$(v5 ? replace(config, "A" => "") : config)" * (illq ? "_I" : "") * ".txt")
+        # Version 5 (2026-10-09, decision A1): the pay premium is in the base and A is dread of job loss
+        # acting on choices (dread_mode = :behaviour), so a configuration with A has a calibration of
+        # its own again: patience and the floor are refitted with dread on.
+        v5 && (d[:dread_mode] = :behaviour)
+        cal = joinpath(@__DIR__, "calibration_$(vtag)_$(code)_$(config)" * (illq ? "_I" : "") * ".txt")
         # In the floor regime places differ by the household's income per head (:conversion_hh): what
         # is not unemployment in a low employment rate stays in the place's income, so a poor place is
         # poor against the national floor and not only riskier (V3_START.md, sections 21 and 22).
