@@ -1918,3 +1918,18 @@ The official rate lies between the two readings in the three countries. Counting
 - The MPC's properties (`test_mpc_economics.jl`, runs 37873038442, 37873043048, 37873047479): 7 of 7 in each country. By liquid wealth 0.59 to 0.20 (France), 0.51 to 0.13 (Germany), 0.53 to 0.14 (Italy); the hand-to-mouth 0.56, 0.51, 0.52 against 0.38, 0.28, 0.28 for the others; the unemployed 0.77, 0.63, 0.57 against 0.40, 0.32, 0.30 for the employed. The survey has the unemployed at 0.34, 0.61, 0.64 and the employed at 0.32, 0.46, 0.48: the model's order by status is the survey's in Germany and Italy, and France's unemployed report far less than the model gives.
 
 **France on the labour-force targets** (run 37870273535): calibrates, hand-to-mouth 0.256 against 0.256, the floor at zero and the median a test at 0.085 against 0.051; MPC 0.434 against the labour force's 0.322; fall on job loss 0.17.
+
+**The indicator table on G of version 5** (`indicator_table.jl G V5`, run 37873052257): 13 of 22 untargeted rows within a quarter of the official figure (7 of 18 on version 4's G+S+A, 14 of 23 on the base of 7 October).
+
+| | France: model, official | Germany | Italy |
+|---|---|---|---|
+| Gini of disposable income | 0.288, 0.296 | 0.302, 0.304 | 0.328, 0.324 |
+| below 50% of median income | 0.082, 0.097 | 0.103, 0.109 | 0.152, 0.145 |
+| below 60% | 0.141, 0.156 | 0.167, 0.170 | 0.216, 0.209 |
+| S80/S20, under 65 (a test in version 5; the script's label corrected after this run) | 4.27, 4.72 | 4.61, 5.08 | 5.69, 6.04 |
+| in-work poverty | 0.126, 0.067 (off) | 0.157, 0.086 (off) | 0.189, 0.117 (off) |
+| liquid-asset poor, three months | 0.562, 0.335 (off) | 0.472, 0.320 (off) | 0.334, 0.341 |
+| income and asset poor | 0.069, 0.064 | 0.102, 0.073 (off) | 0.115, 0.107 |
+| MPC | 0.423, 0.392 | 0.331, 0.468 (off) | 0.320, 0.469 (off) |
+
+The income rows all pass, the Gini to 0.01. What is off: in-work poverty in the three (the state out of work); the liquid-asset poor in France and Germany, a row whose two sides are still on different definitions (section 33); and the MPC in Germany and Italy.

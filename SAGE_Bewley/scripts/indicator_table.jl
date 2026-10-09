@@ -30,7 +30,7 @@ tot = [0, 0]
 for code in codes
     c = country_config(code; config = cfg, v3 = REGIME, S = occursin('S', cfg), A = occursin('A', cfg))
     r = solve_economy(c; cache = false); st = income_stats(c)
-    rows = [("S80/S20, under 65", st.s8020, eu(code, "s80s20_under65"), "Eurostat ilc_di11", true),
+    rows = [("S80/S20, under 65", st.s8020, eu(code, "s80s20_under65"), "Eurostat ilc_di11", REGIME !== :v5),          # version 5 fits the decile cut-offs of all persons; this ratio for the under 65 is then a test
             ("Gini of disposable income", st.gini, eu(code, "gini_disposable"), "Eurostat ilc_di12", false),
             ("below 50% of median income", st.p50, hf(code, "income_poor50_disp_persons"), "HFCS", false),
             ("below 60% of median income", st.p60, hf(code, "income_poor60_disp_persons"), "HFCS", false),
