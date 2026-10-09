@@ -199,7 +199,12 @@ const SE_GAP = V4 ? sqrt(hfcs_se(HTM_NAME, POP_EDU, "below tertiary")^2 + hfcs_s
 const E_REF_C = V3 ? num("e_ref") : NaN
 # the permanent types of version 5 and their weights (fitted in G and G+A, read by the others)
 const PF = Ref(Float64[]); const PW = Ref(Float64[])
-v3kw() = V3 && !isnan(ETA[]) ? merge(V5 ? (perm_sd = 0.0, perm_f = PF[], perm_w = PW[]) : V4 ? (perm_sd = ETA[],) : (eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
+# DREAD IN CHOICES (SAGE_DREAD_CHOICE=1 with a configuration that has A; decision A1, DIMENSIONS_SPEC.md):
+# the employed bear the cost of their exposure to job loss when they choose, at the published weight,
+# where the base only measures it. A test of whether the wealth moments can still be met; it failed
+# on the inputs of September. Only then does a version 5 configuration with A have a fit of its own.
+const DREAD_CHOICE = V5 && get(ENV, "SAGE_DREAD_CHOICE", "0") == "1"
+v3kw() = V3 && !isnan(ETA[]) ? merge(DREAD_CHOICE ? (dread_mode = :behaviour,) : (;), V5 ? (perm_sd = 0.0, perm_f = PF[], perm_w = PW[]) : V4 ? (perm_sd = ETA[],) : (eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
                                      isnan(RHO_TRIAL) ? (;) : (rho = RHO_TRIAL,), isnan(SDEPS_TRIAL) ? (;) : (sd_eps = SDEPS_TRIAL,)) : ()
 if FLOORREG
     if CFG == FLOOR_CFG
@@ -538,7 +543,7 @@ say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", r
 # places are meant to move the income distribution. A adds no parameter while dread is measured
 # without entering choices, so a configuration with A is not calibrated: it reads the file of the
 # same configuration without A (country_config).
-V5 && A_ON && error("version 5: a configuration with A has no calibration of its own (the pay premium is in G and dread does not enter choices); calibrate $(replace(CFG, "A" => "")) instead")
+V5 && A_ON && !DREAD_CHOICE && error("version 5: a configuration with A has no calibration of its own (the pay premium is in G and dread does not enter choices); calibrate $(replace(CFG, "A" => "")) instead")
 const PERM_FITTED = V5 && CFG == "G"
 if V5
     ETA[] = 0.0
