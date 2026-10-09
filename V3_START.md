@@ -1994,3 +1994,19 @@ The return's level is taken up by patience: the product of the two is the same t
 **Indicators, Germany G+S+A** (run 37891004549): the income rows within a quarter (Gini 0.298 against 0.304, below half the median 0.103 against 0.109, S80/S20 4.48 against 5.08); off, as in G: in-work poverty, the liquid-asset poor, the MPC.
 
 **The deposit return, Germany again** (run 37890994382, with the floor put back once): exact (hand-to-mouth 0.223 against 0.225, the median 0.139 against 0.140), MPC 0.33, fall on job loss 0.23. With section 58: under the measured return the three countries are where they are under 2% in every moment and test, with patience at 0.97 to 0.98.
+
+## 60. The tests on version 5, the four configurations without places (2026-10-09, 11:10 UTC)
+
+| test | France | Germany | Italy |
+|---|---|---|---|
+| on and off (`onoff_v3.jl v5`) | 16 of 16 | 16 of 16 | 16 of 16 |
+| participation with S off | 0 | 0 | 0 |
+| gap in participation between the education groups, without and with A | 0.087, 0.088 | 0.098, 0.099 | 0.048, 0.049 |
+| transitions, S off, G and G+A | 12 of 12 for the three, each | | |
+| transitions, S on, G+S+A: a zero shock | running | exact (1e-14 in participation) | exact (2e-12) |
+| the recession with S on: participation at the peak, consumption, welfare | | -0.29 points, -0.50%, -0.13% | -0.02 points, -0.94%, -0.40% |
+| the grid doubled, its top doubled (Germany, G+A and G+S+A) | running | hand-to-mouth 0.0002, the median 0.002, MPC 0.0001 | running |
+| stable participation equilibria | running | one, the solver's, in G+S and G+S+A | running |
+| indicators, G+S+A, tests within a quarter | 12 of 17 over the two | 4 of 8 | (with France) |
+
+**The Euler-error check failed on Germany and the fault was the check's** (run 37890999670: mean error 10^-1.7 to 10^-2.1). It evaluated the plain Euler equation, and with dread in choices the household's condition has a further term, the marginal effect of saving on dread (c^-gamma = beta R E mu - D'(a') / Gamma, `egm_core.jl`). The check read that wedge as an error. It now includes the term (`numerics_base.jl`), and the three countries are run again; the other six checks of the German run pass.
