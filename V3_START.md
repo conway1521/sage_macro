@@ -2053,3 +2053,7 @@ France's transitions with S on are exact as well (run 37903403202: a zero shock 
 - **Equilibria**: one stable participation equilibrium, the solver's, in G+S and G+S+A, in France (0.233) and Italy (0.125) as in Germany (0.278). **Row N6 is met.**
 
 The scorecard of this section then reads **8 met, 10 partly, 2 running or to rerun (N3's last two parts, M7), 2 not**.
+
+**The last two parts of the accuracy test** (runs 37940351002 and 37940366184; 2026-10-09, 18:30 UTC): the asset grid of G+S+A doubled moves the hand-to-mouth share by 0.0001 in France and less in Italy, the median by 0.0013 and 0.0030, the MPC by 0.0001, participation and the multiplier not at all; its top doubled, less. Both pass. **Row N3 is met on version 5 in the three countries**, every part of the test: Euler errors, the grid and its top for G+A and G+S+A.
+
+**The scorecard on version 5: 9 met, 10 partly, 1 to rerun (M7, the two-asset reference), 2 not, of 22.** Met: M1, M2, M8, N1, N2, N3, N5, N6, B2. The same count as the base of 7 October, on inputs and a structure that can be defended line by line. Nothing is running. Waiting for the user: whose moments, the return on the asset, dread in choices to confirm or reverse, and the journal's table.
