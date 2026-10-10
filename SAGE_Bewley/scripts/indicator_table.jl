@@ -9,8 +9,8 @@ include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 cfg = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "GSA"
 codes = length(ARGS) >= 2 ? uppercase.(ARGS[2:end]) : ["FR", "DE", "IT"]
-REGIME = "V5" in codes ? :v5 : "V4" in codes ? :v4 : BASE_REGIME               # `V4` among the arguments: version 4 (section 36)
-codes = filter(x -> !(x in ("V4", "V5")), codes); isempty(codes) && (codes = ["FR", "DE", "IT"])
+REGIME = "V5M" in codes ? :v5m : "V5" in codes ? :v5 : "V4" in codes ? :v4 : BASE_REGIME               # `V4` among the arguments: version 4 (section 36)
+codes = filter(x -> !(x in ("V4", "V5", "V5M")), codes); isempty(codes) && (codes = ["FR", "DE", "IT"])
 println("regime ", REGIME)
 function hf(code, moment)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
@@ -30,7 +30,17 @@ function hf_lf(code, moment)
     end
     NaN
 end
-hfx(code, moment) = (REGIME === :v5 && !isnan(hf_lf(code, moment))) ? hf_lf(code, moment) : hf(code, moment)
+# and over the not retired, which the model with the state out of work is fitted to (2026-10-10)
+function hf_nr(code, moment)
+    for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
+        startswith(ln, "#") && continue
+        f = split(ln, ",")
+        length(f) >= 6 && f[1] == moment && f[2] == code && f[3] == "2021" && f[4] == "not_retired" && return parse(Float64, f[6])
+    end
+    NaN
+end
+hfx(code, moment) = (REGIME === :v5m && !isnan(hf_nr(code, moment))) ? hf_nr(code, moment) :
+                    (REGIME === :v5 && !isnan(hf_lf(code, moment))) ? hf_lf(code, moment) : hf(code, moment)
 function eu(code, ind)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "validation", "income_distribution.csv"))
         f = split(ln, ","); length(f) >= 4 && f[1] == ind && f[2] == code && f[3] == "2021" && return parse(Float64, f[4])
@@ -41,7 +51,7 @@ tot = [0, 0]
 for code in codes
     c = country_config(code; config = cfg, v3 = REGIME, S = occursin('S', cfg), A = occursin('A', cfg))
     r = solve_economy(c; cache = false); st = income_stats(c)
-    rows = [("S80/S20, under 65", st.s8020, eu(code, "s80s20_under65"), "Eurostat ilc_di11", REGIME !== :v5),          # version 5 fits the decile cut-offs of all persons; this ratio for the under 65 is then a test
+    rows = [("S80/S20, under 65", st.s8020, eu(code, "s80s20_under65"), "Eurostat ilc_di11", !(REGIME in (:v5, :v5m))),          # version 5 fits the decile cut-offs of all persons; this ratio for the under 65 is then a test
             ("Gini of disposable income", st.gini, eu(code, "gini_disposable"), "Eurostat ilc_di12", false),
             ("below 50% of median income", st.p50, hfx(code, "income_poor50_disp_persons"), "HFCS", false),
             ("below 60% of median income", st.p60, hfx(code, "income_poor60_disp_persons"), "HFCS", false),
@@ -49,7 +59,7 @@ for code in codes
             ("liquid-asset poor (3 months)", r.asset_poor, hfx(code, "asset_poor_disp_persons"), "HFCS", false),
             ("income and asset poor", r.both, hfx(code, "hardship_disp_persons"), "HFCS", false),
             ("hand-to-mouth", r.hand_to_mouth_kvw, hfx(code, "htm_model_narrow_total"), "HFCS", true),
-            ("liquid wealth over income", r.wealth_p50 / r.median_income, hfx(code, "liquid_kvw_to_disposable_income_ratio_of_medians"), "HFCS", c.cfloor > 0 || REGIME === :v4),
+            ("liquid wealth over income", r.wealth_p50 / r.median_income, hfx(code, "liquid_kvw_to_disposable_income_ratio_of_medians"), "HFCS", (c.cfloor > 0 && REGIME !== :v5m) || REGIME === :v4),          # with one measured minimum income the floor is not fitted and the median is a test
             ("MPC out of a month's income", r.mpc, hfx(code, "mpc_mean"), "HFCS, self-reported", REGIME === :v4)]      # version 4 fits both, weighted by standard errors
     @printf("\n%s %s, the base\n%-30s %8s %9s  %-22s %-9s %s\n", code, cfg, "indicator", "model", "official", "source", "", "")
     for (nm, m, d, src, tg) in rows

@@ -28,21 +28,22 @@
 #   julia --project=scripts/run_env scripts/onoff_v3.jl [floor] [edu] [trans] [CODE ...]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
-V5 = any(a -> lowercase(a) == "v5", ARGS)              # version 5 (V3_START.md sections 44 to 52): as version 4 in what it implies here
+V5M = any(a -> lowercase(a) == "v5m", ARGS)            # version 5 with the state out of work and one measured minimum income (V3_START.md sections 72 to 74)
+V5 = V5M || any(a -> lowercase(a) == "v5", ARGS)              # version 5 (V3_START.md sections 44 to 52): as version 4 in what it implies here
 V4 = V5 || any(a -> lowercase(a) == "v4", ARGS)        # version 4 (V3_START.md section 36): the floor, education and transitory regimes implied
 FLOORREG = V4 || any(a -> lowercase(a) == "floor", ARGS)
 EDUREG = V4 || any(a -> lowercase(a) == "edu", ARGS)    # patience by education (V3_START.md section 24)
 TRANS = V4 || any(a -> lowercase(a) == "trans", ARGS)  # the transitory part and the proportional tax (V3_START.md section 29)
-V3ARG = V5 ? :v5 : V4 ? :v4 : TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") : FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : true)
-VTAG = V5 ? "v5" : V4 ? "v4" : "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "") * (TRANS ? "t" : "")
-codes = (cc = [uppercase(a) for a in ARGS if !(lowercase(a) in ("floor", "edu", "trans", "v4", "v5"))]; isempty(cc) ? ["FR", "DE", "IT"] : cc)
+V3ARG = V5M ? :v5m : V5 ? :v5 : V4 ? :v4 : TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") : FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : true)
+VTAG = V5M ? "v5m" : V5 ? "v5" : V4 ? "v4" : "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "") * (TRANS ? "t" : "")
+codes = (cc = [uppercase(a) for a in ARGS if !(lowercase(a) in ("floor", "edu", "trans", "v4", "v5", "v5m"))]; isempty(cc) ? ["FR", "DE", "IT"] : cc)
 (FLOORREG || EDUREG || TRANS) && println("regime: ", VTAG)
 function hfcs(code, moment)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
         startswith(ln, "#") && continue
         f = split(ln, ",")
         # version 5 is fitted to the households in the labour force (2026-10-09)
-        length(f) >= 6 && f[1] == moment && f[2] == code && f[3] == "2021" && f[4] == (V5 ? "labour_force" : "all") && return parse(Float64, f[6])
+        length(f) >= 6 && f[1] == moment && f[2] == code && f[3] == "2021" && f[4] == (V5M ? "not_retired" : V5 ? "labour_force" : "all") && return parse(Float64, f[6])
     end
     NaN
 end

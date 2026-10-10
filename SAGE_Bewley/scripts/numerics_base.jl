@@ -16,7 +16,7 @@ code = uppercase(ARGS[1]); reg = length(ARGS) >= 2 ? lowercase(ARGS[2]) : "v3fe"
 # With five types of household a cell the whole does not fit in a six-hour job (version 5, 2026-10-09).
 PART = length(ARGS) >= 3 ? lowercase(ARGS[3]) : "all"
 part(x) = PART == "all" || PART == x || startswith(PART, x * "_")          # 2gsa_grid and 2gsa_top run one variant of the grid check alone (France's two together passed six hours)
-V3ARG = Dict("v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu, "v3" => true, "v3fet" => :floor_edu_trans, "v3et" => :edu_trans, "v4" => :v4, "v5" => :v5)[reg]
+V3ARG = Dict("v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu, "v3" => true, "v3fet" => :floor_edu_trans, "v3et" => :edu_trans, "v4" => :v4, "v5" => :v5, "v5m" => :v5m)[reg]
 results = Tuple{String,Bool}[]
 check(name, ok) = (push!(results, (name, ok)); @printf("   -> %s: %s\n", name, ok ? "PASS" : "FAIL"); flush(stdout))
 
