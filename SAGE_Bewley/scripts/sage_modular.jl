@@ -1386,6 +1386,9 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
     for (k, v) in kwargs
         d[k] = v
     end
+    # one measured minimum income (v3 = :v5m): assistance in the state out of work is the floor's level,
+    # given outright so that it stays when a step of the solution switches the floor off
+    (v3 !== false && v3 !== true && string(v3) == "v5m" && !haskey(d, :assist_long) && get(d, :cfloor, 0.0) > 0) && (d[:assist_long] = d[:cfloor])
     SAGEConfig(; d...)
 end
 
