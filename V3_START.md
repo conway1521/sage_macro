@@ -2135,3 +2135,9 @@ Two checks do not pass, neither a fault of the economics.
 - What would remove the last doubt: the replication package (openICPSR E183361V1, free with an account, which I cannot open), where the code shows which variance drives the persistent state. Not needed to proceed.
 
 `data/manual_inputs.csv`: the status of the twelve rows updated to say so.
+
+## 67. The remaining tests on the decided base (2026-10-10, 09:00 UTC)
+
+- **Transitions with S on** (G+S+A, dread measured): a zero shock exact in France (2e-12 in participation) and Germany (9e-14), as in Italy. The recession: participation falls 0.42 points at the peak in France and 0.28 in Germany; welfare -0.17% and -0.05% of consumption.
+- **Equilibria**: one stable participation equilibrium, the solver's, in Germany (0.281) as in France and Italy. **Row N6 met in the three countries.**
+- **The asset grid, G+S+A**: Germany and Italy pass (doubled, the hand-to-mouth share moves by 0.0002 and 0.0001, the median by 0.0017 and 0.0026, the MPC by 0.0002 and 0.0005). France's job was cancelled at the six-hour limit; the check now runs one variant a job (`2gsa_grid`, `2gsa_top`) and France's two are started, with the Euler errors and the G+A grid for the three countries on this base.
