@@ -2141,3 +2141,39 @@ Two checks do not pass, neither a fault of the economics.
 - **Transitions with S on** (G+S+A, dread measured): a zero shock exact in France (2e-12 in participation) and Germany (9e-14), as in Italy. The recession: participation falls 0.42 points at the peak in France and 0.28 in Germany; welfare -0.17% and -0.05% of consumption.
 - **Equilibria**: one stable participation equilibrium, the solver's, in Germany (0.281) as in France and Italy. **Row N6 met in the three countries.**
 - **The asset grid, G+S+A**: Germany and Italy pass (doubled, the hand-to-mouth share moves by 0.0002 and 0.0001, the median by 0.0017 and 0.0026, the MPC by 0.0002 and 0.0005). France's job was cancelled at the six-hour limit; the check now runs one variant a job (`2gsa_grid`, `2gsa_top`) and France's two are started, with the Euler errors and the G+A grid for the three countries on this base.
+
+## 68. Version 5 as decided: the base without places, tested and scored (2026-10-10, 13:00 UTC)
+
+**The base.** Version 5 (`v3 = :v5`, `SAGE_V5=1`): the published income process in the source's order, checked against the journal's online appendix; five permanent income types fitted to Eurostat's decile cut-offs; the pay premium by education in G, from the 2022 earnings survey; the yearly job-finding rate from the Labour Force Survey's transitions; the asset earning the measured real return on overnight deposits; the HFCS moments of the households in the labour force; the hand-to-mouth share and its split by education fitted first, the floor fitting the median where it is positive; the MPC a test; S exactly off when off; dread of job loss measured in wellbeing and not in choices. Files `calibration_v5_{FR,DE,IT}_{G,GS}.txt`; a configuration with A reads the one without it.
+
+**The accuracy test, complete on this base** (runs 38033416337 to 38033429292, with section 67): Euler errors 10^-5.0 to 10^-6.3 in the three countries; the asset grid doubled or its top doubled, for G+A and G+S+A, moves the hand-to-mouth share by 0.0005 at most, the median by 0.0026, the MPC by 0.0005. All pass.
+
+**The scorecard: 9 met, 10 partly, 1 to rerun, 2 not, of 22.**
+
+| | on the decided base | what is left |
+|---|---|---|
+| M1 budget and closure | **met** | |
+| M2 standard blocks | **met** | |
+| M3 parameters sourced | partly, close | the private share of belonging (a band), the place elasticity (E), the units of the fitted floors against the statutory amounts |
+| M4 every configuration on its targets | partly: the six without places, of twelve | G+E and G+S+E in the three countries |
+| M5 spending behaviour | partly | the MPC's properties hold; its level is 0.43, 0.33, 0.35 against the labour force's 0.32, 0.46, 0.48; the fall in consumption on job loss is 0.17, 0.23, 0.26 against 0.07 to 0.16 |
+| M6 who holds no buffer | partly | by education exact; by place not rerun |
+| M7 wealth distribution | to rerun | the two-asset reference, on this base and with the measured return |
+| M8 transitions | **met** | S off and S on exact in the three countries; France's S-off path drifts 1.3e-6 against a bound of 1e-6, to close with a tighter steady state |
+| N1 method | **met** | |
+| N2 exact reductions | **met** | 16 of 16 in the three countries |
+| N3 accuracy | **met** | |
+| N4 independent solver | not | |
+| N5 reproducible | mostly met | |
+| N6 equilibria | **met** | one stable equilibrium in the three countries |
+| B1 dimensions | partly | S and A settled (`DIMENSIONS_SPEC.md`); E's sixth channel and choice over hours to build |
+| B2 official data | **met** | |
+| B3 indicators | partly: 15 of 25 | off: in-work poverty, the MPC, France's median |
+| B4, B5 welfare tables, accessibility | partly | later |
+| U1 any order of switches | partly: 6 of 12 | places |
+| U2 policy levers | partly | |
+| U3 a new country | not tried | |
+
+With A adding no parameter a country has four calibrations, so the count of configurations is out of twelve from here.
+
+**What does not fit, in order of weight.** (1) In-work poverty, 1.6 to 1.9 times official: the state out of work. (2) The MPC by country. (3) The fall in consumption on job loss in Germany and Italy. (4) France's median liquid wealth, a week and a half of income above the data's. (5) Places and the wealth distribution, not yet on this base.
