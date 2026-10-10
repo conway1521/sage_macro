@@ -2292,3 +2292,36 @@ Runs (probes, G): 38072177182 (France), 38072178808 (Germany), 38072180382 (Ital
 Run: 38073202817 (the calibration workflow, three countries, G).
 
 **The workflow file** is pushed (the Mac was unlocked): `calibrate.yml` has `out` (0, 1, 2) and `pop`.
+
+## 73. The two designs of the state out of work, side by side in G (2026-10-10, 18:40 UTC)
+
+Runs: the first design with section 71's changes, 38072177182, 38072178808, 38072180382 (probes); one measured minimum income, 38073642965 (the first attempt, 38073202817, failed on wiring: a step that switches the floor off also removed the state's assistance; assistance is now given outright at the floor's level). The not retired's moments in both. Files of the second kept: `calibration_v5m_{FR,DE,IT}_G.txt`.
+
+**In the first design the fitted floor dropped out in the three countries**: it moves no moment once the state pays the minimum income and the first year is insured at its own rate, and is set to zero. What is left differs from the second design only in whether those in work and in the first year are topped up to the minimum income.
+
+| G, model and data | France | Germany | Italy |
+|---|---|---|---|
+| hand-to-mouth, first design | 0.268, 0.268 | 0.252, 0.252 | 0.204, 0.203 |
+| hand-to-mouth, one minimum income | 0.267, 0.268 | 0.252, 0.252 | 0.197, 0.203 |
+| split by education, first design | 0.178, 0.177 | 0.201, 0.200 | 0.126, 0.126 |
+| split by education, one minimum income | 0.178, 0.177 | 0.202, 0.200 | 0.122, 0.126 |
+| **median liquid wealth over income, untargeted**, first design | 0.108, 0.047 | 0.124, 0.117 | 0.159, 0.229 |
+| the same, one minimum income | 0.110, 0.047 | 0.129, 0.117 | **0.230, 0.229** |
+| in-work poverty, first design (official; base) | 0.075 (0.067; 0.124) | 0.090 (0.086; 0.153) | 0.139 (0.117; 0.187) |
+| in-work poverty, one minimum income | 0.072 | 0.074 | 0.137 |
+| Gini, first design, one minimum income (official) | 0.290, 0.292 (0.296) | 0.305, 0.296 (0.304) | 0.318, 0.317 (0.324) |
+| MPC, first design, one minimum income (survey; base) | 0.42, 0.41 (0.33; 0.43) | 0.37, 0.36 (0.46; 0.33) | 0.42, 0.36 (0.49; 0.35) |
+| fall in consumption on job loss, first, one minimum income (base) | 0.31, 0.31 (0.17) | 0.35, 0.35 (0.23) | 0.31, 0.30 (0.26) |
+| top patience and gap, one minimum income | 0.947, 0.056 | 0.965, 0.040 | 0.958, 0.054 |
+| the minimum income over the model's median (official) | 0.360 (0.36) | 0.371 (0.37) | 0.406 (0.40) |
+
+**Reading.**
+1. **The two designs agree in France and Germany** to the second digit on everything.
+2. **In Italy the one minimum income reproduces the median without fitting it**: 0.230 against 0.229, where the first design leaves 0.159. With Germany within one standard error (0.129 against 0.117, s.e. 0.012), the median is reproduced untargeted in two countries of three by a measured floor. France's median stays the miss it was (0.110 against 0.047; the base had 0.085 against 0.051).
+3. My expectation of section 72, that the measured amount would be too generous for the wealth data in France and Italy, was wrong for Italy and immaterial for France.
+4. **The bottom of the income distribution.** In the solve the types are fitted on, people below 40% of the median are 0.066, 0.085, 0.029 against the official 0.042, 0.052, 0.101. Jobless households sit at the single adult's minimum income; in the data France's and Germany's are better off than that (other members' incomes, other benefits: a third to a half of them are not below the poverty line) and Italy's are worse off (coverage). Common to the two designs.
+5. **The cost of the state is the fall in consumption on job loss**, 0.30 to 0.35 against 0.17 to 0.26 in the base and 0.07 to 0.16 in the literature. Common to the two designs. The first-year rate took 0.02 to 0.08 off it.
+
+**My recommendation**: the one minimum income. One institution in place of two, one fitted parameter fewer in each country (G has the effort scale, patience and its gap by education), the median as an out-of-sample test that two countries pass, and nothing lost in France or Germany. It is not the base until the user says so and until the tests are rerun on it.
+
+**Started without waiting**, since it is needed whichever way the decision goes: G+S on the one minimum income in the three countries.
