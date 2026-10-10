@@ -28,7 +28,8 @@ else
 fi
 [ -f "SAGE_Bewley/scripts/$file" ] || { echo "no $file: nothing to chain"; exit 0; }
 pre="$GITHUB_RUN_ID:$art:$file"
-run1() { gh workflow run calibrate.yml --ref "$GITHUB_REF_NAME" -f countries="$1" -f configs="$2" -f prereq="$pre" -f v3="$v3" -f floor="$floor" -f edu="$edu" -f trans="$trans" -f v4="$v4" -f v5="$v5" -f out="$out" -f pop="$pop" -f floor_from="${SAGE_FLOOR_FROM:-G}"
+extra=""; [ "$out" = 1 ] && extra="-f out=1"; [ -n "$pop" ] && extra="$extra -f pop=$pop"        # only when set: the base's chain passes neither
+run1() { gh workflow run calibrate.yml --ref "$GITHUB_REF_NAME" -f countries="$1" -f configs="$2" -f prereq="$pre" -f v3="$v3" -f floor="$floor" -f edu="$edu" -f trans="$trans" -f v4="$v4" -f v5="$v5" $extra -f floor_from="${SAGE_FLOOR_FROM:-G}"
          echo "started one-asset $1 $2, with $file from run $GITHUB_RUN_ID"; }
 run2() { gh workflow run calibrate2.yml --ref "$GITHUB_REF_NAME" -f countries="$1" -f configs="$2" -f chi_from="${3:-}" -f prereq="$pre"
          echo "started two-asset $1 $2 ${3:+(chi0 from $3)}, with $file from run $GITHUB_RUN_ID"; }
