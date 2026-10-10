@@ -207,6 +207,12 @@ const SE_GAP = V4 ? sqrt(hfcs_se(HTM_NAME, POP_EDU, "below tertiary")^2 + hfcs_s
 const E_REF_C = V3 ? num("e_ref") : NaN
 # the permanent types of version 5 and their weights (fitted in G and G+A, read by the others)
 const PF = Ref(Float64[]); const PW = Ref(Float64[])
+# ASSISTANCE IN THE STATE OUT OF WORK (version 5 with the state; V3_START.md section 70): the OECD's
+# adequacy of minimum income benefits, a share of median disposable income, times the model's own
+# median, so that it is in the units of the income targets. Set where the permanent types are fitted
+# (G) and written to the file; NaN leaves country_config's starting value.
+const ASSIST = Ref(NaN)
+const MIN_MED = V5O ? manual_input(CODE, "min_income_pct_median") : NaN
 # DREAD IN CHOICES (decision A1, DIMENSIONS_SPEC.md; adopted 2026-10-09 after the test of V3_START.md
 # section 55): in version 5 a configuration with A has the employed bear the cost of their exposure to
 # job loss when they choose, at the published weight, where A until then only measured it. Such a
@@ -216,7 +222,7 @@ const DREAD_CHOICE = V5 && get(ENV, "SAGE_DREAD_CHOICE", "0") == "1"          # 
 # return on households' overnight deposits by country in place of the engine's 2%.
 # Decided by the user on 2026-10-09: version 5 has the measured return (country_config sets it under v3 = :v5).
 const R_DEPOSITS = (V5 || get(ENV, "SAGE_RLIQ", "") == "deposits") ? manual_input(CODE, "r_deposits_real") : NaN
-v3kw() = V3 && !isnan(ETA[]) ? merge(DREAD_CHOICE ? (dread_mode = :behaviour,) : (;), isnan(R_DEPOSITS) ? (;) : (R_one = R_DEPOSITS,), V5 ? (perm_sd = 0.0, perm_f = PF[], perm_w = PW[]) : V4 ? (perm_sd = ETA[],) : (eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
+v3kw() = V3 && !isnan(ETA[]) ? merge(DREAD_CHOICE ? (dread_mode = :behaviour,) : (;), isnan(R_DEPOSITS) ? (;) : (R_one = R_DEPOSITS,), (V5O && !isnan(ASSIST[])) ? (assist_long = ASSIST[],) : (;), V5 ? (perm_sd = 0.0, perm_f = PF[], perm_w = PW[]) : V4 ? (perm_sd = ETA[],) : (eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
                                      isnan(RHO_TRIAL) ? (;) : (rho = RHO_TRIAL,), isnan(SDEPS_TRIAL) ? (;) : (sd_eps = SDEPS_TRIAL,)) : ()
 if FLOORREG
     if CFG == FLOOR_CFG
@@ -340,7 +346,7 @@ function write_cal(phi, spread; kappa = nothing, sigma = nothing)
     open(OUTFILE, "w") do io
         println(io, "# written by calibrate_country.jl $(CODE) $(CFG)", V3 ? ", version 3 (effort set by the job, household replacement rate, liquid-wealth targets from the HFCS)" : "", "; read by country_config")
         V5 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\nperm_f = %s\nperm_w = %s\n%s", phi, spread, BB[], join([@sprintf("%.5f", v) for v in PF[]], " "), join([@sprintf("%.5f", v) for v in PW[]], " "),
-                     (FLOORREG ? @sprintf("cfloor = %.6f\n", FL[] * E_REF_C) : "") * (EDUREG ? @sprintf("beta_gap = %.4f\n", BGAP[]) : "")) :
+                     (FLOORREG ? @sprintf("cfloor = %.6f\n", FL[] * E_REF_C) : "") * (EDUREG ? @sprintf("beta_gap = %.4f\n", BGAP[]) : "") * ((V5O && !isnan(ASSIST[])) ? @sprintf("assist_long = %.6f\n", ASSIST[]) : "")) :
         V3 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\n%s = %.4f\n%s", phi, spread, BB[], V4 ? "perm_sd" : "eta_z", ETA[], (FLOORREG ? @sprintf("cfloor = %.6f\n", FL[] * E_REF_C) : "") * (EDUREG ? @sprintf("beta_gap = %.4f\n", BGAP[]) : "")) :
              @printf(io, "phi = %.2f\nbeta_spread = %.3f\nbeta_bar = %.4f\n", phi, spread, BB[])
         kappa === nothing || @printf(io, "kappa = %.2f\nsigma_m = %.2f\n", kappa, sigma)
@@ -577,12 +583,24 @@ if V5
         for l in eachline(fbp)
             startswith(l, "perm_f") && (PF[] = parse.(Float64, split(last(split(l, "=")))))
             startswith(l, "perm_w") && (PW[] = parse.(Float64, split(last(split(l, "=")))))
+            (V5O && startswith(l, "assist_long")) && (ASSIST[] = parse(Float64, last(split(l, "="))))
         end
         (length(PF[]) > 0 && length(PF[]) == length(PW[])) || error("version 5: no permanent types in $(basename(fbp))")
         say("  permanent types from ", basename(fbp), ": ", join([@sprintf("%.3f", v) for v in PF[]], " "), " | weights ", join([@sprintf("%.3f", v) for v in PW[]], " "))
     elseif (ckp = ck_read("perm")) !== nothing
         PF[] = [ckp["f$k"] for k in 1:5]; PW[] = [ckp["w$k"] for k in 1:5]
+        V5O && (ASSIST[] = get(ckp, "assist", NaN))
     end
+end
+"The permanent types at effort scale `phi`; with the state out of work, assistance is first set at its official share of the model's median and the types fitted once more."
+function fit_types(phi)
+    P = fit_permanent(cfg_off(phi, 0.0), CODE)
+    if V5O
+        ASSIST[] = MIN_MED * P.model.med
+        P = fit_permanent(cfg_off(phi, 0.0), CODE)
+        @printf("  assistance in the state out of work: %.4f, %.3f of the median (official %.2f)\n", ASSIST[], ASSIST[] / P.model.med, MIN_MED)
+    end
+    P
 end
 ck1 = ck_read("stage1")
 if ck1 === nothing && V3
@@ -618,14 +636,14 @@ if ck1 === nothing && V3
         x0v = x0e === nothing ? [log(7.5), 0.93, 0.0, 0.0, FL[], 0.03] : copy(x0e); x0v[3] = 0.0; x0v[4] = 0.0
         BB[] = x0v[2]; FL[] = x0v[5]; BGAP[] = x0v[6]
         say("  the permanent types, fitted to the official decile cut-offs at the starting point")
-        P1 = fit_permanent(cfg_off(exp(x0v[1]), 0.0), CODE); PF[] = P1.f; PW[] = P1.w; show_permanent(P1)
+        P1 = fit_types(exp(x0v[1])); PF[] = P1.f; PW[] = P1.w; show_permanent(P1)
         f3a = fit_v3(E_TARGET, HTM_TARGET - GAP; x0 = x0v)
         BB[] = f3a.bb; FL[] = f3a.fl; BGAP[] = f3a.gap
         say("  the permanent types again, at the fitted point")
-        P2 = fit_permanent(cfg_off(f3a.phi, 0.0), CODE)
+        P2 = fit_types(f3a.phi)
         @printf("  largest move of a type between the two passes: %.3f in the log of its factor, %.3f in its weight\n", maximum(abs.(log.(P2.f ./ P1.f))), maximum(abs.(P2.w .- P1.w)))
         PF[] = P2.f; PW[] = P2.w; show_permanent(P2)
-        ck_write("perm", merge(Dict("f$k" => PF[][k] for k in 1:5), Dict("w$k" => PW[][k] for k in 1:5)))
+        ck_write("perm", merge(Dict("f$k" => PF[][k] for k in 1:5), Dict("w$k" => PW[][k] for k in 1:5), V5O ? Dict("assist" => ASSIST[]) : Dict{String,Float64}()))
         f3 = fit_v3(E_TARGET, HTM_TARGET - GAP; x0 = [log(f3a.phi), f3a.bb, 0.0, 0.0, f3a.fl, f3a.gap], tag = "fit3b")
     else
         f3 = x0e === nothing ? fit_v3(E_TARGET, HTM_TARGET - GAP) : fit_v3(E_TARGET, HTM_TARGET - GAP; x0 = x0e)

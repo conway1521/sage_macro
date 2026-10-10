@@ -57,7 +57,7 @@ function mix_stats(R, lf, wk)
     share(lo, hi) = (i1 = searchsortedfirst(cw, lo); i2 = min(searchsortedfirst(cw, hi), length(y)); (cy[i2] - (i1 > 1 ? cy[i1-1] : 0.0)) / tot)
     below(t, mm) = sum(mm[i] for i in eachindex(y) if y[i] < t * med; init = 0.0)
     mu = dot(m, l)
-    (cut = [q(p) / med for (_, p) in SHAPE_QS], top10 = 100 * share(0.9, 1.0), s8020 = share(0.8, 1.0) / share(0.0, 0.2),
+    (med = med, cut = [q(p) / med for (_, p) in SHAPE_QS], top10 = 100 * share(0.9, 1.0), s8020 = share(0.8, 1.0) / share(0.0, 0.2),
      below = [below(t, m) for t in (0.4, 0.5, 0.6, 0.7)], inwork60 = below(0.6, mE) / sum(mE), varlog = dot(m, (l .- mu) .^ 2),
      # the same among the employed of every type but the lowest, and the lowest type's place in the distribution
      # (for the state out of work, V3_START.md section 55)
