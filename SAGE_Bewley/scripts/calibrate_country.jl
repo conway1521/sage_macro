@@ -86,7 +86,11 @@ const V4 = V5 || get(ENV, "SAGE_V4", "0") == "1"
 # long-term state, its yearly exit fitted in closed form to the official share of people in households
 # out of work, by education, and the official minimum income paid in it (country_config, v3 = :v5o).
 # A variant under test: files calibration_v5o_*, starting from version 5's.
-const V5O = V5 && get(ENV, "SAGE_OUT", "0") == "1"
+const V5O = V5 && get(ENV, "SAGE_OUT", "0") in ("1", "2")
+# ONE MEASURED MINIMUM INCOME (SAGE_OUT=2; V3_START.md section 72): the state out of work with the floor
+# set at the official minimum income and not fitted (country_config, v3 = :v5m). The hand-to-mouth
+# share and its split by education own patience; the median is a test. Files calibration_v5m_*.
+const V5M = V5O && get(ENV, "SAGE_OUT", "0") == "2"
 const V3 = V4 || get(ENV, "SAGE_V3", "0") == "1"
 # THE FLOOR IN THE BASE (SAGE_FLOOR=1 with SAGE_V3=1; V3_START.md, section 22). A means-tested floor
 # (Hubbard, Skinner and Zeldes 1995), financed by the lump-sum tax, with patience the same for all
@@ -112,14 +116,14 @@ const EDUREG = V4 || (V3 && get(ENV, "SAGE_EDU", "0") == "1")
 # The same regime with both on; files with a t added to the tag (calibration_v3fet_* for the base).
 const TRANS = V4 || (V3 && get(ENV, "SAGE_TRANS", "0") == "1")
 const VTAG0 = V5O ? "v5" : V5 ? "v4" : V4 ? "v3fet" : "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "")          # the regime the starting point is read from
-const V3ARG = V5O ? :v5o : V5 ? :v5 : V4 ? :v4 : TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") :
+const V3ARG = V5M ? :v5m : V5O ? :v5o : V5 ? :v5 : V4 ? :v4 : TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") :
               FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : V3)
 # A TRIAL INCOME PROCESS (SAGE_RHO, SAGE_SDEPS with SAGE_TRANS=1): the persistence of the persistent part
 # and the size of the transitory part given here in place of the country table's; files tagged with an
 # r more (V3_START.md, section 31). The fit is as always: the persistent innovation to S80/S20.
 const RHO_TRIAL = TRANS && haskey(ENV, "SAGE_RHO") ? parse(Float64, ENV["SAGE_RHO"]) : NaN
 const SDEPS_TRIAL = TRANS && haskey(ENV, "SAGE_SDEPS") ? parse(Float64, ENV["SAGE_SDEPS"]) : NaN
-const VTAG = V5O ? "v5o" : V5 ? "v5" : V4 ? "v4" : VTAG0 * (TRANS ? "t" : "") * ((isnan(RHO_TRIAL) && isnan(SDEPS_TRIAL)) ? "" : "r")
+const VTAG = V5M ? "v5m" : V5O ? "v5o" : V5 ? "v5" : V4 ? "v4" : VTAG0 * (TRANS ? "t" : "") * ((isnan(RHO_TRIAL) && isnan(SDEPS_TRIAL)) ? "" : "r")
 # WHOSE MOMENTS (SAGE_POP; V3_START.md section 53). all, the default: every household of the survey.
 # labour_force: households whose reference person is employed, self-employed or unemployed, which is
 # who the model's households are; retired households, a third of the survey, hold more liquid wealth
@@ -422,7 +426,7 @@ below one for the most patient type). Returns the point and its moments.
 function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22, FL[]], iters = 16, tag = "fit3")
     # fifth parameter: the floor's level. Free in G of the floor regime (0 to 0.30 of reference earnings),
     # fixed elsewhere (at zero without the regime). In the floor regime patience has no spread.
-    flfree = FLOORREG && CFG == FLOOR_CFG
+    flfree = FLOORREG && CFG == FLOOR_CFG && !V5M          # with one measured minimum income the floor is given
     # sixth parameter: the patience gap between the education cells, free in the education regime
     length(x0) == 5 && (x0 = vcat(x0, EDUREG ? max(BGAP[], 0.03) : 0.0))
     nospread = FLOORREG || EDUREG
@@ -615,9 +619,10 @@ end
 function fit_types(phi)
     P = fit_permanent(cfg_off(phi, 0.0), CODE)
     if V5O
-        ASSIST[] = MIN_MED * P.model.med
+        a = MIN_MED * P.model.med
+        V5M ? (FL[] = a / E_REF_C) : (ASSIST[] = a)          # one measured minimum income: the floor itself; otherwise the state's assistance
         P = fit_permanent(cfg_off(phi, 0.0), CODE)
-        @printf("  assistance in the state out of work: %.4f, %.3f of the median (official %.2f)\n", ASSIST[], ASSIST[] / P.model.med, MIN_MED)
+        @printf("  %s: %.4f, %.3f of the median (official %.2f)\n", V5M ? "the minimum income, floor and assistance" : "assistance in the state out of work", a, a / P.model.med, MIN_MED)
     end
     P
 end

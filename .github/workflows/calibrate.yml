@@ -51,7 +51,7 @@ on:
         description: "Version 5 (version 4 with the published variances in the source's order, the permanent income types fitted to the official deciles, the MPC a test; files calibration_v5_*): 1 or 0. Implies v4"
         default: "0"
       out:
-        description: "With v5=1, the state out of work sized to the official count of jobless households (a variant under test; files calibration_v5o_*): 1 or 0"
+        description: "With v5=1, the state out of work sized to the official count of jobless households (variants under test): 0, 1 (a fitted floor beside the state's assistance; files calibration_v5o_*) or 2 (one measured minimum income, no fitted floor; files calibration_v5m_*)"
         default: "0"
       pop:
         description: "Whose HFCS moments the fit takes: labour_force (version 5's default), not_retired or all; empty for the default"

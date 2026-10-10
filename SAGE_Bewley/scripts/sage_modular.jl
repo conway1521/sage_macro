@@ -1268,11 +1268,12 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
         # part (its size from data/manual_inputs.csv, field sd_eps) and the proportional tax
         # (V3_START.md, section 29); files with a t added to the tag, calibration_v3fet_* for the base.
         vs = v3 === true ? "" : string(v3)
-        vs in ("", "floor", "edu", "floor_edu", "trans", "floor_trans", "edu_trans", "floor_edu_trans", "v4", "v5", "v5o") || error("unknown version 3 regime $v3")
-        vout = vs == "v5o"                               # version 5 with the state out of work (below)
+        vs in ("", "floor", "edu", "floor_edu", "trans", "floor_trans", "edu_trans", "floor_edu_trans", "v4", "v5", "v5o", "v5m") || error("unknown version 3 regime $v3")
+        vmin = vs == "v5m"                               # the state out of work with one measured minimum income (below)
+        vout = vs == "v5o" || vmin                       # version 5 with the state out of work (below)
         v5 = vs == "v5" || vout; v4 = vs == "v4" || v5   # version 5 is version 4 with the corrections below
         vfl = v4 || occursin("floor", vs); ved = v4 || occursin("edu", vs); vtr = v4 || occursin("trans", vs)
-        vtag = vout ? "v5o" : v5 ? "v5" : v4 ? "v4" : "v3" * (vfl ? "f" : "") * (ved ? "e" : "") * (vtr ? "t" : "")
+        vtag = vmin ? "v5m" : vout ? "v5o" : v5 ? "v5" : v4 ? "v4" : "v3" * (vfl ? "f" : "") * (ved ? "e" : "") * (vtr ? "t" : "")
         if vtr
             d[:sd_eps] = manual_input(code, "sd_eps"); d[:tax_mode] = :prop
         end
@@ -1335,7 +1336,13 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
                 # the OECD's profile, same households and weights), not the average over a five-year
                 # spell, which holds the assistance of the later years a second time.
                 d[:rr] = manual_input(code, "rr_household_first_year"); d[:rr_public] = manual_input(code, "rr_public_first_year")
-                d[:assist_long] = manual_input(code, "min_income_net_aw") * d[:e_ref]
+                # ONE MEASURED MINIMUM INCOME (v3 = :v5m, 2026-10-10; V3_START.md section 72). In v5o the
+                # state pays the official minimum income and a means-tested floor is fitted beside it: the
+                # same institution twice. In v5m there is one: the floor is the official minimum income
+                # (the calibration sets it at the OECD's share of the median), those out of work beyond a
+                # year receive its level (assist_long left unset: assist_of gives the floor's level), and
+                # everyone else is topped up to it. No floor is fitted and the median is a test.
+                vmin || (d[:assist_long] = manual_input(code, "min_income_net_aw") * d[:e_ref])
             end
         end
         # Version 5: the pay premium is in the base and dread of job loss is measured without entering

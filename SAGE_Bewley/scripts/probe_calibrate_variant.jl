@@ -12,7 +12,7 @@ let code = uppercase(ARGS[1]), cfg = uppercase(ARGS[2]), rest = ARGS[3:end]
         occursin("=", a) ? (ENV[String(first(split(a, "=")))] = String(last(split(a, "=")))) : (ENV["SAGE_POP"] = a)
     end
     haskey(ENV, "SAGE_TIME_BUDGET_MIN") || (ENV["SAGE_TIME_BUDGET_MIN"] = "335")
-    tag = get(ENV, "SAGE_OUT", "0") == "1" ? "v5o" : "v5"
+    tag = get(ENV, "SAGE_OUT", "0") == "1" ? "v5o" : get(ENV, "SAGE_OUT", "0") == "2" ? "v5m" : "v5"
     out = joinpath(@__DIR__, "calibration_$(tag)_$(code)_$(cfg).txt"); t0 = time()
     atexit() do
         if isfile(out) && mtime(out) >= t0

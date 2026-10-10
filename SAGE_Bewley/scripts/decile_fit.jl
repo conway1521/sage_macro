@@ -100,7 +100,10 @@ component and floor are switched off for the one solve. Returns the factors (mea
 their weights, the loss and the fitted and official statistics.
 """
 function fit_permanent(c, code; starts = Vector{Float64}[])
-    R = income_records(SAGEConfig(c; perm_sd = 0.0, perm_f = Float64[], perm_w = Float64[], cfloor = 0.0, S = false))
+    # with the state out of work and no assistance given, those in it receive the floor's level (assist_of):
+    # kept as their transfer in this solve, where the floor itself is off
+    al = (!isnan(c.f_long[1]) && isnan(c.assist_long)) ? c.cfloor : c.assist_long
+    R = income_records(SAGEConfig(c; perm_sd = 0.0, perm_f = Float64[], perm_w = Float64[], cfloor = 0.0, S = false, assist_long = al))
     offc = [official_shape(code, "cutoff_over_median_" * nm) for (nm, _) in SHAPE_QS]; offt = official_shape(code, "share_D10")
     loss(st) = sum(abs2, log.(st.cut ./ offc)) + abs2(log(st.top10 / offt))
     best = nothing
