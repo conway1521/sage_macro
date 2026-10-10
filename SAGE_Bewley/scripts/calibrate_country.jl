@@ -206,7 +206,7 @@ const PF = Ref(Float64[]); const PW = Ref(Float64[])
 # section 55): in version 5 a configuration with A has the employed bear the cost of their exposure to
 # job loss when they choose, at the published weight, where A until then only measured it. Such a
 # configuration has a fit of its own. SAGE_DREAD_CHOICE=0 refuses it, as before the adoption.
-const DREAD_CHOICE = V5 && get(ENV, "SAGE_DREAD_CHOICE", "1") == "1"
+const DREAD_CHOICE = V5 && get(ENV, "SAGE_DREAD_CHOICE", "0") == "1"          # the variant; off by default from 2026-10-09 evening (section 64)
 # THE RETURN ON THE ONE ASSET (SAGE_RLIQ=deposits, a diagnostic; V3_START.md section 57): the measured real
 # return on households' overnight deposits by country in place of the engine's 2%.
 # Decided by the user on 2026-10-09: version 5 has the measured return (country_config sets it under v3 = :v5).
@@ -562,7 +562,7 @@ say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", r
 # places are meant to move the income distribution. A adds no parameter while dread is measured
 # without entering choices, so a configuration with A is not calibrated: it reads the file of the
 # same configuration without A (country_config).
-V5 && A_ON && !DREAD_CHOICE && error("version 5 with SAGE_DREAD_CHOICE=0: a configuration with A has no calibration of its own (the pay premium is in G and dread does not enter choices); calibrate $(replace(CFG, "A" => "")) instead")
+V5 && A_ON && !DREAD_CHOICE && error("version 5: a configuration with A has no calibration of its own unless SAGE_DREAD_CHOICE=1 (the pay premium is in G and dread does not enter choices); calibrate $(replace(CFG, "A" => "")) instead")
 const PERM_FITTED = V5 && CFG == "G"
 if V5
     ETA[] = 0.0

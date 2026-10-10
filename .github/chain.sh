@@ -35,7 +35,7 @@ if [ "$kind" = 1 ]; then
   case "$cfg" in
     GSA)  if [ "$v5" != 1 ]; then run1 "$code" GS; fi ;;        # before version 5 G+S took its taste dispersion from G+S+A
     GSAE) if [ "$v5" != 1 ]; then run1 "$code" GSE; fi ;;
-    G)    if [ "$v5" = 1 ]; then run1 "$code" "GS GA"; fi ;;   # version 5: every dimension sits on G alone; G+S and G+A read G's permanent types (G+S its floor too)
+    G)    if [ "$v5" = 1 ]; then run1 "$code" GS; fi ;;        # version 5: every dimension sits on G alone; G+S reads G's permanent types and floor
     GA)   if [ "$v5" = 1 ]; then run1 "$code" GSA; fi ;;       # version 5: G+S+A reads G+A's floor
   esac
 else

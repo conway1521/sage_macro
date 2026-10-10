@@ -79,7 +79,7 @@ for code in codes
          check("$code 3. A widens the participation gap between the cells", gap(fx["GSA"]) > gap(fx["GS"]))
     println("own calibration (each configuration at its own file)")
     for (nm, S_, A_) in CFGS
-        f = joinpath(@__DIR__, "calibration_$(VTAG)_$(code)_$(nm).txt")
+        f = joinpath(@__DIR__, "calibration_$(VTAG)_$(code)_$((V5 && get(ENV, "SAGE_DREAD_CHOICE", "0") != "1") ? replace(nm, "A" => "") : nm).txt")          # version 5: a configuration with A reads the file without it
         isfile(f) || (println(nm, "      no calibration file yet"); push!(results, ("$code 4. $nm has a calibration", false)); continue)
         r = solve_economy(country_config(code; v3 = V3ARG, config = nm, S = S_, A = A_)); row(nm, r)
         ok = abs(r.mean_effort_employed - E) <= 0.005 && abs(r.hand_to_mouth_kvw - H) <= 0.02 && (!S_ || abs(r.rate - P) <= 0.005)

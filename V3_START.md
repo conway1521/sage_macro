@@ -2082,3 +2082,20 @@ Run 37996379933 at e41deef; the three files committed.
 | in-work poverty, a test | 0.124 | 0.153 | 0.187 | 0.067, 0.086, 0.117 |
 
 The three calibrate, the gap by education and effort on target in each. Patience is 0.97 to 0.98. The chain has started G+S and G+A for the three countries (runs 38000178684, 38001477597, 38001701151).
+
+## 64. G+S on the new targets; France's G+A with dread does not calibrate; dread measured only as the working default (2026-10-10, 01:15 UTC)
+
+**G+S, version 5 on the labour force and the measured return** (runs 38000178684, 38001477597, 38001701151; the three files committed).
+
+| G+S | France | Germany | Italy |
+|---|---|---|---|
+| participation of the two education groups | 0.203, 0.290 | 0.255, 0.348 | 0.116, 0.166 |
+| targets | 0.203, 0.291 | 0.252, 0.349 | 0.116, 0.165 |
+| multiplier | 1.7 | 1.9 | 1.4 |
+| hand-to-mouth (labour force 0.256, 0.249, 0.166) | 0.257 | 0.248 | 0.163 |
+
+**G+A with dread in choices on the same targets.** Germany and Italy calibrate, with falls in consumption on job loss of 0.25 and 0.30. France does not: the search took the floor from its starting 0.10 to 0.41 of reference earnings on its first step and stopped there (hand-to-mouth 0.343 against 0.256, no household below half the median). A fault of the search's starting point, which for a configuration other than G should be the country's G and not an old file with a floor of 0.10; not repaired tonight, since:
+
+**Dread measured only is now the working default** (my recommendation of section 62, put to the user and not yet answered; reversible by `SAGE_DREAD_CHOICE=1`). Under it A adds no parameter, a configuration with A reads the file of the same one without it, and the base of version 5 without places is G and G+S, which are in for the three countries. The variant's files for Germany and Italy are not committed (their numbers are above and in section 55). If the user keeps dread in choices, the start is repaired and the three G+A and G+S+A are run.
+
+**An outage of the push.** From about 23:00 UTC `git push` hung: the keychain's credential helper waits when the session is locked. The commit of section 63 stayed local for two hours, and the three G+S+A runs the chain started failed for want of G's file on the remote (runs 38002477107, 38004265981). Pushed since through the GitHub CLI's credential for the one command, with no configuration changed; the remote is checked after each push.
