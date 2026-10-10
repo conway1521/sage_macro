@@ -2099,3 +2099,27 @@ The three calibrate, the gap by education and effort on target in each. Patience
 **Dread measured only is now the working default** (my recommendation of section 62, put to the user and not yet answered; reversible by `SAGE_DREAD_CHOICE=1`). Under it A adds no parameter, a configuration with A reads the file of the same one without it, and the base of version 5 without places is G and G+S, which are in for the three countries. The variant's files for Germany and Italy are not committed (their numbers are above and in section 55). If the user keeps dread in choices, the start is repaired and the three G+A and G+S+A are run.
 
 **An outage of the push.** From about 23:00 UTC `git push` hung: the keychain's credential helper waits when the session is locked. The commit of section 63 stayed local for two hours, and the three G+S+A runs the chain started failed for want of G's file on the remote (runs 38002477107, 38004265981). Pushed since through the GitHub CLI's credential for the one command, with no configuration changed; the remote is checked after each push.
+
+## 65. The tests on version 5 as recalibrated: the labour force, the measured return, dread measured (2026-10-10, 04:30 UTC)
+
+| test | France | Germany | Italy |
+|---|---|---|---|
+| on and off, budget, own targets (`onoff_v3.jl v5`) | 16 of 16 | 16 of 16 | 16 of 16 |
+| gap in participation between the education groups, without and with A | 0.087, 0.087 | 0.094, 0.094 | 0.050, 0.050 |
+| transitions, S off (G): a zero shock | drift 1.3e-6 in the hand-to-mouth share against a bound of 1e-6: fails by that | flat to 2e-7 | flat to 7e-8 |
+| the recession in G: welfare, % of consumption | -0.17 | -0.05 | -0.23 |
+| transitions, S on (G+S+A): a zero shock | running | running | exact (2e-12 in participation) |
+| stable participation equilibria | one (0.233) | running | one (0.125) |
+| the MPC's properties | 7 of 7 | 6 of 7 | 7 of 7 |
+| indicators: tests within a quarter | 15 of 25 over the three, on G and on G+S+A alike | | |
+| the asset grid, G+S+A | running | running | running |
+
+Two checks do not pass, neither a fault of the economics.
+- **France's zero shock** leaves the hand-to-mouth share 1.3e-6 off after sixty years, against a bound of 1e-6 (it was 3e-7 at a return of 2%). With the asset losing value each year the steady state is accepted at the same tolerance and the path inherits a slightly larger residual. A tolerance question, to be closed by a tighter steady state and not by a looser bound.
+- **Germany's MPC by liquid wealth**: 0.486 in the lowest fifth and 0.489 in the second, then 0.333, 0.227, 0.125. The check wants it falling throughout. The lowest fifth holds the households on the means-tested floor (0.31 of reference earnings in Germany), from whom the floor takes back part of a windfall, so their MPC is a little lower. That is what a means-tested benefit does, and the check should set those households apart.
+
+**The MPC by status** (model; survey for the labour force's employed and unemployed in section 53): the unemployed 0.79, 0.63, 0.67; the employed 0.40, 0.33, 0.33.
+
+**The lowest type and households out of work, again on the new base**: weights 0.092, 0.098, 0.124 against the official 0.108, 0.095, 0.108; in-work poverty over all the employed 0.118, 0.153, 0.176, over the employed of the other types 0.050, 0.077, 0.082, official 0.067, 0.086, 0.117. As in section 55.
+
+**Indicators, G** (labour-force figures where they exist): Gini 0.288, 0.304, 0.331 against 0.296, 0.304, 0.324; below half the median 0.080, 0.100, 0.149 against 0.100, 0.088, 0.147. Off: in-work poverty in the three, the MPC in the three (0.43, 0.33, 0.35 against 0.32, 0.46, 0.48), France's median.
