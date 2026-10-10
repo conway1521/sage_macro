@@ -50,6 +50,12 @@ on:
       v5:
         description: "Version 5 (version 4 with the published variances in the source's order, the permanent income types fitted to the official deciles, the MPC a test; files calibration_v5_*): 1 or 0. Implies v4"
         default: "0"
+      out:
+        description: "With v5=1, the state out of work sized to the official count of jobless households (a variant under test; files calibration_v5o_*): 1 or 0"
+        default: "0"
+      pop:
+        description: "Whose HFCS moments the fit takes: labour_force (version 5's default), not_retired or all; empty for the default"
+        default: ""
       prereq:
         description: "Calibration file this one needs, from an earlier run's artifact: 'run id:artifact:file' (set by .github/chain.sh)"
         default: ""
@@ -123,6 +129,8 @@ jobs:
           SAGE_TRANS: ${{ inputs.trans }}
           SAGE_V4: ${{ inputs.v4 }}
           SAGE_V5: ${{ inputs.v5 }}
+          SAGE_OUT: ${{ inputs.out }}
+          SAGE_POP: ${{ inputs.pop }}
           SAGE_FLOOR_FROM: ${{ inputs.floor_from }}
         run: |
           cd SAGE_Bewley
@@ -146,7 +154,7 @@ jobs:
         if: steps.cal.outputs.code == '0' && inputs.chain == 'yes'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: SAGE_V3=${{ inputs.v3 }} SAGE_FLOOR=${{ inputs.floor }} SAGE_EDU=${{ inputs.edu }} SAGE_TRANS=${{ inputs.trans }} SAGE_V4=${{ inputs.v4 }} SAGE_V5=${{ inputs.v5 }} SAGE_FLOOR_FROM=${{ inputs.floor_from }} bash .github/chain.sh 1 ${{ matrix.code }} ${{ matrix.cfg }}
+        run: SAGE_V3=${{ inputs.v3 }} SAGE_FLOOR=${{ inputs.floor }} SAGE_EDU=${{ inputs.edu }} SAGE_TRANS=${{ inputs.trans }} SAGE_V4=${{ inputs.v4 }} SAGE_V5=${{ inputs.v5 }} SAGE_OUT=${{ inputs.out }} SAGE_POP=${{ inputs.pop }} SAGE_FLOOR_FROM=${{ inputs.floor_from }} bash .github/chain.sh 1 ${{ matrix.code }} ${{ matrix.cfg }}
       - name: Resume in a new run
         if: steps.cal.outputs.code == '3' && inputs.hop < 5
         env:
@@ -154,4 +162,4 @@ jobs:
         run: |
           gh workflow run calibrate.yml --ref ${{ github.ref_name }} -f solver=${{ inputs.solver }} -f countries=${{ matrix.code }} \
             -f configs=${{ matrix.cfg }} -f budget=${{ inputs.budget }} -f resume_from=${{ github.run_id }} -f hop=$(( ${{ inputs.hop }} + 1 )) \
-            -f prereq="${{ inputs.prereq }}" -f chain=${{ inputs.chain }} -f v3=${{ inputs.v3 }} -f floor=${{ inputs.floor }} -f edu=${{ inputs.edu }} -f trans=${{ inputs.trans }} -f v4=${{ inputs.v4 }} -f v5=${{ inputs.v5 }} -f floor_from=${{ inputs.floor_from }}
+            -f prereq="${{ inputs.prereq }}" -f chain=${{ inputs.chain }} -f v3=${{ inputs.v3 }} -f floor=${{ inputs.floor }} -f edu=${{ inputs.edu }} -f trans=${{ inputs.trans }} -f v4=${{ inputs.v4 }} -f v5=${{ inputs.v5 }} -f out=${{ inputs.out }} -f pop="${{ inputs.pop }}" -f floor_from=${{ inputs.floor_from }}
