@@ -133,3 +133,7 @@ Written 2026-10-08. One page per dimension: the concept and its source, what the
 ## A1, tested and adopted (9 October 2026)
 
 Dread acting on choices was tested on version 5 and the wealth moments still hold (exactly in France and Italy, within a standard error in Germany), so it is adopted by the rule agreed: in version 5 A is the dread of job loss in the household's problem at the published weight. A configuration with A is calibrated on its own again (patience and the floor refitted), so a country has eight calibrations, each dimension still sitting on G alone. The cost found by the test: patience falls by 0.02 to 0.03 and the fall in consumption on job loss rises to 0.19, 0.27 and 0.28, further from the literature's 0.07 to 0.16. Reversible by one setting.
+
+## A, settled by the user (10 October 2026)
+
+Job insecurity affects welfare and does not change behaviour: dread of job loss is measured at its published weight and counted in wellbeing, and it does not enter the household's choices. A therefore adds no parameter. A configuration with A reads the calibration of the same one without it and adds the protection indicators and the cost of insecurity. The version with dread in choices (tested 9 October) stays as a variant behind one setting. The other half of the concept, influencing one's fortunes through one's own effort, is to be restored later by choice over hours.

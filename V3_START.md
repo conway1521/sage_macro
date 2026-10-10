@@ -2123,3 +2123,15 @@ Two checks do not pass, neither a fault of the economics.
 **The lowest type and households out of work, again on the new base**: weights 0.092, 0.098, 0.124 against the official 0.108, 0.095, 0.108; in-work poverty over all the employed 0.118, 0.153, 0.176, over the employed of the other types 0.050, 0.077, 0.082, official 0.067, 0.086, 0.117. As in section 55.
 
 **Indicators, G** (labour-force figures where they exist): Gini 0.288, 0.304, 0.331 against 0.296, 0.304, 0.324; below half the median 0.080, 0.100, 0.149 against 0.100, 0.088, 0.147. Off: in-work poverty in the three, the MPC in the three (0.43, 0.33, 0.35 against 0.32, 0.46, 0.48), France's median.
+
+## 66. Two things settled: dread, and the published income table (2026-10-10, 04:50 UTC)
+
+**Dread, decided by the user**: "job insec is welfare affecting, we said, no? measured, not changing behaviour". So A measures dread and counts it in wellbeing, and it does not enter choices. That is the default set in section 64, now the decision. A adds no parameter; four calibrations a country (G, G+S, G+E, G+S+E); the variant with dread in choices stays behind `SAGE_DREAD_CHOICE=1`.
+
+**The published version of the income table, checked.** The article is behind a paywall, as the user found, but the table is not in the article: it is Table 1 of the journal's own Online Appendix, which the AEA posts free (American Economic Journal: Macroeconomics 16(3), 2024, pp. 343 to 388, DOI 10.1257/mac.20210277; supplemental appendix dated 25 April 2023, `aeaweb.org/articles/materials/21277`). Read on 10 October:
+- the twelve numbers used (persistence and two variances, by education, France, Germany, Italy) are those of the two working papers, digit for digit;
+- the heading is rho, sigma2 epsilon, sigma2 eta, and the model printed under the table is y = z + epsilon, z = rho z(-1) + eta: the first variance column is the transitory shock, the second the persistent innovation. This is the order version 5 uses (section 43).
+- The appendix's text has the same sentences as the working papers, which read the first column as the permanent shock. So the published source contradicts itself in the same place, and the heading and equation, the implied cross-sectional variances (section 42) and the test against the official distribution (section 43) decide. The audit's item is closed on the numbers; on the order it is closed as far as the source allows.
+- What would remove the last doubt: the replication package (openICPSR E183361V1, free with an account, which I cannot open), where the code shows which variance drives the persistent state. Not needed to proceed.
+
+`data/manual_inputs.csv`: the status of the twelve rows updated to say so.
