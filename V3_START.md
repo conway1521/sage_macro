@@ -2325,3 +2325,25 @@ Runs: the first design with section 71's changes, 38072177182, 38072178808, 3807
 **My recommendation**: the one minimum income. One institution in place of two, one fitted parameter fewer in each country (G has the effort scale, patience and its gap by education), the median as an out-of-sample test that two countries pass, and nothing lost in France or Germany. It is not the base until the user says so and until the tests are rerun on it.
 
 **Started without waiting**, since it is needed whichever way the decision goes: G+S on the one minimum income in the three countries.
+
+## 74. Adopted: the state out of work with one measured minimum income is the base (2026-10-10, 23:00 UTC)
+
+**Decided by the user**: "yes adopt the cleaner design, go ahead". The base is version 5 with the state out of work and one measured minimum income: `v3 = :v5m`, `SAGE_V5=1 SAGE_OUT=2`, workflow inputs `v5=1 out=2`, files `calibration_v5m_*`, the tests' option `v5m` (`V5M` for `indicator_table.jl` and `test_transition_base.jl`). The tag `v5.0-base` stays as the base without the state; the new one is tagged once its tests are in.
+
+**What the base now is**, beyond section 68: households out of work beyond a year, sized by education to the official share of people in households with very low work intensity through the one closed-form exit rate; the first year insured at its own replacement rate; one minimum income at the OECD's share of the median, paid in that state and topping everyone else up, not fitted; the HFCS moments of the not retired; median liquid wealth a test in every country. G fits the effort scale, patience and its gap by education, and the income types.
+
+**A stopping rule, proposed to the user on 10 October and to be followed from this base on**: after it is frozen the base changes only when a test fails, not to improve a fit; the work then moves to the welfare and policy tables on G with S and A, and places are the third paper's.
+
+**G+S on the base** (run 38076090121; Italy handed over at its time budget and is finishing in run 38086831186).
+
+| G+S, model and target | France | Germany | Italy (before its last step) |
+|---|---|---|---|
+| participation, below tertiary | 0.204, 0.203 | 0.253, 0.252 | 0.116, 0.116 |
+| participation, tertiary | 0.292, 0.291 | 0.350, 0.349 | 0.165, 0.165 |
+| social multiplier (band; the base without the state) | 1.6 (1.2 to 2.4; 1.7) | 1.8 (1.3 to 3.0; 1.9) | 1.3 (1.1 to 1.9; 1.4) |
+| participation, employed and out of work | 0.245, 0.128 | 0.294, 0.155 | 0.126, 0.114 |
+| hand-to-mouth, model and data | 0.266, 0.268 | 0.252, 0.252 | 0.201, 0.203 |
+
+S sits on the new G as it sat on the old: both education groups reached, the multipliers 0.1 lower.
+
+**Tests started on the base** (probes, 22:48 UTC): on and off for France and Germany (38092764262, 38092765965; Italy after its G+S), the indicator table for G (38092767408), the MPC's properties (38092769193, 38092773638, 38092777738), transitions with S off (38092770818, 38092774956, 38092779102), Euler errors (38092772292, 38092776272, 38092780286). Still to start: transitions with S on, the grid checks, the equilibria, each needing G+S.
