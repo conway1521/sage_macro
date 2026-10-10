@@ -2236,3 +2236,32 @@ Against the measured rates: France's lower group and Italy sit inside the measur
 3. **Whether the inactive belong in a risk state at all**, or the unemployed part in the state and the inactive part in a type out of work. The test results decide whether this needs taking up.
 
 **Started**: G in the three countries, with the labour force's moments and with the not retired's, as probes (the calibration script run through `probe_calibrate_variant.jl`): runs 38064319899, 38064321899, 38064323747 (labour force: France, Germany, Italy) and 38064325749, 38064327445, 38064329061 (not retired). The calibration workflow's own switch (`out`, `pop`) is written and waits in the working tree: the push of a workflow file needs the keychain, which is locked while the Mac is.
+
+## 70. The state out of work, first results in G (2026-10-10, 17:40 UTC)
+
+**A fault in the first set-up, corrected.** Assistance as the minimum income over the net average wage put the jobless households at half the model's median in Italy (the model's median is 0.77 of reference earnings; in the data the median is close to net income at the average wage). They then sat above the bottom tenth and the decile fit kept its low-paid type: Italy's in-work poverty stayed at 0.175. Assistance is now the OECD's own adequacy figure, a share of median disposable income (0.36, 0.37, 0.40; input `min_income_pct_median`), times the model's median, found where the types are fitted and written to the file (`assist_long`). Section 69's remark on Germany's floor was in the first units: in the units of the median the statutory amount is 0.165 against the base's fitted floor of 0.190, so 15% apart and not 1%.
+
+**Runs** (probes; assistance in the units of the median): 38066254757, 38066256491, 38066258372 (labour force: France, Germany, Italy), 38066259942 (France, not retired: not calibrated), 38066261860 (Germany, not retired), 38066263527 (Italy, not retired: running). The first batch (section 69) is kept for comparison only.
+
+| G with the state (labour force; Germany also not retired) | France | Germany | Italy |
+|---|---|---|---|
+| in-work poverty: model, official (base) | 0.072, 0.067 (0.124) | 0.091 and 0.098, 0.086 (0.153) | 0.130, 0.117 (0.187) |
+| lowest permanent type: weight at factor (base) | 0.35 at 0.78 (0.09 at 0.45 of the median) | 0.37 at 0.66 (0.10 at 0.42) | 0.23 at 0.74 (0.12 at 0.35) |
+| loss of the decile fit | 0.0009 | 0.0040 | 0.0057 |
+| below 40, 50, 60% of the median | 0.067, 0.084, 0.135 | 0.087, 0.107, 0.163 | 0.094, 0.134, 0.198 |
+| Gini | 0.293 | 0.308 | 0.307 |
+| hand-to-mouth: model, data | **0.363, 0.256** | 0.246, 0.249 (not retired 0.254, 0.252) | 0.162, 0.166 |
+| median liquid wealth over income | **0.068, 0.051** | 0.125, 0.127 (0.118, 0.117) | 0.228, 0.227 |
+| top patience (base) | 0.915 (0.967) | 0.965 (0.983) | 0.953 (0.971) |
+| MPC: model, survey (base) | 0.48, 0.32 (0.43) | 0.37, 0.46 (0.33) | 0.38, 0.48 (0.35) |
+| fall in consumption on job loss (base; literature 0.07 to 0.16) | 0.33 (0.17) | 0.40 (0.23) | 0.38 (0.26) |
+
+**What it shows.**
+1. **In-work poverty is repaired in the three countries**: 0.072, 0.091, 0.130 against 0.067, 0.086, 0.117, from 1.6 to 1.9 times the official rate to 1.06 to 1.11 times. The very low-paid type is gone: the households at the bottom are now the households out of work, on the official minimum income, and the lowest type is ordinary low pay at two thirds to three quarters of the mean.
+2. **Germany and Italy keep their wealth moments**, on either population.
+3. **France does not calibrate.** Hand-to-mouth 0.36 against 0.26 with the median already above its target, the patient end of patience down to 0.915. Two things are mixed: France's own tension (a median of two and a half weeks of income beside a quarter of households hand-to-mouth, section 49), and the rule of fit: with the state on the floor no longer binds below 0.10, the search leaves it at its start, it never reaches zero, and the median is then kept as a target against the hand-to-mouth share with a standard error of 0.002. In the base France's floor went to zero and the median became a test. The rule has to say the same when the floor does not bind. To repair before anything is concluded on France.
+4. **The fall in consumption on job loss is worse**: 0.33 to 0.40 against 0.17 to 0.26 in the base. A worker who loses the job now faces, with the probability of not finding work in the year, a long spell at 36 to 40% of the median. The first year's replacement rate is still the five-year average (section 69, choice 2), which holds the low later years a second time.
+5. **The population hardly moves the fit** where both ran (Germany: the same parameters to the third digit).
+6. Italy's bottom is thinner than the data's below the minimum income (P5 at 0.39 of the median against 0.29): nobody in the model is below assistance, where the data have households with less (non-take-up, the scheme's limited coverage).
+
+**My recommendations on the three choices** (to the user, 10 October): the not retired as the population once the state is adopted; the first year's own replacement rate; one state and not a split, unless the fall in consumption on job loss stays too high after the first-year rate.
