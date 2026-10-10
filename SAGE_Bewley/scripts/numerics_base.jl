@@ -15,7 +15,7 @@ code = uppercase(ARGS[1]); reg = length(ARGS) >= 2 ? lowercase(ARGS[2]) : "v3fe"
 # A third argument runs one part alone: 1 (Euler errors), 2ga and 2gsa (the grid, G+A and G+S+A), 3 (equilibria).
 # With five types of household a cell the whole does not fit in a six-hour job (version 5, 2026-10-09).
 PART = length(ARGS) >= 3 ? lowercase(ARGS[3]) : "all"
-part(x) = PART == "all" || PART == x
+part(x) = PART == "all" || PART == x || startswith(PART, x * "_")          # 2gsa_grid and 2gsa_top run one variant of the grid check alone (France's two together passed six hours)
 V3ARG = Dict("v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu, "v3" => true, "v3fet" => :floor_edu_trans, "v3et" => :edu_trans, "v4" => :v4, "v5" => :v5)[reg]
 results = Tuple{String,Bool}[]
 check(name, ok) = (push!(results, (name, ok)); @printf("   -> %s: %s\n", name, ok ? "PASS" : "FAIL"); flush(stdout))
@@ -75,6 +75,8 @@ for cfg in ("GA", "GSA")
     b = mom(solve_economy(c0; cache = false), S_)
     @printf("   %-22s htm %.4f | liquid/income %.4f | MPC %.4f | effort %.4f | participation %.4f | multiplier %.2f | job-loss drop %.4f\n", "base", b...)
     for (nm, cv) in (("grid doubled", SAGEConfig(c0; na = 2 * c0.na)), ("top doubled", SAGEConfig(c0; a_max = 2 * c0.a_max, na = round(Int, 1.3 * c0.na))))
+        (endswith(PART, "_grid") && nm != "grid doubled") && continue
+        (endswith(PART, "_top") && nm != "top doubled") && continue
         v = mom(solve_economy(cv; cache = false), S_)
         d = [getfield(v, f) - getfield(b, f) for f in keys(TOL)]
         @printf("   %-22s htm %+.4f | liquid/income %+.4f | MPC %+.4f | effort %+.4f | participation %+.4f | multiplier %+.2f | job-loss drop %+.4f\n", nm, d...)
