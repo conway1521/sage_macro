@@ -2177,3 +2177,62 @@ Two checks do not pass, neither a fault of the economics.
 With A adding no parameter a country has four calibrations, so the count of configurations is out of twelve from here.
 
 **What does not fit, in order of weight.** (1) In-work poverty, 1.6 to 1.9 times official: the state out of work. (2) The MPC by country. (3) The fall in consumption on job loss in Germany and Italy. (4) France's median liquid wealth, a week and a half of income above the data's. (5) Places and the wealth distribution, not yet on this base.
+
+## 69. The state out of work: the official figures, the design, the variant under test (2026-10-10, 16:00 UTC)
+
+**Decided by the user**: households where nobody works are a state households move in and out of, sized to the official count of jobless households (the second of the two options of section 68's item 1), after looking for a measured exit rate.
+
+**The official figures** (Eurostat, 2023, read through the API on 10 October; `data/validation/out_of_work.csv`, and the three inputs in `data/manual_inputs.csv`).
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| people aged 18 to 64 in households with very low work intensity (ilc_lvhl14n) | 9.0% | 9.7% | 9.6% |
+| the same, below tertiary education | 12.4% | 11.2% | 11.0% |
+| the same, tertiary | 4.1% | 6.2% | 5.1% |
+| of them, unemployed (ilc_lvhl12n, most frequent status) | 44% | 34% | 39% |
+| of them, outside the labour force and not retired | 51% | 63% | 58% |
+| their at-risk-of-poverty rate, under 65 (tespm060) | 66% | 52.5% | 66% |
+| persistent poverty, ages 18 to 64 (ilc_li21; poor now and in two of the three years before) | 6.5% | 4.5% | 14.7% |
+| minimum income with housing benefit over net income at the average wage (OECD TaxBEN 2023) | 0.314 | 0.316 | 0.381 |
+
+The yearly rate of leaving for work, by source:
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| unemployed a year earlier, employed now (Labour Force Survey, lfsi_long_a) | 0.41 | 0.47 | 0.29 |
+| outside the labour force a year earlier, employed now (same table, ages 15 to 74, pensioners and students in it) | 0.08 | 0.13 | 0.07 |
+| unemployed in the previous year, employed now (EU-SILC, ilc_lvhl30, self-defined status) | 0.31 | 0.25 | 0.25 |
+| outside the labour force, the same | 0.07 | 0.25 (0.16 in 2019) | 0.08 |
+| a quarter: unemployed under a year, a year or more, two years or more (lfsi_long_e01, experimental) | 0.32, 0.11, 0.08 | 0.37, 0.13, 0.10 | 0.28, 0.10, 0.08 |
+| a quarter: outside the labour force, ages 25 to 54 (lfsi_long_e06, experimental) | 0.09 | 0.13 | 0.08 |
+
+Three readings.
+1. **There is no single measured exit rate.** By source and by who is counted it runs from 0.07 to nearly 0.5 a year. The yearly tables do not split by duration and the table that does is quarterly and experimental. Turning it into a yearly rate needs an assumption about returns within the year, so it would be a derived number and not a measured one.
+2. **Most people in jobless households are not unemployed.** Half to two thirds are outside the labour force. In Germany the jobless share is three times the unemployment rate. Sized to that count through job loss alone, the yearly risk of losing work would have to be 8% for Germany's lower education group against the 2% measured. That would put a risk on every German worker that the data do not have.
+3. **The lowest permanent type is too permanent in France and Germany.** The decile fit puts 9.2% and 9.8% of households in a type that is poor every year; persistent poverty among the working-age is 6.5% and 4.5%. Italy's is 14.7% against a type of 12.4%. This is official evidence, independent of the model, for a state that households leave in France and Germany.
+
+**The design, as built** (a variant of version 5, `v3 = :v5o`, `SAGE_OUT=1`, files `calibration_v5o_*`; off, the base is unchanged to the digit). It uses the engine's long-term state of section 23.
+- In work; the first year out of work, insured at the household replacement rate, ending in work at the measured job-finding rate; out of work beyond a year, on assistance.
+- **Job loss is not changed**: the rates of version 5, from the unemployment rates by education and the measured job-finding rate. The risk a worker faces in a year is the measured one.
+- **The yearly exit from the state is the one fitted parameter**, by education, to the official share out of work, in closed form: with s the share, s / (1 - s) = delta + delta (1 - f) / exit. One parameter and one official moment in each education group, nothing searched.
+- **Assistance is measured**: the OECD's minimum income with housing benefit over net income at the average wage, a flat amount, the same for every permanent type, taxed like the benefit.
+- The permanent types are fitted to the deciles again with the state on (those on assistance enter the mixture unscaled, `decile_fit.jl`).
+- **The measured exit rates are the test**, with the poverty rate of jobless households and persistent poverty.
+
+| what the inputs give, before any calibration | France | Germany | Italy |
+|---|---|---|---|
+| yearly exit from the state, below tertiary and tertiary | 0.22, 0.69 | 0.07, 0.09 | 0.25, 0.25 |
+| first year out of work, beyond a year (below tertiary) | 4.0%, 8.4% | 1.9%, 9.4% | 3.4%, 7.6% |
+| the same (tertiary) | 2.5%, 1.6% | 1.3%, 4.9% | 1.6%, 3.5% |
+| the benefit bill per head (version 5) | 0.022 (0.019) | 0.019 (0.006) | 0.025 (0.014) |
+
+Against the measured rates: France's lower group and Italy sit inside the measured range (0.07 to 0.37); Germany sits at its lower edge, which is reading 2 again, the stock there being fed from outside unemployment; France's tertiary group asks for an exit above the first year's, because its jobless share (4.1%) hardly exceeds its first-year stock. These two are limits of sizing one state to a count that mixes the unemployed and the inactive.
+
+**A by-product on the floor's units** (row M3's open item). In the model's units Germany's official minimum income is 0.1922; the floor fitted in version 5 to Germany's median liquid wealth is 0.1901. The fitted floor is the statutory amount to 1%. France's fitted floor is zero against an official 0.202, Italy's 0.104 against 0.276 (the 2023 scheme, which from 2024 no longer covers households without a minor, a disabled person or a person aged 60 or more).
+
+**Open choices, mine to recommend and the user's to decide.**
+1. **Whose wealth moments.** The official count is mostly households outside the labour force, which the labour-force moments decided on 9 October leave out. With the state on, the consistent population is the not retired (aggregates already computed). Both are being run.
+2. **The first year's replacement rate** is still the average over a five-year spell, which already holds the assistance of later years. With the state on it should be the first year's own rate (OECD TaxBEN has it by month). Not changed yet.
+3. **Whether the inactive belong in a risk state at all**, or the unemployed part in the state and the inactive part in a type out of work. The test results decide whether this needs taking up.
+
+**Started**: G in the three countries, with the labour force's moments and with the not retired's, as probes (the calibration script run through `probe_calibrate_variant.jl`): runs 38064319899, 38064321899, 38064323747 (labour force: France, Germany, Italy) and 38064325749, 38064327445, 38064329061 (not retired). The calibration workflow's own switch (`out`, `pop`) is written and waits in the working tree: the push of a workflow file needs the keychain, which is locked while the Mac is.
