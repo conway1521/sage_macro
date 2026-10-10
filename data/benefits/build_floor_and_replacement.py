@@ -403,6 +403,33 @@ for c in ("FR", "DE", "IT"):
                 "household-weighted TaxBEN spell average less the weighted month-60 rate (no social assistance) of the two-earner couples",
                 oecd_url("nrr"), "computed approximation; weights are a proxy")
 
+# (f) the first year alone, for the state out of work (V3_START.md section 71). With a state for those out
+#     of work beyond a year, on assistance, the insured year is the first: the mean of months 1 to 12 for the
+#     same three childless types and weights as the household-weighted rate; the public part removes the
+#     partner's earnings in the same way as (e).
+def first_year(c, y, h, prev, part, sa, hb):
+    return sum(N[(c, y, h, prev, part, sa, hb, m)] for m in range(1, 13)) / 12
+
+
+for c in ("FR", "DE", "IT"):
+    for y in (2023, 2025):
+        for prev in ("AW67", "AW100"):
+            _, cells3 = WRR[(c, y, prev, "YES", "NO", False)]
+            ws = [w for w, _ in cells3]
+            fy = [first_year(c, y, "S_C0", prev, "_Z", "YES", "NO"), first_year(c, y, "C_C0", prev, "AW67", "YES", "NO"),
+                  first_year(c, y, "C_C0", prev, "NOEARN_UNEMP_WO_CONBEN", "YES", "NO")]
+            v = sum(w * x for w, x in zip(ws, fy)); priv = ws[1] * N[(c, y, "C_C0", prev, "AW67", "NO", "NO", 60)]
+            SENS[("first_year", c, y, prev)] = (v, list(zip(ws, fy)), fy[0])
+            SENS[("first_year_public", c, y, prev)] = v - priv
+            fam = f"three childless types; previous earnings {prev[2:]}% AW; social assistance yes; housing benefit no"
+            add("nrr_household_weighted_first_year", c, round(v, 4), "share of net household income before job loss", y, fam,
+                "TaxBEN months 1 to 12 (mean) weighted by Eurostat lfst_hhindws (not employed, age 25-54) and lfst_hhwhnpt", oecd_url("nrr"),
+                "computed; weights are a proxy (not employed, not unemployed)")
+            add("nrr_household_weighted_first_year_public_part", c, round(v - priv, 4), "share of net household income before job loss", y,
+                fam + "; partner's earnings removed",
+                "household-weighted TaxBEN first-year mean less the weighted month-60 rate (no social assistance) of the two-earner couple",
+                oecd_url("nrr"), "computed approximation; weights are a proxy")
+
 with open(os.path.join(HERE, "computed_series.csv"), "w", newline="") as fh:
     w = csv.DictWriter(fh, fieldnames=["indicator", "country", "value", "unit", "year", "family_type", "source", "url", "status"], lineterminator="\n")
     w.writeheader(); w.writerows(OUT)

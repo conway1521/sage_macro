@@ -126,7 +126,9 @@ const VTAG = V5O ? "v5o" : V5 ? "v5" : V4 ? "v4" : VTAG0 * (TRANS ? "t" : "") * 
 # and are less often hand-to-mouth. not_retired adds the other non-retired. The hand-to-mouth share,
 # its split by education, median liquid wealth and the survey MPC all follow the choice.
 # Decided by the user on 2026-10-09: version 5 is fitted to the households in the labour force.
-const POP = let v = lowercase(get(ENV, "SAGE_POP", "")); isempty(v) ? (V5 ? "labour_force" : "all") : v end
+# With the state out of work (SAGE_OUT=1) the model holds the households outside the labour force too,
+# and the default is the not retired (the user, 2026-10-10; V3_START.md section 71).
+const POP = let v = lowercase(get(ENV, "SAGE_POP", "")); isempty(v) ? (V5O ? "not_retired" : V5 ? "labour_force" : "all") : v end
 POP in ("all", "labour_force", "not_retired") || error("SAGE_POP must be all, labour_force or not_retired, got $POP")
 const POP_GROUP = POP == "all" ? ("all", "all") : POP == "labour_force" ? ("labour_force", "in the labour force") : ("not_retired", "not retired")
 const POP_EDU = POP == "all" ? "education" : POP == "labour_force" ? "education_lf" : "education_nr"
@@ -524,7 +526,7 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
             (say(@sprintf("\nTIME BUDGET: %.0f of %.0f minutes used inside the fit, after step %d; checkpoint kept, to resume in a new job.",
                           (time() - t_start) / 60, BUDGET, it - 1)); exit(3))
         ss0 = sum(abs2, F)
-        J = zeros(nm, np)
+        J = zeros(nm, np); floor_seen = false; xfl = x[5]
         for k in 1:np
             hi[k] - lo[k] < 1e-12 && continue          # a fixed parameter: no column, no solve
             xk = copy(x); h = (xk[k] + H[k] > hi[k]) ? -H[k] : H[k]; xk[k] += h
@@ -533,6 +535,23 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
                 xk = copy(x); h = -H[k]; xk[k] += h; ok_ = atm(xk)
             end
             ok_.ok && (J[:, k] = (res(ok_) .- F) ./ h)
+            k == 5 && (floor_seen = ok_.ok)
+        end
+        # A FLOOR THAT REACHES NO ONE (2026-10-10; V3_START.md section 71). With the state out of work the
+        # floor can lie below both assistance and the lowest earnings: no moment moves with it, the search
+        # leaves it at its start, it never reaches zero, and the median stays a target against the
+        # hand-to-mouth share (France: both missed by seven to eleven standard errors). Such a floor is
+        # one the country does not need, as when it ends at zero: it is set to zero and the fit goes on
+        # with the hand-to-mouth share owning patience and the median a test.
+        if V5 && flfree && floor_seen && maximum(abs, J[:, 5]) * H[5] < 0.05
+            x[5] = 0.0; o5 = atm(x)
+            if o5.ok
+                flfree = false; lo[5] = hi[5] = 0.0; liqtol[] = LIQ_TOL; o = o5; F = res(o)
+                J[:, 5] .= 0.0; HTM_FIRST && (J[2, :] .= 0.0)
+                say("    the floor moves no moment (it reaches no one): set to zero, fitting on without it, the median a test")
+            else
+                x[5] = xfl
+            end
         end
         moved = false
         for _ in 1:6

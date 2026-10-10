@@ -1331,6 +1331,10 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
                     v
                 end
                 d[:f_long] = fl_
+                # The insured year is the first: its own replacement rate (the mean of months 1 to 12 of
+                # the OECD's profile, same households and weights), not the average over a five-year
+                # spell, which holds the assistance of the later years a second time.
+                d[:rr] = manual_input(code, "rr_household_first_year"); d[:rr_public] = manual_input(code, "rr_public_first_year")
                 d[:assist_long] = manual_input(code, "min_income_net_aw") * d[:e_ref]
             end
         end
