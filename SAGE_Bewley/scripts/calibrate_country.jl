@@ -82,6 +82,11 @@ const A_ON = occursin('A', CFG)
 # (3) the MPC a test and not a moment of the criterion (the user, 2026-10-08). Files calibration_v5_*.
 const V5 = get(ENV, "SAGE_V5", "0") == "1"
 const V4 = V5 || get(ENV, "SAGE_V4", "0") == "1"
+# THE STATE OUT OF WORK (SAGE_OUT=1 with SAGE_V5=1; V3_START.md section 69): version 5 with the engine's
+# long-term state, its yearly exit fitted in closed form to the official share of people in households
+# out of work, by education, and the official minimum income paid in it (country_config, v3 = :v5o).
+# A variant under test: files calibration_v5o_*, starting from version 5's.
+const V5O = V5 && get(ENV, "SAGE_OUT", "0") == "1"
 const V3 = V4 || get(ENV, "SAGE_V3", "0") == "1"
 # THE FLOOR IN THE BASE (SAGE_FLOOR=1 with SAGE_V3=1; V3_START.md, section 22). A means-tested floor
 # (Hubbard, Skinner and Zeldes 1995), financed by the lump-sum tax, with patience the same for all
@@ -106,22 +111,22 @@ const EDUREG = V4 || (V3 && get(ENV, "SAGE_EDU", "0") == "1")
 # THE TRANSITORY PART AND THE PROPORTIONAL TAX (SAGE_TRANS=1 with SAGE_V3=1; V3_START.md, section 29).
 # The same regime with both on; files with a t added to the tag (calibration_v3fet_* for the base).
 const TRANS = V4 || (V3 && get(ENV, "SAGE_TRANS", "0") == "1")
-const VTAG0 = V5 ? "v4" : V4 ? "v3fet" : "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "")          # the regime the starting point is read from
-const V3ARG = V5 ? :v5 : V4 ? :v4 : TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") :
+const VTAG0 = V5O ? "v5" : V5 ? "v4" : V4 ? "v3fet" : "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "")          # the regime the starting point is read from
+const V3ARG = V5O ? :v5o : V5 ? :v5 : V4 ? :v4 : TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") :
               FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : V3)
 # A TRIAL INCOME PROCESS (SAGE_RHO, SAGE_SDEPS with SAGE_TRANS=1): the persistence of the persistent part
 # and the size of the transitory part given here in place of the country table's; files tagged with an
 # r more (V3_START.md, section 31). The fit is as always: the persistent innovation to S80/S20.
 const RHO_TRIAL = TRANS && haskey(ENV, "SAGE_RHO") ? parse(Float64, ENV["SAGE_RHO"]) : NaN
 const SDEPS_TRIAL = TRANS && haskey(ENV, "SAGE_SDEPS") ? parse(Float64, ENV["SAGE_SDEPS"]) : NaN
-const VTAG = V5 ? "v5" : V4 ? "v4" : VTAG0 * (TRANS ? "t" : "") * ((isnan(RHO_TRIAL) && isnan(SDEPS_TRIAL)) ? "" : "r")
+const VTAG = V5O ? "v5o" : V5 ? "v5" : V4 ? "v4" : VTAG0 * (TRANS ? "t" : "") * ((isnan(RHO_TRIAL) && isnan(SDEPS_TRIAL)) ? "" : "r")
 # WHOSE MOMENTS (SAGE_POP; V3_START.md section 53). all, the default: every household of the survey.
 # labour_force: households whose reference person is employed, self-employed or unemployed, which is
 # who the model's households are; retired households, a third of the survey, hold more liquid wealth
 # and are less often hand-to-mouth. not_retired adds the other non-retired. The hand-to-mouth share,
 # its split by education, median liquid wealth and the survey MPC all follow the choice.
 # Decided by the user on 2026-10-09: version 5 is fitted to the households in the labour force.
-const POP = lowercase(get(ENV, "SAGE_POP", V5 ? "labour_force" : "all"))
+const POP = let v = lowercase(get(ENV, "SAGE_POP", "")); isempty(v) ? (V5 ? "labour_force" : "all") : v end
 POP in ("all", "labour_force", "not_retired") || error("SAGE_POP must be all, labour_force or not_retired, got $POP")
 const POP_GROUP = POP == "all" ? ("all", "all") : POP == "labour_force" ? ("labour_force", "in the labour force") : ("not_retired", "not retired")
 const POP_EDU = POP == "all" ? "education" : POP == "labour_force" ? "education_lf" : "education_nr"
@@ -567,7 +572,7 @@ const PERM_FITTED = V5 && CFG == "G"
 if V5
     ETA[] = 0.0
     if !PERM_FITTED
-        fbp = joinpath(@__DIR__, "calibration_v5_$(CODE)_G.txt")
+        fbp = joinpath(@__DIR__, "calibration_$(VTAG)_$(CODE)_G.txt")
         isfile(fbp) || error("version 5: the permanent types are read from $(basename(fbp)), which does not exist; calibrate it first")
         for l in eachline(fbp)
             startswith(l, "perm_f") && (PF[] = parse.(Float64, split(last(split(l, "=")))))

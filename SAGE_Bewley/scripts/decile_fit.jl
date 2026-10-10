@@ -7,6 +7,11 @@
 # permanent component then gives the income distribution under any permanent distribution as a
 # mixture of scaled copies, and the fit below needs no further solve. It does not hold with the
 # means-tested floor, which is an amount, so the floor is off in the solve the fit uses.
+#
+# With the state out of work (SAGEConfig.f_long, V3_START.md section 69) the households out of work
+# beyond a year live on assistance, an amount that is the same for every type. Their incomes are kept
+# in a third column and enter the mixture unscaled; the rest scales as before (asset income, which
+# does not scale exactly once assistance is flat, is a percent or so of income at the measured return).
 using Printf, LinearAlgebra
 function official_shape(code, ind; file = "income_shape.csv")
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "validation", file))
@@ -18,23 +23,24 @@ function income_records(c)
     c0 = floor_effort(SAGEConfig(c; S = false))
     cs = cells_of(c0); _, bw = betas_of(c0); cT = SAGEConfig(c0; lumptax = c0.lumptax + ui_tax_of(c0))
     jobs = [(g, k, p) for g in 1:2 for (k, p) in enumerate(params_of(cT, cs[g]))]
+    long = !isnan(c0.f_long[1])          # states in three blocks (first year out of work, in work, beyond a year)
     recs = (nworkers() > 1 ? pmap : map)(jobs) do (g, k, p)
         p = update(p; social_strength = 0.0)
         s = solve_participation_logit(p, 1.0; theta = c0.theta, full = true)
-        ys = Float64[]; ws = Float64[]; es = Bool[]
+        ys = Float64[]; ws = Float64[]; es = Int[]; nl = long ? 2 * (length(s.z_vals) ÷ 3) : typemax(Int)
         for st in eachindex(s.z_vals), i in eachindex(s.a), d in (0, 1)
             pd = d == 1 ? s.P1[i, st] : 1 - s.P1[i, st]; m = cs[g].share * bw[k] * s.lambda[i, st] * pd; m <= 1e-12 && continue
             x = p.R * s.a[i] + (1 + p.subsidy) * p.α[st] * s.e_d[d+1][i, st] * s.z_vals[st] * p.Z - p.lumptax +
                 net_participation(p, p.α[st], s.z_vals[st]) * d + transfer_at(p, st)
-            push!(ys, (x + floor_transfer(p, x) - s.a[i]) / p.pc); push!(ws, m); push!(es, s.z_vals[st] > 0)
+            push!(ys, (x + floor_transfer(p, x) - s.a[i]) / p.pc); push!(ws, m); push!(es, s.z_vals[st] > 0 ? 1 : st > nl ? 3 : 2)
         end
         (ys, ws, es)
     end
     y = reduce(vcat, [r[1] for r in recs]); w = reduce(vcat, [r[2] for r in recs]); e = reduce(vcat, [r[3] for r in recs])
     # binned in the log of income (2,000 bins by status), so that a mixture is cheap to evaluate
     ly = log.(max.(y, 1e-9)); lo, hi = minimum(ly), maximum(ly); nb = 2000; h = (hi - lo) / nb
-    B = zeros(nb, 2)
-    for i in eachindex(y); b = clamp(1 + floor(Int, (ly[i] - lo) / h), 1, nb); B[b, e[i] ? 1 : 2] += w[i]; end
+    B = zeros(nb, long ? 3 : 2)
+    for i in eachindex(y); b = clamp(1 + floor(Int, (ly[i] - lo) / h), 1, nb); B[b, e[i]] += w[i]; end
     (l = [lo + (b - 0.5) * h for b in 1:nb], m = B ./ sum(B))
 end
 const SHAPE_QS = (("P5", 0.05), ("D1", 0.1), ("D2", 0.2), ("D3", 0.3), ("D4", 0.4), ("D6", 0.6), ("D7", 0.7), ("D8", 0.8), ("D9", 0.9), ("P95", 0.95))
@@ -43,6 +49,9 @@ function mix_stats(R, lf, wk)
     n = length(R.l); K = length(lf)
     l = vcat([R.l .+ lf[k] for k in 1:K]...); mE = vcat([R.m[:, 1] .* wk[k] for k in 1:K]...); mU = vcat([R.m[:, 2] .* wk[k] for k in 1:K]...)
     kk = vcat([fill(k, n) for k in 1:K]...)
+    if size(R.m, 2) >= 3          # out of work beyond a year: on assistance, the same amount for every type
+        l = vcat(l, [R.l for k in 1:K]...); mE = vcat(mE, zeros(K * n)); mU = vcat(mU, [R.m[:, 3] .* wk[k] for k in 1:K]...); kk = vcat(kk, kk)
+    end
     o = sortperm(l); l = l[o]; mE = mE[o]; mU = mU[o]; kk = kk[o]; m = mE .+ mU; cw = cumsum(m); y = exp.(l)
     q(p) = y[min(searchsortedfirst(cw, p), length(y))]; med = q(0.5); tot = dot(m, y); cy = cumsum(m .* y)
     share(lo, hi) = (i1 = searchsortedfirst(cw, lo); i2 = min(searchsortedfirst(cw, hi), length(y)); (cy[i2] - (i1 > 1 ? cy[i1-1] : 0.0)) / tot)

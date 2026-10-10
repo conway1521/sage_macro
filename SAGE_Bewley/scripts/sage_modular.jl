@@ -669,7 +669,7 @@ function floor_tax_of(c::SAGEConfig)
     isnan(c.floor_tax_given) || return c.floor_tax_given
     c.effort_mode === :job || error("the means-tested floor needs effort_mode = :job")
     c0 = floor_effort(SAGEConfig(c; S = false, E = false, cfloor = c.cfloor))
-    key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
+    key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.f_long, c0.assist_long, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
                      c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop)))
@@ -1268,10 +1268,11 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
         # part (its size from data/manual_inputs.csv, field sd_eps) and the proportional tax
         # (V3_START.md, section 29); files with a t added to the tag, calibration_v3fet_* for the base.
         vs = v3 === true ? "" : string(v3)
-        vs in ("", "floor", "edu", "floor_edu", "trans", "floor_trans", "edu_trans", "floor_edu_trans", "v4", "v5") || error("unknown version 3 regime $v3")
-        v5 = vs == "v5"; v4 = vs == "v4" || v5          # version 5 is version 4 with the corrections below
+        vs in ("", "floor", "edu", "floor_edu", "trans", "floor_trans", "edu_trans", "floor_edu_trans", "v4", "v5", "v5o") || error("unknown version 3 regime $v3")
+        vout = vs == "v5o"                               # version 5 with the state out of work (below)
+        v5 = vs == "v5" || vout; v4 = vs == "v4" || v5   # version 5 is version 4 with the corrections below
         vfl = v4 || occursin("floor", vs); ved = v4 || occursin("edu", vs); vtr = v4 || occursin("trans", vs)
-        vtag = v5 ? "v5" : v4 ? "v4" : "v3" * (vfl ? "f" : "") * (ved ? "e" : "") * (vtr ? "t" : "")
+        vtag = vout ? "v5o" : v5 ? "v5" : v4 ? "v4" : "v3" * (vfl ? "f" : "") * (ved ? "e" : "") * (vtr ? "t" : "")
         if vtr
             d[:sd_eps] = manual_input(code, "sd_eps"); d[:tax_mode] = :prop
         end
@@ -1311,6 +1312,26 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
                 ratio = num("alpha_ratio_ses2022")
                 ah5 = 1 / ((1 - sh) * ratio + sh)
                 d[:alpha] = (ratio * ah5, ah5)
+            end
+            if vout
+                # THE STATE OUT OF WORK (v3 = :v5o, 2026-10-10; V3_START.md section 69). The engine's
+                # long-term state: the first year out of work is insured and ends in work at the measured
+                # rate or in the state, which pays the official minimum income (OECD TaxBEN, with housing
+                # benefit, over net income at the average wage: a flat amount, the same for every type)
+                # and ends in work with a yearly probability. The rates of job loss are those of version 5.
+                # The yearly exit is fitted, by education, to the official share of people aged 18 to 64
+                # in households with very low work intensity (Eurostat ilc_lvhl14n, 2023), in closed
+                # form: with s the share out of work, s / (1 - s) = delta + delta (1 - f) / f_long.
+                # The measured exit rates are kept as the test (data/validation/out_of_work.csv).
+                fl_ = ntuple(2) do g
+                    s_ = manual_input(code, g == 1 ? "jobless_low" : "jobless_high"); dl = d[:delta][g]
+                    s_ / (1 - s_) > dl || error("$code: the official share out of work ($s_) is below what the first year alone gives; no long-term state fits it")
+                    v = dl * (1 - d[:f_find]) / (s_ / (1 - s_) - dl)
+                    v <= 1 || error("$code: the official share out of work ($s_) asks for a yearly exit above one in cell $g")
+                    v
+                end
+                d[:f_long] = fl_
+                d[:assist_long] = manual_input(code, "min_income_net_aw") * d[:e_ref]
             end
         end
         # Version 5: the pay premium is in the base and dread of job loss is measured without entering
