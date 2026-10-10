@@ -2265,3 +2265,30 @@ Against the measured rates: France's lower group and Italy sit inside the measur
 6. Italy's bottom is thinner than the data's below the minimum income (P5 at 0.39 of the median against 0.29): nobody in the model is below assistance, where the data have households with less (non-take-up, the scheme's limited coverage).
 
 **My recommendations on the three choices** (to the user, 10 October): the not retired as the population once the state is adopted; the first year's own replacement rate; one state and not a split, unless the fall in consumption on job loss stays too high after the first-year rate.
+
+## 71. Three changes to the state out of work, agreed by the user (2026-10-10, 17:35 UTC)
+
+"yes go ahead" to the three recommendations of section 70.
+1. **The population is the not retired** wherever the state is on (`SAGE_POP` default under `SAGE_OUT`).
+2. **The first year's own replacement rate**: the mean of months 1 to 12 of the OECD TaxBEN profile, the same three childless households and weights as the household rate (`data/benefits/build_floor_and_replacement.py`, part (f); inputs `rr_household_first_year`, `rr_public_first_year`). The script reproduces the earlier rates to the fourth digit.
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| household replacement rate, first year (five-year average) | 0.725 (0.704) | 0.700 (0.585) | 0.702 (0.527) |
+| of which paid by the state | 0.497 (0.476) | 0.476 (0.361) | 0.466 (0.291) |
+
+3. **The rule of fit where the floor reaches no one**: if no moment moves with the floor (it lies below assistance and the lowest earnings) it is set to zero and the median is a test, as when it ends at zero.
+
+Runs (probes, G): 38072177182 (France), 38072178808 (Germany), 38072180382 (Italy).
+
+## 72. A second variant: one measured minimum income (2026-10-10, 17:50 UTC)
+
+**Why.** In the variant of sections 69 to 71 (`v5o`) the state pays the official minimum income and a means-tested floor is fitted beside it. They are the same institution, once measured and once fitted. The user asked for the cleaner design, to compare.
+
+**The design** (`v3 = :v5m`, `SAGE_OUT=2`, workflow input `out=2`, files `calibration_v5m_*`). One minimum income, at the OECD's share of median disposable income (0.36, 0.37, 0.40) times the model's median. Those out of work beyond a year receive it; everyone else is topped up to it by the means-tested floor. No floor is fitted. The hand-to-mouth share and its split by education own patience and its gap; **median liquid wealth is a test in every country**. Everything else as in section 71. G then has three fitted numbers (the effort scale, patience, the gap) beside the income types and the closed-form exits.
+
+**What to expect, stated before the runs.** The official amount is an entitlement, not what households receive. France's fitted floor in the base was zero and Italy's 0.104 against official amounts of 0.17 and 0.21 in the same units; take-up is incomplete and Italy's 2023 scheme covered a part of the poor. So the measured floor will be more generous than the one the wealth data ask for in France and Italy, and the model's bottom will be cut off at the minimum income where the data have households below it (Italy: 10% under 40% of the median). The comparison will say how much that costs.
+
+Run: 38073202817 (the calibration workflow, three countries, G).
+
+**The workflow file** is pushed (the Mac was unlocked): `calibrate.yml` has `out` (0, 1, 2) and `pop`.
