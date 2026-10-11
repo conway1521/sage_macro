@@ -259,3 +259,17 @@ Not read beyond the abstract: Imbens, Rubin and Sacerdote (2001), about 0.11 of 
 - **The micro consensus used so far** (a Frisch elasticity of 0.5): hours fall with wealth and with pay far more than the survey shows, in the base and more so with hours chosen.
 - **The European lottery evidence** (a Frisch elasticity of 0.14, one published number in place of another): flatter hours in the base, a smaller and more believable response where hours are chosen, and so a small behaviour side of A through hours. A change to the base's preferences, to be recalibrated and retested.
 - Neither removes the wrong sign by education entirely: that needs an uncompensated elasticity of zero, which these preferences give only with gamma at one.
+
+**The probe at the Swedish elasticity** (run 38156361534; psi = 7, the scale of the cost of hours moved so that mean hours stay on target, the floor off as before).
+
+| | France | Germany | Italy | the HFCS |
+|---|---|---|---|---|
+| the base, hours set by the job: below tertiary over tertiary, at 0.5 and at 0.14 | +11%, +5% | +14%, +6% | +12%, +5% | -2%, -6%, +1% |
+| the base: poorest quarter of assets over richest, at 0.5 and at 0.14 | +15%, +7% | +15%, +7% | +16%, +8% | -3%, -5%, -8% |
+| hours chosen: the same, at 0.5 and at 0.14 | +28%, +12% | +30%, +12% | +38%, +15% | |
+| hours chosen: response to job loss 1.5 times as likely, at 0.5 and at 0.14 | +0.4%, +0.2% | +0.4%, +0.2% | +0.6%, +0.3% | |
+| households with no buffer, job-set and chosen, at 0.14 | 0.358, 0.369 | 0.314, 0.319 | 0.217, 0.226 | |
+| spending in the first year out of work over spending in work, job-set and chosen, at 0.14 | 0.640, 0.644 | 0.603, 0.609 | 0.653, 0.659 | |
+
+- The European elasticity halves both misses of the base's hours (by education and by wealth) and does not remove them: the sign is still the model's and not the survey's.
+- With hours chosen at that elasticity the response to vulnerability is a fifth to a third of a percent of hours, the buffer falls by about a point and spending out of work rises by half a point. **Hours are then a minor way of weathering a shock.** This is what the European evidence says, and it is the honest size of A's behaviour side through hours.
