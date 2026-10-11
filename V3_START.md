@@ -2439,3 +2439,11 @@ Run 38157468520. The three countries calibrate; the files `calibration_v5m_{FR,D
 | effort scale, top patience, gap | 62.5, 0.942, 0.048 | 100.9, 0.963, 0.039 | 21.5, 0.954, 0.050 |
 
 Reading: the wealth side holds (the median untargeted within 1.5 standard errors in Germany and half of one in Italy; France as before). **In-work poverty is higher in France and Italy** (0.091 and 0.149 against 0.072 and 0.137 at the old elasticity; Germany's is now on the official rate): with flatter hours the low-paid no longer make up for low pay by working more. Still well under the 1.6 to 1.9 times of the base without the state (now 1.36, 0.99, 1.27 times). The fall in consumption on job loss is a point or two lower. The cost of the change is this one row; what it buys is hours by education and by wealth half as far from the survey.
+
+## 81. A defined and built, waiting to be run (2026-10-11, 18:15 UTC)
+
+**Decided by the user**: A is the security dimension (`DIMENSIONS_SPEC.md`, "A, the definition"): insecurity in the wellbeing account, hours as a choice for those with control over their working time, the protection indicators, and levers that sit in G. G is not redefined.
+
+**Built, not yet pushed.** The household types and weights (`control_share`, `control_groups`), the engine's treatment of chosen hours under the minimum income (`egm_core.jl`, a solver file), dread looking to assistance after the first year, the official shares in `data/manual_inputs.csv`, and `probe_agency_build.jl` (G against G+A, and those who choose beside those who do not). Checked without any solve: the lists of households and their weights (France 0.75, 0.104, 0.146; the share choosing 0.146 and 0.250 by education), the tax base unchanged.
+
+**Why not pushed**: `egm_core.jl` is a solver file, and Italy's G+S (run 38161501576) will hand over to a second job that reads its checkpoints by the solver's digest. Pushed once that second job has started.

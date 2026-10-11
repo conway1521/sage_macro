@@ -287,3 +287,23 @@ Not read beyond the abstract: Imbens, Rubin and Sacerdote (2001), about 0.11 of 
 2. **Hours as a choice for those with control over their working time** (Eurostat's shares by education), at the European elasticity. Small, measured, and it makes the switch change behaviour.
 3. **The protection indicators**, as now.
 4. **Not built**: the second earner's response (small, and it needs two adults in a household, which the model does not have); dread in choices (the variant stays).
+
+## A, the definition (decided by the user, 11 October 2026)
+
+"yes go ahead with that definition of A". G is not redefined: it is the standard economy, with job-loss risk, public insurance and saving, and the economics of security are in it. A is the security dimension, in four parts.
+
+1. **A wellbeing account.** Insecurity counts: the dread of losing a job, with the fall to assistance after a first year out of work in it, and (to add, once a published estimate is read at its source) the cost of being out of work beyond the income lost. Counted in wellbeing; not in choices.
+2. **One margin of choice.** Households with control over their working time choose their hours each year; the others work the hours the job sets. The shares by education are Eurostat's (the person decides fully: 0.146 and 0.250 in France, 0.163 and 0.313 in Germany, 0.154 and 0.191 in Italy; `control_hours_low`, `control_hours_high`), the elasticity the base's (0.14).
+3. **A reading of G.** The protection indicators: what the economy delivers by way of security.
+4. **Levers that sit in G.** The benefit rate, the minimum income, the risk of job loss, control over working time. With A on, their value for security shows in the welfare count.
+
+S and E change the economy; A changes what counts, and one choice. A off is G exactly.
+
+**What A adds to the list of parameters**: nothing fitted. Two official shares a country and a published weight. So a configuration with A reads the calibration of the same one without it, as before, and the test is that it still meets its targets (the probe at the European elasticity moved the share without a buffer by a point with every household choosing; with a fifth of them choosing it should move by a fraction of that).
+
+**As built** (11 October; `SAGEConfig.control_share`, `control_groups`, `params_of` in `sage_modular.jl`; `apply_floor!` in `egm_core.jl`).
+- Households of each education cell come in up to three groups with weights common to the two cells: those who choose in neither cell, those who choose in the cell with the larger share only, those who choose in both. Three times the household problems of G.
+- **With the minimum income**: a household that chooses its hours and would be on the floor does not work, since every euro earned is taken back; one that could be on it is on it only if that is worth more than working its way above. The engine refused chosen hours with a floor until now.
+- The hours a job asks, and the base of the proportional tax, are those of the economy without choosers.
+- Dread for those in their first year out of work now looks to the assistance of the year after, not to their own benefit going on.
+- Not covered yet: transitions with households that choose their hours (the path solver refuses them and says so).
