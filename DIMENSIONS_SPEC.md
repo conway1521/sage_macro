@@ -273,3 +273,17 @@ Not read beyond the abstract: Imbens, Rubin and Sacerdote (2001), about 0.11 of 
 
 - The European elasticity halves both misses of the base's hours (by education and by wealth) and does not remove them: the sign is still the model's and not the survey's.
 - With hours chosen at that elasticity the response to vulnerability is a fifth to a third of a percent of hours, the buffer falls by about a point and spending out of work rises by half a point. **Hours are then a minor way of weathering a shock.** This is what the European evidence says, and it is the honest size of A's behaviour side through hours.
+
+**Decided by the user, 11 October**: the base's hours elasticity moves to the European value (Frisch 0.14; `frisch_elasticity` in `data/manual_inputs.csv`, flagged as a transfer from Sweden). Recalibration started the same day.
+
+**The second earner, scoped (11 October).** Two things, to be kept apart.
+- **A partner's existing earnings are already in G.** The household replacement rate in the first year out of work is 0.72, 0.70 and 0.70 (France, Germany, Italy) where the state pays 0.50, 0.48 and 0.47: a partner who keeps working covers about 0.23 of the household's previous income. The weights are Eurostat's (a partner works for 44 to 58% of non-working adults in couples without children and 72 to 77% with children).
+- **A partner who starts work, or works more, because the other lost the job** (the added worker effect) is what A could add. The European evidence is that it is small: in Austrian administrative data on husbands displaced by mass layoffs and plant closures, wives' labour supply rises moderately, by entering work, and their added earnings recover only a small share of the household's loss, public transfers and taxes insuring more (Halla, Schmieder and Weber 2020, American Economic Journal: Applied Economics 12(4); the published abstract, the article's tables not read). Across 28 European countries it exists and varies with the welfare regime and the cycle (Bredtmann, Otten and Rulff 2018, ILR Review 71(5); abstract only).
+
+**Conclusion of the scoping of A's behaviour side.** Neither hours nor a second earner is a large way of weathering a job loss in European data. What protects a household is mostly what it already has when the shock comes: public insurance, a partner's existing earnings, savings. All of that is in G. So the behaviour A adds is small in truth, and the model should have it at its measured size and say so.
+
+**Proposed definition of A, to close the scope.**
+1. **Insecurity in wellbeing**: dread of job loss, with the chance of a long spell in it, and the cost of being out of work beyond the income lost. The larger part of A.
+2. **Hours as a choice for those with control over their working time** (Eurostat's shares by education), at the European elasticity. Small, measured, and it makes the switch change behaviour.
+3. **The protection indicators**, as now.
+4. **Not built**: the second earner's response (small, and it needs two adults in a household, which the model does not have); dread in choices (the variant stays).

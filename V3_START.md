@@ -2414,3 +2414,11 @@ Official data recorded: who decides working time by education (`data/validation/
 | U1 any order of switches | partly: 6 of 12 | places |
 | U2 policy levers | partly | |
 | U3 a new country | not tried | |
+
+## 79. The hours elasticity moved to the European value; A scoped to a close (2026-10-11, 18:30 UTC)
+
+**Tag `v5.1-base`**: the base with the state out of work as tested in sections 74 to 78, at the old hours elasticity.
+
+**Decided by the user**: "yes move to the european value". The base's Frisch elasticity is 0.14 (Cesarini, Lindqvist, Notowidigdo and Östling 2017, read at the source; psi = 7) in place of 0.5. Why: at 0.5 the base's lower education group worked 11 to 14% more hours than its higher and its poorest quarter 15% more than its richest, where the HFCS has about zero and the reverse; at 0.14 both gaps halve (`probe_agency_hours.jl`, runs 38153101306 and 38156361534). A transfer from Sweden, flagged in `data/manual_inputs.csv`. Recalibration: run 38157468520 (G in the three countries, G+S to follow by the chain); the files `calibration_v5m_*` in the repository are those of the old elasticity until replaced.
+
+**A, scoped to a close** (`DIMENSIONS_SPEC.md`). Read at the source: the Swedish and American lottery studies. Measured: who decides working time by education (Eurostat), hours by wealth and education (HFCS, aggregates). Found: neither hours nor a second earner is a large way of weathering a job loss in European data; a partner's existing earnings are already in G through the household replacement rate. Proposed definition, for the user: insecurity in wellbeing (dread with the long spell; the cost of being out of work), hours as a choice for those with control at the European elasticity, the protection indicators; the second earner's response and dread in choices not built. The user's worry, the same day: "we're getting lost in the weeds". The scoping of A stops here.
