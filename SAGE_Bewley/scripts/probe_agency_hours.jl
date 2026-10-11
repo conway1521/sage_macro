@@ -9,7 +9,11 @@
 #   julia --project=scripts/run_env scripts/probe_agency_hours.jl [CODE ...]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
-codes = isempty(ARGS) ? ["FR", "DE", "IT"] : uppercase.(ARGS)
+# An argument psi=<value> sets the curvature of the cost of hours (the Frisch elasticity is its inverse)
+# for the three solves, with the scale of that cost moved so that hours at the reference level stay where
+# they are (phi' = phi e_ref^(psi - psi')): the base has psi = 2, the Swedish lottery evidence 7.
+PSI = (k = findfirst(a -> startswith(lowercase(a), "psi="), ARGS); k === nothing ? NaN : parse(Float64, split(ARGS[k], "=")[2]))
+codes = [uppercase(a) for a in ARGS if !startswith(lowercase(a), "psi=")]; isempty(codes) && (codes = ["FR", "DE", "IT"])
 function households(c0; free)
     c = floor_effort(c0); cs = cells_of(c); _, bw = betas_of(c); cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c)); th = c.theta
     jobs = [(g, k, p, cs[g].share * bw[k]) for g in 1:2 for (k, p) in enumerate(params_of(cT, cs[g]))]
@@ -40,6 +44,7 @@ function table(R)
 end
 for code in codes
     c = SAGEConfig(country_config(code; config = "G", v3 = :v5m, S = false, A = false); cfloor = 0.0)
+    isnan(PSI) || (c = SAGEConfig(c; psi = PSI, phi = c.phi * c.e_ref^(c.psi - PSI)); @printf("\n%s: psi %.1f (Frisch %.2f), phi %.2f\n", code, PSI, 1 / PSI, c.phi))
     J = table(households(c; free = false)); F = table(households(c; free = true))
     R = table(households(SAGEConfig(c; delta = (1.5 * c.delta[1], 1.5 * c.delta[2])); free = true))
     @printf("\n%s G, the floor off | hours set by the job, hours chosen, hours chosen with job loss 1.5 times as likely\n", code)

@@ -228,3 +228,34 @@ What it says.
 **Choices added for the user.**
 5. **The wealth effect on hours.** Fit it to the published earnings response to a windfall, in A2 and in the hours the job sets (which would also be tested against hours by education). This is a change to preferences and so to the base; or leave the base's hours as they are and state the miss. Proposed: read the two sources first and bring the numbers, then decide.
 6. **If hours turn out to be a small channel**, whether the behaviour side of A should also carry something else that the data support, to be looked for (the second earner going to work when the first loses a job is the classic one, and the survey could measure it), or whether a small A2 reported as such is the answer.
+
+**The published evidence on how hours respond to wealth, read at the source on 11 October** (`data/validation/labour_supply_evidence.csv`, with what was read and what was not).
+
+| | Sweden: Cesarini, Lindqvist, Notowidigdo and Östling (2017, AER 107(12)), the published article | United States: Golosov, Graber, Mogstad and Novgorodsky (2024, QJE), the authors' draft of January 2023 |
+|---|---|---|
+| yearly labour earnings per 100 of wealth won | -1.1 for the winner (s.e. 0.15), -1.3 for a married household; at once, and lasting over ten years | -2.3 for the household; -1.3 in the bottom quarter of income, -3.1 in the top |
+| earnings response per unit of unearned income | lifetime: -0.17 at age 20, -0.12 at 40, -0.04 at 60 | in the period: -0.50 (consumption +0.60) |
+| on the extensive margin | 40% of the five-year response, 24% after ten years | 40% per adult; 58% for low incomes |
+| hours | 1.3 a week fewer per million kronor (about 140,000 dollars), 4% of a working week | not reported |
+| elasticities | Frisch 0.14, compensated 0.10, uncompensated 0.01 | |
+| by education, age, sex | "quite similar"; none by college | larger for higher incomes |
+| spouse | responds less than the winner | responds a third as much |
+
+Not read beyond the abstract: Imbens, Rubin and Sacerdote (2001), about 0.11 of unearned income taken as leisure; Jessen, Rostam-Afschar and Schmitz (2018), 2.8% of married men's hours in Germany worked as precaution against wage risk. The American study says of the European ones that they are "consistently and noticeably smaller" than its own and cautions against carrying a wealth effect from one country to another.
+
+**What the base's preferences imply, against these.** With consumption curvature gamma = 2 and hours curvature psi = 2:
+
+| | the base | Sweden | United States |
+|---|---|---|---|
+| Frisch elasticity, 1 / psi | 0.50 | 0.14 | |
+| earnings response per unit of income, a household that spends what it earns, gamma / (gamma + psi) | -0.50 | -0.04 to -0.17 | -0.50 |
+| uncompensated elasticity of hours to pay, (1 - gamma) / (gamma + psi) | -0.25 | 0.01 | |
+
+- The base's response to income equals the American estimate and is three to twelve times the Swedish.
+- The uncompensated elasticity of -0.25 is what puts hours by education the wrong way round: at France's pay ratio of 1.59 it gives the lower group 12% more hours, and the base has 11%. The Swedish estimate and the HFCS (the same or up to 6% fewer) both say about zero.
+- At the Swedish Frisch elasticity (psi = 7) and the same gamma the three become 0.14, -0.22 and -0.11: each closer to the European evidence, the response to income still above its range. The probe is being rerun at that value to read the two cross-sections (run on 11 October).
+
+**The choice this puts to the user (choice 5, restated).** Which evidence disciplines hours in a model of France, Germany and Italy.
+- **The micro consensus used so far** (a Frisch elasticity of 0.5): hours fall with wealth and with pay far more than the survey shows, in the base and more so with hours chosen.
+- **The European lottery evidence** (a Frisch elasticity of 0.14, one published number in place of another): flatter hours in the base, a smaller and more believable response where hours are chosen, and so a small behaviour side of A through hours. A change to the base's preferences, to be recalibrated and retested.
+- Neither removes the wrong sign by education entirely: that needs an uncompensated elasticity of zero, which these preferences give only with gamma at one.
