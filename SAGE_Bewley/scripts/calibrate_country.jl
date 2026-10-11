@@ -908,7 +908,18 @@ ck_write("pre5b", Dict("phi" => phi, "spread" => spread, "bb" => BB[], "eta" => 
 end
 say("\n5b. the calibration on the full belonging grid (", length(UGRID_DEFAULT), " scales): technology re-scanned, economy solved and checked")
 budget_check("the full-grid scan"; factor = 2.5)
+t5b = time()
 S = timed_scans(phi, spread; ugrid = UGRID_DEFAULT)
+# The solve that follows takes about as long as building the full grid's families did. Where both do
+# not fit in what is left of the job (Italy with the state out of work, 2026-10-11: 203 minutes for the
+# families, cancelled at the six-hour limit inside the solve with the families not kept), the job
+# hands over here: the families are in the cache, and the next job loads them and goes to the solve.
+let d5 = (time() - t5b) / 60
+    if (time() - t_start) / 60 + 1.2 * d5 > BUDGET
+        say(@sprintf("\nTIME BUDGET: %.0f of %.0f minutes used and the full grid's families took %.0f; they are kept, the solve is for a new job.", (time() - t_start) / 60, BUDGET, d5))
+        exit(3)
+    end
+end
 if S[RATIO] === nothing || S[RATIO].best.loss > LOSS_STD
     say("\nNOT CALIBRATED on the full grid. No calibration file written.")
     mark_not_calibrated(); exit(2)
