@@ -18,6 +18,10 @@ c = mode == "v5m" ? country_config(code; config = "GSA", v3 = :v5m, S = true, A 
     mode == "base" ? country_config(code; config = "GSA", v3 = :floor_edu_trans, S = true, A = true) :
                      country_config(code; config = "GSA", S = true, A = true)
 println(code, " G+S+A", mode == "v5m" ? ", version 5 with the state out of work" : mode == "v5" ? ", version 5" : mode == "v4" ? ", version 4" : mode == "base" ? ", base regime" : ", version 2")
+# `shock` as the second argument runs the recession alone, read against the steady state (a zero shock
+# and a recession together do not fit in a six-hour job with the state out of work, 2026-10-11)
+SHOCK_ONLY = length(ARGS) >= 2 && ARGS[2] == "shock"
+if !SHOCK_ONLY
 t = @elapsed z = transition_s(c; delta_scale = Float64[], T = T)
 dev(v) = maximum(abs.(v .- v[1]))
 @printf("1. zero shock (%.1f min, %d iterations, gap %.1e): participation %.8f against the families' %.8f; drift participation %.1e, consumption %.1e, assets %.1e; welfare %.1e\n",
@@ -25,8 +29,13 @@ dev(v) = maximum(abs.(v .- v[1]))
 @printf("   first period against the steady-state economy: consumption %.6f vs %.6f, hand-to-mouth %.6f vs %.6f | tax: amount per head %.6f vs %.6f, rate %.6f | consumption by year %s\n",
         z.cons[1], z.steady_state.cons, z.htm[1], z.steady_state.htm, z.lumptax[1], z.steady_state.tax, z.taxrate[1], join([@sprintf("%.5f", v) for v in z.cons[1:min(T, 6)]], " "))
 flush(stdout)
+end
 if length(ARGS) < 2 || ARGS[2] != "zero"
     t = @elapsed x = transition_s(c; delta_scale = [1.5, 1.5], T = T)
+    # without the zero-shock path the reference is the steady state: the families' participation and
+    # consumption, the first period's unemployment and assets (both given before the shock), the last period's effort
+    SHOCK_ONLY && (z = (participation = fill(x.steady_state_rate, T), unemployment = fill(x.unemployment[1], T), cons = fill(x.steady_state.cons, T),
+                        effort_employed = fill(x.effort_employed[T], T), assets = fill(x.assets[1], T)))
     @printf("2. recession, job-loss x1.5 for two years (%.1f min, %d iterations, gap %.1e)\n", t / 60, x.iterations, x.gap)
     @printf("   %4s %9s %8s %8s %8s %8s\n", "year", "particip.", "unempl.", "cons.", "effort", "assets")
     for tt in (1, 2, 3, 4, 5, 8, 12, 20)

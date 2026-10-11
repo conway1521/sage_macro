@@ -71,6 +71,14 @@ for cfg in ("GA", "GSA")
     part("2" * lowercase(cfg)) || continue
     S_ = cfg == "GSA"
     c0 = country_config(code; v3 = V3ARG, config = cfg, S = S_, A = true)
+    # With the state out of work a household problem has half as many states again, and the economy with
+    # S on the full belonging grid on a doubled asset grid does not fit in a six-hour job (France and
+    # Germany, 2026-10-11). The check is of the asset grid: with S on it is run on every fourth belonging
+    # scale, the same for the base and the variant, so that what moves is the asset grid alone.
+    if S_ && reg == "v5m"
+        c0 = SAGEConfig(c0; ugrid = c0.ugrid[vcat(1:4:length(c0.ugrid) - 1, length(c0.ugrid))])
+        @printf("   %s: on every fourth belonging scale (%d of them)\n", cfg, length(c0.ugrid))
+    end
     @printf("   %s: asset grid %d points to %.1f\n", cfg, c0.na, c0.a_max)
     b = mom(solve_economy(c0; cache = false), S_)
     @printf("   %-22s htm %.4f | liquid/income %.4f | MPC %.4f | effort %.4f | participation %.4f | multiplier %.2f | job-loss drop %.4f\n", "base", b...)
