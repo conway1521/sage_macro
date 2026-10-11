@@ -2453,3 +2453,24 @@ Reading: the wealth side holds (the median untargeted within 1.5 standard errors
 Pushed at 20:05 once Italy's G+S had handed over (its second job is 38170537845; France's and Germany's G+S, 38160920164 and 38161501576, were in their first). First run of A in the three countries, at the first attempt (`DIMENSIONS_SPEC.md`, "A's first run"): off is G; on, the MPC falls by a point, the hand-to-mouth share moves by 0.004 at most (so G+A meets G's targets on G's calibration), the budget balances, and the economy's earnings response to a windfall is 0.011 to 0.014 per unit against the Swedish lottery estimate of 0.011, untargeted. 16 to 20% of households choose their hours. The benefit trap: 0.3% of the choosers in work work no hours in France and Germany, 3.7% in Italy.
 
 Started: the indicator table and the MPC's properties for G+A in the three countries. On and off, Euler errors and the grid for the configurations with S wait for G+S at the new elasticity. Still to build in A: the cost of being out of work in the wellbeing count; transitions with households who choose.
+
+## 83. G+S at the European elasticity; A's first tests; the battery restarted (2026-10-11, 22:10 UTC)
+
+**G+S** (runs 38160920164, 38161501576, 38159671929 then 38170537845): calibrated in the three countries, files replaced.
+
+| G+S, model and target | France | Germany | Italy |
+|---|---|---|---|
+| participation, below tertiary | 0.202, 0.203 | 0.252, 0.252 | 0.116, 0.116 |
+| participation, tertiary | 0.291, 0.291 | 0.349, 0.349 | 0.165, 0.165 |
+| social multiplier and its band (at the old elasticity) | 1.3, 1.2 to 1.7 (1.6, 1.2 to 2.4) | 1.4, 1.3 to 1.8 (1.8, 1.3 to 3.0) | 1.2, 1.1 to 1.5 (1.3, 1.1 to 1.9) |
+| hand-to-mouth | 0.268, 0.268 | 0.252, 0.252 | 0.204, 0.203 |
+
+**The multiplier is lower and its band narrower at the European elasticity.** Taking part costs time, and time is now costlier at the margin, so participation feeds on itself less. A consequence of the elasticity that was not looked for: 1.2 to 1.4 where it was 1.3 to 1.8.
+
+**A's first tests** (G+A reading G's calibration): the MPC's properties 7 of 7 in the three countries (38172022284, 38172024167, 38172026092); the indicators 20 of 27 (38172019999; off: in-work poverty in France and Italy, the liquid-asset poor in France and Germany, France's median, Germany's income and asset poor, Italy's MPC).
+
+**France's doubled grid with S on, on the old elasticity** (38148549343): cancelled at six hours on one worker. To be rerun in a lighter form on this base.
+
+**The cost of A with S.** A configuration with A has three times the household problems. A solve of G+S+A is then about 3.5 hours in France and Germany and about 7.5 in Italy, which does not fit in a job. The on/off test now runs the configurations asked for (`cfg=`), and Italy's G+S+A is not run for now. Two ways to bring it down, neither taken yet: weights by education cell in place of the three common groups (two thirds of the cost; a change through `sage_modular.jl`), and a job that keeps the families between runs. This will matter for every table that needs G+S+A.
+
+**Started at 22:05 UTC, twenty runs** (38178683523 to 38178722965): on and off for G and G+S in the three countries and for G+A and G+S+A in France and Germany, G+A in Italy; Euler errors; the asset grid for G+A; equilibria in France and Germany; transitions with S off (G) and a zero shock with S on (G+S), both with A off since the path solver does not cover households who choose.
