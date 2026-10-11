@@ -2447,3 +2447,9 @@ Reading: the wealth side holds (the median untargeted within 1.5 standard errors
 **Built, not yet pushed.** The household types and weights (`control_share`, `control_groups`), the engine's treatment of chosen hours under the minimum income (`egm_core.jl`, a solver file), dread looking to assistance after the first year, the official shares in `data/manual_inputs.csv`, and `probe_agency_build.jl` (G against G+A, and those who choose beside those who do not). Checked without any solve: the lists of households and their weights (France 0.75, 0.104, 0.146; the share choosing 0.146 and 0.250 by education), the tax base unchanged.
 
 **Why not pushed**: `egm_core.jl` is a solver file, and Italy's G+S (run 38161501576) will hand over to a second job that reads its checkpoints by the solver's digest. Pushed once that second job has started.
+
+## 82. A runs (2026-10-11, 20:30 UTC)
+
+Pushed at 20:05 once Italy's G+S had handed over (its second job is 38170537845; France's and Germany's G+S, 38160920164 and 38161501576, were in their first). First run of A in the three countries, at the first attempt (`DIMENSIONS_SPEC.md`, "A's first run"): off is G; on, the MPC falls by a point, the hand-to-mouth share moves by 0.004 at most (so G+A meets G's targets on G's calibration), the budget balances, and the economy's earnings response to a windfall is 0.011 to 0.014 per unit against the Swedish lottery estimate of 0.011, untargeted. 16 to 20% of households choose their hours. The benefit trap: 0.3% of the choosers in work work no hours in France and Germany, 3.7% in Italy.
+
+Started: the indicator table and the MPC's properties for G+A in the three countries. On and off, Euler errors and the grid for the configurations with S wait for G+S at the new elasticity. Still to build in A: the cost of being out of work in the wellbeing count; transitions with households who choose.

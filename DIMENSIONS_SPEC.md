@@ -307,3 +307,24 @@ S and E change the economy; A changes what counts, and one choice. A off is G ex
 - The hours a job asks, and the base of the proportional tax, are those of the economy without choosers.
 - Dread for those in their first year out of work now looks to the assistance of the year after, not to their own benefit going on.
 - Not covered yet: transitions with households that choose their hours (the path solver refuses them and says so).
+
+**A's first run** (`probe_agency_build.jl`, runs 38170810347, 38170812262, 38170814000, 11 October; G against G+A, each reading G's calibration at the European elasticity). It solved at the first attempt in the three countries.
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| hand-to-mouth, G and G+A | 0.270, 0.273 | 0.252, 0.255 | 0.206, 0.206 |
+| median liquid wealth over income | 0.113, 0.113 | 0.134, 0.136 | 0.249, 0.249 |
+| MPC | 0.412, 0.402 | 0.363, 0.355 | 0.351, 0.343 |
+| hours of those in work | 0.643, 0.642 | 0.609, 0.608 | 0.725, 0.720 |
+| **earnings response to a windfall, per unit** | 0, -0.014 | 0, -0.013 | 0, -0.011 |
+| fall in consumption on job loss | 0.300, 0.300 | 0.334, 0.334 | 0.288, 0.287 |
+| in-work poverty | 0.091, 0.090 | 0.085, 0.083 | 0.150, 0.150 |
+| the budget's gap | 0 | 0 | 0 |
+| households who choose their hours | 18% | 20% | 16% |
+| of those in work among them, working no hours on the minimum income | 0.3% | 0.3% | 3.7% |
+
+1. **The switch changes behaviour, by a little, and off is G.** The MPC falls by a point; the hours of those who choose respond to a windfall.
+2. **G+A still meets G's targets** on G's calibration: the hand-to-mouth share moves by 0.004 at most against a tolerance of 0.02, the median not at all. So A has no calibration of its own, as intended.
+3. **An untargeted number lands on the evidence.** The economy's earnings fall by 1.1 to 1.4 per 100 of a windfall in the year. The Swedish estimate, over all winners, is 1.07 (s.e. 0.15). Nothing in A was fitted to it: the shares are Eurostat's and the elasticity the lottery study's own.
+4. **The benefit trap is there and small**, except in Italy, where 3.7% of those who choose their hours and have a job work none and live on the minimum income (0.6% of all households). Italy's minimum income is the highest against its median and its low pay the lowest.
+5. **The fall in consumption on job loss does not move**, as the scoping said it would not.
