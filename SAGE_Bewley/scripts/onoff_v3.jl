@@ -36,7 +36,7 @@ EDUREG = V4 || any(a -> lowercase(a) == "edu", ARGS)    # patience by education 
 TRANS = V4 || any(a -> lowercase(a) == "trans", ARGS)  # the transitory part and the proportional tax (V3_START.md section 29)
 V3ARG = V5M ? :v5m : V5 ? :v5 : V4 ? :v4 : TRANS ? Symbol((FLOORREG ? "floor_" : "") * (EDUREG ? "edu_" : "") * "trans") : FLOORREG ? (EDUREG ? :floor_edu : :floor) : (EDUREG ? :edu : true)
 VTAG = V5M ? "v5m" : V5 ? "v5" : V4 ? "v4" : "v3" * (FLOORREG ? "f" : "") * (EDUREG ? "e" : "") * (TRANS ? "t" : "")
-codes = (cc = [uppercase(a) for a in ARGS if !(lowercase(a) in ("floor", "edu", "trans", "v4", "v5", "v5m"))]; isempty(cc) ? ["FR", "DE", "IT"] : cc)
+codes = (cc = [uppercase(a) for a in ARGS if !(lowercase(a) in ("floor", "edu", "trans", "v4", "v5", "v5m")) && !startswith(lowercase(a), "cfg=")]; isempty(cc) ? ["FR", "DE", "IT"] : cc)
 (FLOORREG || EDUREG || TRANS) && println("regime: ", VTAG)
 function hfcs(code, moment)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
@@ -56,7 +56,12 @@ function row(nm, r)
             r.wealth_p50 / r.median_income, r.welfare.V, r.welfare.Vc, r.welfare.Ve, r.welfare.Vb, isnan(mult(r)) ? "-" : @sprintf("%.2f", mult(r)))
     flush(stdout)
 end
-CFGS = (("G", false, false), ("GA", false, true), ("GS", true, false), ("GSA", true, true))
+# An argument cfg=G,GS runs those configurations alone (with households who choose their hours a configuration
+# with A has three times the household problems, and the four together no longer fit in a six-hour job);
+# a check that needs a configuration not asked for is left out.
+ONLY = (k = findfirst(a -> startswith(lowercase(a), "cfg="), ARGS); k === nothing ? String[] : String.(split(uppercase(split(ARGS[k], "=")[2]), ",")))
+CFGS = Tuple(x for x in (("G", false, false), ("GA", false, true), ("GS", true, false), ("GSA", true, true)) if isempty(ONLY) || x[1] in ONLY)
+has(nm) = any(x -> x[1] == nm, CFGS)
 for code in codes
     row_ = country_rows()[code]
     E = parse(Float64, row_["effort_target"]); H = hfcs(code, "htm_model_narrow_total")
@@ -67,17 +72,21 @@ for code in codes
     for (nm, S_, A_) in CFGS
         fx[nm] = solve_economy(country_config(code; v3 = V3ARG, S = S_, A = A_)); row(nm, fx[nm])
     end
-    @printf("   S off: participation %.2e (G), %.2e (G+A); belonging in welfare %.2e, %.2e\n", fx["G"].rate, fx["GA"].rate, fx["G"].welfare.Vb, fx["GA"].welfare.Vb)
-    check("$code 1. S off: participation below 1e-4 and no belonging in welfare", all(fx[k].rate < 1e-4 && abs(fx[k].welfare.Vb) < 1e-8 for k in ("G", "GA")))
+    for k in ("G", "GA"); has(k) && @printf("   S off, %s: participation %.2e; belonging in welfare %.2e\n", k, fx[k].rate, fx[k].welfare.Vb); end
+    any(has, ("G", "GA")) && check("$code 1. S off: participation below 1e-4 and no belonging in welfare", all(fx[k].rate < 1e-4 && abs(fx[k].welfare.Vb) < 1e-8 for k in ("G", "GA") if has(k)))
     for (off, on) in (("G", "GS"), ("GA", "GSA"))
+        (has(off) && has(on)) || continue
         check("$code 2. $on against $off: belonging adds to welfare; hand-to-mouth within 0.03 and effort within 0.01 of S off",
               fx[on].welfare.Vb > 0 && abs(fx[on].hand_to_mouth_kvw - fx[off].hand_to_mouth_kvw) < 0.03 && abs(fx[on].mean_effort_employed - fx[off].mean_effort_employed) < 0.01)
     end
     gap(r) = r.pooled[2].rate - r.pooled[1].rate
-    @printf("   participation gap between the cells: %.4f without A, %.4f with A\n", gap(fx["GS"]), gap(fx["GSA"]))
+    for k in ("GS", "GSA"); has(k) && @printf("   participation gap between the cells, %s: %.4f\n", k, gap(fx[k])); end
     # version 5: the pay premium by education is in G, so the gap between the cells is there without A
-    V5 ? check("$code 3. the participation gap between the cells is there without A", gap(fx["GS"]) > 0.01) :
-         check("$code 3. A widens the participation gap between the cells", gap(fx["GSA"]) > gap(fx["GS"]))
+    if V5
+        has("GS") && check("$code 3. the participation gap between the cells is there without A", gap(fx["GS"]) > 0.01)
+    elseif has("GS") && has("GSA")
+        check("$code 3. A widens the participation gap between the cells", gap(fx["GSA"]) > gap(fx["GS"]))
+    end
     println("own calibration (each configuration at its own file)")
     for (nm, S_, A_) in CFGS
         f = joinpath(@__DIR__, "calibration_$(VTAG)_$(code)_$((V5 && get(ENV, "SAGE_DREAD_CHOICE", "0") != "1") ? replace(nm, "A" => "") : nm).txt")          # version 5: a configuration with A reads the file without it

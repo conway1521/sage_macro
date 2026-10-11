@@ -12,7 +12,7 @@ using Printf
 T = length(ARGS) >= 1 ? parse(Int, ARGS[1]) : 60
 code = length(ARGS) >= 3 ? uppercase(ARGS[3]) : "FR"
 mode = length(ARGS) >= 4 ? ARGS[4] : ""
-c = mode == "v5m" ? country_config(code; config = "GSA", v3 = :v5m, S = true, A = true) :
+c = mode == "v5m" ? country_config(code; config = "GS", v3 = :v5m, S = true, A = false) :          # A off: the path solver does not cover households who choose their hours yet
     mode == "v5" ? country_config(code; config = "GSA", v3 = :v5, S = true, A = true) :
     mode == "v4" ? country_config(code; config = "GSA", v3 = :v4, S = true, A = true) :
     mode == "base" ? country_config(code; config = "GSA", v3 = :floor_edu_trans, S = true, A = true) :

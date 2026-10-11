@@ -274,6 +274,7 @@ the paths of `transition` plus participation and the community fabric, the
 number of fixed-point iterations and the final gap.
 """
 function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, maxit::Int = 40, damp::Float64 = 0.5, tol::Float64 = 1e-7)
+    length(control_groups(c)) > 1 && error("the transition solver does not cover households that choose their hours yet (A's control_share): run it with A off")
     c.S || error("transition_s is for S on; use transition")
     c.E && error("the transition solver covers E off so far")
     ds = vcat(delta_scale, ones(max(0, T - length(delta_scale))))[1:T]
