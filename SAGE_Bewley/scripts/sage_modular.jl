@@ -172,6 +172,11 @@ Base.@kwdef struct SAGEConfig
     # makes households save so much that the German and Italian hand-to-mouth
     # targets are out of reach at any plausible patience (MODULAR.md, 2026-09-28).
     dread_mode::Symbol = :overlay
+    # HOURS AS A CHOICE (A, 2026-10-11; DIMENSIONS_SPEC.md, "A, reopened and scoped"): the share of households
+    # in each education cell who have control over their working time and choose their hours each year;
+    # the others work the hours the job sets. From Eurostat (lfso_19fxwt01, who decides working time).
+    # Active with A on only; zero is every earlier result.
+    control_share::NTuple{2,Float64} = (0.0, 0.0)
     # Household solver: :grid, the reference, or :egm (SOLVER_DESIGN.md). The
     # default can be set for a whole run with the environment variable
     # SAGE_SOLVER (grid or egm), which worker processes inherit.
@@ -376,9 +381,9 @@ end
 function cells_of(c::SAGEConfig)
     αs = (c.A || c.premium_base) ? c.alpha : (c.alpha_off, c.alpha_off)
     pick(v, common) = isnan(v) ? common : v          # the cell's own income process where it is given
-    ((α = αs[1], B = c.B[1], share = c.share[1], δ = c.unemployment ? c.delta[1] : 0.0, τ = c.commute[1], eset = c.effort_by_cell[1], fL = c.f_long[1], dβ = c.beta_cell[1],
+    ((gi = 1, α = αs[1], B = c.B[1], share = c.share[1], δ = c.unemployment ? c.delta[1] : 0.0, τ = c.commute[1], eset = c.effort_by_cell[1], fL = c.f_long[1], dβ = c.beta_cell[1],
       ρ = pick(c.rho_cell[1], c.rho), η = pick(c.eta_cell[1], c.eta_z), sε = pick(c.sd_eps_cell[1], c.sd_eps)),
-     (α = αs[2], B = c.B[2], share = c.share[2], δ = c.unemployment ? c.delta[2] : 0.0, τ = c.commute[2], eset = c.effort_by_cell[2], fL = c.f_long[2], dβ = c.beta_cell[2],
+     (gi = 2, α = αs[2], B = c.B[2], share = c.share[2], δ = c.unemployment ? c.delta[2] : 0.0, τ = c.commute[2], eset = c.effort_by_cell[2], fL = c.f_long[2], dβ = c.beta_cell[2],
       ρ = pick(c.rho_cell[2], c.rho), η = pick(c.eta_cell[2], c.eta_z), sε = pick(c.sd_eps_cell[2], c.sd_eps)))
 end
 
@@ -399,6 +404,34 @@ node of the permanent component of income when there is one (the first list then
 discount factor once per income node, in the order `params_of` builds them).
 """
 function betas_of(c::SAGEConfig)
+    b, w = type_betas(c)
+    G = control_groups(c)
+    length(G) == 1 && return (b, w)
+    (repeat(b, outer = length(G)), [g.w * x for g in G for x in w])
+end
+
+"""
+    control_groups(c)
+
+Who chooses their hours (A): groups of households with a weight that is the same in the two education
+cells and a flag by cell. The shares differ by education, so there are up to three groups: those who
+choose in neither cell (one less the larger share), those who choose in the cell with the larger share
+only (the difference), and those who choose in both (the smaller share). With A off, or no share, one
+group that chooses nowhere. Every list of household types repeats once per group, in this order.
+"""
+function control_groups(c::SAGEConfig)
+    s1, s2 = c.A ? c.control_share : (0.0, 0.0)
+    (0 <= s1 <= 1 && 0 <= s2 <= 1) || error("control_share must lie between zero and one")
+    lo, hi = minmax(s1, s2)
+    hi == 0 && return [(w = 1.0, chooses = (false, false))]
+    G = [(w = 1 - hi, chooses = (false, false))]
+    hi > lo && push!(G, (w = hi - lo, chooses = (s1 > s2, s2 > s1)))
+    lo > 0 && push!(G, (w = lo, chooses = (true, true)))
+    filter(g -> g.w > 0, G)
+end
+
+"The types by patience and permanent income alone, before the groups of `control_groups`: what `_params_of` builds."
+function type_betas(c::SAGEConfig)
     b, w = _betas_of(c)
     f, wf = perm_nodes(c)
     length(f) == 1 && return (b, w)
@@ -457,7 +490,7 @@ function labour_base(c::SAGEConfig)
     (c.effort_mode === :job && !isempty(c.effort_by_cell[1])) ||
         error("a proportional tax needs the job's effort levels given (effort_mode = :job, and floor_effort(c) first)")
     c1 = SAGEConfig(c; tax_mode = :lump, tax_base = NaN, sd_eps = 0.0, sd_eps_cell = (0.0, 0.0), lumptax = 0.0, subsidy = 0.0, levy_employed = 0.0,
-                    S = false, cfloor = 0.0, floor_tax_given = NaN)
+                    S = false, cfloor = 0.0, floor_tax_given = NaN, control_share = (0.0, 0.0))          # the base of the tax is at the job's hours for everyone
     get!(LABOUR_BASE_CACHE, hash(repr(c1))) do
         cs = cells_of(c1); _, bw = betas_of(c1)
         sum(1:2) do g
@@ -476,7 +509,11 @@ end
 "Parameter sets for one cell, one per discount type."
 function params_of(c::SAGEConfig, cell)
     ps = _params_of(c, cell)
-    cell.sε > 0 ? [expand_transitory(p, cell.sε, c.n_eps) for p in ps] : ps
+    ps = cell.sε > 0 ? [expand_transitory(p, cell.sε, c.n_eps) for p in ps] : ps
+    G = control_groups(c)
+    length(G) == 1 && !G[1].chooses[cell.gi] && return ps
+    # the same households once per group; where the group chooses its hours in this cell, the job's levels are dropped
+    vcat([g.chooses[cell.gi] ? [update(p; job_effort = false, effort_set = Float64[]) for p in ps] : ps for g in G]...)
 end
 
 function _params_of(c::SAGEConfig, cell)
@@ -486,7 +523,7 @@ function _params_of(c::SAGEConfig, cell)
     (cell.sε > 0 || c.tax_mode === :prop) && c.effort_mode === :job && isempty(cell.eset) &&
         error("with a transitory part or a proportional tax the job's effort levels are given: floor_effort(c) first")
     c.tax_mode in (:lump, :prop) || error("tax_mode is :lump or :prop")
-    bs, _ = betas_of(c)
+    bs, _ = type_betas(c)
     ps = [cell_params_u(cell.α; δ = cell.δ, f = c.f_find, rr = c.rr, na = c.na, ne = c.ne,
                         a_max = c.a_max, pexp = c.pexp, subsidy = c.subsidy, lumptax = c.lumptax,
                         partcredit = c.partcredit, β = b + cell.dβ, pcost = c.pcost, nz = c.nz,
@@ -558,7 +595,10 @@ function dread_params(p::SAGEParams, c::SAGEConfig, cell)
     zl(s) = z[nh + lat(s)]
     hi = [(1 + p.subsidy) * cell.α * zl(s) * p.Z * c.e_ref + p.transfer[nh + lat(s)] - p.lumptax
           for s in 1:n]
-    lo = [p.transfer[isE(s) ? lat(s) : s] - p.lumptax for s in 1:n]
+    # what income falls to if the bad outcome comes: for those in work the first year's benefit; for those in
+    # their first year out of work, with the state out of work, the assistance of the year after (2026-10-11:
+    # until then their own benefit, as if it went on); for those beyond a year, the assistance they are on
+    lo = [p.transfer[isE(s) ? lat(s) : (n > 2nh && s <= nh) ? 2nh + lat(s) : s] - p.lumptax for s in 1:n]
     c.dread_mode in (:overlay, :behaviour) || error("dread_mode must be :overlay or :behaviour")
     c.dread_mode == :behaviour ?
         update(p; dread = c.dread, dread_q = q .* (1 .- q), dread_hi = hi, dread_lo = lo) :
@@ -609,7 +649,8 @@ function floor_effort(c::SAGEConfig)
     long = !isnan(c.f_long[1])
     # The same holds for the transitory part and the proportional tax (2026-10-06): the levels are
     # those of the economy with persistent risk alone and the tax raised per head.
-    c1 = SAGEConfig(c; cfloor = 0.0, S = false, f_long = (NaN, NaN), sd_eps = 0.0, sd_eps_cell = (0.0, 0.0), tax_mode = :lump, tax_base = NaN)
+    c1 = SAGEConfig(c; cfloor = 0.0, S = false, f_long = (NaN, NaN), sd_eps = 0.0, sd_eps_cell = (0.0, 0.0), tax_mode = :lump, tax_base = NaN,
+                    control_share = (0.0, 0.0))          # what a job asks does not depend on who may choose otherwise
     lv = if c.ref_prop && c.tax_mode === :prop
         # the reference economy pays its benefit bill T at a rate on labour income. The rate needs the
         # levels (it is T over labour income per head) and the levels the rate, so the pair is found
@@ -669,7 +710,7 @@ function floor_tax_of(c::SAGEConfig)
     isnan(c.floor_tax_given) || return c.floor_tax_given
     c.effort_mode === :job || error("the means-tested floor needs effort_mode = :job")
     c0 = floor_effort(SAGEConfig(c; S = false, E = false, cfloor = c.cfloor))
-    key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.f_long, c0.assist_long, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
+    key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.f_long, c0.assist_long, c0.control_share, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
                      c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop)))
@@ -1348,6 +1389,8 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
                 # and Östling 2017, Table 5), in place of the 0.5 of the micro consensus. psi is its inverse.
                 # A transfer from Sweden to the three countries, flagged as such in data/manual_inputs.csv.
                 vmin && (d[:psi] = 1 / manual_input(code, "frisch_elasticity"))
+                # A: who chooses their hours, by education (Eurostat lfso_19fxwt01, the person decides fully)
+                vmin && (d[:control_share] = (manual_input(code, "control_hours_low"), manual_input(code, "control_hours_high")))
             end
         end
         # Version 5: the pay premium is in the base and dread of job loss is measured without entering
@@ -1520,7 +1563,7 @@ with S off and effort_mode = :job: the levels of each patience type averaged wit
 the type weights. For `effort_by_cell` of another configuration.
 """
 function job_effort_levels(c::SAGEConfig)
-    c0 = SAGEConfig(c; S = false, effort_mode = :job, effort_by_cell = (Float64[], Float64[]))
+    c0 = SAGEConfig(c; S = false, effort_mode = :job, effort_by_cell = (Float64[], Float64[]), control_share = (0.0, 0.0))
     cs = cells_of(c0); _, bw = betas_of(c0); cT = SAGEConfig(c0; lumptax = c0.lumptax + ui_tax_of(c0))
     Tuple(begin
               ps = params_of(cT, cs[g])

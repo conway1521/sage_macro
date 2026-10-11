@@ -130,6 +130,7 @@ consumption equivalent against staying in the steady state, overall and by cell.
 """
 function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80, rr_add::Vector{Float64} = Float64[])
     c.S && error("the transition solver covers S off so far")
+    length(control_groups(c)) > 1 && error("the transition solver does not cover households that choose their hours yet (A's control_share): run it with A off")
     c.E && error("the transition solver covers E off so far")
     # the job's effort levels where they are given (the floor, the transitory part, the proportional
     # tax): what a job asks does not move along the path

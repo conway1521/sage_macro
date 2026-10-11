@@ -180,7 +180,12 @@ function apply_floor!(cd, ed, apd, vd, fl, p::SAGEParams, a, EVs, s::Int, d::Int
                       w::Float64, other::Float64, tfl::Float64, belong::Float64, Ds)
     na = length(a)
     @inbounds for i in 1:na; fl[i, s] = false; end
-    e = w > 0 ? p.effort_set[s] : 0.0
+    # HOURS CHOSEN BY THE HOUSEHOLD (A, 2026-10-11): `effort_set` empty. On the floor every euro earned is taken
+    # back, so a household on it does not work; and a household that could be on it (its resources without
+    # work fall short) is on it only if that is worth more than working its way above. With hours set by the
+    # job there is no such choice and everything below is as before.
+    chosen = isempty(p.effort_set)
+    e = (w > 0 && !chosen) ? p.effort_set[s] : 0.0
     κ = 1.0 + p.commute
     T = tfl + κ * e + p.qbar * d
     T > 1.0 && return
@@ -198,6 +203,10 @@ function apply_floor!(cd, ed, apd, vd, fl, p::SAGEParams, a, EVs, s::Int, d::Int
     cf = (X - a[kb]) / p.pc
     @inbounds for i in 1:na
         a[i] < af || break
+        if chosen && w > 0
+            # the choice found without the floor stands where it lifts the household above the floor and is worth more
+            (p.R * a[i] + w * ed[i, s] + other >= X && vd[i, s] >= best) && continue
+        end
         cd[i, s] = cf; ed[i, s] = e; apd[i, s] = a[kb]; vd[i, s] = best; fl[i, s] = true
     end
 end
@@ -220,8 +229,6 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
            for s in 1:nz]
     tfl = [floor_at(p, s) for s in 1:nz]
     bel = [p.social_strength * p.Λ * p.B[s] * Q_agg * p.qbar * belong_at(p, s) for s in 1:nz]
-    p.cfloor > 0 && isempty(p.effort_set) && any(>(0), wv) &&
-        error("the means-tested floor needs effort set by the job (effort_mode = :job)")
     fl = (falses(na, nz), falses(na, nz))        # grid points on the floor, by branch
 
     # dread in behavioural mode, at each next-asset node, and its derivative
