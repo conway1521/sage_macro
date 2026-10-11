@@ -1343,6 +1343,11 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
                 # year receive its level (assist_long left unset: assist_of gives the floor's level), and
                 # everyone else is topped up to it. No floor is fitted and the median is a test.
                 vmin || (d[:assist_long] = manual_input(code, "min_income_net_aw") * d[:e_ref])
+                # THE ELASTICITY OF HOURS (decided by the user on 2026-10-11; V3_START.md section 79): the
+                # Frisch elasticity of the European lottery evidence, 0.14 (Cesarini, Lindqvist, Notowidigdo
+                # and Östling 2017, Table 5), in place of the 0.5 of the micro consensus. psi is its inverse.
+                # A transfer from Sweden to the three countries, flagged as such in data/manual_inputs.csv.
+                vmin && (d[:psi] = 1 / manual_input(code, "frisch_elasticity"))
             end
         end
         # Version 5: the pay premium is in the base and dread of job loss is measured without entering

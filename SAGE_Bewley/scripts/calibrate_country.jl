@@ -91,6 +91,10 @@ const V5O = V5 && get(ENV, "SAGE_OUT", "0") in ("1", "2")
 # set at the official minimum income and not fitted (country_config, v3 = :v5m). The hand-to-mouth
 # share and its split by education own patience; the median is a test. Files calibration_v5m_*.
 const V5M = V5O && get(ENV, "SAGE_OUT", "0") == "2"
+# The curvature of the cost of hours on this base (the inverse of the Frisch elasticity in data/manual_inputs.csv).
+# A starting point read from a file fitted at the old curvature of 2 has its effort scale moved so that hours
+# at the reference level stay where they were: phi' = phi e_ref^(2 - psi).
+const PSI_M = V5M ? 1 / manual_input(CODE, "frisch_elasticity") : 2.0
 const V3 = V4 || get(ENV, "SAGE_V3", "0") == "1"
 # THE FLOOR IN THE BASE (SAGE_FLOOR=1 with SAGE_V3=1; V3_START.md, section 22). A means-tested floor
 # (Hubbard, Skinner and Zeldes 1995), financed by the lump-sum tax, with patience the same for all
@@ -440,6 +444,7 @@ function fit_v3(aim_e, aim_h; x0 = [log(7.5), FLOORREG ? 0.93 : 0.90, 0.01, 0.22
     V4 && (lo[4] = 0.0; hi[4] = 1.2; H[4] = 0.05)
     V5 && (lo[4] = hi[4] = 0.0)          # version 5: the permanent types are given (fitted to the deciles before the fit)
     isnan(R_DEPOSITS) || (hi[2] = 0.995)     # with a return below one the most patient type can be more patient and beta R still be below one
+    PSI_M == 2.0 || (hi[1] = log(2000.0))          # the effort scale is larger at a steeper cost of hours (France 65, Germany 104 at psi 7)
     (V5 && flfree) && (hi[5] = 0.60)     # a search bound, raised from 0.30 where Germany's floor sat on it (2026-10-09); it is not to bind
     # A point where the economy has no solution (a floor that cannot be financed: Italy at 0.35,
     # 2026-10-04) is not an error of the fit: it is a point to step away from.
@@ -651,6 +656,7 @@ if ck1 === nothing && V3
             e0 = V4 ? 0.30 : isnan(RHO_TRIAL) ? kv["eta_z"] : clamp(kv["eta_z"] * sqrt((1 - RHO_TRIAL^2) / (1 - 0.92^2)), 0.06, 0.39)          # version 4: where the search for the permanent dispersion starts
             x0e = [log(kv["phi"]), kv["beta_bar"] - ((V4 || !isnan(RHO_TRIAL)) ? 0.0 : 0.02), kv["beta_spread"], e0,
                    CFG == FLOOR_CFG ? (HTM_FIRST ? 0.10 : get(kv, "cfloor", FL[] * E_REF_C) / E_REF_C) : FL[], get(kv, "beta_gap", 0.0)]
+            PSI_M == 2.0 || (x0e[1] += (2.0 - PSI_M) * log(E_REF_C))
             say("  starting from ", basename(fb), isnan(RHO_TRIAL) ? ", patience 0.02 lower" : ", the persistent innovation rescaled to the trial persistence")
         end
     end
