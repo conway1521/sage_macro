@@ -2369,3 +2369,48 @@ S sits on the new G as it sat on the old: both education groups reached, the mul
 - **Transitions with S on, France, zero shock** (38111733309, cancelled after it): exact, participation drifting by 3.6e-12 and welfare 2.8e-8, in 250 minutes. The recession that follows did not fit in the job; Germany's run gave nothing in six hours.
 - **Why the heavy checks stopped fitting**: with the third labour state a household problem has half as many states again. Two changes to the tests, none to the model: the recession with S on is its own run, read against the steady state (`test_transition_s.jl`, second argument `shock`), on 40 years in France and Germany and 20 in Italy, whose problems are three times slower; the asset-grid check with S on runs on every fourth belonging scale, the same for the base and the variant (`numerics_base.jl`).
 - **Started** (10:40 UTC): zero shock with S on, Germany and Italy (38132126573, 38132128047); the recession with S on, three countries (38132129623, 38132131160, 38132132457); the asset grid for G+S+A, France both, Germany doubled, Italy both (38132133939, 38132135466, 38132136656, 38132138129, 38132139751). Running: Italy's on and off (38128710951) and equilibria (38128714314).
+
+## 78. The tests on the new base, nearly complete; A reopened (2026-10-11, 16:40 UTC)
+
+**Passed since section 77.**
+- **On and off, Italy** (38128710951): 16 of 16. With France and Germany (section 76), exact reductions hold in the three countries.
+- **Equilibria, Italy** (38128714314): one stable equilibrium, the solver's, for G+S and G+S+A. So in the three countries.
+- **Transitions with S on, zero shock**: exact in Germany (38132126573: participation drifting by 9.9e-12) and Italy (38132128047: 1.4e-12; the first period is the steady state to six digits), as in France (section 77).
+- **The asset grid with S on** (on every fourth belonging scale): France with the top doubled (38132135466), Germany doubled (38132136656) and with the top doubled (section 77), Italy both (38132138129, 38132139751). The largest moves: 0.0006 in the hand-to-mouth share, 0.0027 in the median, 0.0002 in the MPC. France's doubled grid was killed by the runner twice (three workers, then two) and is running on one (38148549343).
+- **The recession with S on, France** (38132129623, 40 years, 354 minutes): participation falls by 0.28 and 0.40 points in years 2 and 3 and is back within 0.02 by year 12; consumption falls 1.4% and is within 0.02% by year 20; welfare -0.47% of consumption, against -0.47% with S off (section 75).
+
+**Not obtained.** The recession with S on in Germany and Italy: both runs reached the six-hour limit with nothing printed (the fixed point of participation along the path takes about thirty rounds of the whole path). I am not resizing these again. What stands for transitions: a zero shock is exact with S off and S on in the three countries; a recession behaves with S off in the three countries and with S on in France. A practical limit to record: with the state out of work a path with S on costs about six hours a country, which matters for any policy run along a path and would need the path solver to keep its rounds between jobs.
+
+**A is reopened** (the user, 11 October; `DIMENSIONS_SPEC.md`, "A, reopened and scoped"). Scope written, nothing built. The findings so far, from a probe and from the HFCS:
+- a household that chooses its hours solves on the new base (floor off);
+- at the base's preferences it works 28 to 38% more in the poorest quarter of assets than in the richest, where in the HFCS hours are flat or rise a little with wealth (3 to 9%);
+- **a miss of G that no test had looked at**: the base's lower education group works 11 to 14% more than its higher, where the survey has the same or up to 6% less. It comes from the wealth effect on hours (gamma over psi, one in the base) through the hours the job sets, and touches no fitted moment;
+- the input the scope lacks is the size of the wealth effect on hours, for which the published evidence is the earnings response to a windfall (to be read at the source).
+
+Official data recorded: who decides working time by education (`data/validation/agency_working_time.csv`); hours by wealth and by education from the HFCS, aggregates only (`data/validation/hfcs_hours_by_wealth.csv`, script `hfcs_protocol/hfcs_hours.py`).
+
+**The scorecard on the new base: 9 met, 10 partly, 1 to rerun, 2 not, of 22.**
+
+| | on the base with the state out of work | what is left |
+|---|---|---|
+| M1 budget and closure | **met** | |
+| M2 standard blocks | **met** | |
+| M3 parameters sourced | partly, closer | the floor is now the official minimum income; left: the private share of belonging (a band), the place elasticity |
+| M4 every configuration on its targets | partly: 6 of 12 | G+E and G+S+E, not started on this base |
+| M5 spending behaviour | partly | the fall in consumption on job loss 0.30 to 0.35 against 0.07 to 0.16; the MPC's level by country; new: hours by education the wrong way round |
+| M6 who holds no buffer | partly | by education exact; by place not rerun |
+| M7 wealth distribution | to rerun | the two-asset reference |
+| M8 transitions | **met**, with the limit above | the recession with S on in Germany and Italy not obtained |
+| N1 method | **met** | |
+| N2 exact reductions | **met** | 16 of 16 in the three countries |
+| N3 accuracy | **met** bar one run | France's doubled grid with S on, running |
+| N4 independent solver | not | |
+| N5 reproducible | mostly met | |
+| N6 equilibria | **met** | |
+| B1 dimensions | partly | S settled; **A reopened, scoped, not built**; E's sixth channel to build |
+| B2 official data | **met** | |
+| B3 indicators | partly: 20 of 27 | off: the liquid-asset poor in France and Germany, the MPC in France and Italy, France's median and share below half the median, Germany's income and asset poor |
+| B4, B5 welfare tables, accessibility | partly | |
+| U1 any order of switches | partly: 6 of 12 | places |
+| U2 policy levers | partly | |
+| U3 a new country | not tried | |
