@@ -137,3 +137,51 @@ Dread acting on choices was tested on version 5 and the wealth moments still hol
 ## A, settled by the user (10 October 2026)
 
 Job insecurity affects welfare and does not change behaviour: dread of job loss is measured at its published weight and counted in wellbeing, and it does not enter the household's choices. A therefore adds no parameter. A configuration with A reads the calibration of the same one without it and adds the protection indicators and the cost of insecurity. The version with dread in choices (tested 9 October) stays as a variant behind one setting. The other half of the concept, influencing one's fortunes through one's own effort, is to be restored later by choice over hours.
+
+## A, reopened and scoped (11 October 2026)
+
+**Why reopened.** After the decisions of 8 and 10 October the switch changed nothing in the economy: the pay premium had moved to G and dread was counted in wellbeing only. The user, 11 October: "I was wrong to turn it off"; what matters is to "explore properly the existence of A as a dimension and try to get the switch on / off correct". Nothing below is built. It is the scope, for agreement.
+
+**The frame (the user's, after Snower and Lima de Miranda 2020).** Agency is a household's command over its ability to weather shocks such as losing a job. It has two sides.
+- **Wellbeing.** Insecurity is a cost in itself: the dread of losing a job, and the cost of being out of work and of staying out of work.
+- **Behaviour.** Being vulnerable to job loss changes how much a household works.
+
+**The switch, proposed.** A off is G exactly, as now. A on adds two parts, each with its own source.
+
+| part | what it adds | acts on | parameters and their source |
+|---|---|---|---|
+| A1, insecurity in wellbeing | (a) dread of job loss among those in work; (b) a cost of being out of work, in the first year and beyond, over and above the income lost | the wellbeing count only | (a) the published weight (Koszegi and Rabin 2009; Pagel 2017), built; (b) a published life-satisfaction estimate of the non-income cost of unemployment, converted at a published income coefficient: to be chosen and checked at the source (the repository's `data/wellby_coefficients.csv` has a candidate marked to confirm) |
+| A2, hours as a choice | households with control over their working time choose their hours each year, given their wealth, their pay and their risk; the others work the hours the job sets | the household's problem | the share with control, by education, from Eurostat (below); the elasticity of hours already in the base (psi = 2, a Frisch elasticity of 0.5, the micro consensus of Chetty, Guren, Manoli and Weber 2011) |
+
+**The official figures for A2** (Eurostat `lfso_19fxwt01`, Labour Force Survey module of 2019, employed persons aged 15 to 74; `data/validation/agency_working_time.csv`).
+
+| who decides the start and end of working time | France | Germany | Italy |
+|---|---|---|---|
+| the person, fully: below tertiary, tertiary | 0.15, 0.25 | 0.16, 0.31 | 0.15, 0.19 |
+| the person, with restrictions: below tertiary, tertiary | 0.20, 0.36 | 0.23, 0.41 | 0.10, 0.19 |
+| the employer: below tertiary, tertiary | 0.66, 0.39 | 0.61, 0.28 | 0.75, 0.62 |
+
+Control over working time rises with education in the three countries and is lowest in Italy. This gives A back a measured gradient by education, in place of the pay premium that moved to G. One caution: the question is about when one works, not how much. It is the nearest official measure of control over hours by education; a measure of hours wanted against hours worked (`lfso_17cspwt`, involuntary part-time) is the alternative to check.
+
+**What A2 does in the model.** A household that chooses its hours works more when it is poor and when it is exposed, and less when it is comfortable. So it has a second way to absorb a shock beside its savings. Expected, to be tested and not assumed: hours fall with wealth; hours rise with the risk of job loss (precautionary labour supply: Low 2005; Pijoan-Mas 2006; Flodén 2006; Jessen, Rostam-Afschar and Schmitz 2018 estimate its size for Germany); those households respond less in spending to a change in income; protection rises with education because control does. A policy that raises benefits lowers both dread and precautionary hours.
+
+**What it cannot do, to be plain about.** A household out of work cannot work in this model, so hours do not help inside a spell. The channel works before it (buffers built by working more) and after it (rebuilding). The fall in consumption on job loss may ease a little or not at all.
+
+**What has to be built.**
+1. The engine solves chosen hours only without the means-tested floor, and the base now has one (the minimum income). Chosen hours with the floor is a change to a solver file: near the floor an extra euro earned is taken back, so a household there stops working, which is the benefit trap and has to be solved and not avoided.
+2. Two kinds of household in each education group, those who choose and those who do not, with the official shares.
+3. Dread with the state out of work: the prospect of job loss now includes the chance of a long spell.
+4. The cost of being out of work in the wellbeing count.
+5. A calibration of its own for a configuration with A (patience and its gap refitted, since those who choose hours hold different buffers), as the rule on configurations asks. Eight calibrations a country again.
+6. The tests: off gives G exactly; the accuracy check with the hours condition; transitions.
+
+**Risks.**
+- **The MPC.** With hours chosen a constrained household meets a windfall partly by working less, which caps its MPC near psi / (psi + gamma) = 0.5. The model's MPC is already below the survey's in Germany and Italy and above it in France. This is why hours were set by the job on 2 October. A share of choosers moves the MPC part of the way.
+- **The benefit trap** may bite harder than in the data if every euro earned is withdrawn; official withdrawal rates are below one (the OECD's participation tax rates), which would be one more measured input.
+- **Compute** doubles for a configuration with A.
+
+**Choices for the user.**
+1. **Who chooses hours.** Those who decide fully (0.15 to 0.31), or those who decide fully or with restrictions (0.34 to 0.72). Proposed: fully as the base, the wider group as a band.
+2. **The cost of being out of work in wellbeing.** Include it now as a measured cost, once a published estimate is checked at its source; or leave A1 as dread alone. Proposed: include it.
+3. **Dread in choices.** The frame puts behaviour in hours and dread in wellbeing. Proposed: dread stays out of choices; the variant remains behind its setting.
+4. **Order.** A feasibility probe first (does a household that chooses its hours solve on the new base, and how large is the response of hours to wealth and to risk at the literature's elasticity), then the engine work, then the calibrations. The probe is `probe_agency_hours.jl`, started on 11 October; it changes nothing in the model.
