@@ -2422,3 +2422,20 @@ Official data recorded: who decides working time by education (`data/validation/
 **Decided by the user**: "yes move to the european value". The base's Frisch elasticity is 0.14 (Cesarini, Lindqvist, Notowidigdo and Östling 2017, read at the source; psi = 7) in place of 0.5. Why: at 0.5 the base's lower education group worked 11 to 14% more hours than its higher and its poorest quarter 15% more than its richest, where the HFCS has about zero and the reverse; at 0.14 both gaps halve (`probe_agency_hours.jl`, runs 38153101306 and 38156361534). A transfer from Sweden, flagged in `data/manual_inputs.csv`. Recalibration: run 38157468520 (G in the three countries, G+S to follow by the chain); the files `calibration_v5m_*` in the repository are those of the old elasticity until replaced.
 
 **A, scoped to a close** (`DIMENSIONS_SPEC.md`). Read at the source: the Swedish and American lottery studies. Measured: who decides working time by education (Eurostat), hours by wealth and education (HFCS, aggregates). Found: neither hours nor a second earner is a large way of weathering a job loss in European data; a partner's existing earnings are already in G through the household replacement rate. Proposed definition, for the user: insecurity in wellbeing (dread with the long spell; the cost of being out of work), hours as a choice for those with control at the European elasticity, the protection indicators; the second earner's response and dread in choices not built. The user's worry, the same day: "we're getting lost in the weeds". The scoping of A stops here.
+
+## 80. G at the European hours elasticity (2026-10-11, 18:00 UTC)
+
+Run 38157468520. The three countries calibrate; the files `calibration_v5m_{FR,DE,IT}_G.txt` are replaced (the old ones are in the tag `v5.1-base`). G+S follows by the chain (runs 38159671929, 38160920164, 38161501576); until those are in, the G+S files in the repository are still those of the old elasticity.
+
+| G, model and data (at the old elasticity) | France | Germany | Italy |
+|---|---|---|---|
+| hand-to-mouth | 0.270, 0.268 | 0.252, 0.252 | 0.206, 0.203 |
+| its split by education | 0.176, 0.177 | 0.202, 0.200 | 0.134, 0.126 |
+| median liquid wealth over income, untargeted | 0.113, 0.047 (0.110) | 0.134, 0.117 (0.129) | 0.249, 0.229 (0.230) |
+| in-work poverty, official | 0.091, 0.067 (0.072) | 0.085, 0.086 (0.074) | 0.149, 0.117 (0.137) |
+| Gini, official | 0.294, 0.296 | 0.304, 0.304 | 0.310, 0.324 |
+| MPC, survey | 0.41, 0.33 (0.41) | 0.36, 0.46 (0.36) | 0.35, 0.49 (0.36) |
+| fall in consumption on job loss | 0.30 (0.31) | 0.33 (0.35) | 0.29 (0.30) |
+| effort scale, top patience, gap | 62.5, 0.942, 0.048 | 100.9, 0.963, 0.039 | 21.5, 0.954, 0.050 |
+
+Reading: the wealth side holds (the median untargeted within 1.5 standard errors in Germany and half of one in Italy; France as before). **In-work poverty is higher in France and Italy** (0.091 and 0.149 against 0.072 and 0.137 at the old elasticity; Germany's is now on the official rate): with flatter hours the low-paid no longer make up for low pay by working more. Still well under the 1.6 to 1.9 times of the base without the state (now 1.36, 0.99, 1.27 times). The fall in consumption on job loss is a point or two lower. The cost of the change is this one row; what it buys is hours by education and by wealth half as far from the survey.
