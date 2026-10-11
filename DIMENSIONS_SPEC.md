@@ -185,3 +185,23 @@ Control over working time rises with education in the three countries and is low
 2. **The cost of being out of work in wellbeing.** Include it now as a measured cost, once a published estimate is checked at its source; or leave A1 as dread alone. Proposed: include it.
 3. **Dread in choices.** The frame puts behaviour in hours and dread in wellbeing. Proposed: dread stays out of choices; the variant remains behind its setting.
 4. **Order.** A feasibility probe first (does a household that chooses its hours solve on the new base, and how large is the response of hours to wealth and to risk at the literature's elasticity), then the engine work, then the calibrations. The probe is `probe_agency_hours.jl`, started on 11 October; it changes nothing in the model.
+
+**The feasibility probe** (`probe_agency_hours.jl`, run 38153101306, 11 October; G of each country as calibrated, the floor off in every solve, so the three columns compare with each other and not with the calibrated economy).
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| hours of those in work: set by the job, chosen | 0.643, 0.642 | 0.609, 0.610 | 0.726, 0.721 |
+| chosen hours, lowest and highest quarter of assets | 0.707, 0.550 | 0.678, 0.521 | 0.829, 0.601 |
+| the same with hours set by the job | 0.678, 0.591 | 0.644, 0.562 | 0.771, 0.664 |
+| hours when job loss is 1.5 times as likely | +0.4% | +0.4% | +0.6% |
+| households with no buffer: job, chosen | 0.359, 0.394 | 0.332, 0.339 | 0.220, 0.233 |
+| spending in the first year out of work over spending in work: job, chosen | 0.640, 0.651 | 0.599, 0.614 | 0.652, 0.670 |
+| mean spending: job, chosen | 0.565, 0.551 | 0.533, 0.522 | 0.625, 0.614 |
+
+What it says.
+1. **It solves.** A household that chooses its hours has a solution on the new base in the three countries, the floor apart.
+2. **Hours move with wealth, strongly**: with hours chosen the poorest quarter works 28 to 38% more than the richest. This is the second way of absorbing a shock, and it is large at the base's preferences (the wealth effect on hours is gamma over psi, which is one). The data's relation between hours and wealth is weak, so this is the moment that will discipline A2 and it may ask for fewer choosers or a smaller wealth effect than the literature's elasticity alone implies. To be measured before building: hours by income or wealth in an official source.
+3. **Hours rise with risk, a little**: half as much job-loss risk again raises hours by about half a percent, more among the poorest quarter (1 to 2%). Precautionary labour supply is there and small.
+4. **Those who can adjust hours hold less buffer**: the share with none rises by 1 to 4 points. Hours stand in for savings, as the literature on labour supply as self-insurance finds.
+5. **The fall in spending on job loss eases by 1 to 2 points**, as cautioned: hours do not help inside a spell.
+6. **Mean spending is 2% lower with hours chosen at the same mean hours**: hours move from well-paid to poorly paid states, since it is the poor who work more. An output cost of the wealth effect on hours, to keep in view.
