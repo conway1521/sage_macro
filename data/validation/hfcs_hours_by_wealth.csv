@@ -1,0 +1,36 @@
+# Aggregates only, from hfcs_protocol/hfcs_hours.py run locally on the 2021 wave. This paper uses data from the Eurosystem Household Finance and Consumption Survey.
+# Persons aged 25 to 59 in work with positive weekly hours in the main job (PE0600); quarters by the household's deposits (DA2101) and net wealth (DN3001), formed among these persons within country; household weights; mean of five implicates.
+country,sort,group,mean_weekly_hours,persons_unweighted
+DE,all,all,37.87,2966
+DE,deposits,quarter_1,36.56,441
+DE,deposits,quarter_2,38.81,569
+DE,deposits,quarter_3,37.65,854
+DE,deposits,quarter_4,38.46,1101
+DE,education,below_tertiary,36.98,1394
+DE,education,tertiary,39.28,1567
+DE,net_wealth,quarter_1,36.23,373
+DE,net_wealth,quarter_2,38.96,550
+DE,net_wealth,quarter_3,37.56,719
+DE,net_wealth,quarter_4,38.70,1323
+FR,all,all,33.81,9072
+FR,deposits,quarter_1,33.05,1437
+FR,deposits,quarter_2,34.18,2008
+FR,deposits,quarter_3,33.94,2418
+FR,deposits,quarter_4,34.07,3209
+FR,education,below_tertiary,33.48,3882
+FR,education,tertiary,34.20,5190
+FR,net_wealth,quarter_1,33.27,1332
+FR,net_wealth,quarter_2,34.14,1655
+FR,net_wealth,quarter_3,33.89,2401
+FR,net_wealth,quarter_4,33.94,3684
+IT,all,all,37.11,4462
+IT,deposits,quarter_1,35.61,918
+IT,deposits,quarter_2,37.21,882
+IT,deposits,quarter_3,36.89,1113
+IT,deposits,quarter_4,38.72,1549
+IT,education,below_tertiary,37.23,2630
+IT,education,tertiary,36.77,1832
+IT,net_wealth,quarter_1,36.49,645
+IT,net_wealth,quarter_2,36.60,907
+IT,net_wealth,quarter_3,37.12,978
+IT,net_wealth,quarter_4,38.23,1932

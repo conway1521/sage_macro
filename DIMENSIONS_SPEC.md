@@ -205,3 +205,26 @@ What it says.
 4. **Those who can adjust hours hold less buffer**: the share with none rises by 1 to 4 points. Hours stand in for savings, as the literature on labour supply as self-insurance finds.
 5. **The fall in spending on job loss eases by 1 to 2 points**, as cautioned: hours do not help inside a spell.
 6. **Mean spending is 2% lower with hours chosen at the same mean hours**: hours move from well-paid to poorly paid states, since it is the poor who work more. An output cost of the wealth effect on hours, to keep in view.
+
+**The data against the probe: hours by wealth in the HFCS** (`hfcs_protocol/hfcs_hours.py`, run locally, aggregates only, `data/validation/hfcs_hours_by_wealth.csv`; persons aged 25 to 59 in work, 2021 wave).
+
+| weekly hours in the main job | France | Germany | Italy |
+|---|---|---|---|
+| lowest quarter of household deposits | 33.1 | 36.6 | 35.6 |
+| highest quarter | 34.1 | 38.5 | 38.7 |
+| lowest and highest quarter of net wealth | 33.3, 33.9 | 36.2, 38.7 | 36.5, 38.2 |
+| below tertiary, tertiary | 33.5, 34.2 | 37.0, 39.3 | 37.2, 36.8 |
+| the model, hours chosen: poorest quarter over richest | +28% | +30% | +38% |
+| the model, hours set by the job (the base): the same | +15% | +15% | +16% |
+| the model, the base: below tertiary over tertiary | +11% | +14% | +12% |
+
+**What this changes in the scope.**
+1. **In the data hours do not fall with wealth.** They are flat or rise a little (3 to 9% from the lowest to the highest quarter). With hours chosen at the base's preferences the model has them fall by a quarter to a third. Built as proposed, A2 would put into the model a behaviour the data do not show.
+2. **The reason is the strength of the wealth effect on hours**, gamma over psi, which is one in the base. It is not a parameter anyone chose for this purpose: hours have been set by the job since 2 October, and it only mattered through the job's average.
+3. **The base itself has hours by education the wrong way round**: its lower education group works 11 to 14% more than its higher, where the survey has it work the same or up to 6% less. This is a miss of G that no test had looked at. It comes from the same wealth effect, through the hours the job sets. It does not touch the fitted moments (mean effort is fitted, incomes are fitted to the deciles), but it is a property a labour economist would notice.
+4. **So A2 needs one more measured input before it is built: the size of the wealth effect on hours.** The clean published evidence is the response of earnings to a windfall (lottery studies: Imbens, Rubin and Sacerdote 2001; Cesarini, Lindqvist, Notowidigdo and Östling 2017, both to be read at the source for the number), which is modest. A cross-section by wealth, as above, mixes that effect with pay (the better paid are wealthier and work no less), so it is a test and not the estimate.
+5. **What follows for the size of A2.** With a wealth effect as small as that evidence suggests, hours respond little to vulnerability, and the behaviour side of A through hours will be small. That would be a finding to report as it is. The larger response of a household to vulnerability in this model is its saving, which G already has.
+
+**Choices added for the user.**
+5. **The wealth effect on hours.** Fit it to the published earnings response to a windfall, in A2 and in the hours the job sets (which would also be tested against hours by education). This is a change to preferences and so to the base; or leave the base's hours as they are and state the miss. Proposed: read the two sources first and bring the numbers, then decide.
+6. **If hours turn out to be a small channel**, whether the behaviour side of A should also carry something else that the data support, to be looked for (the second earner going to work when the first loses a job is the classic one, and the survey could measure it), or whether a small A2 reported as such is the answer.
