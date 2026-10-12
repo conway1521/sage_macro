@@ -259,6 +259,11 @@ Base.@kwdef struct SAGEConfig
     # own and negative resources after the lump-sum tax, which the household problem does not solve
     # (first run, 2026-10-05: not a number throughout).
     assist_long::Float64 = NaN
+    # The part of that income paid by the state (2026-10-12; V3_START.md section 89): where the state out of
+    # work pays the measured income of jobless households, which holds other members' incomes too, the public
+    # outlay is the statutory minimum income and the rest is the household's own, as a partner's earnings are
+    # in the replacement rate. NaN: all of it is public.
+    assist_public::Float64 = NaN
     # PATIENCE BY EDUCATION: a shift of the discount factor in each cell, zero by default. The base
     # puts the hand-to-mouth in the wrong cell (France G+A: 7% below tertiary and 53% with tertiary,
     # against 26% and 15% in the HFCS; test_cell_wealth.jl, 2026-10-05): with one patience for all,
@@ -620,11 +625,15 @@ function assist_of(c::SAGEConfig)
     al > 0 || error("the long-term state needs assistance: give assist_long, or turn the means-tested floor on")
     al
 end
+"Assistance in the long-term state where there is one, else one (for ratios taken whether or not the state is on)."
+assist_of_or_one(c::SAGEConfig) = isnan(c.f_long[1]) ? 1.0 : assist_of(c)
+"The part of the long-term state's income that the state pays: all of it, or `assist_public` where that is given and lower."
+assist_public_of(c::SAGEConfig) = isnan(c.f_long[1]) ? 1.0 : isnan(c.assist_public) ? assist_of(c) : min(c.assist_public, assist_of(c))
 "What assistance in the long-term state costs per head: the state's mass in each cell times the amount (zero without the state)."
 function assist_tax_of(c::SAGEConfig)
     (c.unemployment && !isnan(c.f_long[1])) || return 0.0
     sum(x.share * unemployment_process(SAGEParams(nz = c.nz, α = fill(x.α, c.nz), B = fill(1.0, c.nz), ρ = c.rho, η = c.eta_z), x.δ, c.f_find; fL = x.fL).l
-        for x in cells_of(c)) * assist_of(c)
+        for x in cells_of(c)) * assist_public_of(c)
 end
 
 "Unemployment-insurance tax implied by a config, closed form (zero when off)."
@@ -719,7 +728,7 @@ function floor_tax_of(c::SAGEConfig)
     isnan(c.floor_tax_given) || return c.floor_tax_given
     c.effort_mode === :job || error("the means-tested floor needs effort_mode = :job")
     c0 = floor_effort(SAGEConfig(c; S = false, E = false, cfloor = c.cfloor))
-    key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.f_long, c0.assist_long, c0.control_share, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
+    key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.f_long, c0.assist_long, c0.assist_public, c0.control_share, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
                      c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop)))
@@ -1456,6 +1465,8 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
     # one measured minimum income (v3 = :v5m): assistance in the state out of work is the floor's level,
     # given outright so that it stays when a step of the solution switches the floor off
     (v3 !== false && v3 !== true && string(v3) == "v5m" && !haskey(d, :assist_long) && get(d, :cfloor, 0.0) > 0) && (d[:assist_long] = d[:cfloor])
+    # ... and the state's part of that income is the statutory minimum, the floor's level (assist_public)
+    (v3 !== false && v3 !== true && string(v3) == "v5m" && !haskey(d, :assist_public) && get(d, :cfloor, 0.0) > 0) && (d[:assist_public] = d[:cfloor])
     SAGEConfig(; d...)
 end
 

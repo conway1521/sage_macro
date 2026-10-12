@@ -223,6 +223,9 @@ const PF = Ref(Float64[]); const PW = Ref(Float64[])
 # (G) and written to the file; NaN leaves country_config's starting value.
 const ASSIST = Ref(NaN)
 const MIN_MED = V5O ? manual_input(CODE, "min_income_pct_median") : NaN
+# The income of the households in the state out of work, over the median: Eurostat's median income of people in
+# households with very low work intensity (the state pays it; the floor for everyone else stays the minimum income)
+const JOB_MED = V5M ? manual_input(CODE, "jobless_income_over_median") : NaN
 # DREAD IN CHOICES (decision A1, DIMENSIONS_SPEC.md; adopted 2026-10-09 after the test of V3_START.md
 # section 55): in version 5 a configuration with A has the employed bear the cost of their exposure to
 # job loss when they choose, at the published weight, where A until then only measured it. Such a
@@ -625,9 +628,10 @@ function fit_types(phi)
     P = fit_permanent(cfg_off(phi, 0.0), CODE)
     if V5O
         a = MIN_MED * P.model.med
-        V5M ? (FL[] = a / E_REF_C) : (ASSIST[] = a)          # one measured minimum income: the floor itself; otherwise the state's assistance
+        V5M ? (FL[] = a / E_REF_C; ASSIST[] = JOB_MED * P.model.med) : (ASSIST[] = a)          # the floor is the minimum income; the state pays the measured income of jobless households
         P = fit_permanent(cfg_off(phi, 0.0), CODE)
-        @printf("  %s: %.4f, %.3f of the median (official %.2f)\n", V5M ? "the minimum income, floor and assistance" : "assistance in the state out of work", a, a / P.model.med, MIN_MED)
+        @printf("  %s: %.4f, %.3f of the median (official %.2f)\n", V5M ? "the minimum income, the floor" : "assistance in the state out of work", a, a / P.model.med, MIN_MED)
+        V5M && @printf("  the income of households in the state out of work: %.4f, %.3f of the median (official %.3f)\n", ASSIST[], ASSIST[] / P.model.med, JOB_MED)
     end
     P
 end
