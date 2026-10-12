@@ -2569,3 +2569,16 @@ The user asked for the split of section 87 to be checked against the literature 
 Jobless households have other income (other members, disability and other benefits) and sit at about half the median, not at the single adult's minimum. Their official poverty rate (66%, 52.5%, 66%, section 69) says the same: a third to a half are not below the line, where in the model all of them are. Section 73 had noted the symptom (too many people below 40% of the median in France and Germany).
 
 **So the first step is the income in the state, at its measured level**, with the structure kept: the state pays the median income of jobless households over the overall median (Eurostat), and the means-tested floor for everyone stays the statutory minimum (OECD). Two measured numbers, none fitted. The split stays in reserve. For the user to decide.
+
+## 89. The state out of work pays the measured income of jobless households (2026-10-12, 20:50 UTC)
+
+**Decided by the user** ("yes" to section 88's step). Tag `v5.2-base` marks the state before it: the European elasticity, A built, the state paying the statutory minimum.
+
+**The change** (under `v5m`; nothing fitted).
+- The state out of work pays the median income of people in households with very low work intensity over everyone's median, ages 18 to 64 (Eurostat ilc_di07 over ilc_di03, 2023: 0.503, 0.540, 0.455; input `jobless_income_over_median`), times the model's median, found where the income types are fitted and written to the file as `assist_long`.
+- The means-tested floor for everyone else stays the OECD's minimum income (0.36, 0.37, 0.40 of the median).
+- **The state's part of that income is the statutory minimum** (`assist_public`, the floor's level); the rest is the household's own (other members, other income), as a partner's earnings are in the replacement rate. The benefit tax and the path's tax use the state's part. A simplification to state: some of the rest is public too (disability benefits), which the tax then understates.
+
+**Expected, stated before the run**: a smaller fall in consumption on job loss (the prospect is less harsh), fewer people under 40% of the median in France and Germany, patience a little lower (less to insure against). In-work poverty may move either way, since the income types are refitted with the jobless households higher in the distribution.
+
+**Started**: G in the three countries (run 38302262132); G+S and G+S+A follow once G's files are in. Germany's G+S+A on the earlier income (38282888006) is still in its last job; its file would be superseded.
