@@ -2548,3 +2548,24 @@ At G+S+A's parameters, A off lowers France's participation from 0.233 to 0.230 a
 5. A caution on the comparison: the model's figure is for a full year out of work, the literature's for spells that are mostly shorter. Not quantified.
 
 **The remedy on the table** is the split left open on 10 October: the state reached through job loss sized to the long-term unemployed, and the jobless households outside the labour force as households who are not reached through job loss. For the user to decide; nothing changed.
+
+## 88. Is the split the literature's step? Checked, and it is not the first one (2026-10-12, 20:30 UTC)
+
+The user asked for the split of section 87 to be checked against the literature before anything is built.
+
+**The structure as it is has a canonical precedent.** McKay and Reis (2016, Econometrica 84(1); the accepted version read): a household is employed, unemployed, or "needy or long-term unemployed". The unemployed find a job or exhaust their benefit and become needy; nobody goes from work to needy directly or from needy back to unemployed; the needy receive a lump-sum safety-net transfer (food stamps, cash assistance to the very poor, transfers to the disabled), regain work less often, and their number is calibrated to the count of recipients of those transfers. That is the engine's three states, sized to those on the safety net, as here. A split has precedents too (three labour-market states with flows in and out of the labour force: Krusell, Mukoyama, Rogerson and Şahin 2017, American Economic Review 107(11), seen at abstract level), but it is the heavier model and needs flows by age that Eurostat does not publish yearly.
+
+**What the evidence on consumption points to is the depth of the fall, not the structure.** Ganong and Noel (2019, American Economic Review 109(7); the figures as in the working-paper versions, the published text not opened): spending falls by 6% at the onset of unemployment and by a further 13% when the benefit is exhausted. In the model consumption beyond a year out of work is 35 to 44% of consumption in work (section on the hours probe), a far deeper fall.
+
+**The official income of jobless households says the same** (Eurostat ilc_di07 and ilc_di03, 2023, ages 18 to 64, median equivalised income).
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| people in households with very low work intensity | 12,796 | 15,154 | 9,425 |
+| everyone aged 18 to 64 | 25,457 | 28,062 | 20,693 |
+| ratio | 0.50 | 0.54 | 0.46 |
+| what the model pays in the state (the OECD's minimum income for a single adult) | 0.36 | 0.37 | 0.40 |
+
+Jobless households have other income (other members, disability and other benefits) and sit at about half the median, not at the single adult's minimum. Their official poverty rate (66%, 52.5%, 66%, section 69) says the same: a third to a half are not below the line, where in the model all of them are. Section 73 had noted the symptom (too many people below 40% of the median in France and Germany).
+
+**So the first step is the income in the state, at its measured level**, with the structure kept: the state pays the median income of jobless households over the overall median (Eurostat), and the means-tested floor for everyone stays the statutory minimum (OECD). Two measured numbers, none fitted. The split stays in reserve. For the user to decide.
