@@ -2603,3 +2603,29 @@ Jobless households have other income (other members, disability and other benefi
 **The correction**: the income in the state is a share of what the household would earn, the measured ratio of the median income of people in jobless households to that of the rest (Eurostat ilc_di07, 2023: 0.480, 0.509, 0.437; input `jobless_income_over_rest`; the engine's `rr_long`), so it is spread as earnings are. It is treated as the household's own income (other members, other entitlements: `long_public_share` zero); the state's part is what the means-tested floor, the statutory minimum income, tops up. Untargeted tests for it: the poverty rate of jobless households (66%, 52.5%, 66%) and the share under 40% of the median.
 
 **Started**: G in the three countries with both (run 38309820886).
+
+## 91. G with both corrections (2026-10-12, 22:35 UTC)
+
+Run 38309820886: the income process net of job loss, and the jobless households' income as a measured share of earnings (section 90). The three countries calibrate; G's files are replaced (the earlier ones are in the tag `v5.2-base`).
+
+| G, before and after (data or official) | France | Germany | Italy |
+|---|---|---|---|
+| fall in consumption on job loss (literature 0.07 to 0.16) | 0.30, 0.21 | 0.33, 0.21 | 0.29, 0.19 |
+| people under 40% of the median | 0.069, 0.039 (0.042) | 0.086, 0.059 (0.052) | 0.053, 0.086 (0.101) |
+| in-work poverty | 0.091, 0.087 (0.067) | 0.085, 0.116 (0.086) | 0.149, 0.171 (0.117) |
+| hand-to-mouth | 0.270, 0.269 (0.268) | 0.252, 0.254 (0.252) | 0.206, 0.201 (0.203) |
+| median liquid wealth over income, untargeted | 0.113, 0.097 (0.047) | 0.134, 0.137 (0.117) | 0.249, 0.356 (0.229) |
+| MPC, a test | 0.41, 0.39 (0.33) | 0.36, 0.33 (0.46) | 0.35, 0.26 (0.49) |
+| Gini | 0.294, 0.284 (0.296) | 0.304, 0.302 (0.304) | 0.310, 0.320 (0.324) |
+| top patience | 0.942, 0.963 | 0.963, 0.984 | 0.954, 0.983 |
+
+1. **The fall in consumption on job loss is repaired in the three countries**: 0.19 to 0.21, from 0.29 to 0.33; the literature's range is 0.07 to 0.16 for spells mostly shorter than the model's full year.
+2. **The bottom of the income distribution is right in the three countries**: the share under 40% of the median within 0.015 of the official one, where France and Germany had too many and Italy too few.
+3. **France improves on every row**, its median liquid wealth included.
+4. **In-work poverty is up in Germany and Italy**, to 1.35 and 1.46 times the official rate (France 1.3 times). A low-paid type of 7 to 11% of households is back. Still under the 1.6 to 1.9 times of the base without the state.
+5. **Italy's wealth side has slipped**: the untargeted median is three standard errors above the data and the MPC is down to 0.26. With less income risk to insure against, the hand-to-mouth share needs more patience (0.98), and more patience holds more wealth at the median.
+6. Patience is 0.02 to 0.03 higher everywhere, the mirror of item 5: the double-counted risk had been offset by impatience.
+
+**Kept as the base.** The first correction puts right the use of a published estimate and is not optional; the second gives the two results above. The misses are named: in-work poverty in Germany and Italy, Italy's median and MPC. The split of the state (the unemployed apart from the inactive) remains the structural answer to item 4 and is not built.
+
+**Started**: G+S and G+S+A in the three countries.
