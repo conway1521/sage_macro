@@ -2499,3 +2499,20 @@ Started: the indicator table and the MPC's properties for G+A in the three count
 - **Asset grid, France's G+A** (38194283591, one worker): passes, grid doubled and top doubled (the median moves by 0.0019). So in the three countries.
 - **Zero shock with S on**: Germany exact (38178721188: participation drifting by 1.3e-11) and Italy (section 84). France's run on 40 years reached the six-hour limit with nothing printed; restarted on 20 years.
 - Running: on and off with A (G+A, G+S+A) and the equilibria, three countries.
+
+## 86. A with S: participation rises, so G+S+A is calibrated on its own (2026-10-12, 08:30 UTC)
+
+**On and off with A** (runs 38194192490 Germany, 38194197481 Italy; France's 38194187407 reached six hours inside its G+S+A solve).
+- Germany: 7 of 8; Italy: 6 of 8. What passes: S off exact, belonging adds to welfare, the budget, the MPC, G+A's targets in Germany.
+- **What fails, and why it is a finding**: G+S+A read from G+S's file has participation of 0.295 in Germany against a target of 0.279, and 0.132 against 0.125 in Italy. Households who choose their hours make time to take part by working less, so they take part more; the gap between the education groups widens (`DIMENSIONS_SPEC.md`, "A and S together").
+- Italy's G+A misses hours by 0.0051 against a tolerance of 0.005: the benefit trap, counted as in work at zero hours.
+
+**Equilibria** (38194199204): Italy, one stable equilibrium, the solver's, for G+S and for G+S+A with choosers. France's and Germany's runs passed G+S and reached six hours inside G+S+A.
+
+**Two changes.**
+1. Households with a job who work no hours are out of work in the reporting (`idle_E` in `unemployment_core.jl`, a solver file; `mean_effort_employed` over those who work; `idle` reported).
+2. A configuration with S and A is calibrated on its own under this base (`calibrate_country.jl`: starts from the same configuration without A, reads the floor and the income types from G; `country_config` and the on/off test read its file once it exists). G+A reads G.
+
+**Started**: G+S+A in the three countries (run 38221595571; long, with hand-overs: a G+S+A solve is about five hours in France on these runners); Italy's G+A on and off again (38221598022). France's zero shock with S on, 20 years, is running (38202237159).
+
+**The cost of A with S, after the restructuring**: two thirds of what it was, and still about five hours a solve in France. Every test that needs a G+S+A solve is at the edge of a job. The calibration's own last step checks the targets; the other checks with G+S+A will be run from the calibration's cached families where possible.
