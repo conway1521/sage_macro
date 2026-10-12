@@ -2516,3 +2516,35 @@ Started: the indicator table and the MPC's properties for G+A in the three count
 **Started**: G+S+A in the three countries (run 38221595571; long, with hand-overs: a G+S+A solve is about five hours in France on these runners); Italy's G+A on and off again (38221598022). France's zero shock with S on, 20 years, is running (38202237159).
 
 **The cost of A with S, after the restructuring**: two thirds of what it was, and still about five hours a solve in France. Every test that needs a G+S+A solve is at the edge of a job. The calibration's own last step checks the targets; the other checks with G+S+A will be run from the calibration's cached families where possible.
+
+## 87. G+S+A in France and Italy; where the fall in consumption on job loss comes from (2026-10-12, 19:45 UTC)
+
+**G+S+A, calibrated on its own** (households who choose their hours in; run 38221595571 and its hand-overs 38239203519, 38246503406; both ended at the six-hour limit inside the last, informational step, after the file was written). Files kept for France and Italy; Germany's third job is running (38282888006).
+
+| G+S+A, model and target | France | Italy |
+|---|---|---|
+| participation, below tertiary and tertiary | 0.203, 0.291 (0.203, 0.291) | 0.116, 0.165 (0.116, 0.165) |
+| hand-to-mouth | 0.269, 0.268 | 0.205, 0.203 |
+| hours of those who work | 0.643, 0.643 | 0.724, 0.725 |
+| multiplier and band | 1.3, 1.2 to 1.7 | 1.2, 1.1 to 1.5 |
+| S's parameters (G+S's) | kappa 7.85, sigma 1.74 (7.65, 1.70) | 3.75, 1.88 (4.35, 2.00) |
+| MPC; earnings response to a windfall; fall on job loss | 0.40; -0.014; 0.30 | 0.34; -0.010; 0.29 |
+
+At G+S+A's parameters, A off lowers France's participation from 0.233 to 0.230 and Italy's from 0.125 to 0.117. Also in: Italy's G+A on and off 4 of 4 with the reporting of section 86 (38221598022); France's zero shock with S on exact on 20 years (38202237159), so in the three countries.
+
+**The fall in consumption on job loss, diagnosed** (`probe_job_loss_fall.jl`, run 38288478797; G as calibrated, one change at a time, nothing refitted).
+
+| the fall | France | Germany | Italy |
+|---|---|---|---|
+| as calibrated | 0.300 | 0.334 | 0.288 |
+| without the state out of work | 0.162 | 0.183 | 0.132 |
+| the first year replaced in full | 0.203 | 0.259 | 0.212 |
+| the job-finding rate of those out of work under a year (0.79, 0.84, 0.73 in place of 0.55, 0.64, 0.44) | 0.227 (not valid: it asks France's tertiary group for an exit above one) | 0.260 | 0.211 |
+
+1. **It is the prospect, not the first year's income.** With no income lost in the first year the fall is still 0.20 to 0.26. A household that loses its job cuts spending because of what may follow.
+2. **What may follow is the state out of work.** Without it the fall is 0.13 to 0.18, at the upper edge of the literature's 0.07 to 0.16. The state adds 0.14 to 0.16.
+3. **Why it weighs so much.** The state is sized to all jobless households, of whom a third to under a half are unemployed, and its exit is what that count implies: 7 to 9% a year in Germany, over a decade on the minimum income. Every job loser in the model looks ahead to that with the probability of not finding work in the year (36 to 56%). This is the limit named on 10 October (section 69, reading 2 and open choice 3): one state for the unemployed and the inactive gives the unemployed the persistence of the inactive.
+4. **The faster job-finding of new job losers** takes 0.07 to 0.08 off and is not enough on its own.
+5. A caution on the comparison: the model's figure is for a full year out of work, the literature's for spells that are mostly shorter. Not quantified.
+
+**The remedy on the table** is the split left open on 10 October: the state reached through job loss sized to the long-term unemployed, and the jobless households outside the labour force as households who are not reached through job loss. For the user to decide; nothing changed.
