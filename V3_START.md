@@ -2474,3 +2474,21 @@ Started: the indicator table and the MPC's properties for G+A in the three count
 **The cost of A with S.** A configuration with A has three times the household problems. A solve of G+S+A is then about 3.5 hours in France and Germany and about 7.5 in Italy, which does not fit in a job. The on/off test now runs the configurations asked for (`cfg=`), and Italy's G+S+A is not run for now. Two ways to bring it down, neither taken yet: weights by education cell in place of the three common groups (two thirds of the cost; a change through `sage_modular.jl`), and a job that keeps the families between runs. This will matter for every table that needs G+S+A.
 
 **Started at 22:05 UTC, twenty runs** (38178683523 to 38178722965): on and off for G and G+S in the three countries and for G+A and G+S+A in France and Germany, G+A in Italy; Euler errors; the asset grid for G+A; equilibria in France and Germany; transitions with S off (G) and a zero shock with S on (G+S), both with A off since the path solver does not cover households who choose.
+
+## 84. Weights by education cell; the battery at the European elasticity (2026-10-12, 02:15 UTC)
+
+**Weights by education cell** (asked by the user). Households who choose their hours are now a second group in each cell with the cell's own share, in place of three groups with common weights: ten household problems a cell with A on where there were fifteen (`betas_by_cell`, `control_groups(c, g)`, `has_choosers`; `betas_of` refuses a configuration with choosers). Checked without a solve: ten problems a cell, weights summing to one, the share choosing equal to the official one in each cell, G's weights unchanged. The four heavy runs with S and A were stopped and started again on it, with Italy's now included, and A's probe is rerun as a check that the economy is the same as with three groups.
+
+**The battery so far, at the European elasticity** (runs of 22:05 UTC, section 83).
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| on and off, G and G+S | 9 of 9 | 9 of 9 | 9 of 9 |
+| Euler errors, households of G+S+A (those who choose included) | pass | pass | pass |
+| asset grid, G+A | killed by the runner on two workers; rerun on one | pass | pass |
+| transitions with S off (G) | 4 of 4 | 4 of 4 | 4 of 4 |
+| zero shock with S on (G+S) | running | running | exact (1.3e-12) |
+| on and off, G+A and G+S+A | rerunning | rerunning | G+A: 3 of 4 |
+| equilibria | rerunning | rerunning | running |
+
+**Italy's G+A misses its hours target by a hair**: mean hours of those in a job 0.7201 against 0.7252, 0.0051 where the tolerance is 0.005; the hand-to-mouth share is on target (0.206, 0.203). All of it is the benefit trap: 3.7% of those who choose their hours and have a job work none, and they are counted as in work with zero hours. A household that has a job, works no hours and lives on the minimum income is out of work in any survey's sense. To put right in the reporting (count it as out of work, which also adds 0.6 points to Italy's jobless households), together with the cost of being out of work, since both need the same definition. Not a reason to give A a calibration of its own.
