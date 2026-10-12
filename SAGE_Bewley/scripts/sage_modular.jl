@@ -1036,8 +1036,11 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
             # this was divided by everyone (the unemployed counting as zero), so
             # every calibration had fitted per-person effort to an employed-person
             # target; all were redone.
+            # over those who work: a household with a job that works no hours (it chooses its hours and lives on the
+            # minimum income) is out of work, and is reported as `idle` (2026-10-12)
             mean_effort_employed = sum(cs[g].share * pooled[g].eff_E for g in 1:2) /
-                                   sum(cs[g].share * sum(pooled[g].mass[emp]) for g in 1:2),
+                                   sum(cs[g].share * (sum(pooled[g].mass[emp]) - pooled[g].idle_E) for g in 1:2),
+            idle = sum(cs[g].share * pooled[g].idle_E for g in 1:2),
             unemployment = sum(cs[g].share * sum(pooled[g].mass[.!emp]) for g in 1:2),
             partbase = sum(cs[g].share * pooled[g].pbase for g in 1:2),
             rate_E = sum(cs[g].share * sum(pooled[g].part[emp]) for g in 1:2) /
@@ -1410,6 +1413,13 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
         v5dread = v5 && get(ENV, "SAGE_DREAD_CHOICE", "0") == "1"
         v5dread && (d[:dread_mode] = :behaviour)
         cal = joinpath(@__DIR__, "calibration_$(vtag)_$(code)_$((v5 && !v5dread) ? replace(config, "A" => "") : config)" * (illq ? "_I" : "") * ".txt")
+        # With households who choose their hours (v5m) A adds no parameter to G, so G+A reads G's file; but it
+        # moves participation where S is on (those who choose make time for it), so a configuration with S and
+        # A has a file of its own once it is calibrated, and reads the one without A until then (2026-10-12).
+        if vmin && occursin('A', config)
+            own = joinpath(@__DIR__, "calibration_$(vtag)_$(code)_$(config)" * (illq ? "_I" : "") * ".txt")
+            isfile(own) && (cal = own)
+        end
         # In the floor regime places differ by the household's income per head (:conversion_hh): what
         # is not unemployment in a low employment rate stays in the place's income, so a poor place is
         # poor against the national floor and not only riskier (V3_START.md, sections 21 and 22).

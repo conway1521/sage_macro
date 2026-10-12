@@ -134,7 +134,7 @@ function collapse(ds, w)
     acc(fld) = sum(w[i] .* getfield(ds[i], fld) for i in 1:n)
     (W = acc(:W), K = acc(:K), N = acc(:N), mass = acc(:mass), part = acc(:part), Y = acc(:Y), Ys = acc(:Ys), fout = acc(:fout),
      ym_s = acc(:ym_s), jinc = acc(:jinc), jboth = acc(:jboth), ymean = acc(:ymean),
-     rate = acc(:rate), minc = acc(:minc), pbase = acc(:pbase), eff_E = acc(:eff_E),
+     rate = acc(:rate), minc = acc(:minc), pbase = acc(:pbase), eff_E = acc(:eff_E), idle_E = acc(:idle_E),
      ypoor = acc(:ypoor),
      ymin_E = minimum(d.ymin_E for d in ds), thresholds = ds[1].thresholds)
 end
@@ -186,6 +186,10 @@ function cell_summary(p::SAGEParams, sol; thresholds = nothing)
     thr = thresholds === nothing ? Tuple{Float64,Float64}[] : collect(thresholds)
     np = length(thr)
     jinc = zeros(nz, np); jboth = zeros(nz, np); eff_E = 0.0
+    # households with a job who work no hours (A, 2026-10-12): those who choose their hours and live on the
+    # minimum income, where a euro earned is taken back. Out of work in any survey's sense, so the mean hours
+    # of those in work are taken over the others. Zero where hours are set by the job.
+    idle_E = 0.0
     # Asset-poor mass BY INCOME, accumulated here because it needs the joint
     # distribution of income and wealth, which cannot be recovered from the two
     # marginals afterwards. `ypoor` is cumulative on YGRID exactly as `Y` is,
@@ -234,6 +238,7 @@ function cell_summary(p::SAGEParams, sol; thresholds = nothing)
             ymean += wd * y; ym_s[i_z] += wd * y
             employed && y < ymin_E && (ymin_E = y)
             employed && (eff_E += wd * sol.e_d[d+1][i_a, i_z])
+            employed && sol.e_d[d+1][i_a, i_z] <= 1e-9 && (idle_E += wd)
             if Δz == 0
                 k = searchsortedfirst(YGRID, y)
                 if k <= length(YGRID)
@@ -273,7 +278,7 @@ function cell_summary(p::SAGEParams, sol; thresholds = nothing)
     cumsum!(Y, Y); cumsum!(ypoor, ypoor)
     (W = W, K = zeros(nz, 1), N = zeros(nz, 1), mass = mass, part = part, Y = Y, Ys = Ys, ymean = ymean, ym_s = ym_s,
      ymin_E = ymin_E, rate = sol.rate, minc = sol.meaninc, pbase = sol.partbase,
-     jinc = jinc, jboth = jboth, thresholds = thr, eff_E = eff_E, ypoor = ypoor, fout = fout)
+     jinc = jinc, jboth = jboth, thresholds = thr, eff_E = eff_E, idle_E = idle_E, ypoor = ypoor, fout = fout)
 end
 
 # ----------------------------------------------------------- categories --

@@ -110,7 +110,7 @@ const FLOORREG = V4 || (V3 && get(ENV, "SAGE_FLOOR", "0") == "1")
 # regions are in, and no configuration with places then meets the hand-to-mouth share.
 # Version 5: the floor is fitted in G, and again in G+A, where dread changes how much is saved; the
 # configurations with S or places read it from G or from G+A according to whether A is on.
-const FLOOR_CFG = V5 ? (occursin('A', CFG) ? "GA" : "G") : uppercase(get(ENV, "SAGE_FLOOR_FROM", "G"))
+const FLOOR_CFG = V5M ? "G" : V5 ? (occursin('A', CFG) ? "GA" : "G") : uppercase(get(ENV, "SAGE_FLOOR_FROM", "G"))
 # PATIENCE BY EDUCATION (SAGE_EDU=1 with SAGE_V3=1; V3_START.md, section 24). The lower-education
 # cell's discount factor lies a gap below the other's; the gap is a parameter of the fit and the
 # difference between the two cells' hand-to-mouth shares (HFCS, by education) is the moment it owns.
@@ -601,7 +601,7 @@ say("\n1. effort scale and discount spread, cohesion off, hand-to-mouth aim ", r
 # places are meant to move the income distribution. A adds no parameter while dread is measured
 # without entering choices, so a configuration with A is not calibrated: it reads the file of the
 # same configuration without A (country_config).
-V5 && A_ON && !DREAD_CHOICE && error("version 5: a configuration with A has no calibration of its own unless SAGE_DREAD_CHOICE=1 (the pay premium is in G and dread does not enter choices); calibrate $(replace(CFG, "A" => "")) instead")
+V5 && A_ON && !DREAD_CHOICE && !(V5M && S_ON) && error("version 5: a configuration with A has no calibration of its own unless SAGE_DREAD_CHOICE=1 (the pay premium is in G and dread does not enter choices); calibrate $(replace(CFG, "A" => "")) instead")
 const PERM_FITTED = V5 && CFG == "G"
 if V5
     ETA[] = 0.0
@@ -642,6 +642,15 @@ if ck1 === nothing && V3
             kv = Dict(strip(first(split(l, "="))) => parse(Float64, last(split(l, "="))) for l in eachline(fb) if occursin("=", l) && !startswith(l, "#") && !startswith(l, "perm_") && !startswith(l, "effort_cell"))
             x0e = [log(kv["phi"]), kv["beta_bar"], kv["beta_spread"], get(kv, V4 ? "perm_sd" : "eta_z", 0.0),
                    CFG == FLOOR_CFG ? get(kv, "cfloor", FL[] * E_REF_C) / E_REF_C : FL[], get(kv, "beta_gap", 0.0)]
+            say("  starting from ", basename(fb))
+        end
+    end
+    if x0e === nothing && V5M && A_ON
+        # a configuration with S and A (households who choose their hours) starts at the same one without A
+        fb = joinpath(@__DIR__, "calibration_$(VTAG)_$(CODE)_$(replace(CFG, "A" => "")).txt")
+        if isfile(fb)
+            kv = Dict(strip(first(split(l, "="))) => parse(Float64, last(split(l, "="))) for l in eachline(fb) if occursin("=", l) && !startswith(l, "#") && !startswith(l, "perm_") && !startswith(l, "effort_cell"))
+            x0e = [log(kv["phi"]), kv["beta_bar"], kv["beta_spread"], 0.0, FL[], get(kv, "beta_gap", 0.0)]
             say("  starting from ", basename(fb))
         end
     end
