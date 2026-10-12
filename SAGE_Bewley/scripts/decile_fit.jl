@@ -21,7 +21,7 @@ function official_shape(code, ind; file = "income_shape.csv")
 end
 function income_records(c)
     c0 = floor_effort(SAGEConfig(c; S = false))
-    cs = cells_of(c0); _, bw = betas_of(c0); cT = SAGEConfig(c0; lumptax = c0.lumptax + ui_tax_of(c0))
+    cs = cells_of(c0); _, bw = betas_by_cell(c0); cT = SAGEConfig(c0; lumptax = c0.lumptax + ui_tax_of(c0))
     jobs = [(g, k, p) for g in 1:2 for (k, p) in enumerate(params_of(cT, cs[g]))]
     long = !isnan(c0.f_long[1])          # states in three blocks (first year out of work, in work, beyond a year)
     recs = (nworkers() > 1 ? pmap : map)(jobs) do (g, k, p)
@@ -29,7 +29,7 @@ function income_records(c)
         s = solve_participation_logit(p, 1.0; theta = c0.theta, full = true)
         ys = Float64[]; ws = Float64[]; es = Int[]; nl = long ? 2 * (length(s.z_vals) ÷ 3) : typemax(Int)
         for st in eachindex(s.z_vals), i in eachindex(s.a), d in (0, 1)
-            pd = d == 1 ? s.P1[i, st] : 1 - s.P1[i, st]; m = cs[g].share * bw[k] * s.lambda[i, st] * pd; m <= 1e-12 && continue
+            pd = d == 1 ? s.P1[i, st] : 1 - s.P1[i, st]; m = cs[g].share * bw[g][k] * s.lambda[i, st] * pd; m <= 1e-12 && continue
             x = p.R * s.a[i] + (1 + p.subsidy) * p.α[st] * s.e_d[d+1][i, st] * s.z_vals[st] * p.Z - p.lumptax +
                 net_participation(p, p.α[st], s.z_vals[st]) * d + transfer_at(p, st)
             push!(ys, (x + floor_transfer(p, x) - s.a[i]) / p.pc); push!(ws, m); push!(es, s.z_vals[st] > 0 ? 1 : st > nl ? 3 : 2)

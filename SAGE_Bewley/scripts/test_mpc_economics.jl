@@ -26,7 +26,7 @@ REG = length(ARGS) >= 3 ? lowercase(ARGS[3]) : ""          # third argument: v3,
 V3 = REG in ("v3", "v3f", "v3e", "v3fe", "v3fet", "v3et", "v4", "v5", "v5m"); V3F = REG in ("v3f", "v3fe", "v3fet", "v4", "v5", "v5m")
 c = floor_effort(country_config(code; config = cfg, v3 = get(Dict("v3f" => :floor, "v3e" => :edu, "v3fe" => :floor_edu, "v3fet" => :floor_edu_trans, "v3et" => :edu_trans, "v4" => :v4, "v5" => :v5, "v5m" => :v5m), REG, V3), S = false, A = occursin('A', cfg)))
 c.illiquid && error("one asset only")
-cs = cells_of(c); bs, bw = betas_of(c)
+cs = cells_of(c); bs, bw = betas_by_cell(c)
 cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
 V3F && @printf("floor regime: floor %.4f, its tax %.5f\n", c.cfloor, floor_tax_of(c))
 
@@ -47,7 +47,7 @@ for g in 1:2, (k, p) in enumerate(params_of(cT, cs[g]))
             sb[i, st] += w * s.a_d[d+1][i, st]; lb[i, st] += w * lab; yb[i, st] += w * (lab + tr); fb[i, st] += w * floor_transfer(p, x)
         end
     end
-    push!(hh, (w = cs[g].share * bw[k], g = g, k = k, p = p, a = a, z = z, λ = s.lambda, c = cb, s = sb, l = lb, y = yb, f = fb))
+    push!(hh, (w = cs[g].share * bw[g][k], g = g, k = k, p = p, a = a, z = z, λ = s.lambda, c = cb, s = sb, l = lb, y = yb, f = fb))
 end
 
 "Mass-weighted mean response per unit of windfall, windfall = `mult` times own annual income, over the states where `keep` holds."

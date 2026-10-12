@@ -404,30 +404,40 @@ node of the permanent component of income when there is one (the first list then
 discount factor once per income node, in the order `params_of` builds them).
 """
 function betas_of(c::SAGEConfig)
-    b, w = type_betas(c)
-    G = control_groups(c)
-    length(G) == 1 && return (b, w)
-    (repeat(b, outer = length(G)), [g.w * x for g in G for x in w])
+    has_choosers(c) && error("with households who choose their hours the weights differ by education cell: use betas_by_cell(c)")
+    type_betas(c)
 end
 
 """
-    control_groups(c)
+    betas_by_cell(c)
 
-Who chooses their hours (A): groups of households with a weight that is the same in the two education
-cells and a flag by cell. The shares differ by education, so there are up to three groups: those who
-choose in neither cell (one less the larger share), those who choose in the cell with the larger share
-only (the difference), and those who choose in both (the smaller share). With A off, or no share, one
-group that chooses nowhere. Every list of household types repeats once per group, in this order.
+The types of household and their weights in each education cell: `(b, (w1, w2))`. The same as `betas_of`
+in both cells unless some households choose their hours (A), whose share differs by education: each cell's
+list then holds its types twice, first those whose job sets their hours (one less the cell's share), then
+those who choose (the cell's share), in the order `params_of` builds them.
 """
-function control_groups(c::SAGEConfig)
-    s1, s2 = c.A ? c.control_share : (0.0, 0.0)
-    (0 <= s1 <= 1 && 0 <= s2 <= 1) || error("control_share must lie between zero and one")
-    lo, hi = minmax(s1, s2)
-    hi == 0 && return [(w = 1.0, chooses = (false, false))]
-    G = [(w = 1 - hi, chooses = (false, false))]
-    hi > lo && push!(G, (w = hi - lo, chooses = (s1 > s2, s2 > s1)))
-    lo > 0 && push!(G, (w = lo, chooses = (true, true)))
-    filter(g -> g.w > 0, G)
+function betas_by_cell(c::SAGEConfig)
+    b, w = type_betas(c)
+    has_choosers(c) || return (b, (w, w))
+    (repeat(b, outer = 2), ntuple(g -> [x.w * y for x in control_groups(c, g) for y in w], 2))
+end
+
+"Whether some households choose their hours: A on and a share with control over working time."
+has_choosers(c::SAGEConfig) = c.A && any(>(0), c.control_share)
+
+"""
+    control_groups(c, g)
+
+Who chooses their hours in education cell `g` (A): those whose job sets their hours, with weight one less
+the cell's share with control over working time, then those who choose, with that share. One group that
+does not choose when no household does. (Until 2026-10-12 three groups with weights common to the two
+cells; weights by cell need two, and a third fewer household problems.)
+"""
+function control_groups(c::SAGEConfig, g::Int)
+    has_choosers(c) || return [(w = 1.0, chooses = false)]
+    s_ = c.control_share[g]
+    0 <= s_ <= 1 || error("control_share must lie between zero and one")
+    [(w = 1 - s_, chooses = false), (w = s_, chooses = true)]
 end
 
 "The types by patience and permanent income alone, before the groups of `control_groups`: what `_params_of` builds."
@@ -510,10 +520,9 @@ end
 function params_of(c::SAGEConfig, cell)
     ps = _params_of(c, cell)
     ps = cell.sε > 0 ? [expand_transitory(p, cell.sε, c.n_eps) for p in ps] : ps
-    G = control_groups(c)
-    length(G) == 1 && !G[1].chooses[cell.gi] && return ps
-    # the same households once per group; where the group chooses its hours in this cell, the job's levels are dropped
-    vcat([g.chooses[cell.gi] ? [update(p; job_effort = false, effort_set = Float64[]) for p in ps] : ps for g in G]...)
+    has_choosers(c) || return ps
+    # the same households once per group; for the group that chooses its hours the job's levels are dropped
+    vcat([g.chooses ? [update(p; job_effort = false, effort_set = Float64[]) for p in ps] : ps for g in control_groups(c, cell.gi)]...)
 end
 
 function _params_of(c::SAGEConfig, cell)
@@ -684,12 +693,12 @@ where the floor is financed by the nation and not by each place.
 """
 function floor_outlay_at(c::SAGEConfig, T)
     cg = SAGEConfig(c; S = false, E = false, lumptax = T - ui_only_tax_of(c), floor_tax_given = 0.0)
-    c0 = floor_effort(cg); cs = cells_of(c0); _, bw = betas_of(c0)
+    c0 = floor_effort(cg); cs = cells_of(c0); _, bw = betas_by_cell(c0)
     cT = SAGEConfig(c0; lumptax = T)
     jobs = [(g, k, p) for g in 1:2 for (k, p) in enumerate(params_of(cT, cs[g]))]
     sum((nworkers() > 1 ? pmap : map)(jobs) do (g, k, p)
             p = update(p; social_strength = 0.0)
-            cs[g].share * bw[k] * cell_summary(p, solve_participation_logit(p, 1.0; theta = c0.theta, full = true)).fout
+            cs[g].share * bw[g][k] * cell_summary(p, solve_participation_logit(p, 1.0; theta = c0.theta, full = true)).fout
         end)
 end
 
@@ -716,7 +725,7 @@ function floor_tax_of(c::SAGEConfig)
                      c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop)))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
-    cs = cells_of(c0); _, bw = betas_of(c0)
+    cs = cells_of(c0); _, bw = betas_by_cell(c0)
     # start from the last tax found, unless that run failed (a NaN kept here made every later
     # configuration NaN: all Italian places after the first that broke, 2026-10-04)
     F = isfinite(FLOOR_TAX_LAST[]) ? FLOOR_TAX_LAST[] : 0.0
@@ -726,7 +735,7 @@ function floor_tax_of(c::SAGEConfig)
         outs = (nworkers() > 1 ? pmap : map)(jobs) do (g, k, p)
             p = update(p; social_strength = 0.0)
             s = solve_participation_logit(p, 1.0; theta = c0.theta, full = true)
-            cs[g].share * bw[k] * cell_summary(p, s).fout
+            cs[g].share * bw[g][k] * cell_summary(p, s).fout
         end
         out = sum(outs)
         isfinite(out) || error("the floor's outlay is not finite at a tax of $F: a floor of $(c0.cfloor) cannot be financed in this economy")
@@ -817,9 +826,9 @@ const SOLVER_DIGEST = bytes2hex(sha1(join(read(f, String) for f in SOLVER_FILES)
 "The household part and the threshold part of a family's cache key."
 function family_cache_key(c::SAGEConfig, cell, thr)
     cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
-    _, bw = betas_of(c)
+    _, bw = betas_by_cell(c)
     hh = bytes2hex(sha1(string(SOLVER_DIGEST, "|", repr(params_of(cT, cell)), "|",
-                               repr(c.ugrid), "|", repr(c.theta), "|", repr(bw))))
+                               repr(c.ugrid), "|", repr(c.theta), "|", repr(bw[cell.gi]))))
     tk = bytes2hex(sha1(repr(thr === nothing ? Tuple{Float64,Float64}[] : collect(thr))))
     (hh[1:24], tk[1:16])
 end
@@ -838,7 +847,7 @@ function build_families(c::SAGEConfig, thr; disk = true, any_thresholds = false)
     # the household problem without them until 2026-10-06
     c = floor_effort(c)
     cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
-    _, bw = betas_of(c)
+    _, bw = betas_by_cell(c)
     map(cells_of(c)) do cell
         hh, tk = family_cache_key(c, cell, thr)
         file = joinpath(FAMILY_CACHE_DIR, "fam_$(hh)_$(tk).jls")
@@ -850,7 +859,7 @@ function build_families(c::SAGEConfig, thr; disk = true, any_thresholds = false)
                 isempty(other) || return deserialize(joinpath(FAMILY_CACHE_DIR, first(other)))
             end
         end
-        f = build_family_ag(params_of(cT, cell), c.ugrid, c.theta; weights = bw, thresholds = thr)
+        f = build_family_ag(params_of(cT, cell), c.ugrid, c.theta; weights = bw[cell.gi], thresholds = thr)
         if disk
             mkpath(FAMILY_CACHE_DIR); tmp = file * ".tmp"
             serialize(tmp, f); mv(tmp, file; force = true)
@@ -937,7 +946,7 @@ clear_cache!() = (empty!(ECON_CACHE); nothing)
 function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds = false)
     check_ratio(c)
     c = floor_effort(c)
-    cs = cells_of(c); bs, bw = betas_of(c)
+    cs = cells_of(c); bs, bw = betas_by_cell(c)
     T = c.lumptax + ui_tax_of(c)
     cfgT = SAGEConfig(c; lumptax = T)
     agrid = liquid_grid_of(c)
@@ -981,8 +990,8 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
             merge(cell_summary(p, s; thresholds = thr), agency_summary(p, s))
         end
         out = nworkers() > 1 ? pmap(solve0, jobs) : map(solve0, jobs)
-        nb = length(bw)
-        pooled = [collapse_all(out[(g-1)*nb+1:g*nb], bw) for g in 1:2]
+        nb = length(bw[1])
+        pooled = [collapse_all(out[(g-1)*nb+1:g*nb], bw[g]) for g in 1:2]
         if c.unemployed_ratio !== nothing
             emp0 = employment_mask(c)
             pooled = map(P -> impose_unemployed_ratio([P], emp0, c.unemployed_ratio)[1], pooled)
@@ -1583,7 +1592,7 @@ official S80/S20 of people under 65 (data/validation/income_distribution.csv).
 """
 function income_stats(c::SAGEConfig)
     c0 = floor_effort(SAGEConfig(c; S = false))
-    cs = cells_of(c0); _, bw = betas_of(c0); cT = SAGEConfig(c0; lumptax = c0.lumptax + ui_tax_of(c0))
+    cs = cells_of(c0); _, bw = betas_by_cell(c0); cT = SAGEConfig(c0; lumptax = c0.lumptax + ui_tax_of(c0))
     jobs = [(g, k, p) for g in 1:2 for (k, p) in enumerate(params_of(cT, cs[g]))]
     recs = (nworkers() > 1 ? pmap : map)(jobs) do (g, k, p)
         p = update(p; social_strength = 0.0)
@@ -1593,7 +1602,7 @@ function income_stats(c::SAGEConfig)
         zp = sort(unique(s.z_vals[s.z_vals .> 0])); K = max(p.ysmooth, 1)
         Δ = K > 1 ? (isnan(p.zstep) ? (length(zp) > 1 ? log(zp[2] / zp[1]) : 0.0) : p.zstep) : 0.0
         for st in eachindex(s.z_vals), i in eachindex(s.a), d in (0, 1)
-            pd = d == 1 ? s.P1[i, st] : 1 - s.P1[i, st]; m = cs[g].share * bw[k] * s.lambda[i, st] * pd; m <= 0 && continue
+            pd = d == 1 ? s.P1[i, st] : 1 - s.P1[i, st]; m = cs[g].share * bw[g][k] * s.lambda[i, st] * pd; m <= 0 && continue
             sy = (1 + p.subsidy) * p.α[st] * s.e_d[d+1][i, st] * s.z_vals[st] * p.Z + net_participation(p, p.α[st], s.z_vals[st]) * d + transfer_at(p, st)
             x = p.R * s.a[i] + (1 + p.subsidy) * p.α[st] * s.e_d[d+1][i, st] * s.z_vals[st] * p.Z - p.lumptax +
                 net_participation(p, p.α[st], s.z_vals[st]) * d + transfer_at(p, st)

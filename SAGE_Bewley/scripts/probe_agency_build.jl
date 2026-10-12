@@ -10,8 +10,8 @@ using Printf
 codes = isempty(ARGS) ? ["FR", "DE", "IT"] : uppercase.(ARGS)
 fld(r, f) = hasproperty(r, f) ? getproperty(r, f) : NaN
 function households(c0)
-    c = floor_effort(c0); cs = cells_of(c); _, bw = betas_of(c); cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c)); th = c.theta
-    jobs = [(g, k, p, cs[g].share * bw[k]) for g in 1:2 for (k, p) in enumerate(params_of(cT, cs[g]))]
+    c = floor_effort(c0); cs = cells_of(c); _, bw = betas_by_cell(c); cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c)); th = c.theta
+    jobs = [(g, k, p, cs[g].share * bw[g][k]) for g in 1:2 for (k, p) in enumerate(params_of(cT, cs[g]))]
     recs = (nworkers() > 1 ? pmap : map)(jobs) do (g, k, p, w)
         p = update(p; social_strength = 0.0)
         s = solve_participation_logit(p, 1.0; theta = th, full = true)
@@ -35,7 +35,7 @@ function side(R, chooser)
 end
 for code in codes
     g = country_config(code; config = "G", v3 = :v5m, S = false, A = false); a = country_config(code; config = "GA", v3 = :v5m, S = false, A = true)
-    @printf("\n%s | who chooses their hours: below tertiary %.3f, tertiary %.3f | groups %s\n", code, a.control_share..., join([@sprintf("%.3f", x.w) for x in control_groups(a)], " "))
+    @printf("\n%s | who chooses their hours: below tertiary %.3f, tertiary %.3f | household problems a cell: %d\n", code, a.control_share..., length(betas_by_cell(a)[2][1]))
     rg = solve_economy(g; cache = false); ra = solve_economy(a; cache = false)
     @printf("  %-44s %9s %9s\n", "the economy", "G", "G+A")
     for (nm, f) in (("hand-to-mouth", r -> r.hand_to_mouth_kvw), ("median liquid wealth over income", r -> r.wealth_p50 / r.median_income), ("MPC", r -> r.mpc),
