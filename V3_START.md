@@ -2492,3 +2492,10 @@ Started: the indicator table and the MPC's properties for G+A in the three count
 | equilibria | rerunning | rerunning | running |
 
 **Italy's G+A misses its hours target by a hair**: mean hours of those in a job 0.7201 against 0.7252, 0.0051 where the tolerance is 0.005; the hand-to-mouth share is on target (0.206, 0.203). All of it is the benefit trap: 3.7% of those who choose their hours and have a job work none, and they are counted as in work with zero hours. A household that has a job, works no hours and lives on the minimum income is out of work in any survey's sense. To put right in the reporting (count it as out of work, which also adds 0.6 points to Italy's jobless households), together with the cost of being out of work, since both need the same definition. Not a reason to give A a calibration of its own.
+
+## 85. The restructured weights give the same economy; more of the battery (2026-10-12, 04:10 UTC)
+
+- **Two groups a cell against three common ones** (`probe_agency_build.jl`, runs 38194190687, 38194195580, 38194200731 against those of section 82): every figure the same to the fourth decimal in the three countries (France: hand-to-mouth 0.2732, MPC 0.4022, earnings response -0.0141, 0.33% of choosers in work working no hours). The restructuring changed the cost and nothing else.
+- **Asset grid, France's G+A** (38194283591, one worker): passes, grid doubled and top doubled (the median moves by 0.0019). So in the three countries.
+- **Zero shock with S on**: Germany exact (38178721188: participation drifting by 1.3e-11) and Italy (section 84). France's run on 40 years reached the six-hour limit with nothing printed; restarted on 20 years.
+- Running: on and off with A (G+A, G+S+A) and the equilibria, three countries.
