@@ -2582,3 +2582,24 @@ Jobless households have other income (other members, disability and other benefi
 **Expected, stated before the run**: a smaller fall in consumption on job loss (the prospect is less harsh), fewer people under 40% of the median in France and Germany, patience a little lower (less to insure against). In-work poverty may move either way, since the income types are refitted with the jobless households higher in the distribution.
 
 **Started**: G in the three countries (run 38302262132); G+S and G+S+A follow once G's files are in. Germany's G+S+A on the earlier income (38282888006) is still in its last job; its file would be superseded.
+
+## 90. Two corrections to G from the literature audit and from the first run (2026-10-12, 21:40 UTC)
+
+**The audit.** The user had a literature review run on the programme (a Perplexity report, 47 pages, in Downloads; its ranked objections are in memory). Its sixth objection was a possible double counting of income risk. Checked at the source the same evening.
+
+**1. The published income process already contains job loss.** Ampudia, Cooper, Le Blanc and Zhu (BIS WP 1102, online appendix 8.1, read): the income measure is "total reported after-tax, non-asset household income", with "social cash transfers (government transfers, workers compensation, unemployment insurance and old-age pensions)", for households with a head of 20 or more and non-negative income; the authors say they use it "to allow for insurance mechanisms ... such as unemployment benefits". So the falls in household income that come with job loss are inside the estimated variances, and the model, which has job loss as states of its own, counted them twice. From the chain of the labour states alone (no household solved), with the state paying a flat amount the model's variance of log household income was 11 to 54% above the published one by education cell and country, and its first autocovariance 4 to 65% above.
+
+**The correction** (`purged_income_risk` in `sage_modular.jl`, under `v5m`): the standard deviations of the persistent innovation and of the transitory part are those with which the model's household income, job loss included, has the variance and the first autocovariance of the published process; the persistence is the published one. Fitted to two published moments in closed-loop algebra, by education cell; nothing else is touched.
+
+| standard deviations, published and net of job loss | France | Germany | Italy |
+|---|---|---|---|
+| persistent innovation, below tertiary | 0.078, 0.064 | 0.127, 0.091 | 0.141, 0.126 |
+| persistent innovation, tertiary | 0.134, 0.132 | 0.105, 0.092 | 0.148, 0.137 |
+| transitory part, below tertiary | 0.176, 0.161 | 0.148, 0.159 | 0.268, 0.267 |
+| transitory part, tertiary | 0.152, 0.135 | 0.141, 0.142 | 0.170, 0.164 |
+
+**2. The income of jobless households as one flat amount did not work.** Section 89's run (38302262132; France and Italy finished, Germany stopped): with the state paying the median income of jobless households (0.50 and 0.46 of the median) the fall in consumption on job loss came down as expected (France 0.30 to 0.23, Italy 0.29 to 0.23), and France's share under 40% of the median came onto the official figure (0.040 against 0.042). But in-work poverty went back up (France 0.121, Italy 0.182, against 0.067 and 0.117): with every jobless household at one point above the bottom twentieth, the income types again need a low-paid type to fill the bottom. Italy's median liquid wealth also left its target (0.35 against 0.23). The data's jobless households are spread around their median; a single amount cannot be.
+
+**The correction**: the income in the state is a share of what the household would earn, the measured ratio of the median income of people in jobless households to that of the rest (Eurostat ilc_di07, 2023: 0.480, 0.509, 0.437; input `jobless_income_over_rest`; the engine's `rr_long`), so it is spread as earnings are. It is treated as the household's own income (other members, other entitlements: `long_public_share` zero); the state's part is what the means-tested floor, the statutory minimum income, tops up. Untargeted tests for it: the poverty rate of jobless households (66%, 52.5%, 66%) and the share under 40% of the median.
+
+**Started**: G in the three countries with both (run 38309820886).
