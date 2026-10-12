@@ -23,7 +23,7 @@ function income_records(c)
     c0 = floor_effort(SAGEConfig(c; S = false))
     cs = cells_of(c0); _, bw = betas_by_cell(c0); cT = SAGEConfig(c0; lumptax = c0.lumptax + ui_tax_of(c0))
     jobs = [(g, k, p) for g in 1:2 for (k, p) in enumerate(params_of(cT, cs[g]))]
-    long = !isnan(c0.f_long[1])          # states in three blocks (first year out of work, in work, beyond a year)
+    long = !isnan(c0.f_long[1]) && assist_of(c0) > 0          # three blocks, and those beyond a year on a flat amount: kept apart, unscaled
     recs = (nworkers() > 1 ? pmap : map)(jobs) do (g, k, p)
         p = update(p; social_strength = 0.0)
         s = solve_participation_logit(p, 1.0; theta = c0.theta, full = true)

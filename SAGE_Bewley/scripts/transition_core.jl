@@ -170,7 +170,7 @@ function transition(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 80, rr
     # Until this was told apart the path's tax was below the steady state's (assistance counted at the
     # state's share of the benefit) and a zero shock drifted.
     long = [isnan(c.f_long[1]) ? falses(length(unemp[g])) : [s > 2 * (length(unemp[g]) ÷ 3) for s in eachindex(unemp[g])] for g in 1:2]
-    pubL = assist_public_of(c) / assist_of_or_one(c)          # the state's part of the income of those out of work beyond a year
+    pubL = long_public_factor(c)          # the state's part of the income of those out of work beyond a year
     uicost(t) = sum(cs[g].share * bw[k] * sum(μ[g][t][s] * transfer_at(base_ps[g][k], s) * (long[g][s] ? pubL : pub(t)) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2, k in eachindex(bw))
     # the period's transfers: the benefit at the period's rate in the insured states
     trs(p, g, t) = ra[t] == 0 ? p.transfer : [(unemp[g][s] && !long[g][s]) ? p.transfer[s] * (c.rr + ra[t]) / c.rr : p.transfer[s] for s in eachindex(p.transfer)]
@@ -297,7 +297,7 @@ function transition_s(c::SAGEConfig; delta_scale::Vector{Float64}, T::Int = 60, 
     unemp = [SAGEBewley.income_process(base_ps[g][1])[1] .== 0 for g in 1:2]      # benefits only, as in `transition`
     pub = isnan(c.rr_public) ? 1.0 : c.rr_public / c.rr          # the state's part of the replacement rate, as in `transition`
     long = [isnan(c.f_long[1]) ? falses(length(unemp[g])) : [s > 2 * (length(unemp[g]) ÷ 3) for s in eachindex(unemp[g])] for g in 1:2]      # on assistance, paid in full by the state, as in `transition`
-    lump = [c.lumptax + floor_tax_of(c) + sum(cs[g].share * bw[k] * sum(μ[g][t][s] * transfer_at(base_ps[g][k], s) * (long[g][s] ? assist_public_of(c) / assist_of_or_one(c) : pub) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2, k in eachindex(bw)) for t in 1:T]
+    lump = [c.lumptax + floor_tax_of(c) + sum(cs[g].share * bw[k] * sum(μ[g][t][s] * transfer_at(base_ps[g][k], s) * (long[g][s] ? long_public_factor(c) : pub) for s in eachindex(μ[g][t]) if unemp[g][s]) for g in 1:2, k in eachindex(bw)) for t in 1:T]
     # the proportional tax and the floor's tax, as in `transition`
     prop = c.tax_mode === :prop
     zs = [SAGEBewley.income_process(base_ps[g][1])[1] for g in 1:2]

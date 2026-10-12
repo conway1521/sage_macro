@@ -264,6 +264,10 @@ Base.@kwdef struct SAGEConfig
     # outlay is the statutory minimum income and the rest is the household's own, as a partner's earnings are
     # in the replacement rate. NaN: all of it is public.
     assist_public::Float64 = NaN
+    # The share of the long-term state's earnings-related income (rr_long) that the state pays and the tax
+    # raises. One: all of it (assistance in place of insurance). Zero: it is the household's own income (other
+    # members, other entitlements), and the state's part is what the means-tested floor tops up (2026-10-12).
+    long_public_share::Float64 = 1.0
     # PATIENCE BY EDUCATION: a shift of the discount factor in each cell, zero by default. The base
     # puts the hand-to-mouth in the wrong cell (France G+A: 7% below tertiary and 53% with tertiary,
     # against 26% and 15% in the HFCS; test_cell_wealth.jl, 2026-10-05): with one patience for all,
@@ -622,9 +626,64 @@ end
 "Assistance paid in the long-term state: the amount given, or the floor's level."
 function assist_of(c::SAGEConfig)
     al = isnan(c.assist_long) ? c.cfloor : c.assist_long
-    al > 0 || error("the long-term state needs assistance: give assist_long, or turn the means-tested floor on")
+    (al > 0 || c.rr_long > 0) || error("the long-term state needs an income: give assist_long or rr_long, or turn the means-tested floor on")
     al
 end
+"The state's share of the income of those out of work beyond a year, for the tax along a path."
+long_public_factor(c::SAGEConfig) = isnan(c.f_long[1]) ? 1.0 : (c.rr_long > 0 && assist_of(c) == 0) ? c.long_public_share : assist_public_of(c) / assist_of(c)
+
+const INCOME_RISK_CACHE = Dict{UInt,Any}()
+"""
+    income_chain_moments(nz, n_eps, rho, s_eta, s_eps, delta, f, fL, rr, rrL)
+
+The variance and first autocovariance of log household income in one education cell, from the Markov
+chain of its states alone (no household is solved: income by state is given). In work, income is the
+persistent part times the transitory part; in the first year out of work, `rr` times the persistent part;
+beyond a year, `rrL` times it. Taxes are left out (a few percent on those in work).
+"""
+function income_chain_moments(nz, n_eps, ρ, sη, sε, δ, f, fL, rr, rrL)
+    base = SAGEParams(nz = nz, α = fill(1.0, nz), B = fill(1.0, nz), ρ = ρ, η = sη)
+    up = unemployment_process(base, δ, f; fL = fL)
+    z = up.z_latent; emp = up.employed; long = up.longterm; nt = sε > 0 ? n_eps : 1
+    x = nt > 1 ? [sε * sqrt(nt - 1) * (2 * (t - 1) / (nt - 1) - 1) for t in 1:nt] : [0.0]
+    w = nt > 1 ? [binomial(nt - 1, t - 1) / 2.0^(nt - 1) for t in 1:nt] : [1.0]
+    ε = exp.(x); ε ./= dot(w, ε)
+    y = [log(emp[s] ? z[s] * ε[t] : long[s] ? rrL * z[s] : rr * z[s]) for s in eachindex(z) for t in 1:nt]
+    P = kron(up.Π, ones(nt) * w'); N = length(y)
+    π = vcat(P' - I, ones(1, N)) \ vcat(zeros(N), 1.0)
+    d = y .- dot(π, y)
+    (var = dot(π, d .^ 2), ac1 = dot(π .* d, P * d))
+end
+
+"""
+    purged_income_risk(nz, n_eps, rho, s_eta, s_eps, delta, f, fL, rr, rrL)
+
+THE INCOME PROCESS NET OF JOB LOSS (2026-10-12; V3_START.md section 90). The published process (Ampudia,
+Cooper, Le Blanc and Zhu 2024) is estimated on household income after tax with social transfers,
+unemployment benefits among them, for all households of working age: the falls in income that come with
+job loss are already in its variances. The model has job loss as states of its own, so the published
+standard deviations used as they are count that risk twice (by 11 to 54% of the variance of log income,
+by education cell and country). Returned are the standard deviations of the persistent innovation and of
+the transitory part with which the model's household income, job loss included, has the variance and the
+first autocovariance of the published process; the persistence is the published one.
+"""
+function purged_income_risk(nz, n_eps, ρ, sη, sε, δ, f, fL, rr, rrL)
+    get!(INCOME_RISK_CACHE, hash((nz, n_eps, ρ, sη, sε, δ, f, fL, rr, rrL))) do
+        pubv = sη^2 / (1 - ρ^2) + sε^2; puba = ρ * sη^2 / (1 - ρ^2)
+        mom(a, b) = income_chain_moments(nz, n_eps, ρ, a, b, δ, f, fL, rr, rrL)
+        a, b = sη, sε
+        for _ in 1:80
+            base0 = mom(1e-6, b).ac1          # what job loss alone gives
+            puba > base0 || error("job loss alone gives more persistent income risk than the published process has")
+            a *= clamp(sqrt((puba - base0) / max(mom(a, b).ac1 - base0, 1e-12)), 0.7, 1.4)
+            b = sqrt(max(b^2 + pubv - mom(a, b).var, 1e-10))
+        end
+        r = mom(a, b)
+        (abs(r.var - pubv) < 1e-5 && abs(r.ac1 - puba) < 1e-5) || error("the income process net of job loss was not found: variance $(r.var) against $pubv, autocovariance $(r.ac1) against $puba")
+        (a, b)
+    end
+end
+
 "Assistance in the long-term state where there is one, else one (for ratios taken whether or not the state is on)."
 assist_of_or_one(c::SAGEConfig) = isnan(c.f_long[1]) ? 1.0 : assist_of(c)
 "The part of the long-term state's income that the state pays: all of it, or `assist_public` where that is given and lower."
@@ -639,13 +698,13 @@ end
 "Unemployment-insurance tax implied by a config, closed form (zero when off)."
 function ui_tax_of(c::SAGEConfig)
     c.unemployment || return 0.0
-    assist_tax_of(c) + ui_tax([(share = x.share, α = x.α, δ = x.δ, fL = x.fL) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long) *
+    assist_tax_of(c) + ui_tax([(share = x.share, α = x.α, δ = x.δ, fL = x.fL) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long * c.long_public_share) *
         (c.e_ref / E_REF) + floor_tax_of(c)
 end
 
 "The unemployment-benefit part of the tax alone (closed form)."
 ui_only_tax_of(c::SAGEConfig) = c.unemployment ?
-    assist_tax_of(c) + ui_tax([(share = x.share, α = x.α, δ = x.δ, fL = x.fL) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long) * (c.e_ref / E_REF) : 0.0
+    assist_tax_of(c) + ui_tax([(share = x.share, α = x.α, δ = x.δ, fL = x.fL) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long * c.long_public_share) * (c.e_ref / E_REF) : 0.0
 
 const FLOOR_EFFORT_CACHE = Dict{UInt,Any}()
 """
@@ -728,7 +787,7 @@ function floor_tax_of(c::SAGEConfig)
     isnan(c.floor_tax_given) || return c.floor_tax_given
     c.effort_mode === :job || error("the means-tested floor needs effort_mode = :job")
     c0 = floor_effort(SAGEConfig(c; S = false, E = false, cfloor = c.cfloor))
-    key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.f_long, c0.assist_long, c0.assist_public, c0.control_share, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
+    key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.f_long, c0.assist_long, c0.assist_public, c0.rr_long, c0.long_public_share, c0.control_share, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
                      c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop)))
@@ -1412,6 +1471,17 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
                 vmin && (d[:psi] = 1 / manual_input(code, "frisch_elasticity"))
                 # A: who chooses their hours, by education (Eurostat lfso_19fxwt01, the person decides fully)
                 vmin && (d[:control_share] = (manual_input(code, "control_hours_low"), manual_input(code, "control_hours_high")))
+                if vmin
+                    # THE INCOME OF HOUSEHOLDS IN THE STATE (2026-10-12; V3_START.md section 90): a share of what
+                    # the household would earn, the measured ratio of the median income of people in jobless
+                    # households to that of the rest (Eurostat ilc_di07), so that it is spread as earnings are.
+                    # It is the household's own income; the state's part is what the floor tops up.
+                    d[:rr_long] = manual_input(code, "jobless_income_over_rest"); d[:assist_long] = 0.0; d[:long_public_share] = 0.0
+                    # and the published income process net of the job loss the model has as states of its own
+                    tmp = SAGEConfig(; d...)
+                    pr = ntuple(g -> purged_income_risk(tmp.nz, tmp.n_eps, d[:rho_cell][g], d[:eta_cell][g], d[:sd_eps_cell][g], d[:delta][g], d[:f_find], d[:f_long][g], d[:rr], d[:rr_long]), 2)
+                    d[:eta_cell] = (pr[1][1], pr[2][1]); d[:sd_eps_cell] = (pr[1][2], pr[2][2])
+                end
             end
         end
         # Version 5: the pay premium is in the base and dread of job loss is measured without entering
