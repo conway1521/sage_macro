@@ -141,7 +141,15 @@ So the order is: first the five channels and the state out of work by place, rea
 - Poverty by region against the official rate, untargeted: correlation 0.97 (0.89 in metropolitan France), spread two thirds of the data's: **passed in order, short in size**. With the conversion channel 0.47: **the conversion channel is not carried to France as it stands** (a uniform scale makes Île-de-France rich, where the official poverty rate is above average).
 - Hand-to-mouth by type of place: **failed again**, model 1.00, 1.07, 1.13 against 1.00, 1.01, 0.65 in the HFCS (not retired).
 
-**E2 restated by the data.** In the HFCS (France 2021, not retired) owners are hand-to-mouth alike in every type of place (0.163, 0.170, 0.169). Tenants are not (0.373, 0.458, 0.238), and they are 59%, 42% and 26% of households. The gap holds within education and among those of 40 and over. The missing cost of place is tenure. **Open, the user's decision:** state the limit and keep regions as the standard geography, or build tenure into E (a share of households in each place paying a committed rent, from official tenure and rent data), to be scoped before building.
+**E2 restated by the data.** In the HFCS (France 2021, not retired) owners are hand-to-mouth alike in every type of place (0.163, 0.170, 0.169). Tenants are not (0.373, 0.458, 0.238), and they are 59%, 42% and 26% of households. The gap holds within education and among those of 40 and over. The missing cost of place is tenure. **Decided by the user (13 October 2026): tenure is not built into E.** Checked for worth first, on the data alone (HFCS 2021, not retired, rows `tenure_nr`, `tenure_inc_nr`, `degurba_inc_nr`, `region_nr`, `region_tenure_nr` of `data/hfcs_targets.csv`):
+- tenants are about twice as often hand-to-mouth as owners in the three countries (France 0.370 against 0.167, Germany 0.321 against 0.152, Italy 0.345 against 0.138), and the gap holds within each third of income, so tenure is not a marker of income;
+- it is a national fact, so building it would change the base and not only E;
+- it explains about two thirds of France's gap by type of place, about a third of France's regional spread, and does not order Germany's or Italy's regions;
+- a cross-section cannot separate a committed rent from who becomes an owner.
+
+**The limit, as stated:** the model does not place households without buffers correctly where a place is mostly a large city, because tenants are twice as often hand-to-mouth and the model has no tenure. Joblessness, poverty and participation by place are not affected. **The tenure tables are a validation target for the two-asset reference**, where households with and without an illiquid asset exist. **E2 (housing cost as a sixth channel) is closed without a build.**
+
+**Still open in E:** the conversion channel has to take one form in every country and passes Italy's test while failing France's regional poverty; Germany has no source for community infrastructure; the regional hand-to-mouth tests (the survey has 9 regions for France on the 2013 map, 4 groups of Länder for Germany, 20 regions for Italy).
 
 ## Decisions taken (8 October 2026)
 

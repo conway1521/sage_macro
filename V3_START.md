@@ -2685,3 +2685,13 @@ Joblessness and poverty come in the right order; **hand-to-mouth by type of plac
 **Put to the user (13 October):** state the limit (hand-to-mouth by type of place is a failed test with a known reason; regions are the standard geography), or build tenure into E (a share of households in each place pays a committed rent; to be scoped first). Recommended: the first for now.
 
 **The HFCS targets file** was appended to, not regenerated: `~/hfcs_secure/out` no longer holds every row of the committed file (regenerating would drop 538 rows, the education split of the labour force among them).
+
+## 93. Tenure checked for worth and not built; the limit of E stated (2026-10-13, 17:30 UTC)
+
+**The HFCS has regions for France and Germany**: France 9 (NUTS 1 of 2013, which the 2016 regions of the place table do not map onto: the table has to be rebuilt at the former regions for a regional test), Germany 4 groups of Länder in a national coding (the mapping to confirm at the Bundesbank), Italy 20. Degree of urbanisation for France alone. Rough reading for France: Île-de-France has the highest hand-to-mouth share of metropolitan France in the survey (0.31, not retired) and the lowest in the model (0.23), so the limit below is not one of typology.
+
+**Tenure, one data cut and no model work** (HFCS 2021, not retired; `DIMENSIONS_SPEC.md`, E's section, has the figures). Tenants are twice as often hand-to-mouth as owners in the three countries, within each third of income as well. It is a national fact, explains two thirds of France's gap by type of place, a third of France's regional spread, and does not order Germany's or Italy's regions.
+
+**Decided by the user**: "yes go ahead with that recommendation". Tenure is not built into E. The limit is stated (households without buffers are misplaced where a place is mostly a large city). The tenure tables are a validation target for the two-asset reference. E2 is closed without a build.
+
+**Running**: Italy and Germany by region on the base (`run_places_base.jl "IT tl2 G"`, `"DE tl2 G"`, runs 38436627505 and 38436635833), for poverty by region and, in Italy, hand-to-mouth by region against the 20 survey regions.
