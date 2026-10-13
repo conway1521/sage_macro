@@ -17,7 +17,7 @@ c = mode == "v5m" ? country_config(code; config = "GS", v3 = :v5m, S = true, A =
     mode == "v4" ? country_config(code; config = "GSA", v3 = :v4, S = true, A = true) :
     mode == "base" ? country_config(code; config = "GSA", v3 = :floor_edu_trans, S = true, A = true) :
                      country_config(code; config = "GSA", S = true, A = true)
-println(code, " G+S+A", mode == "v5m" ? ", version 5 with the state out of work" : mode == "v5" ? ", version 5" : mode == "v4" ? ", version 4" : mode == "base" ? ", base regime" : ", version 2")
+println(code, mode == "v5m" ? " G+S" : " G+S+A", mode == "v5m" ? ", version 5 with the state out of work" : mode == "v5" ? ", version 5" : mode == "v4" ? ", version 4" : mode == "base" ? ", base regime" : ", version 2")
 # `shock` as the second argument runs the recession alone, read against the steady state (a zero shock
 # and a recession together do not fit in a six-hour job with the state out of work, 2026-10-11)
 SHOCK_ONLY = length(ARGS) >= 2 && ARGS[2] == "shock"
