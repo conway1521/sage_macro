@@ -9,7 +9,7 @@
 # (all households, so the order and the ratio between places are the test, not the level) and, with S
 # on, formal volunteering by place (EU-SILC 2022, ilc_scp20).
 #
-#   julia --project=scripts/run_env scripts/run_places_base.jl CODE [degurba | tl2] [G | GS] [last: the full set of channels alone]
+#   julia --project=scripts/run_env scripts/run_places_base.jl CODE [degurba | tl2] [G | GS] [last: the full set of channels alone | reduction: the first test alone]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf, Statistics
 code = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "FR"
@@ -26,10 +26,24 @@ flush(stdout)
 
 w0 = [latest(d, "pop_share", p) for (_, p) in pl]; w0 = w0 ./ sum(w0)
 same = [(name = nm,) for (nm, _) in pl][1:min(3, length(pl))]
-sp = solve_places(c, same; weights = w0[1:length(same)])
-worst = maximum(abs(getfield(sp.national, f) - getfield(r0, f)) for (f, _) in PLACE_FIELDS if isfinite(getfield(r0, f)))
+sp0 = solve_places(c, same; weights = w0[1:length(same)])
+worst = maximum(abs(getfield(sp0.national, f) - getfield(r0, f)) for (f, _) in PLACE_FIELDS if isfinite(getfield(r0, f)))
 @printf("REDUCTION: %d identical places against the nation, largest difference %.1e: %s\n", length(same), worst, worst < 1e-10 ? "PASS" : "FAIL")
+if worst >= 1e-10
+    # where the difference is: the financing first (total tax per head, the base of the proportional tax), then each aggregate
+    cp = place_config(c, same[1], sp0.T_nat); cn = floor_effort(c)
+    @printf("   national total per head: places %.8f | nation: lump sum %.8f + insurance %.8f + floor %.8f = %.8f\n", sp0.T_nat, c.lumptax, ui_only_tax_of(c),
+            floor_tax_of(c), c.lumptax + ui_only_tax_of(c) + floor_tax_of(c))
+    @printf("   base of the tax: places %.8f | nation's own %.8f | given to the nation %.8f\n", NAT_TAX_BASE[][2], labour_base(SAGEConfig(cn; S = false)), c.tax_base)
+    @printf("   one place against the nation: lump sum %.8f %.8f | floor tax given %.8f %.8f | job effort %s %s\n", cp.lumptax, c.lumptax, cp.floor_tax_given,
+            c.floor_tax_given, floor_effort(cp).effort_by_cell == cn.effort_by_cell ? "the same" : "DIFFERENT", "")
+    for (f, _) in PLACE_FIELDS
+        a = getfield(sp0.national, f); b = getfield(r0, f)
+        isfinite(b) && abs(a - b) >= 1e-10 && @printf("   %-22s places %.8f nation %.8f difference %+.1e\n", f, a, b, a - b)
+    end
+end
 flush(stdout)
+length(ARGS) >= 4 && lowercase(ARGS[4]) == "reduction" && (println("DONE"); exit())
 
 htm = Dict{String,Float64}(); vol = Dict{String,Float64}()
 if typ === :degurba

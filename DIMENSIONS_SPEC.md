@@ -110,6 +110,30 @@ Written 2026-10-08. One page per dimension: the concept and its source, what the
 - **E3, the community elasticity** is estimated on the data it explains. Proposed: estimate on Italy with a standard error, test on Germany's Lander against the Freiwilligensurvey once Germany has a source for infrastructure, and on France at a finer geography.
 - **E4, order.** E is rerun only when G is closed on version 5, since each place configuration costs hours.
 
+## E on the base with the state out of work (declared 13 October 2026, before any result)
+
+The place layer is carried to the base as it stands (`v3 = :v5m`), with one addition that the base itself brings and one decision of order on housing.
+
+**The state out of work by place.** The base has a state out of work, sized nationally to the official share of people in jobless households. Places now have it too, by the same rule and closed form: the place's share is the nation's, by education, times the place's official share (Eurostat `ilc_lvhl23n` by degree of urbanisation, `ilc_lvhl21n` by region, 2023) over the population-weighted mean of the places, at the place's own education mix. The national share is unchanged by construction. Job loss and job finding come from the access channel. Where they alone give more than the place's share, the yearly exit is 0.95 and job loss falls to hold the share. Nothing is fitted.
+
+| people under 65 in jobless households, percent, 2023 | cities | towns and suburbs | rural areas |
+|---|---|---|---|
+| France | 10.4 | 11.5 | 5.8 |
+| Germany | 13.1 | 8.9 | 5.5 |
+| Italy | 10.2 | 8.5 | 7.6 |
+
+The income process net of job loss stays national: places differ in the risk of losing work, not in the wage risk of those who keep it. The floor is national, as is the tax rate.
+
+**Housing cost (E2), data in and order decided by the theory.** The median share of housing costs in disposable household income by degree of urbanisation is published (Eurostat `ilc_lvho08b`, 2023): France 15.3, 11.2, 9.7 percent (cities, towns, rural), Germany 20.6, 19.4, 17.6, Italy 10.9, 9.6, 9.1. By region France publishes nothing (`ilc_lvho07_r` has Germany and Italy only), so the channel exists by degree of urbanisation alone, as commuting does.
+
+Two versions of the channel are not equal, and this is settled before building:
+- **A cost of living proportional to income** (incomes deflated by local prices, Moretti 2013) leaves the hand-to-mouth share where it is. With these preferences saving scales with income, and the floor and the place's incomes are deflated alike. It would shift the weight of consumption against time (the hours of those who choose them, participation), nothing else.
+- **A committed amount** (housing as a necessity, a larger share of low incomes; Chetty and Szeidl 2007 on commitments) does change who holds a buffer, but its sign is not given: a commitment raises the buffer a household wants relative to what is left after housing and lowers it relative to gross income, and the floor works the other way again.
+
+So the order is: first the five channels and the state out of work by place, read against the test that failed (hand-to-mouth by type of place in France); then housing as a committed amount, with the before and after. Jobless households are twice as frequent in French cities and towns as in rural places, which is the base's own reason for more households without buffers in cities and was absent when the test failed.
+
+**Tests, restated for the base.** Identical places give back the nation. The national moments with places on, against the tolerances of the calibration, at the national parameters (a refit only if they move by more). Untargeted: hand-to-mouth by type of place against the HFCS (France), volunteering by place, and the regional tests as before.
+
 ## Decisions taken (8 October 2026)
 
 | | decision | what was decided |
