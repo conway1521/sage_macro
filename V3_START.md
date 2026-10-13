@@ -2739,6 +2739,17 @@ No column is flat and the block is well conditioned in the three countries. The 
 | France G+A | 0.2733, 0.2715 | |
 | France G+S (participation 0.2316, 0.2331) | 0.2722, 0.2699 | |
 | Germany G | 0.2541, 0.2541 | 0.2544, 0.2541 |
-| Italy G | 0.2013, 0.2013 | running |
+| Italy G | 0.2013, 0.2013 | 0.2053 (0.2157 with conversion), 0.2013 |
 
 No refit is needed where run. **Germany's poverty by Land, untargeted**: correlation with the official rate 0.97 without the conversion channel and 0.91 with it, the model's spread (sd of log) 0.150 and 0.245 against 0.178. As in France the channel adds too much. A caution on these correlations: joblessness by region is an input and jobless households are a large part of official poverty, so the test is easier to pass than it looks.
+
+**Italy by region, G** (21 regions, run 38436627505), and the conversion channel across the three countries.
+
+| untargeted, by region: without the conversion channel, with it (data) | France, metropolitan | Germany | Italy |
+|---|---|---|---|
+| poverty, correlation with the official rate | 0.89, 0.47 | 0.97, 0.91 | 0.94, 0.96 |
+| poverty, spread (sd of log) | 0.13, 0.25 (0.20) | 0.15, 0.25 (0.18) | 0.17, 0.40 (0.59) |
+| hand-to-mouth, correlation with the HFCS regions, not retired | not run | not run | 0.64, 0.73 |
+| hand-to-mouth, North against South and islands | | | 0.189 and 0.231, 0.174 and 0.282 (0.118 and 0.343) |
+
+Italy's regional hand-to-mouth is **right in order and short in size**, as before the base changed (19 survey regions, smallest cell 45 households). The conversion channel is needed for the size of Italy's gap, overshoots Germany's spread, and breaks the order in France. **One rule for every country cannot be both**: put to the user with the recommendation to leave the channel out of the base's default and keep it as a documented option.
