@@ -2,7 +2,7 @@
 # official geography, each its own economy under one national tax rate, at the national parameters
 # (nothing refitted). The channels enter one after another, so each one's part can be read:
 #   1. composition, access to work and the state out of work (the place's share of jobless households);
-#   2. with conversion (the household's income per head by place);
+#   2. with conversion (official income per head over what the model's place already gives, jobless households included);
 #   3. with commuting (degree of urbanisation only) and, with S on, community.
 # First: identical places give back the national economy.
 # Untargeted, France by degree of urbanisation: the hand-to-mouth share by place against the HFCS 2021
@@ -61,8 +61,8 @@ end
 hname(nm) = nm == "rural areas" ? "rural" : nm
 
 sets = Any[("composition, access to work, the state out of work", (:composition, :access, :out_of_work)),
-           ("with conversion", (:composition, :access, :out_of_work, :conversion_hh))]
-last_ch = (:composition, :access, :out_of_work, :conversion_hh, (typ === :degurba ? (:commute,) : ())..., (S_ON ? (:community,) : ())...)
+           ("with conversion", (:composition, :access, :out_of_work, :conversion_net))]
+last_ch = (:composition, :access, :out_of_work, :conversion_net, (typ === :degurba ? (:commute,) : ())..., (S_ON ? (:community,) : ())...)
 length(last_ch) > 4 && push!(sets, ("with " * join([x === :commute ? "commuting" : "community" for x in last_ch[5:end]], " and "), last_ch))
 ONLY_LAST && (sets = sets[end:end])
 for (lab, ch) in sets

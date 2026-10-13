@@ -153,6 +153,12 @@ So the order is: first the five channels and the state out of work by place, rea
 
 **Still open in E:** the conversion channel has to take one form in every country and passes Italy's test while failing France's regional poverty; Germany has no source for community infrastructure; the regional hand-to-mouth tests (the survey has 9 regions for France on the 2013 map, 4 groups of Länder for Germany, 20 regions for Italy).
 
+**The conversion channel, restated and put to a test fixed in advance (agreed with the user, 13 October 2026).** The channel says that the same work yields more or less income in one place than in another: official household income per head over what the place's people would predict, applied to everyone's pay there. As written it left low employment inside the residual, because the model had no jobless households. It has them now, place by place, so the residual is redefined as official income per head over what the model's own place already gives, jobless households included (`:conversion_net`; the floor's top-up left out of the prediction). The same rule in every country.
+
+*The rule, set before the runs:* keep the channel if Germany's overshoot in the regional spread of poverty goes and Italy keeps its gain; drop it from the base's default if the order of regional poverty still falls in any country. Whatever the outcome, Île-de-France (rich on average, unequal inside) belongs to the large-city limit. Official hourly earnings by region (Structure of Earnings Survey 2022, NUTS 1) are a cross-check of direction, not an input: Italy has five macro-areas only.
+
+*Seen before any solve:* the redefinition moves the premiums little (their spread across regions 0.089 to 0.083 in France, 0.057 to 0.054 in Germany, 0.136 to 0.139 in Italy). Counting joblessness twice was a small part of the overshoot. The larger part is that the premium is an average: regional differences in pay are wider at the top of the distribution than at the bottom, where poverty is decided, and a uniform scale gives the bottom the top's difference.
+
 ## Decisions taken (8 October 2026)
 
 | | decision | what was decided |

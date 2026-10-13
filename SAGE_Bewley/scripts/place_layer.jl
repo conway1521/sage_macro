@@ -301,7 +301,7 @@ function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (
             specs[i][:delta] = (dn[1], dn[2]); specs[i][:f_long] = (fl[1], fl[2])
         end
     end
-    if (:conversion in channels || :conversion_hh in channels) && !any(isnothing, u)
+    if (:conversion in channels || :conversion_hh in channels || :conversion_net in channels) && !any(isnothing, u)
         key = typology === :degurba ? "median_income_eur" : "hh_income_per_head"
         inc = [latest(d, key, p) for (_, p) in pl]
         if !any(isnothing, inc)
@@ -319,6 +319,24 @@ function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (
             # the North, against the HFCS (test_place_wealth.jl, 2026-10-04).
             emp = (any(isnothing, er) || :conversion_hh in channels) ? [1 - u[i] / 100 for i in 1:n] : er ./ 100
             pred = [((1 - t[i]) * c.alpha[1] + t[i] * c.alpha[2]) * emp[i] for i in 1:n]
+            if :conversion_net in channels
+                # NET OF WHAT THE MODEL'S PLACE ALREADY PRODUCES (the base with the state out of work,
+                # 2026-10-13; V3_START.md section 96). :conversion_hh left low employment in the place's
+                # income because the model had no jobless households. It has them now, each place at its
+                # official share, so a place with many was made poor twice: by having them and by the
+                # residual. Here the prediction is the income per head the model's place gives without
+                # this channel: by education, those in work at their pay, the first year out of work at
+                # the replacement rate, the state at its share of earnings (the floor's top-up left out).
+                # The residual is what official income per head has beyond that.
+                isnan(c.f_long[1]) && error("the conversion channel net of the state out of work needs that state")
+                pred = map(1:n) do i
+                    f = get(specs[i], :f_find, c.f_find); dl = get(specs[i], :delta, c.delta); fl = get(specs[i], :f_long, c.f_long)
+                    sum(1:2) do g
+                        o = dl[g] * (1 + (1 - f) / fl[g]); E = 1 / (1 + o); U = dl[g] * E; L = dl[g] * E * (1 - f) / fl[g]
+                        (g == 1 ? 1 - t[i] : t[i]) * c.alpha[g] * (E + U * c.rr + L * c.rr_long)
+                    end
+                end
+            end
             raw = inc ./ pred; k = sum(w .* pred) / sum(w .* inc)
             for i in 1:n; specs[i][:conv] = raw[i] * k; end
         end
