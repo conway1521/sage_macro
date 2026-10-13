@@ -2629,3 +2629,56 @@ Run 38309820886: the income process net of job loss, and the jobless households'
 **Kept as the base.** The first correction puts right the use of a published estimate and is not optional; the second gives the two results above. The misses are named: in-work poverty in Germany and Italy, Italy's median and MPC. The split of the state (the unemployed apart from the inactive) remains the structural answer to item 4 and is not built.
 
 **Started**: G+S and G+S+A in the three countries.
+
+## 92. The corrected base calibrated in every configuration and tested; E carried to it, France first (2026-10-13)
+
+**Calibrations.** G, G+S and G+S+A are calibrated in the three countries on the base of section 91 (G+A reads G's file). Files `calibration_v5m_{FR,DE,IT}_{G,GS,GSA}.txt`, all committed.
+
+| on its own targets (model, data) | France | Germany | Italy |
+|---|---|---|---|
+| G+S participation, below tertiary | 0.203, 0.203 | 0.253, 0.252 | 0.116, 0.116 |
+| G+S participation, tertiary | 0.292, 0.291 | 0.349, 0.349 | 0.165, 0.165 |
+| G+S+A participation | 0.202 and 0.290 | 0.252 and 0.349 | 0.117 and 0.165 |
+| G+S+A hand-to-mouth | 0.268 (0.268) | 0.252 (0.252) | 0.208 (0.203) |
+| social multiplier, G+S and G+S+A | 1.4, 1.3 | 1.4, 1.4 | 1.2, 1.2 |
+| G+S+A earnings response to a windfall, untargeted (Sweden 0.011) | 0.010 | 0.012 | 0.008 |
+
+**Tests on the corrected base** (runs of 13 October, 04:42 and 10:48 UTC).
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| on and off, budget, own targets: G and G+S | 9 of 9 | 9 of 9 | 9 of 9 |
+| the same: G+A and G+S+A | 8 of 8 | 8 of 8 | running |
+| transitions, S off (zero shock, recession) | 4 of 4 | 4 of 4 | 4 of 4 |
+| zero shock with S on: drift in participation | 2e-12 | 9e-12 | running |
+| asset grid doubled, top doubled (G+A) | pass | pass | pass |
+| Euler errors, 40 household problems: mean, worst point | 10^-5.1 to 10^-6.2, 10^-2.6 | 10^-5.0 to 10^-6.4, 10^-2.2 | 10^-4.9 to 10^-6.2, 10^-2.4 |
+| equilibria | running | running | running |
+| MPC properties | 7 of 7 | 7 of 7 | 6 of 7 |
+| indicator table, G: untargeted rows within a quarter | 6 of 9 | 5 of 9 | 6 of 9 |
+
+- A recession (job loss 1.5 times higher for two years, S off) costs 0.28% of consumption in France, 0.13% in Germany, 0.17% in Italy, and two to four times more below tertiary education than above.
+- Italy's failed MPC property: the lowest wealth quintile's MPC is 0.404 against 0.409 for the second. Not explained. A guess to check: households on the floor lose part of a windfall to the means test, and Italy's floor is the highest.
+- The indicator table's misses are those of section 91 (in-work poverty in Germany and Italy, Italy's median and MPC, France's median and share below half the median, the liquid-asset poor in France and Germany).
+
+**E on this base** (declared in `DIMENSIONS_SPEC.md` before the runs; script `run_places_base.jl`).
+
+1. **The state out of work by place.** Each place has its official share of people in jobless households (Eurostat `ilc_lvhl23n` by degree of urbanisation, `ilc_lvhl21n` by region, 2023), by the nation's closed form; the national share is unchanged by construction (checked for the three countries and both geographies, building the configurations without a solve). Channel `:out_of_work`; the base's channels are composition, access, out of work, conversion, commuting, community. Data added by `data/place/add_out_of_work_housing.py`.
+2. **A fault found and repaired: identical places did not give back the nation** (1.7e-4 in the largest aggregate, run 38413149915). The job's effort levels of a place were found after the national financing, in a reference economy that carried the floor's tax, which the nation's does not. They are now found before it, as the nation's are (`place_ref`). The fault predates this base. Rerun: 38415616928, running.
+3. **France by type of place, G, national parameters** (run 38386601071, before the repair of item 2, which moves the fourth decimal).
+
+| | cities | towns and suburbs | rural |
+|---|---|---|---|
+| out of work, model | 0.108 | 0.120 | 0.061 |
+| income poor, model | 0.084 | 0.094 | 0.059 |
+| hand-to-mouth, model | 0.254 | 0.272 | 0.287 |
+| hand-to-mouth, HFCS 2021, not retired | 0.287 | 0.290 | 0.187 |
+
+Joblessness and poverty come in the right order; **hand-to-mouth by type of place still fails**. With places on, the national hand-to-mouth share is 0.270 against 0.2685.
+
+4. **Why it fails, from the HFCS** (France 2021, not retired, aggregates only, smallest cell 203 households; rows `degurba_nr`, `degurba_edu_nr`, `degurba_tenure_nr`, `degurba_age_nr` of `data/hfcs_targets.csv`). Among owners the hand-to-mouth share is the same in every type of place (0.163, 0.170, 0.169). The difference is tenants: 0.373 in cities, 0.458 in towns, 0.238 in rural places, and they are 59%, 42% and 26% of households. It holds within education (below tertiary 0.385 in cities, 0.222 rural) and among those of 40 and over. **Housing is the missing cost of place, in the form of tenure**, which a one-asset model does not have. A burden share common to every household of a place (E2 as first written) is not the form the data point to, and a cost proportional to income would not move the hand-to-mouth share at all (`DIMENSIONS_SPEC.md`).
+5. **France by region, G** (14 regions, run 38386608288). Poverty by region, untargeted, against the official at-risk-of-poverty rate (`ilc_li41`): correlation 0.97 (0.89 without the overseas departments) with composition, access and the state out of work; spread (sd of log) 0.13 against 0.20 in metropolitan France. **With the conversion channel the correlation falls to 0.47**: a uniform scale on incomes makes Île-de-France rich (poverty 4% against 16% official). The channel was built on Italy's North and South and should not be carried to France as it stands. National hand-to-mouth with places 0.275 (0.277 with conversion) against 0.2685.
+
+**Put to the user (13 October):** state the limit (hand-to-mouth by type of place is a failed test with a known reason; regions are the standard geography), or build tenure into E (a share of households in each place pays a committed rent; to be scoped first). Recommended: the first for now.
+
+**The HFCS targets file** was appended to, not regenerated: `~/hfcs_secure/out` no longer holds every row of the committed file (regenerating would drop 538 rows, the education split of the labour force among them).

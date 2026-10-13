@@ -107,7 +107,7 @@ function stable_points(c, fams)
     pts
 end
 for cfg in ("GS", "GSA")
-    part("3") || continue
+    (part("3") && (PART in ("all", "3") || PART == "3_" * lowercase(cfg))) || continue          # 3_gs and 3_gsa run one configuration alone (France's two together passed six hours, 2026-10-13)
     c0 = country_config(code; v3 = V3ARG, config = cfg, S = true, A = cfg == "GSA")
     b0 = solve_economy(c0); thr = [(b0.ypov, b0.abar)]
     sp = stable_points(c0, families(c0; thresholds = thr))
