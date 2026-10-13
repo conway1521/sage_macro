@@ -2753,3 +2753,17 @@ No refit is needed where run. **Germany's poverty by Land, untargeted**: correla
 | hand-to-mouth, North against South and islands | | | 0.189 and 0.231, 0.174 and 0.282 (0.118 and 0.343) |
 
 Italy's regional hand-to-mouth is **right in order and short in size**, as before the base changed (19 survey regions, smallest cell 45 households). The conversion channel is needed for the size of Italy's gap, overshoots Germany's spread, and breaks the order in France. **One rule for every country cannot be both**: put to the user with the recommendation to leave the channel out of the base's default and keep it as a documented option.
+
+## 96. The policy levers as checks; the conversion channel restated (2026-10-13, 21:30 UTC)
+
+**The levers, one at a time, steady state against steady state** (`policy_checks_base.jl`; runs 38441879441 to 38441919508). 9 of 9 checks pass in France G and G+A, Germany G and G+A, Italy G: every budget balances (to 1e-11), a higher benefit lowers the fall in consumption on job loss, a higher minimum income pays out more and does not lower the share without a buffer, better job finding lowers the share out of work and raises welfare. Italy's G+A and the configurations with S are running or queued.
+
+| G: change in (hand-to-mouth, fall on job loss, welfare in consumption) | France | Germany | Italy |
+|---|---|---|---|
+| first-year benefit +0.10 | +0.028, -0.040, +0.14% | +0.003, -0.032, +0.05% | +0.001, -0.021, +0.05% |
+| minimum income +10% | +0.013, -0.006, +0.47% | +0.011, -0.007, +0.61% | +0.018, -0.011, +1.27% |
+| job finding +0.05 | +0.003, -0.008, +0.37% | -0.003, -0.010, +0.57% | -0.001, -0.007, +0.29% |
+
+With A on the figures are the same to the third decimal; the households who choose their hours work slightly less under a higher minimum income (hours -0.0001), and the welfare gain is a little smaller (France 0.44% against 0.47%, Germany 0.55% against 0.61%). **To read as checks only**: in G the job sets the hours, so a transfer has almost no cost in work, and the welfare gains of the minimum income are an upper reading. These are steady states, without the path.
+
+**The conversion channel** is restated as official income per head over what the model's own place already gives, jobless households included (`:conversion_net`, the base's default channel in place of `:conversion_hh`; `DIMENSIONS_SPEC.md` has the definition and the rule for keeping or dropping it, set with the user before the runs). Before any solve: the premiums move little (their regional spread 0.089 to 0.083 in France, 0.057 to 0.054 in Germany, 0.136 to 0.139 in Italy), so counting joblessness twice was a small part of the overshoot. The regional tests are runs 38469136825, 38469145055, 38469154482.
