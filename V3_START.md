@@ -2648,15 +2648,16 @@ Run 38309820886: the income process net of job loss, and the jobless households'
 | | France | Germany | Italy |
 |---|---|---|---|
 | on and off, budget, own targets: G and G+S | 9 of 9 | 9 of 9 | 9 of 9 |
-| the same: G+A and G+S+A | 8 of 8 | 8 of 8 | running |
+| the same: G+A and G+S+A | 8 of 8 | 8 of 8 | 8 of 8 |
 | transitions, S off (zero shock, recession) | 4 of 4 | 4 of 4 | 4 of 4 |
 | zero shock with S on: drift in participation | 2e-12 | 9e-12 | 7e-13 |
 | asset grid doubled, top doubled (G+A) | pass | pass | pass |
 | Euler errors, 40 household problems: mean, worst point | 10^-5.1 to 10^-6.2, 10^-2.6 | 10^-5.0 to 10^-6.4, 10^-2.2 | 10^-4.9 to 10^-6.2, 10^-2.4 |
-| equilibria: one stable, the solver's | G+S pass; G+S+A rerun (six hours) | 2 of 2 | running |
+| equilibria: one stable, the solver's | 2 of 2 | 2 of 2 | G+S pass; G+S+A rerun (six hours) |
 | MPC properties | 7 of 7 | 7 of 7 | 6 of 7 |
 | indicator table, G: untargeted rows within a quarter | 6 of 9 | 5 of 9 | 6 of 9 |
-| the same, G+S+A | 6 of 9 | 5 of 9 | running |
+| the same, G+S+A | 6 of 9 | 5 of 9 | 6 of 9 |
+| top of the asset grid doubled, G+S+A | running | pass | pass |
 
 - A recession (job loss 1.5 times higher for two years, S off) costs 0.28% of consumption in France, 0.13% in Germany, 0.17% in Italy, and two to four times more below tertiary education than above.
 - Italy's failed MPC property: the lowest wealth quintile's MPC is 0.404 against 0.409 for the second. Not explained. A guess to check: households on the floor lose part of a windfall to the means test, and Italy's floor is the highest.
@@ -2665,7 +2666,7 @@ Run 38309820886: the income process net of job loss, and the jobless households'
 **E on this base** (declared in `DIMENSIONS_SPEC.md` before the runs; script `run_places_base.jl`).
 
 1. **The state out of work by place.** Each place has its official share of people in jobless households (Eurostat `ilc_lvhl23n` by degree of urbanisation, `ilc_lvhl21n` by region, 2023), by the nation's closed form; the national share is unchanged by construction (checked for the three countries and both geographies, building the configurations without a solve). Channel `:out_of_work`; the base's channels are composition, access, out of work, conversion, commuting, community. Data added by `data/place/add_out_of_work_housing.py`.
-2. **A fault found and repaired: identical places did not give back the nation** (1.7e-4 in the largest aggregate, run 38413149915). The job's effort levels of a place were found after the national financing, in a reference economy that carried the floor's tax, which the nation's does not. They are now found before it, as the nation's are (`place_ref`). The fault predates this base. After the repair: 2.7e-11 (run 38415616928, G). With S on the same fault gave 5.0e-4; its rerun is 38434140582.
+2. **A fault found and repaired: identical places did not give back the nation** (1.7e-4 in the largest aggregate, run 38413149915). The job's effort levels of a place were found after the national financing, in a reference economy that carried the floor's tax, which the nation's does not. They are now found before it, as the nation's are (`place_ref`). The fault predates this base. After the repair: 2.7e-11 (run 38415616928, G). With S on the same fault gave 5.0e-4, and 2.5e-11 after the repair (run 38434140582).
 3. **France by type of place, G, national parameters** (run 38386601071, before the repair of item 2, which moves the fourth decimal).
 
 | | cities | towns and suburbs | rural |
@@ -2714,3 +2715,30 @@ Joblessness and poverty come in the right order; **hand-to-mouth by type of plac
 **Limits version 1 carries**: in-work poverty in Germany and Italy about 1.4 times official; Italy's median liquid wealth and MPC; France's median; hours by education the wrong sign, half as far as before; the fall in consumption on job loss 0.19 to 0.21 against 0.07 to 0.16; households without buffers misplaced in large cities; no source for Germany's community infrastructure; the community elasticity estimated on Italy; partial equilibrium; the multiplier a band; the hours elasticity transported from Sweden; policies with A as steady states.
 
 **Outside version 1**: the wellbeing account, the natural environment beyond indicators, an independent second solver, a fourth country, transitions with A.
+
+## 95. Identification on the base, and places in more combinations (2026-10-13, 21:00 UTC)
+
+**Identification of G's fit** (`identification.jl CODE G v5m`, runs 38441669335, 38441679179, 38441688137). The three parameters the search moves (effort scale, top patience, the patience gap by education) against their three targets (effort, the hand-to-mouth share, its difference by education), the income types and the floor held at their fitted values. Entries of the first block are the change in the target, in tolerance bands, for one step of the parameter (effort scale +10%, top patience +0.005, patience gap +0.01).
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| effort scale on effort | -1.35 | -1.28 | -1.53 |
+| top patience on hand-to-mouth | -1.12 | -0.99 | -0.48 |
+| patience gap on the hand-to-mouth gap | +2.10 | +1.33 | +0.60 |
+| condition number of the block | 5.0 | 3.1 | 4.1 |
+| top patience moves by, when the hand-to-mouth target is off by one band (0.02) | 0.005 | 0.005 | 0.008 |
+| patience gap moves by, when the gap by education is off by one band (0.03) | 0.006 | 0.007 | 0.013 |
+
+No column is flat and the block is well conditioned in the three countries. The last two rows are the sensitivity of the estimates to their targets (Andrews, Gentzkow and Shapiro 2017; with as many targets as parameters, the inverse of the block). **Italy is the least sharply identified**: its patience parameters move the targets half as much as France's, and they move median liquid wealth and the MPC as much as their own targets, which is where Italy's named misses are. The social technology's block (kappa and sigma on participation by education) is running for France.
+
+**Places, more combinations, at the national parameters.** Identical places give back the nation in every one (differences of 1e-11 or less: France G, G+S, G+A; Germany and Italy G).
+
+| national hand-to-mouth with places on, against without | by type of place | by region |
+|---|---|---|
+| France G | 0.2704, 0.2685 | 0.2770, 0.2685 |
+| France G+A | 0.2733, 0.2715 | |
+| France G+S (participation 0.2316, 0.2331) | 0.2722, 0.2699 | |
+| Germany G | 0.2541, 0.2541 | 0.2544, 0.2541 |
+| Italy G | 0.2013, 0.2013 | running |
+
+No refit is needed where run. **Germany's poverty by Land, untargeted**: correlation with the official rate 0.97 without the conversion channel and 0.91 with it, the model's spread (sd of log) 0.150 and 0.245 against 0.178. As in France the channel adds too much. A caution on these correlations: joblessness by region is an input and jobless households are a large part of official poverty, so the test is easier to pass than it looks.
