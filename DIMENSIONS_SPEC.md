@@ -159,6 +159,8 @@ So the order is: first the five channels and the state out of work by place, rea
 
 *Seen before any solve:* the redefinition moves the premiums little (their spread across regions 0.089 to 0.083 in France, 0.057 to 0.054 in Germany, 0.136 to 0.139 in Italy). Counting joblessness twice was a small part of the overshoot. The larger part is that the premium is an average: regional differences in pay are wider at the top of the distribution than at the bottom, where poverty is decided, and a uniform scale gives the bottom the top's difference.
 
+*The outcome (13 October, late):* with the restated channel the order of France's regional poverty still falls (correlation with the official rate 0.44 in metropolitan France, 0.89 without the channel; run 38469136825). **By the rule the channel leaves the base's default.** It stays an option (`:conversion_net`), documented with its tests. The base's places differ by composition, access to work, the state out of work, commuting (by type of place) and community. The cost, stated: Italy's regional gap in poverty is right in order and about a third of the data's size without it.
+
 ## Decisions taken (8 October 2026)
 
 | | decision | what was decided |

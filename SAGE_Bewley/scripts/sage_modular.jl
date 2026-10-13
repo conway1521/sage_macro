@@ -1504,7 +1504,10 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
         # poor against the national floor and not only riskier (V3_START.md, sections 21 and 22).
         vfl && (d[:e_channels] = (:composition, :access, :conversion_hh, :commute, :community))
         # With the state out of work the places have it too, each at its own official share of jobless households.
-        vmin && (d[:e_channels] = (:composition, :access, :out_of_work, :conversion_net, :commute, :community))
+        # The conversion channel is not in the base (2026-10-13, V3_START.md section 97): restated net of what
+        # the model's place already gives (`:conversion_net`), it still breaks the order of regional poverty in
+        # France (an average applied to everyone). It stays an option, documented.
+        vmin && (d[:e_channels] = (:composition, :access, :out_of_work, :commute, :community))
     end
     marker = replace(cal, r"\.txt$" => ".not_calibrated.txt")
     stale = isfile(marker) && (!isfile(cal) || mtime(marker) > mtime(cal))

@@ -2,21 +2,23 @@
 # official geography, each its own economy under one national tax rate, at the national parameters
 # (nothing refitted). The channels enter one after another, so each one's part can be read:
 #   1. composition, access to work and the state out of work (the place's share of jobless households);
-#   2. with conversion (official income per head over what the model's place already gives, jobless households included);
-#   3. with commuting (degree of urbanisation only) and, with S on, community.
+#   2. with commuting (degree of urbanisation only) and, with S on, community: the base's channels.
+# The conversion channel (official income per head over what the model's place already gives) is an
+# option outside the base, run alone with a fourth argument `conversion`.
 # First: identical places give back the national economy.
 # Untargeted, France by degree of urbanisation: the hand-to-mouth share by place against the HFCS 2021
 # (the not retired, the population the base is fitted to) and, with S
 # on, formal volunteering by place (EU-SILC 2022, ilc_scp20).
 #
-#   julia --project=scripts/run_env scripts/run_places_base.jl CODE [degurba | tl2] [G | GS | GA | GSA] [last: the full set of channels alone, without the reduction | reduction: the first test alone]
+#   julia --project=scripts/run_env scripts/run_places_base.jl CODE [degurba | tl2] [G | GS | GA | GSA] [last: the base's channels alone, without the reduction | reduction: the first test alone | conversion]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf, Statistics
 code = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "FR"
 typ = length(ARGS) >= 2 ? Symbol(lowercase(ARGS[2])) : :degurba
 cfg = length(ARGS) >= 3 ? uppercase(ARGS[3]) : "G"
 S_ON = occursin('S', cfg); A_ON = occursin('A', cfg)
-ONLY_LAST = length(ARGS) >= 4 && lowercase(ARGS[4]) == "last"
+WITH_CONV = length(ARGS) >= 4 && lowercase(ARGS[4]) == "conversion"
+ONLY_LAST = WITH_CONV || (length(ARGS) >= 4 && lowercase(ARGS[4]) == "last")
 c = country_config(code; config = cfg, v3 = :v5m, S = S_ON, A = A_ON)
 pl = places_of(code; typology = typ)
 d = place_data(code; typology = typ)
@@ -60,11 +62,13 @@ for ((ind, place), xs) in d
 end
 hname(nm) = nm == "rural areas" ? "rural" : nm
 
-sets = Any[("composition, access to work, the state out of work", (:composition, :access, :out_of_work)),
-           ("with conversion", (:composition, :access, :out_of_work, :conversion_net))]
-last_ch = (:composition, :access, :out_of_work, :conversion_net, (typ === :degurba ? (:commute,) : ())..., (S_ON ? (:community,) : ())...)
-length(last_ch) > 4 && push!(sets, ("with " * join([x === :commute ? "commuting" : "community" for x in last_ch[5:end]], " and "), last_ch))
+base3 = (:composition, :access, :out_of_work)
+full = (base3..., (typ === :degurba ? (:commute,) : ())..., (S_ON ? (:community,) : ())...)
+sets = Any[("composition, access to work, the state out of work", base3)]
+length(full) > 3 && push!(sets, ("with " * join([x === :commute ? "commuting" : "community" for x in full[4:end]], " and ") * ": the base's channels", full))
 ONLY_LAST && (sets = sets[end:end])
+# the conversion channel, an option outside the base: alone, after the base's channels
+WITH_CONV && (sets = Any[("with conversion, an option outside the base", (full..., :conversion_net))])
 for (lab, ch) in sets
     places, w = places_from_data(code, c; typology = typ, channels = ch, epsilon = c.epsilon)
     t = @elapsed sp = solve_places(c, places; weights = w)
