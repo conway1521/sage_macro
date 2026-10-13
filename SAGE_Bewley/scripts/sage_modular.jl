@@ -1503,6 +1503,8 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
         # is not unemployment in a low employment rate stays in the place's income, so a poor place is
         # poor against the national floor and not only riskier (V3_START.md, sections 21 and 22).
         vfl && (d[:e_channels] = (:composition, :access, :conversion_hh, :commute, :community))
+        # With the state out of work the places have it too, each at its own official share of jobless households.
+        vmin && (d[:e_channels] = (:composition, :access, :out_of_work, :conversion_hh, :commute, :community))
     end
     marker = replace(cal, r"\.txt$" => ".not_calibrated.txt")
     stale = isfile(marker) && (!isfile(cal) || mtime(marker) > mtime(cal))

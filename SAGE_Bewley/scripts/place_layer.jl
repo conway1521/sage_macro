@@ -259,6 +259,38 @@ function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (
             specs[i][:f_long] = Tuple(min(0.95, us[g] * (1 - f) / l[g]) for g in 1:2)
         end
     end
+    if :out_of_work in channels
+        # THE STATE OUT OF WORK BY PLACE (the base with the state, v3 = :v5m; V3_START.md section 92).
+        # The nation's rule, place by place: the share out of work s of a cell is the first year and
+        # the state together, s / (1 - s) = delta + delta (1 - f) / f_long, and the yearly exit from
+        # the state follows in closed form. The place's share is the nation's, by education, times the
+        # place's official share of people in households with very low work intensity (Eurostat
+        # ilc_lvhl23n by degree of urbanisation, ilc_lvhl21n by region) over the population-weighted
+        # mean of the places, at the place's own education mix, so the national share is unchanged.
+        # Job loss and job finding are those of the access channel. Where they alone give more than the
+        # place's share (the exit would pass 0.95 a year), the exit is 0.95 and job loss falls to hold
+        # the share. Nothing is fitted.
+        isnan(c.f_long[1]) && error("the out-of-work channel needs the state out of work in the national configuration")
+        J = [latest(d, "low_work_intensity", p) for (_, p) in pl]
+        any(isnothing, J) && error("no shares of people in jobless households by place for $code ($typology): indicator low_work_intensity")
+        sn = [(o = c.delta[g] * (1 + (1 - c.f_find) / c.f_long[g]); o / (1 + o)) for g in 1:2]      # the nation's shares, from its own rule
+        Sn = c.share[1] * sn[1] + c.share[2] * sn[2]; Jbar = sum(w .* J)
+        for i in 1:n
+            f = get(specs[i], :f_find, c.f_find); dl = get(specs[i], :delta, c.delta)
+            t = get(specs[i], :tertiary, c.share[2]); sh = (1 - t, t)
+            k = (J[i] / Jbar) * Sn / (sh[1] * sn[1] + sh[2] * sn[2])
+            dn = zeros(2); fl = zeros(2)
+            for g in 1:2
+                s = min(k * sn[g], 0.9); dn[g] = dl[g]
+                os = s / (1 - s); v = os > dl[g] ? dl[g] * (1 - f) / (os - dl[g]) : Inf
+                if v > 0.95
+                    v = 0.95; dn[g] = os / (1 + (1 - f) / v)
+                end
+                fl[g] = v
+            end
+            specs[i][:delta] = (dn[1], dn[2]); specs[i][:f_long] = (fl[1], fl[2])
+        end
+    end
     if (:conversion in channels || :conversion_hh in channels) && !any(isnothing, u)
         key = typology === :degurba ? "median_income_eur" : "hh_income_per_head"
         inc = [latest(d, key, p) for (_, p) in pl]
