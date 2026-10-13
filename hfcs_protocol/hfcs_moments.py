@@ -719,6 +719,14 @@ def build_E_groups(df):
     df["g_region"] = df["region"]
     df["g_macro_region"] = df["region"].map(IT_MACRO)
     df["g_degurba"] = df["degurba"].map({1: "cities", 2: "towns and suburbs", 3: "rural"})
+    # by type of place within the not retired, the population the model with the state out of work is fitted to (2026-10-13)
+    df["g_degurba_nr"] = df["g_degurba"].where(nr)
+    # and, within the not retired, type of place crossed with education, tenure and age: is the difference
+    # between places one of who lives there, or does it hold within each group (2026-10-13)
+    age_ = df["age_rp"].where(df["age_rp"].notna(), df["age_rp_b"])
+    df["g_degurba_edu_nr"] = (df["g_degurba"] + ", " + df["g_education"]).where(nr)
+    df["g_degurba_tenure_nr"] = (df["g_degurba"] + ", " + pd.Series(np.where(amt(df, "hmr") > 0, "owner", "tenant"), index=df.index)).where(nr)
+    df["g_degurba_age_nr"] = (df["g_degurba"] + ", " + pd.Series(np.where(age_ < 40, "under 40", "40 and over"), index=df.index)).where(nr & age_.notna())
     cuts = {}
     for m, sub in df.groupby("implicate"):
         cuts[m] = [weighted_quantile(sub["liq_kvw"].values, sub["weight"].values, q) for q in (0.2, 0.4, 0.6, 0.8)]
@@ -832,7 +840,7 @@ def build_all(df, country, wave):
     return quant
 
 
-GROUP_VARS = ["all", "education", "labour", "labour_force", "not_retired", "education_lf", "education_nr", "region", "macro_region", "degurba", "liquid_quintile", "htm_status"]
+GROUP_VARS = ["all", "education", "labour", "labour_force", "not_retired", "education_lf", "education_nr", "region", "macro_region", "degurba", "degurba_nr", "degurba_edu_nr", "degurba_tenure_nr", "degurba_age_nr", "liquid_quintile", "htm_status"]
 
 # =============================================================================
 # 4. ESTIMATION: weights, replicate weights, Rubin's rules
@@ -1296,7 +1304,7 @@ def selftest():
         check("MPC by liquid wealth quintile is computed (five quintiles) and declines by construction",
               len(mq) == 5 and mq["Q1"] > mq["Q5"])
         check("standard errors are positive wherever a value is published",
-              (moments.loc[moments["value"].notna() & (moments["moment"] == "home_ownership_rate"), "se"] > 0).all())
+              (moments.loc[moments["value"].notna() & (moments["moment"] == "home_ownership_rate") & (moments["group_var"] != "degurba_tenure_nr"), "se"] > 0).all())
         check("benchmark table is produced; synthetic waves have no 2010 or 2014, so those rows are empty",
               len(bench) == len(BENCHMARKS) and bench.query("wave == '2010'")["computed"].isna().all())
         # --- the guard refuses household-level data

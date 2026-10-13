@@ -58,6 +58,11 @@ BY_GROUP = {
     "macro_region": ["htm_model_narrow_total", "htm_model_broad_total", "asset_poor_disp_persons", "income_poor50_disp_persons",
                      "hardship_disp_persons", "mpc_mean", "median_liquid_broad", "median_networth"],
     "degurba": ["htm_model_narrow_total", "htm_model_broad_total", "asset_poor_disp_persons", "income_poor50_disp_persons", "mpc_mean"],
+    "degurba_nr": ["htm_model_narrow_total", "htm_model_broad_total", "asset_poor_disp_persons", "income_poor50_disp_persons", "mpc_mean",
+                   "liquid_kvw_to_disposable_income_ratio_of_medians", "median_income_disposable", "home_ownership_rate"],
+    "degurba_edu_nr": ["htm_model_narrow_total", "median_income_disposable", "home_ownership_rate"],
+    "degurba_tenure_nr": ["htm_model_narrow_total", "median_income_disposable"],
+    "degurba_age_nr": ["htm_model_narrow_total", "median_income_disposable", "home_ownership_rate"],
 }
 keep = (m["group_var"] == "all") & m["moment"].isin(NATIONAL)
 for gv, moms in BY_GROUP.items():

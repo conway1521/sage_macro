@@ -6,7 +6,7 @@
 #   3. with commuting (degree of urbanisation only) and, with S on, community.
 # First: identical places give back the national economy.
 # Untargeted, France by degree of urbanisation: the hand-to-mouth share by place against the HFCS 2021
-# (all households, so the order and the ratio between places are the test, not the level) and, with S
+# (the not retired, the population the base is fitted to) and, with S
 # on, formal volunteering by place (EU-SILC 2022, ilc_scp20).
 #
 #   julia --project=scripts/run_env scripts/run_places_base.jl CODE [degurba | tl2] [G | GS] [last: the full set of channels alone | reduction: the first test alone]
@@ -50,7 +50,7 @@ if typ === :degurba
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
         startswith(ln, "#") && continue
         f = split(ln, ",")
-        length(f) >= 6 && f[1] == "htm_model_narrow_total" && f[2] == code && f[3] == "2021" && f[4] == "degurba" && (htm[f[5]] = parse(Float64, f[6]))
+        length(f) >= 6 && f[1] == "htm_model_narrow_total" && f[2] == code && f[3] == "2021" && f[4] == "degurba_nr" && (htm[f[5]] = parse(Float64, f[6]))
     end
 end
 for ((ind, place), xs) in d
@@ -80,7 +80,7 @@ for (lab, ch) in sets
     names = [nm for (nm, _) in sp.by_place]; codes = [p for (_, p) in pl]
     if !isempty(htm) && all(haskey(htm, hname(nm)) for nm in names)
         m = [r.hand_to_mouth_kvw for (_, r) in sp.by_place]; h = [htm[hname(nm)] for nm in names]
-        @printf("  untargeted, hand-to-mouth by place over the first place: model %s | HFCS 2021 %s\n",
+        @printf("  untargeted, hand-to-mouth by place over the first place: model %s | HFCS 2021, not retired %s\n",
                 join([@sprintf("%.2f", x / m[1]) for x in m], " "), join([@sprintf("%.2f", x / h[1]) for x in h], " "))
     end
     if S_ON && all(haskey(vol, p) for p in codes)

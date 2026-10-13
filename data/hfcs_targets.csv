@@ -28,6 +28,9 @@ asset_poor_disp_persons,IT,2023,all,all,0.33143,0.01334,9641
 asset_poor_disp_persons,FR,2021,degurba,cities,0.36035,0.0114,6692
 asset_poor_disp_persons,FR,2021,degurba,rural,0.24636,0.01532,1914
 asset_poor_disp_persons,FR,2021,degurba,towns and suburbs,0.35548,0.01804,1547
+asset_poor_disp_persons,FR,2021,degurba_nr,cities,0.40193,0.01264,4506
+asset_poor_disp_persons,FR,2021,degurba_nr,rural,0.26042,0.01995,1295
+asset_poor_disp_persons,FR,2021,degurba_nr,towns and suburbs,0.365,0.02248,1042
 asset_poor_disp_persons,DE,2014,education,below tertiary,0.47344,0.01508,2351
 asset_poor_disp_persons,DE,2014,education,tertiary,0.20626,0.0152,2064
 asset_poor_disp_persons,DE,2017,education,below tertiary,0.47997,0.01276,2470
@@ -374,6 +377,24 @@ home_ownership_rate,IT,2014,all,all,0.68247,0.00688,8156
 home_ownership_rate,IT,2017,all,all,0.68453,0.00668,7420
 home_ownership_rate,IT,2021,all,all,0.73153,0.03397,6239
 home_ownership_rate,IT,2023,all,all,0.74546,0.0107,9641
+home_ownership_rate,FR,2021,degurba_age_nr,"cities, 40 and over",0.49608,0.01677,3243
+home_ownership_rate,FR,2021,degurba_age_nr,"cities, under 40",0.28407,0.0158,1263
+home_ownership_rate,FR,2021,degurba_age_nr,"rural, 40 and over",0.80821,0.01912,1012
+home_ownership_rate,FR,2021,degurba_age_nr,"rural, under 40",0.58744,0.03879,283
+home_ownership_rate,FR,2021,degurba_age_nr,"towns and suburbs, 40 and over",0.64365,0.03254,771
+home_ownership_rate,FR,2021,degurba_age_nr,"towns and suburbs, under 40",0.46789,0.04502,271
+home_ownership_rate,FR,2021,degurba_edu_nr,"cities, below tertiary",0.30328,0.01443,1781
+home_ownership_rate,FR,2021,degurba_edu_nr,"cities, tertiary",0.53565,0.01886,2725
+home_ownership_rate,FR,2021,degurba_edu_nr,"rural, below tertiary",0.69803,0.02303,736
+home_ownership_rate,FR,2021,degurba_edu_nr,"rural, tertiary",0.82908,0.02871,559
+home_ownership_rate,FR,2021,degurba_edu_nr,"towns and suburbs, below tertiary",0.49416,0.03212,547
+home_ownership_rate,FR,2021,degurba_edu_nr,"towns and suburbs, tertiary",0.75166,0.03654,495
+home_ownership_rate,FR,2021,degurba_nr,cities,0.41027,0.01188,4506
+home_ownership_rate,FR,2021,degurba_nr,rural,0.74217,0.01877,1295
+home_ownership_rate,FR,2021,degurba_nr,towns and suburbs,0.5813,0.02569,1042
+home_ownership_rate,FR,2023,degurba_nr,cities,0.41086,0.00953,4707
+home_ownership_rate,FR,2023,degurba_nr,rural,0.72063,0.01725,1570
+home_ownership_rate,FR,2023,degurba_nr,towns and suburbs,0.61002,0.0196,1360
 htm_kvw_poor,DE,2010,all,all,0.07915,0.00636,3256
 htm_kvw_poor,DE,2014,all,all,0.09905,0.00712,4094
 htm_kvw_poor,DE,2017,all,all,0.08519,0.00594,4467
@@ -485,6 +506,12 @@ htm_model_broad_total,FR,2021,degurba,towns and suburbs,0.10446,0.01241,1547
 htm_model_broad_total,FR,2023,degurba,cities,0.11742,0.00569,7361
 htm_model_broad_total,FR,2023,degurba,rural,0.07042,0.00835,2426
 htm_model_broad_total,FR,2023,degurba,towns and suburbs,0.06879,0.00918,2154
+htm_model_broad_total,FR,2021,degurba_nr,cities,0.15422,0.01093,4506
+htm_model_broad_total,FR,2021,degurba_nr,rural,0.09301,0.01326,1295
+htm_model_broad_total,FR,2021,degurba_nr,towns and suburbs,0.13348,0.01882,1042
+htm_model_broad_total,FR,2023,degurba_nr,cities,0.14021,0.00743,4707
+htm_model_broad_total,FR,2023,degurba_nr,rural,0.08012,0.01089,1570
+htm_model_broad_total,FR,2023,degurba_nr,towns and suburbs,0.09074,0.01329,1360
 htm_model_broad_total,DE,2010,education,below tertiary,0.23582,0.01289,1889
 htm_model_broad_total,DE,2010,education,tertiary,0.08045,0.01227,1317
 htm_model_broad_total,DE,2014,education,below tertiary,0.2591,0.01222,2352
@@ -853,6 +880,30 @@ htm_model_narrow_total,FR,2021,degurba,towns and suburbs,0.21721,0.01709,1547
 htm_model_narrow_total,FR,2023,degurba,cities,0.22561,0.00714,7361
 htm_model_narrow_total,FR,2023,degurba,rural,0.18979,0.0127,2426
 htm_model_narrow_total,FR,2023,degurba,towns and suburbs,0.21067,0.01504,2154
+htm_model_narrow_total,FR,2021,degurba_age_nr,"cities, 40 and over",0.29665,0.01511,3243
+htm_model_narrow_total,FR,2021,degurba_age_nr,"cities, under 40",0.27187,0.01965,1263
+htm_model_narrow_total,FR,2021,degurba_age_nr,"rural, 40 and over",0.16489,0.01798,1012
+htm_model_narrow_total,FR,2021,degurba_age_nr,"rural, under 40",0.23955,0.03685,283
+htm_model_narrow_total,FR,2021,degurba_age_nr,"towns and suburbs, 40 and over",0.28284,0.03075,771
+htm_model_narrow_total,FR,2021,degurba_age_nr,"towns and suburbs, under 40",0.30362,0.04152,271
+htm_model_narrow_total,FR,2021,degurba_edu_nr,"cities, below tertiary",0.38499,0.01747,1781
+htm_model_narrow_total,FR,2021,degurba_edu_nr,"cities, tertiary",0.17133,0.0138,2725
+htm_model_narrow_total,FR,2021,degurba_edu_nr,"rural, below tertiary",0.22188,0.02201,736
+htm_model_narrow_total,FR,2021,degurba_edu_nr,"rural, tertiary",0.11899,0.02315,559
+htm_model_narrow_total,FR,2021,degurba_edu_nr,"towns and suburbs, below tertiary",0.34766,0.03343,547
+htm_model_narrow_total,FR,2021,degurba_edu_nr,"towns and suburbs, tertiary",0.1779,0.03403,495
+htm_model_narrow_total,FR,2021,degurba_nr,cities,0.28662,0.01191,4506
+htm_model_narrow_total,FR,2021,degurba_nr,rural,0.18722,0.01604,1295
+htm_model_narrow_total,FR,2021,degurba_nr,towns and suburbs,0.29021,0.02523,1042
+htm_model_narrow_total,FR,2023,degurba_nr,cities,0.26035,0.00911,4707
+htm_model_narrow_total,FR,2023,degurba_nr,rural,0.22209,0.01733,1570
+htm_model_narrow_total,FR,2023,degurba_nr,towns and suburbs,0.2549,0.02017,1360
+htm_model_narrow_total,FR,2021,degurba_tenure_nr,"cities, owner",0.16264,0.0127,2724
+htm_model_narrow_total,FR,2021,degurba_tenure_nr,"cities, tenant",0.37287,0.01769,1782
+htm_model_narrow_total,FR,2021,degurba_tenure_nr,"rural, owner",0.16944,0.01922,1092
+htm_model_narrow_total,FR,2021,degurba_tenure_nr,"rural, tenant",0.23842,0.03765,203
+htm_model_narrow_total,FR,2021,degurba_tenure_nr,"towns and suburbs, owner",0.16965,0.02037,776
+htm_model_narrow_total,FR,2021,degurba_tenure_nr,"towns and suburbs, tenant",0.4576,0.0463,266
 htm_model_narrow_total,DE,2010,education,below tertiary,0.41401,0.01679,1889
 htm_model_narrow_total,DE,2010,education,tertiary,0.214,0.01813,1317
 htm_model_narrow_total,DE,2014,education,below tertiary,0.40496,0.01413,2352
@@ -1225,6 +1276,9 @@ income_poor50_disp_persons,IT,2023,all,all,0.14409,0.00923,9641
 income_poor50_disp_persons,FR,2021,degurba,cities,0.11136,0.00691,6692
 income_poor50_disp_persons,FR,2021,degurba,rural,0.06101,0.00764,1914
 income_poor50_disp_persons,FR,2021,degurba,towns and suburbs,0.09521,0.01064,1547
+income_poor50_disp_persons,FR,2021,degurba_nr,cities,0.13511,0.00892,4506
+income_poor50_disp_persons,FR,2021,degurba_nr,rural,0.06757,0.01003,1295
+income_poor50_disp_persons,FR,2021,degurba_nr,towns and suburbs,0.11992,0.01432,1042
 income_poor50_disp_persons,DE,2014,education,below tertiary,0.14272,0.01077,2351
 income_poor50_disp_persons,DE,2014,education,tertiary,0.05197,0.00745,2064
 income_poor50_disp_persons,DE,2017,education,below tertiary,0.15061,0.01085,2470
@@ -1477,6 +1531,9 @@ liquid_kvw_to_disposable_income_ratio_of_medians,IT,2014,all,all,0.20946,0.00785
 liquid_kvw_to_disposable_income_ratio_of_medians,IT,2017,all,all,0.23432,0.00849,7420
 liquid_kvw_to_disposable_income_ratio_of_medians,IT,2021,all,all,0.2718,0.02794,6239
 liquid_kvw_to_disposable_income_ratio_of_medians,IT,2023,all,all,0.30733,0.0144,9641
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,degurba_nr,cities,0.04052,0.0024,4506
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,degurba_nr,rural,0.0563,0.00509,1295
+liquid_kvw_to_disposable_income_ratio_of_medians,FR,2021,degurba_nr,towns and suburbs,0.0438,0.00278,1042
 liquid_kvw_to_disposable_income_ratio_of_medians,DE,2014,education,below tertiary,0.04046,0.00368,2351
 liquid_kvw_to_disposable_income_ratio_of_medians,DE,2014,education,tertiary,0.09059,0.01301,2064
 liquid_kvw_to_disposable_income_ratio_of_medians,DE,2017,education,below tertiary,0.04085,0.0039,2470
@@ -1635,6 +1692,27 @@ median_income_disposable,IT,2014,all,all,20147.12166,204.51597,8156
 median_income_disposable,IT,2017,all,all,20018.31261,129.12499,7420
 median_income_disposable,IT,2021,all,all,22124.79094,1033.21484,6239
 median_income_disposable,IT,2023,all,all,24029.28934,392.42349,9641
+median_income_disposable,FR,2021,degurba_age_nr,"cities, 40 and over",29019.264,737.71851,3243
+median_income_disposable,FR,2021,degurba_age_nr,"cities, under 40",21285.224,645.90485,1263
+median_income_disposable,FR,2021,degurba_age_nr,"rural, 40 and over",34333.704,1098.69648,1012
+median_income_disposable,FR,2021,degurba_age_nr,"rural, under 40",28134.552,1457.36396,283
+median_income_disposable,FR,2021,degurba_age_nr,"towns and suburbs, 40 and over",26506.272,1641.33416,771
+median_income_disposable,FR,2021,degurba_age_nr,"towns and suburbs, under 40",26266.72,1740.32394,271
+median_income_disposable,FR,2021,degurba_edu_nr,"cities, below tertiary",21271.336,609.86667,1781
+median_income_disposable,FR,2021,degurba_edu_nr,"cities, tertiary",33021.96,1086.93164,2725
+median_income_disposable,FR,2021,degurba_edu_nr,"rural, below tertiary",28299.072,1117.50488,736
+median_income_disposable,FR,2021,degurba_edu_nr,"rural, tertiary",39330.768,1156.89397,559
+median_income_disposable,FR,2021,degurba_edu_nr,"towns and suburbs, below tertiary",21609.072,1019.32258,547
+median_income_disposable,FR,2021,degurba_edu_nr,"towns and suburbs, tertiary",38664.624,2440.9896,495
+median_income_disposable,FR,2021,degurba_nr,cities,26035.76,721.56149,4506
+median_income_disposable,FR,2021,degurba_nr,rural,31858.112,1156.00301,1295
+median_income_disposable,FR,2021,degurba_nr,towns and suburbs,26497.216,1066.25835,1042
+median_income_disposable,FR,2021,degurba_tenure_nr,"cities, owner",39106.976,817.23302,2724
+median_income_disposable,FR,2021,degurba_tenure_nr,"cities, tenant",19537.888,462.82934,1782
+median_income_disposable,FR,2021,degurba_tenure_nr,"rural, owner",36374.128,656.78173,1092
+median_income_disposable,FR,2021,degurba_tenure_nr,"rural, tenant",20102.944,1266.84292,203
+median_income_disposable,FR,2021,degurba_tenure_nr,"towns and suburbs, owner",36121.248,856.69056,776
+median_income_disposable,FR,2021,degurba_tenure_nr,"towns and suburbs, tenant",17621.536,776.45262,266
 median_income_disposable,DE,2014,labour,employed,32254.488,469.01292,2694
 median_income_disposable,DE,2014,labour,other,11045.56,1638.8753,155
 median_income_disposable,DE,2014,labour,retired,22410.712,702.07684,1476
@@ -2020,6 +2098,12 @@ mpc_mean,FR,2021,degurba,towns and suburbs,0.38363,0.01466,1547
 mpc_mean,FR,2023,degurba,cities,0.39637,0.00651,7361
 mpc_mean,FR,2023,degurba,rural,0.39703,0.01055,2426
 mpc_mean,FR,2023,degurba,towns and suburbs,0.38656,0.01091,2154
+mpc_mean,FR,2021,degurba_nr,cities,0.32806,0.0086,4506
+mpc_mean,FR,2021,degurba_nr,rural,0.34544,0.01526,1295
+mpc_mean,FR,2021,degurba_nr,towns and suburbs,0.32927,0.0196,1042
+mpc_mean,FR,2023,degurba_nr,cities,0.33731,0.0077,4707
+mpc_mean,FR,2023,degurba_nr,rural,0.3343,0.01287,1570
+mpc_mean,FR,2023,degurba_nr,towns and suburbs,0.32969,0.01291,1360
 mpc_mean,DE,2017,education,below tertiary,0.51611,0.01008,2469
 mpc_mean,DE,2017,education,tertiary,0.5064,0.01254,2435
 mpc_mean,DE,2021,education,below tertiary,0.46883,0.01351,1958
