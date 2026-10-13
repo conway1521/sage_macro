@@ -727,6 +727,20 @@ def build_E_groups(df):
     df["g_degurba_edu_nr"] = (df["g_degurba"] + ", " + df["g_education"]).where(nr)
     df["g_degurba_tenure_nr"] = (df["g_degurba"] + ", " + pd.Series(np.where(amt(df, "hmr") > 0, "owner", "tenant"), index=df.index)).where(nr)
     df["g_degurba_age_nr"] = (df["g_degurba"] + ", " + pd.Series(np.where(age_ < 40, "under 40", "40 and over"), index=df.index)).where(nr & age_.notna())
+    # Is tenure its own effect or a marker of income (2026-10-13)? Tenure alone and crossed with the tercile of
+    # equivalised disposable income among the not retired; type of place by the same tercile; and region and
+    # region by tenure among the not retired, the population the regional test needs.
+    ten_ = pd.Series(np.where(amt(df, "hmr") > 0, "owner", "tenant"), index=df.index)
+    inc_eq = df["inc_dispo"] / np.sqrt(df["hsize"].clip(lower=1))
+    terc = pd.Series(index=df.index, dtype=object)
+    for m, sub in df[nr & inc_eq.notna()].groupby("implicate"):
+        c1, c2 = (weighted_quantile(inc_eq[sub.index].values, sub["weight"].values, q) for q in (1 / 3, 2 / 3))
+        terc[sub.index] = np.where(inc_eq[sub.index] <= c1, "low income", np.where(inc_eq[sub.index] <= c2, "middle income", "high income"))
+    df["g_tenure_nr"] = ten_.where(nr)
+    df["g_tenure_inc_nr"] = (ten_ + ", " + terc).where(nr)
+    df["g_degurba_inc_nr"] = (df["g_degurba"] + ", " + terc).where(nr)
+    df["g_region_nr"] = df["region"].where(nr)
+    df["g_region_tenure_nr"] = (df["region"] + ", " + ten_).where(nr)
     cuts = {}
     for m, sub in df.groupby("implicate"):
         cuts[m] = [weighted_quantile(sub["liq_kvw"].values, sub["weight"].values, q) for q in (0.2, 0.4, 0.6, 0.8)]
@@ -840,7 +854,7 @@ def build_all(df, country, wave):
     return quant
 
 
-GROUP_VARS = ["all", "education", "labour", "labour_force", "not_retired", "education_lf", "education_nr", "region", "macro_region", "degurba", "degurba_nr", "degurba_edu_nr", "degurba_tenure_nr", "degurba_age_nr", "liquid_quintile", "htm_status"]
+GROUP_VARS = ["all", "education", "labour", "labour_force", "not_retired", "education_lf", "education_nr", "region", "macro_region", "degurba", "degurba_nr", "degurba_edu_nr", "degurba_tenure_nr", "degurba_age_nr", "tenure_nr", "tenure_inc_nr", "degurba_inc_nr", "region_nr", "region_tenure_nr", "liquid_quintile", "htm_status"]
 
 # =============================================================================
 # 4. ESTIMATION: weights, replicate weights, Rubin's rules
@@ -1304,7 +1318,7 @@ def selftest():
         check("MPC by liquid wealth quintile is computed (five quintiles) and declines by construction",
               len(mq) == 5 and mq["Q1"] > mq["Q5"])
         check("standard errors are positive wherever a value is published",
-              (moments.loc[moments["value"].notna() & (moments["moment"] == "home_ownership_rate") & (moments["group_var"] != "degurba_tenure_nr"), "se"] > 0).all())
+              (moments.loc[moments["value"].notna() & (moments["moment"] == "home_ownership_rate") & (~moments["group_var"].isin(["degurba_tenure_nr", "tenure_nr", "tenure_inc_nr", "region_tenure_nr"])), "se"] > 0).all())
         check("benchmark table is produced; synthetic waves have no 2010 or 2014, so those rows are empty",
               len(bench) == len(BENCHMARKS) and bench.query("wave == '2010'")["computed"].isna().all())
         # --- the guard refuses household-level data

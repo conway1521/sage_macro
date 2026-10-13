@@ -63,6 +63,11 @@ BY_GROUP = {
     "degurba_edu_nr": ["htm_model_narrow_total", "median_income_disposable", "home_ownership_rate"],
     "degurba_tenure_nr": ["htm_model_narrow_total", "median_income_disposable"],
     "degurba_age_nr": ["htm_model_narrow_total", "median_income_disposable", "home_ownership_rate"],
+    "tenure_nr": ["htm_model_narrow_total", "median_income_disposable", "home_ownership_rate", "liquid_kvw_to_disposable_income_ratio_of_medians"],
+    "tenure_inc_nr": ["htm_model_narrow_total", "median_income_disposable", "home_ownership_rate", "liquid_kvw_to_disposable_income_ratio_of_medians"],
+    "degurba_inc_nr": ["htm_model_narrow_total", "median_income_disposable", "home_ownership_rate", "liquid_kvw_to_disposable_income_ratio_of_medians"],
+    "region_nr": ["htm_model_narrow_total", "median_income_disposable", "home_ownership_rate", "liquid_kvw_to_disposable_income_ratio_of_medians"],
+    "region_tenure_nr": ["htm_model_narrow_total", "median_income_disposable", "home_ownership_rate", "liquid_kvw_to_disposable_income_ratio_of_medians"],
 }
 keep = (m["group_var"] == "all") & m["moment"].isin(NATIONAL)
 for gv, moms in BY_GROUP.items():
