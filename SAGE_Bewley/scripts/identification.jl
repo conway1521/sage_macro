@@ -24,14 +24,27 @@
 # where it is not zero) against their moments (effort, the hand-to-mouth share, S80/S20, the
 # difference in the hand-to-mouth share by education, and median liquid wealth for the floor).
 #
-#   julia --project=scripts/run_env scripts/identification.jl [CODE] [CONFIG] [v3 | base]
+# With a third argument v5m: at the calibration of the base with the state out of work (calibration_v5m_*).
+# CONFIG G: the three parameters the fit searches over (effort scale, top patience, the patience gap by
+# education) against their moments (effort, the hand-to-mouth share, its difference by education), the
+# income types and the floor held at their fitted values (they are set in closed form from the deciles
+# and the official minimum income, outside the search). CONFIG GS: the two parameters of the social
+# technology (kappa, sigma) against participation in the two education cells, G's parameters held.
+# Below the table, the sensitivity of each parameter to each of its targets (Andrews, Gentzkow and
+# Shapiro 2017; with as many targets as parameters it is the inverse of the owned block): by how much
+# the estimate moves when a target is off by one tolerance band.
+#
+#   julia --project=scripts/run_env scripts/identification.jl [CODE] [CONFIG] [v3 | base | v5m]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf, LinearAlgebra
 code = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "FR"
 cfg = length(ARGS) >= 2 ? uppercase(ARGS[2]) : "G"
-BASEID = length(ARGS) >= 3 && lowercase(ARGS[3]) == "base"
+V5M = length(ARGS) >= 3 && lowercase(ARGS[3]) == "v5m"
+S_ID = V5M && occursin('S', cfg)
+BASEID = V5M || (length(ARGS) >= 3 && lowercase(ARGS[3]) == "base")
 V3 = BASEID || (length(ARGS) >= 3 && lowercase(ARGS[3]) == "v3")
-c0 = BASEID ? country_config(code; config = cfg, v3 = :floor_edu_trans, S = false, A = occursin('A', cfg)) :
+c0 = V5M ? country_config(code; config = cfg, v3 = :v5m, S = S_ID, A = occursin('A', cfg)) :
+     BASEID ? country_config(code; config = cfg, v3 = :floor_edu_trans, S = false, A = occursin('A', cfg)) :
      V3 ? country_config(code; config = cfg, v3 = true, S = false, A = occursin('A', cfg)) :
      SAGEConfig(country_config(code; config = cfg, S = false, A = occursin('A', cfg)); effort_mode = :job,
                 beta_spread = 0.0, impatient_share = 0.20, beta_low = 0.75)
@@ -88,12 +101,25 @@ if BASEID
         (:consumption_drop, r -> r.consumption_drop, 0.02),
     ]
     owned = Dict(:phi => :effort, :beta_bar => :htm_total, :eta_z => :s8020, :patience_gap => :htm_by_education, :floor => :liquid_wealth)
+    if V5M
+        params = filter(p -> p[1] in (:phi, :beta_bar, :patience_gap), params)
+        moments = filter(m -> m[1] != :s8020, moments)
+        moments = [m[1] == :liquid_wealth ? (m[1], m[2], 0.09) : m for m in moments]
+    end
+    if S_ID
+        params = [(:kappa, c -> c.kappa, (c, v) -> SAGEConfig(c; kappa = v), 0.05, false),
+                  (:sigma_m, c -> c.sigma_m, (c, v) -> SAGEConfig(c; sigma_m = v), 0.05, false)]
+        moments = [(:participation_low, r -> r.pooled[1].rate, 0.005), (:participation_high, r -> r.pooled[2].rate, 0.005),
+                   (:multiplier, r -> 1 / (1 - r.slope), 0.1), (:htm_total, r -> r.hand_to_mouth_kvw, 0.02)]
+        owned = Dict(:kappa => :participation_low, :sigma_m => :participation_high)
+    end
 end
 # the income distribution is a property of the configuration, not of the solved economy: carried beside it
-solve_at(c) = (r = solve_economy(c; cache = false); V3 ? merge(r, (s8020 = income_stats(c).s8020,)) : r)
+solve_at(c) = (r = solve_economy(c; cache = S_ID); (V3 && !V5M) ? merge(r, (s8020 = income_stats(c).s8020,)) : r)          # with S on the families are kept: kappa and sigma do not change them
 
 r0 = solve_at(c0)
 m0 = [g(r0) for (_, g, _) in moments]
+S_ID ? @printf("%s %s, the base with the state out of work, at: kappa %.3f, sigma %.3f\n", code, cfg, c0.kappa, c0.sigma_m) :
 BASEID ? @printf("%s %s, one asset, the base, at: phi %.3f, top patience %.4f, eta %.4f, patience gap %.4f, floor %.4f\n", code, cfg, c0.phi, c0.beta_bar, c0.eta_z, -c0.beta_cell[1], c0.cfloor) :
 V3 ? @printf("%s %s, one asset, version 3, at: phi %.3f, top patience %.4f, spread %.4f, eta %.4f\n", code, cfg, c0.phi, c0.beta_bar, c0.beta_spread, c0.eta_z) :
 @printf("%s %s, one asset, effort set by the job, at: phi %.3f, impatient share %.2f at %.2f, beta_bar %.3f\n", code, cfg,
@@ -107,7 +133,7 @@ for (j, (pn, get, set, h, isabs)) in enumerate(params)
         J[i, j] = (g(r) - m0[i]) / tol           # bands per step
     end
 end
-println("\nchange in each moment, in tolerance bands, for one step in the parameter (", BASEID ? "phi +10%; top patience +0.005; eta +0.02; patience gap +0.01; floor +10%" : V3 ? "phi +10%; top patience +0.005; spread +0.02; eta +0.02" : "phi +10%; shares and patience +0.05; beta_bar +0.005", ")")
+println("\nchange in each moment, in tolerance bands, for one step in the parameter (", S_ID ? "kappa +5%; sigma +5%" : V5M ? "phi +10%; top patience +0.005; patience gap +0.01" : BASEID ? "phi +10%; top patience +0.005; eta +0.02; patience gap +0.01; floor +10%" : V3 ? "phi +10%; top patience +0.005; spread +0.02; eta +0.02" : "phi +10%; shares and patience +0.05; beta_bar +0.005", ")")
 @printf("%-18s", ""); for (pn, _, _, _, _) in params; @printf("%17s", pn); end; println()
 for (i, (mn, _, _)) in enumerate(moments)
     @printf("%-18s", mn); for j in eachindex(params); @printf("%17.2f", J[i, j]); end; println()
@@ -119,5 +145,16 @@ for (j, (pn, _, _, _, _)) in enumerate(params)
     i = argmax(abs.(J[:, j]))
     @printf("  %-16s owns %-14s (%+.2f bands); moves most: %-16s (%+.2f)%s\n", pn, owned[pn], J[own[j], j], moments[i][1], J[i, j],
             maximum(abs.(J[:, j])) < 0.5 ? "   FLAT: not identified at this step" : "")
+end
+if V5M && size(B, 1) == size(B, 2) && cond(B) < 1e8
+    # the sensitivity of the estimates to their targets: steps of each parameter for one band of each owned target
+    L = inv(B)
+    println("\nsensitivity of each parameter to each of its targets (in the parameter's own units, for a target off by one tolerance band)")
+    @printf("%-16s", ""); for j in own; @printf("%20s", moments[j][1]); end; println()
+    for (j, (pn, get, _, h, isabs)) in enumerate(params)
+        step = isabs ? h : h * get(c0)
+        @printf("%-16s", pn); for i in eachindex(own); @printf("%+20.5f", L[j, i] * step); end
+        @printf("   (at %.4f)\n", get(c0))
+    end
 end
 println("DONE")
