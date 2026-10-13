@@ -2650,12 +2650,13 @@ Run 38309820886: the income process net of job loss, and the jobless households'
 | on and off, budget, own targets: G and G+S | 9 of 9 | 9 of 9 | 9 of 9 |
 | the same: G+A and G+S+A | 8 of 8 | 8 of 8 | running |
 | transitions, S off (zero shock, recession) | 4 of 4 | 4 of 4 | 4 of 4 |
-| zero shock with S on: drift in participation | 2e-12 | 9e-12 | running |
+| zero shock with S on: drift in participation | 2e-12 | 9e-12 | 7e-13 |
 | asset grid doubled, top doubled (G+A) | pass | pass | pass |
 | Euler errors, 40 household problems: mean, worst point | 10^-5.1 to 10^-6.2, 10^-2.6 | 10^-5.0 to 10^-6.4, 10^-2.2 | 10^-4.9 to 10^-6.2, 10^-2.4 |
-| equilibria | running | running | running |
+| equilibria: one stable, the solver's | G+S pass; G+S+A rerun (six hours) | 2 of 2 | running |
 | MPC properties | 7 of 7 | 7 of 7 | 6 of 7 |
 | indicator table, G: untargeted rows within a quarter | 6 of 9 | 5 of 9 | 6 of 9 |
+| the same, G+S+A | 6 of 9 | 5 of 9 | running |
 
 - A recession (job loss 1.5 times higher for two years, S off) costs 0.28% of consumption in France, 0.13% in Germany, 0.17% in Italy, and two to four times more below tertiary education than above.
 - Italy's failed MPC property: the lowest wealth quintile's MPC is 0.404 against 0.409 for the second. Not explained. A guess to check: households on the floor lose part of a windfall to the means test, and Italy's floor is the highest.
@@ -2664,7 +2665,7 @@ Run 38309820886: the income process net of job loss, and the jobless households'
 **E on this base** (declared in `DIMENSIONS_SPEC.md` before the runs; script `run_places_base.jl`).
 
 1. **The state out of work by place.** Each place has its official share of people in jobless households (Eurostat `ilc_lvhl23n` by degree of urbanisation, `ilc_lvhl21n` by region, 2023), by the nation's closed form; the national share is unchanged by construction (checked for the three countries and both geographies, building the configurations without a solve). Channel `:out_of_work`; the base's channels are composition, access, out of work, conversion, commuting, community. Data added by `data/place/add_out_of_work_housing.py`.
-2. **A fault found and repaired: identical places did not give back the nation** (1.7e-4 in the largest aggregate, run 38413149915). The job's effort levels of a place were found after the national financing, in a reference economy that carried the floor's tax, which the nation's does not. They are now found before it, as the nation's are (`place_ref`). The fault predates this base. Rerun: 38415616928, running.
+2. **A fault found and repaired: identical places did not give back the nation** (1.7e-4 in the largest aggregate, run 38413149915). The job's effort levels of a place were found after the national financing, in a reference economy that carried the floor's tax, which the nation's does not. They are now found before it, as the nation's are (`place_ref`). The fault predates this base. After the repair: 2.7e-11 (run 38415616928, G). With S on the same fault gave 5.0e-4; its rerun is 38434140582.
 3. **France by type of place, G, national parameters** (run 38386601071, before the repair of item 2, which moves the fourth decimal).
 
 | | cities | towns and suburbs | rural |
@@ -2678,6 +2679,8 @@ Joblessness and poverty come in the right order; **hand-to-mouth by type of plac
 
 4. **Why it fails, from the HFCS** (France 2021, not retired, aggregates only, smallest cell 203 households; rows `degurba_nr`, `degurba_edu_nr`, `degurba_tenure_nr`, `degurba_age_nr` of `data/hfcs_targets.csv`). Among owners the hand-to-mouth share is the same in every type of place (0.163, 0.170, 0.169). The difference is tenants: 0.373 in cities, 0.458 in towns, 0.238 in rural places, and they are 59%, 42% and 26% of households. It holds within education (below tertiary 0.385 in cities, 0.222 rural) and among those of 40 and over. **Housing is the missing cost of place, in the form of tenure**, which a one-asset model does not have. A burden share common to every household of a place (E2 as first written) is not the form the data point to, and a cost proportional to income would not move the hand-to-mouth share at all (`DIMENSIONS_SPEC.md`).
 5. **France by region, G** (14 regions, run 38386608288). Poverty by region, untargeted, against the official at-risk-of-poverty rate (`ilc_li41`): correlation 0.97 (0.89 without the overseas departments) with composition, access and the state out of work; spread (sd of log) 0.13 against 0.20 in metropolitan France. **With the conversion channel the correlation falls to 0.47**: a uniform scale on incomes makes Île-de-France rich (poverty 4% against 16% official). The channel was built on Italy's North and South and should not be carried to France as it stands. National hand-to-mouth with places 0.275 (0.277 with conversion) against 0.2685.
+
+6. **France by type of place with S on** (G+S, all channels, run 38386615828, before the repair of item 2). **Participation by place, untargeted: 1.00, 1.05, 1.21 (cities, towns, rural) against formal volunteering 1.00, 1.07, 1.24** (EU-SILC 2022). The community elasticity was estimated on Italy's regions, so for France this is out of sample. With places on, national participation is 0.2316 against 0.2331 and hand-to-mouth 0.2722 against 0.2699, inside the calibration's tolerances: no refit needed for France by type of place.
 
 **Put to the user (13 October):** state the limit (hand-to-mouth by type of place is a failed test with a known reason; regions are the standard geography), or build tenure into E (a share of households in each place pays a committed rent; to be scoped first). Recommended: the first for now.
 

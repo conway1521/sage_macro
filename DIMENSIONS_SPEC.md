@@ -134,6 +134,15 @@ So the order is: first the five channels and the state out of work by place, rea
 
 **Tests, restated for the base.** Identical places give back the nation. The national moments with places on, against the tolerances of the calibration, at the national parameters (a refit only if they move by more). Untargeted: hand-to-mouth by type of place against the HFCS (France), volunteering by place, and the regional tests as before.
 
+**Results on the base, France (13 October; `V3_START.md` section 92).**
+- Identical places give back the nation: **passed** after a repair (the job's hours of a place were set after the national financing; now before it, as the nation's are).
+- National moments with places on, at the national parameters: participation 0.2316 against 0.2331, hand-to-mouth 0.272 against 0.270 by type of place: **inside the tolerances, no refit**.
+- Participation by type of place against volunteering, untargeted and out of sample: 1.00, 1.05, 1.21 against 1.00, 1.07, 1.24: **passed**.
+- Poverty by region against the official rate, untargeted: correlation 0.97 (0.89 in metropolitan France), spread two thirds of the data's: **passed in order, short in size**. With the conversion channel 0.47: **the conversion channel is not carried to France as it stands** (a uniform scale makes Île-de-France rich, where the official poverty rate is above average).
+- Hand-to-mouth by type of place: **failed again**, model 1.00, 1.07, 1.13 against 1.00, 1.01, 0.65 in the HFCS (not retired).
+
+**E2 restated by the data.** In the HFCS (France 2021, not retired) owners are hand-to-mouth alike in every type of place (0.163, 0.170, 0.169). Tenants are not (0.373, 0.458, 0.238), and they are 59%, 42% and 26% of households. The gap holds within education and among those of 40 and over. The missing cost of place is tenure. **Open, the user's decision:** state the limit and keep regions as the standard geography, or build tenure into E (a share of households in each place paying a committed rent, from official tenure and rent data), to be scoped before building.
+
 ## Decisions taken (8 October 2026)
 
 | | decision | what was decided |
