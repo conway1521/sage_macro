@@ -9,14 +9,15 @@
 # (the not retired, the population the base is fitted to) and, with S
 # on, formal volunteering by place (EU-SILC 2022, ilc_scp20).
 #
-#   julia --project=scripts/run_env scripts/run_places_base.jl CODE [degurba | tl2] [G | GS] [last: the full set of channels alone | reduction: the first test alone]
+#   julia --project=scripts/run_env scripts/run_places_base.jl CODE [degurba | tl2] [G | GS | GA | GSA] [last: the full set of channels alone, without the reduction | reduction: the first test alone]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf, Statistics
 code = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "FR"
 typ = length(ARGS) >= 2 ? Symbol(lowercase(ARGS[2])) : :degurba
 cfg = length(ARGS) >= 3 ? uppercase(ARGS[3]) : "G"
-S_ON = occursin('S', cfg)
-c = country_config(code; config = cfg, v3 = :v5m, S = S_ON, A = false)
+S_ON = occursin('S', cfg); A_ON = occursin('A', cfg)
+ONLY_LAST = length(ARGS) >= 4 && lowercase(ARGS[4]) == "last"
+c = country_config(code; config = cfg, v3 = :v5m, S = S_ON, A = A_ON)
 pl = places_of(code; typology = typ)
 d = place_data(code; typology = typ)
 t0 = @elapsed r0 = solve_economy(c)
@@ -26,9 +27,10 @@ flush(stdout)
 
 w0 = [latest(d, "pop_share", p) for (_, p) in pl]; w0 = w0 ./ sum(w0)
 same = [(name = nm,) for (nm, _) in pl][1:min(3, length(pl))]
-sp0 = solve_places(c, same; weights = w0[1:length(same)])
-worst = maximum(abs(getfield(sp0.national, f) - getfield(r0, f)) for (f, _) in PLACE_FIELDS if isfinite(getfield(r0, f)))
-@printf("REDUCTION: %d identical places against the nation, largest difference %.1e: %s\n", length(same), worst, worst < 1e-10 ? "PASS" : "FAIL")
+# with `last` the reduction is left to its own run (it is three more place solves)
+sp0 = ONLY_LAST ? nothing : solve_places(c, same; weights = w0[1:length(same)])
+worst = ONLY_LAST ? 0.0 : maximum(abs(getfield(sp0.national, f) - getfield(r0, f)) for (f, _) in PLACE_FIELDS if isfinite(getfield(r0, f)))
+ONLY_LAST || @printf("REDUCTION: %d identical places against the nation, largest difference %.1e: %s\n", length(same), worst, worst < 1e-10 ? "PASS" : "FAIL")
 if worst >= 1e-10
     # where the difference is: the financing first (total tax per head, the base of the proportional tax), then each aggregate
     cpl = place_config(c, same[1], sp0.T_nat); cn = floor_effort(c)
@@ -62,7 +64,7 @@ sets = Any[("composition, access to work, the state out of work", (:composition,
            ("with conversion", (:composition, :access, :out_of_work, :conversion_hh))]
 last_ch = (:composition, :access, :out_of_work, :conversion_hh, (typ === :degurba ? (:commute,) : ())..., (S_ON ? (:community,) : ())...)
 length(last_ch) > 4 && push!(sets, ("with " * join([x === :commute ? "commuting" : "community" for x in last_ch[5:end]], " and "), last_ch))
-length(ARGS) >= 4 && lowercase(ARGS[4]) == "last" && (sets = sets[end:end])
+ONLY_LAST && (sets = sets[end:end])
 for (lab, ch) in sets
     places, w = places_from_data(code, c; typology = typ, channels = ch, epsilon = c.epsilon)
     t = @elapsed sp = solve_places(c, places; weights = w)

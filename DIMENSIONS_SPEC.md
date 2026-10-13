@@ -76,6 +76,8 @@ Written 2026-10-08. One page per dimension: the concept and its source, what the
 - **A2, the year of the pay data.** The ratios in use (0.68, 0.58, 0.62) are not those of the 2022 survey recorded beside them in the country table (0.63, 0.59, 0.64). Proposed: the 2022 survey, with the derivation written out.
 - **A3, the benchmark.** Protection and expected loss to be set beside the OECD's labour-market insecurity by country as a standing test (`data/validation/agency_benchmarks.csv`).
 
+**Transitions with A (decided by the user, 13 October 2026).** "State the limit for v1, build transitions with A after." In version 1 a policy with A on is a comparison of steady states; the path solver covers A off, with S on or off. Paths with households who choose their hours are the first build after version 1.
+
 ## E: place and environment
 
 **Concept (agreed 27 and 29 September).** The environment people live in, in two senses. What a place gives (access to work and services, community) against what it costs (commuting, pollution). And the cost side for later and elsewhere: the household's greenhouse-gas footprint.

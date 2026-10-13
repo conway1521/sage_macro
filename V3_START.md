@@ -2695,3 +2695,22 @@ Joblessness and poverty come in the right order; **hand-to-mouth by type of plac
 **Decided by the user**: "yes go ahead with that recommendation". Tenure is not built into E. The limit is stated (households without buffers are misplaced where a place is mostly a large city). The tenure tables are a validation target for the two-asset reference. E2 is closed without a build.
 
 **Running**: Italy and Germany by region on the base (`run_places_base.jl "IT tl2 G"`, `"DE tl2 G"`, runs 38436627505 and 38436635833), for poverty by region and, in Italy, hand-to-mouth by region against the 20 survey regions.
+
+## 94. What version 1 is, and what it still needs (2026-10-13, evening)
+
+**Version 1** is the product of section 27: G with S, A and E switching on in any order, each on its own data, in France, Germany and Italy, in which a policy or a shock can be run, every limit stated.
+
+**Decided by the user**: "state the limit for v1, build transitions with A after". In version 1 a policy with A on is a comparison of steady states; transition paths exist with A off (S on or off). Paths with households who choose their hours are the first build after version 1.
+
+**Closed**: G (section 91), S, A as a switch (hours chosen by those with control over working time), exact reductions (places included, section 92). Not to reopen: tenure, the split of the state out of work, the wellbeing account (parked).
+
+**Left for version 1, in order.**
+1. E in every combination: Germany and Italy, and E with A on, at the national parameters; a refit only where places move the national moments beyond the calibration's tolerances.
+2. One rule for the conversion channel in every country (today's fails France's regional poverty, section 92 item 5).
+3. The policy levers run through every configuration on this base, as checks.
+4. For the numerical audience: the sensitivity of each parameter to each moment (Andrews, Gentzkow and Shapiro 2017), a brute-force benchmark for chosen hours around the floor's kink, the two-asset reference rerun (with the tenure tables as its test).
+5. The tag, the scorecard, the specification frozen.
+
+**Limits version 1 carries**: in-work poverty in Germany and Italy about 1.4 times official; Italy's median liquid wealth and MPC; France's median; hours by education the wrong sign, half as far as before; the fall in consumption on job loss 0.19 to 0.21 against 0.07 to 0.16; households without buffers misplaced in large cities; no source for Germany's community infrastructure; the community elasticity estimated on Italy; partial equilibrium; the multiplier a band; the hours elasticity transported from Sweden; policies with A as steady states.
+
+**Outside version 1**: the wellbeing account, the natural environment beyond indicators, an independent second solver, a fourth country, transitions with A.
