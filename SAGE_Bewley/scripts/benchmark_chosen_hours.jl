@@ -13,12 +13,13 @@
 # Set before the run, a pass is: on-floor status the same for 99% of the mass; consumption within
 # 0.1% on average; mean hours of the employed within 0.5%; values within 1e-4 relative on average.
 #
-#   julia --project=scripts/run_env scripts/benchmark_chosen_hours.jl CODE [fine points] [hours points]
+#   julia --project=scripts/run_env scripts/benchmark_chosen_hours.jl CODE [fine points] [hours points] [one problem: 1l 1m 2l 2m]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = length(ARGS) >= 1 ? uppercase(ARGS[1]) : "FR"
 NF = length(ARGS) >= 2 ? parse(Int, ARGS[2]) : 1500
 NE = length(ARGS) >= 3 ? parse(Int, ARGS[3]) : 120
+ONLY = length(ARGS) >= 4 ? ARGS[4] : ""          # e.g. 2m: cell 2, middle type alone (a finer benchmark where one failed)
 results = Tuple{String,Bool}[]
 check(name, ok) = (push!(results, (name, ok)); @printf("   -> %s: %s\n", name, ok ? "PASS" : "FAIL"); flush(stdout))
 
@@ -103,7 +104,8 @@ for g in 1:2
     ps = [update(q; social_strength = 0.0) for q in params_of(cfgT, cs[g]) if isempty(q.effort_set) && !q.job_effort]
     isempty(ps) && continue
     zs = [q.Z for q in ps]; o = sortperm(zs)
-    push!(probs, ("cell $g, lowest type", ps[o[1]]), ("cell $g, middle type", ps[o[cld(length(o), 2)]]))
+    (ONLY == "" || ONLY == "$(g)l") && push!(probs, ("cell $g, lowest type", ps[o[1]]))
+    (ONLY == "" || ONLY == "$(g)m") && push!(probs, ("cell $g, middle type", ps[o[cld(length(o), 2)]]))
 end
 @printf("%s G+A, households who choose their hours: %d problems | fine grid %d points, hours %d points refined\n", code, length(probs), NF, NE)
 for (lab, p) in probs
@@ -113,11 +115,15 @@ for (lab, p) in probs
     m = egm.lambda; tot = sum(m)
     emp = [bf.w[s] > 0 for s in 1:nz]
     dfl = 0.0; dc = 0.0; dv = 0.0; dcmax = 0.0; hE = 0.0; hB = 0.0; mE = 0.0; fE = 0.0; fB = 0.0
+    worst = (0.0, 0, 0); byq = zeros(3); mq = zeros(3)
+    acdf = cumsum(vec(sum(m, dims = 2))) ./ tot; qof(i) = acdf[i] <= 1 / 3 ? 1 : acdf[i] <= 2 / 3 ? 2 : 3
     for s in 1:nz, i in 1:na
         q = m[i, s]; q > 0 || continue
         r = bf.pol[i, s]; ce = egm.c_d[1][i, s]; fe = egm.floor_d[1][i, s]
         dfl += q * (fe != r.floor)
         rel = abs(ce - r.c) / max(r.c, 1e-12); dc += q * rel; dcmax = max(dcmax, rel)
+        byq[qof(i)] += q * rel; mq[qof(i)] += q
+        q * rel > worst[1] && (worst = (q * rel, i, s))
         dv += q * abs(egm.V[i, s] - r.v) / max(abs(r.v), 1e-12)
         fE += q * fe; fB += q * r.floor
         if emp[s]
@@ -129,6 +135,8 @@ for (lab, p) in probs
     @printf("   on the floor: fast %.4f, benchmark %.4f of the mass | status differs for %.4f\n", fE, fB, dfl)
     @printf("   consumption: mean relative difference %.1e, largest %.1e | value: mean relative difference %.1e\n", dc, dcmax, dv)
     @printf("   mean hours of the employed: fast %.5f, benchmark %.5f (%+.2f%%)\n", hE, hB, 100 * (hE / hB - 1))
+    @printf("   consumption gap by third of the wealth distribution: %.1e, %.1e, %.1e | largest contribution at assets %.3f (grid point %d of %d), state %d, mass %.1e\n",
+            (byq ./ max.(mq, eps()))..., egm.a[worst[2]], worst[2], na, worst[3], m[worst[2], worst[3]])
     check("$lab: on-floor status the same for 99% of the mass", dfl < 0.01)
     check("$lab: consumption within 0.1% on average", dc < 1e-3)
     check("$lab: mean hours of the employed within 0.5%", abs(hE / hB - 1) < 5e-3)
