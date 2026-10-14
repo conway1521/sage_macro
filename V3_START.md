@@ -2817,3 +2817,9 @@ With A on the figures are the same to the third decimal; the households who choo
 | U1 any order of switches | partly, closer | E with A and S being read |
 | U2 policy levers | partly, closer: checks pass in G and G+A in the three countries and France's G+S | the rest running; welfare gains of transfers an upper reading (hours set by the job) |
 | U3 a new country | not tried | |
+
+## 99. The two-asset reference after version 1 (2026-10-14)
+
+The two-asset solver has no state out of work (`sage_modular.jl` refuses the combination), so the reference cannot be rerun on `v5.3-base`. **Decided by the user**: "yes lets do that, finish v1 and then not forget about the two asset version as we want to convince macroeconomists after". Version 1 leaves it out and states the limit: the wealth distribution is the one-asset model's; the wealthy hand-to-mouth, the distribution of net wealth and the tenure test wait for it. Rerunning the old reference was set aside (it would describe a model that no longer exists).
+
+**After version 1, in order:** (1) transitions with A on (households who choose their hours on the path); (2) the two-asset version with the state out of work, calibrated per country, the tenure tables of the HFCS as its test (section 93). The second is what the macroeconomists' rows ask for (M7, and M5 through the wealthy hand-to-mouth) and is not optional.
