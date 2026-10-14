@@ -1,0 +1,4 @@
+"# Life satisfaction (0 to 10) on regional PM2.5 (µg/m3) and log equivalised income, ESS rounds 6, 7, 10, 11, France, Germany, Italy; method of Ferreira and co-authors (2013); script data/environment/ess_pm25_life_satisfaction.py; aggregates only"
+fixed_effects,pm25_coef,pm25_se,lninc_coef,lninc_se,share_of_income_per_ugm3,n,regions
+country by round,-0.0363,0.0144,1.0292,0.0533,0.0353,24568,52
+country by round and region,0.0292,0.0588,1.007,0.05,-0.029,24568,52
