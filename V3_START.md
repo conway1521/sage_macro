@@ -2785,3 +2785,35 @@ With A on the figures are the same to the third decimal; the households who choo
 **More tests read.** Policy checks 9 of 9 in Italy G+A as well. Doubled grid with S on: Germany passes (grid and top), Italy's top passes and its grid run died on the runner after five hours (rerun on one worker), France's two did not finish in six hours on one worker (the top rerun on two). Germany by type of place with S on: national moments unchanged (participation 0.2792 against 0.2791); participation by place 1.00, 1.07, 1.11 against volunteering 1.00, 1.26, 1.47, right in order and short in size, with no community source for Germany.
 
 **Added 14 October, 00:30 UTC.** The restated conversion channel in the other two countries, for the record: Germany's regional poverty correlates 0.86 with the official rate (0.97 without the channel) with the spread still over (0.23 against 0.18); Italy's 0.96 with a spread of 0.39 against 0.59. The decision stands. **Policy checks with S on, France G+S**: all pass (runs 38441939866, 38441948563, 38441957087). The figures are G's, and participation moves a little: -0.12 points with the higher benefit, +0.14 with better job finding, none with the minimum income; the multiplier stays at 1.35. The other configurations with S are launched (Germany and Italy G+S, the three countries' G+S+A).
+
+## 98. The base tagged (`v5.3-base`) and rescored (2026-10-14, 04:00 UTC)
+
+**Italy's G+S+A equilibria did not finish in six hours** (run 38466562386, run alone as France's was). Recorded as not obtained; Italy's G+S has one stable equilibrium, the solver's, and France's and Germany's G+S+A have one each. **France's top of the grid doubled with S on passes** on two workers (run 38483700774). Still open in accuracy: the doubled grid with S on in France (over six hours) and Italy (rerunning on one worker).
+
+**Tag `v5.3-base`**: the corrected base (section 91) calibrated in G, G+S and G+S+A in the three countries, tested (sections 92 to 97), places carried to it with the state out of work, the conversion channel out of the default.
+
+**The scorecard: 9 met, 10 partly, 1 to rerun, 2 not, of 22.** The count is that of section 79; six rows moved inside their grade.
+
+| | on `v5.3-base` | what is left |
+|---|---|---|
+| M1 budget and closure | **met** | |
+| M2 standard blocks | **met** | |
+| M3 parameters sourced | partly, closer: identification shown (G's block conditioned 3 to 5; the social technology's 23, hence the multiplier as a band) | the private share of belonging a band; the community elasticity estimated on Italy; the hours elasticity transported |
+| M4 every configuration on its targets | partly, closer: 12 of 12 without E | E at the national parameters inside the tolerances wherever read (France, Germany, Italy, G; France and Germany G+S); the rest running |
+| M5 spending behaviour | partly, closer: the fall on job loss 0.19 to 0.21 (was 0.30 to 0.35) | against 0.07 to 0.16; the MPC's level in Germany and Italy; hours by education |
+| M6 who holds no buffer | partly | by education exact; by region right in order in Italy, short in size; by type of place a stated limit (tenure) |
+| M7 wealth distribution | to rerun | the two-asset reference, now with the tenure tables as its test |
+| M8 transitions | **met**, its limit lifted: the recession with S on in the three countries | paths with A on after version 1 |
+| N1 method | **met** | |
+| N2 exact reductions | **met**, places included (1e-11 or less) | |
+| N3 accuracy | **met** bar two runs | the doubled grid with S on in France and Italy |
+| N4 independent solver | not | after version 1 |
+| N5 reproducible | **met** in substance | one command per result to document |
+| N6 equilibria | **met** bar one run | Italy's G+S+A over six hours |
+| B1 dimensions | partly, closer: A built, E carried to the base | the wellbeing account (parked) |
+| B2 official data | **met** | |
+| B3 indicators | partly: 17 of 27 | named in section 92 |
+| B4, B5 welfare tables, accessibility | partly | |
+| U1 any order of switches | partly, closer | E with A and S being read |
+| U2 policy levers | partly, closer: checks pass in G and G+A in the three countries and France's G+S | the rest running; welfare gains of transfers an upper reading (hours set by the job) |
+| U3 a new country | not tried | |
