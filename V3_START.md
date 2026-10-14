@@ -2825,3 +2825,20 @@ The two-asset solver has no state out of work (`sage_modular.jl` refuses the com
 **After version 1, in order:** (1) transitions with A on (households who choose their hours on the path); (2) the two-asset version with the state out of work, calibrated per country, the tenure tables of the HFCS as its test (section 93). The second is what the macroeconomists' rows ask for (M7, and M5 through the wealthy hand-to-mouth) and is not optional.
 
 **Read on 14 October, 04:00 UTC.** France by type of place, G+S, on the base's channels (run 38483670309): participation by place 1.00, 1.06, 1.18 against volunteering 1.00, 1.07, 1.24, untargeted; with places on, national participation 0.2321 against 0.2331 and hand-to-mouth 0.2733 against 0.2699, inside the tolerances. Germany's G+S policy checks: 9 of 9 (run 38490481615), participation +0.2 points with better job finding, the multiplier 1.43 throughout.
+
+## 100. The brute-force benchmark for chosen hours (2026-10-14, 05:15 UTC)
+
+`benchmark_chosen_hours.jl`: the households who choose their hours (G+A), solved again by plain value iteration with no rule at the floor (fine asset grid of 1500 points with full search over next assets, hours on 120 points refined by golden section, the floor as one more option), compared with the fast solver at its grid points under its stationary distribution. Four problems a country: the lowest and a middle permanent type of each education cell. Criteria set before the run: on-floor status the same for 99% of the mass, consumption within 0.1% on average, mean hours of the employed within 0.5%, values within 1e-4 relative on average.
+
+| (runs 38508313902, 38508324203) | France | Italy |
+|---|---|---|
+| on-floor status differs, in every problem | 0.0000 | 0.0000 |
+| mean hours of the employed, largest gap | 0.01% | 0.28% |
+| consumption, mean relative gap: lowest types | 1.8e-4, 4.5e-4 | 1.1e-4, 7.2e-4 |
+| consumption, mean relative gap: middle types | 2.6e-4, 6.9e-4 | 6.2e-4, **9.3e-3** |
+| value, mean relative gap: middle type of the tertiary cell | **1.2e-4** | **3.8e-3** |
+| checks | 15 of 16 | 14 of 16 |
+
+**The kink is right**: who is on the floor agrees exactly in all eight problems, including the lowest types of whom 31% (France) and 66% (Italy) are on it, and hours agree to 0.3% or better. **The failures are away from the floor**, in the patient middle type of the tertiary cell, where the benchmark took 253 and 743 iterations. Whether the gap is the benchmark's own grid (next assets on a discrete grid that is sparse where patient households hold their wealth) or the fast solver is being checked: the same problem on a fine grid of 3000 points, with the gap located by third of the wealth distribution (runs 38514588086, 38514593017, 38514597305). Germany's run is going.
+
+**Italy by type of place, G+S** (run 38483682569): participation 1.00, 0.98, 0.97 (cities, towns, rural) against volunteering 1.00, 0.93, 1.00; flat in both. National moments unchanged with places on.
