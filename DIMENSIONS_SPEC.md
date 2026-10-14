@@ -454,3 +454,23 @@ with time the job's hours (or chosen ones), commuting and participation. Each te
 ### To read at the source before building (the user's agreement asked)
 
 Pagel (2017) and Kőszegi and Rabin (2009) for dread (Pagel's weight is already in use, read on 8 October); Chetty (2008) and Schmieder and von Wachter (2016) for search, and the country studies they cite; Winkelmann and Winkelmann (1998) for the cost of being out of work; Luechinger (2009) and Ferreira and co-authors (2013) for air quality. Official data through the Eurostat and OECD interfaces: `une_ltu_a`, `ilc_pw01`, regional PM2.5 exposure.
+
+### Phase 1: the evidence read at the source (14 October 2026)
+
+PDFs in the session's reading folders; journal versions where open, else working papers (WP), labelled. The figures I use below were checked in the PDFs.
+
+**Search effort.**
+- No quasi-experimental estimate of the response of unemployment duration to the benefit *level* exists for France, Germany or Italy: France's only evaluation (Unédic 2025, official) moves the level and the duration together; Germany's (Hunt 1995) has the wrong sign and is imprecise; Italy's (Rosolia and Sestito 2012, Bank of Italy WP) is a null from a small change. Every country target is a transfer.
+- The review: duration elasticity with respect to the benefit level from 0.1 to 2, **median 0.53** over 18 studies (Schmieder and von Wachter 2016, Table 2; WP p. 16, checked). Chetty (2008): hazard elasticity -0.527 (s.e. 0.267), so 0.53 (checked). A meta-analysis corrected for publication bias gives about 0.2 (Cohen and Ganong 2024, WP, publication not verified).
+- The curvature of the search cost estimated directly: \(c(s) = k s^{1+\gamma}/(1+\gamma)\), **\(\gamma = 0.40\) (s.e. 0.046)** in the standard model with savings (DellaVigna, Lindner, Reizer and Schmieder 2017, QJE, Hungary; WP Table 3, checked); 0.13 in their hand-to-mouth version.
+- Cautions: about 60% of the response is liquidity, not moral hazard (Chetty 2008), so the curvature is only right if the model's buffers among the unemployed are; European estimates mostly measure non-employment, not insured spells; in Italy many unemployed draw no benefit.
+
+**The cost of being out of work and of insecure work.**
+- Unemployment, holding income: Winkelmann and Winkelmann (1998, Economica; fixed-effects logit, GSOEP 1984 to 1989, men): -0.958 (0.204), about seven times the log-income effect. On the 0 to 10 scale with fixed effects and income in the same regression: men -1.17 (0.09), women -0.43 (0.09) (Clark, Knabe and Rätzel 2010, Labour Economics; IZA WP, Table 3). France, pooled and official: -0.62 (INSEE Analyses 71, 2022). No peer-reviewed estimate for Italy.
+- Insecure work, among the employed: "concerned about job security" men -0.35 (0.03), women -0.20 (0.04), same regression (Clark, Knabe and Rätzel); perceived chance of losing the job, -0.23 per unit of probability (Green 2011, JHE, Australia). The evidence is for **perceived risk, not contract type**: fixed-term contracts are insignificant within person (Dawson, Veliziotis and Hopkins 2017, BHPS). So precarious work is modelled through the chance of losing the job, which is how dread works.
+- Our own data test agrees in size (`data/validation/ess_life_satisfaction.csv`, cross-section): unemployed -1.06, -1.06, -1.05; limited contracts -0.21, -0.20, -0.27 (France, Germany, Italy).
+- **Dread's weight needs re-checking at the published source.** The input in use is \(\eta(\lambda-1) = 1.5\) from Pagel (2017) with \(\eta = 1, \lambda = 2.5\) "calibration p. 899". The author's copy read today gives the calibration \(\eta = 1, \lambda = 2\) (Figure 1) and the estimates \(\eta = 0.97, \lambda = 2.33\) (Table 1), with different values in its text. The weight lies between about 1.0 and 1.5 depending on the version; the journal version was not reachable today.
+
+**Air quality.**
+- No peer-reviewed European valuation of PM2.5 with an income coefficient was found. Luechinger (2009, EJ; WP) values SO2 in Germany (IV -0.008 per µg/m³, log income 0.548: €313 per µg/m³ per household a year). Ferreira and co-authors (2013, Ecological Economics; WP) value SO2 across 23 countries in the ESS (-0.021 per µg/m³, log income 0.372). Ferreira and Moro (2010) value PM10 in Ireland, weakly (p < 0.10, one cross-section).
+- Official data: population-weighted PM2.5 by TL2 region for France, Germany and Italy, 1990 to 2020 (OECD `OECD.ENV.EPI,DSD_AIR_POL@DF_AIR_POLL`); Eurostat publishes none by region. Nothing values access to services in life-satisfaction terms.
