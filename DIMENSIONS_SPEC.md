@@ -384,3 +384,73 @@ S and E change the economy; A changes what counts, and one choice. A off is G ex
 - This is a prediction, to be tested: participation by control over working time, which the European Social Survey can give (it asks both).
 - It means G+S+A read from G+S's calibration overshoots the participation targets by 0.7 to 1.6 points, beyond the tolerance of 0.5. So **a configuration with S and A has a calibration of its own**: G's part and S's two parameters refitted with the choosers in. G+A still reads G. Five calibrations a country without places: G, G+S, G+S+A, and G+A reading G.
 - **Households with a job who work no hours** (the benefit trap) are now counted as out of work: the mean hours of those in work are taken over the others, and their share is reported (`idle`). This was Italy's miss of its hours target by 0.0001 beyond tolerance.
+
+## Phase 1 scope: A and E as their own utilities (proposed 14 October 2026, for the user's agreement)
+
+`ROADMAP.md`, phase 1. Version 1 stays one asset and partial equilibrium. Nothing here is built until the user agrees.
+
+### The household's wellbeing, with every term named
+
+Each year a household gets
+
+\[ W = u(c) - v(\text{time}) + \underbrace{\Lambda B Q\, d}_{S} \;-\; \underbrace{D(a') \;-\; k(s) \;-\; \chi\, \mathbb{1}[\text{out of work}]}_{A} \;-\; \underbrace{\textstyle\sum_j \omega_j\, x_{j,p}}_{E}, \]
+
+with time the job's hours (or chosen ones), commuting and participation. Each term either changes choices (its argument depends on what the household does) or changes wellbeing only (it does not).
+
+| term | dimension | argument | changes choices? | strength from |
+|---|---|---|---|---|
+| belonging \(\Lambda B Q d\) | S | taking part, and how many others do | yes | built; participation by education fitted |
+| dread \(D(a')\) | A | next year's chance of losing work and how far income falls, given the buffer carried | yes: saving | Pagel (2017), \(\eta(\lambda-1) = 1.5\), already in `manual_inputs.csv` |
+| cost of search \(k(s)\) | A | search effort while out of work | yes: job finding | fitted to the response of unemployment duration to benefits |
+| cost of being out of work \(\chi\) | A | being out of work | yes, through search | life-satisfaction evidence (Winkelmann and Winkelmann 1998) |
+| place environment \(\omega_j x_{j,p}\) | E | air pollution, access to services, by place | no (no moving in version 1) | life-satisfaction evidence (for air, Luechinger 2009 or Ferreira and co-authors 2013) |
+| commuting time | E | time per unit of work, by place | yes: hours where chosen | built |
+
+### A: three pieces
+
+1. **Dread in choices** (option 3 of decision A1, never decided; built and run on 9 October as the variant `SAGE_DREAD_CHOICE=1`). The term is the anticipatory loss of the coming year's employment lottery, in the form of Kőszegi and Rabin (2009) as Pagel (2017) uses it for consumption: weight times q(1 - q) times the utility gap between keeping and losing work at the buffer carried. Households then save for peace of mind, and a benefit lowers dread among those in work as well as the fall for those who lose it. On 9 October Germany and Italy calibrated with it (falls on job loss 0.25 and 0.30, on the old inputs); France failed because its search started from an old file, a fault of the start not of the model. **G+A gets its own calibration** (patience refitted, nothing new fitted).
+2. **Search effort**, agency over job loss. Out of work, a household chooses effort s, which raises its chance of finding work (the first year's rate and the exit from the state out of work, by the same rule) at a cost k(s) with one curvature. A off: effort fixed where job finding is the measured rate, so the base is exact. A on: two parameters a country, the cost's level (mean job finding stays the measured rate) and its curvature, fitted to **the response of unemployment duration to the benefit level** (Chetty 2008 for the model; Schmieder and von Wachter 2016 for the estimates, by country where one exists, a flagged transfer where not). Out of work also costs \(\chi\) beyond income, from the life-satisfaction evidence, which raises search: so \(\chi\) is set first, from wellbeing data, and the curvature second, from behaviour.
+3. **Hours for those with control over their time**: built (11 October).
+
+**A in wellbeing then has three parts** (dread, the search cost, the cost of being out of work), all valued in consumption and in WELLBYs through the bridge of `data/EVIDENCE_WELLBY.md`.
+
+### E: what changes
+
+- **Behaviour**: as now (composition, access to work, the state out of work, commuting, community). E's behavioural bite grows in version 2 (tenure) and with the labour market in equilibrium (local job finding), not here.
+- **Wellbeing**: the place's environment as its own term, for the variables with a published valuation read at the source: air pollution (PM2.5 exposure by region, OECD Regional Well-Being; by type of place, the EU-SILC question on pollution already in the place table) and access to services (unmet medical need for distance, already in the table) if a valuation is found; otherwise it stays an indicator. Commuting stays a time cost; the commuting paradox (Stutzer and Frey 2008) is not added on top, to avoid counting the time twice.
+- **Germany's community source**: to be found (community infrastructure per head by Land), or Germany's community channel stays national and is stated.
+
+### The interactions this gives, with no new parameter
+
+- **A with E**: dread differs by place because job loss and the state out of work differ by place; search effort differs because job finding does.
+- **A with S**: built (control over time raises participation).
+- **S with E**: built (community).
+
+### Tests set before the runs (untargeted)
+
+| | test | data |
+|---|---|---|
+| A, behaviour | the share of the unemployed out of work for a year or more | Eurostat `une_ltu_a` |
+| A, behaviour | the fall in consumption on job loss and the MPC properties still hold | as now |
+| A, wellbeing | the life-satisfaction gap between those in and out of work, against the model's in WELLBYs | EU-SILC `ilc_pw01` by activity status |
+| A with S | participation by control over working time | ESS |
+| E, wellbeing | life satisfaction by type of place and by region, against the model's wellbeing by place | EU-SILC `ilc_pw02` (in the place table); regional where published |
+| all | on and off exact; the brute-force benchmark extended to search effort | the test battery |
+
+### Build order inside the phase
+
+1. Dread in choices: repair the calibration's start, recalibrate G+A and G+S+A in the three countries.
+2. Search effort and \(\chi\): a change to the household problem of the unemployed in `egm_core.jl` (the transition to work depends on the choice). **The repair of the top of the asset grid (section 100 of `V3_START.md`) goes into the same change**, so one recalibration covers both.
+3. E's wellbeing terms: data and valuations, a reporting layer with no recalibration.
+4. The tests, the model note, the release of version 1.
+
+### Stop rules
+
+- **Dread**: if a country cannot meet its hand-to-mouth and median targets with dread in choices after patience is refitted, dread stays in wellbeing only there, and that is stated.
+- **Search**: where no published duration response exists for a country, the central estimate is transferred and flagged; if the curvature needed lies outside the range the literature reports, the miss is stated, not forced.
+- **E**: only variables with a valuation read at the source enter wellbeing; the rest stay indicators.
+- **The phase as a whole**: six weeks. What passes by then is released as version 1; the rest moves to the list.
+
+### To read at the source before building (the user's agreement asked)
+
+Pagel (2017) and Kőszegi and Rabin (2009) for dread (Pagel's weight is already in use, read on 8 October); Chetty (2008) and Schmieder and von Wachter (2016) for search, and the country studies they cite; Winkelmann and Winkelmann (1998) for the cost of being out of work; Luechinger (2009) and Ferreira and co-authors (2013) for air quality. Official data through the Eurostat and OECD interfaces: `une_ltu_a`, `ilc_pw01`, regional PM2.5 exposure.
