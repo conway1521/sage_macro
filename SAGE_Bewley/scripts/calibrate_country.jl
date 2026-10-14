@@ -303,7 +303,10 @@ const HTM_TOL = V3 ? 0.02 : 0.005   # v2: the poor hand-to-mouth targets are 0.0
 const LIQ_TOL = 0.09
 const E_TOL = 0.005          # effort
 const SKIP_GS = get(ENV, "SKIP_GS", "0") == "1"
-const OUTFILE = V3 ? joinpath(@__DIR__, "calibration_$(VTAG)_$(CODE)_$(CFG).txt") :
+# with dread in choices (phase 1 of ROADMAP.md, 2026-10-14) a configuration with A writes a file of its own, `_D`, beside the
+# one without dread, so the two can be compared until the user adopts one
+const DREAD_TAG = (V5M && DREAD_CHOICE && A_ON) ? "_D" : ""
+const OUTFILE = V3 ? joinpath(@__DIR__, "calibration_$(VTAG)_$(CODE)_$(CFG)$(DREAD_TAG).txt") :
                 joinpath(@__DIR__, CFG == "GSA" ? "calibration_country_$(CODE).txt" :
                                                   "calibration_country_$(CODE)_$(CFG).txt")
 const NOTCAL = replace(OUTFILE, r"\.txt$" => ".not_calibrated.txt")
@@ -650,8 +653,11 @@ if ck1 === nothing && V3
         end
     end
     if x0e === nothing && V5M && A_ON
-        # a configuration with S and A (households who choose their hours) starts at the same one without A
+        # a configuration with S and A (households who choose their hours) starts at the same one without A;
+        # with dread in choices, at the same configuration without dread where it exists
         fb = joinpath(@__DIR__, "calibration_$(VTAG)_$(CODE)_$(replace(CFG, "A" => "")).txt")
+        fd = joinpath(@__DIR__, "calibration_$(VTAG)_$(CODE)_$(CFG).txt")
+        DREAD_CHOICE && isfile(fd) && (fb = fd)
         if isfile(fb)
             kv = Dict(strip(first(split(l, "="))) => parse(Float64, last(split(l, "="))) for l in eachline(fb) if occursin("=", l) && !startswith(l, "#") && !startswith(l, "perm_") && !startswith(l, "effort_cell"))
             x0e = [log(kv["phi"]), kv["beta_bar"], kv["beta_spread"], 0.0, FL[], get(kv, "beta_gap", 0.0)]

@@ -53,6 +53,10 @@ on:
       out:
         description: "With v5=1, the state out of work sized to the official count of jobless households (variants under test): 0, 1 (a fitted floor beside the state's assistance; files calibration_v5o_*) or 2 (one measured minimum income, no fitted floor; files calibration_v5m_*)"
         default: "0"
+      dread:
+        description: "1: dread of job loss enters choices (phase 1 of ROADMAP.md); a configuration with A writes its own _D file"
+        required: false
+        default: "0"
       pop:
         description: "Whose HFCS moments the fit takes: labour_force (version 5's default), not_retired or all; empty for the default"
         default: ""
@@ -131,6 +135,7 @@ jobs:
           SAGE_V5: ${{ inputs.v5 }}
           SAGE_OUT: ${{ inputs.out }}
           SAGE_POP: ${{ inputs.pop }}
+          SAGE_DREAD_CHOICE: ${{ inputs.dread }}
           SAGE_FLOOR_FROM: ${{ inputs.floor_from }}
         run: |
           cd SAGE_Bewley

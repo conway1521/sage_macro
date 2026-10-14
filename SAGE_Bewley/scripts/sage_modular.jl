@@ -1497,7 +1497,11 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
         # A has a file of its own once it is calibrated, and reads the one without A until then (2026-10-12).
         if vmin && occursin('A', config)
             own = joinpath(@__DIR__, "calibration_$(vtag)_$(code)_$(config)" * (illq ? "_I" : "") * ".txt")
-            isfile(own) && (cal = own)
+            # with dread in choices its own file (`_D`, phase 1 of ROADMAP.md) where it exists; until then the
+            # configuration's file without dread, or the one without A
+            ownd = replace(own, r"\.txt$" => "_D.txt")
+            base_ = joinpath(@__DIR__, "calibration_$(vtag)_$(code)_$(replace(config, "A" => ""))" * (illq ? "_I" : "") * ".txt")
+            cal = (v5dread && isfile(ownd)) ? ownd : isfile(own) ? own : base_
         end
         # In the floor regime places differ by the household's income per head (:conversion_hh): what
         # is not unemployment in a low employment rate stays in the place's income, so a poor place is
