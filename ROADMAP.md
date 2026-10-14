@@ -17,7 +17,7 @@ Each channel is then tested against data it was not fitted to. **The size is the
 
 The weights between dimensions are a separate, last step (phase 5): within a dimension, consequences are valued from published estimates; across dimensions, the user's plan is the Better Life Index users' own rankings by country.
 
-## Where each dimension stands at version 1
+## Where each dimension stands on `v5.3-base` (14 October)
 
 | | behaviour | wellbeing | tested in data | verdict |
 |---|---|---|---|---|
@@ -39,61 +39,58 @@ Every source in this table is to be read at the source before it is used (the st
 
 ## Phases
 
+**Revised by the user on 14 October**: version 1 stays one asset and partial equilibrium, and is completed first with S, A and E and their interactions working fairly well, in the way Kaplan and Violante (2014) made their case in partial equilibrium. Version 2 is two assets. General equilibrium follows. A and E are each their own utility, as S is, in the spirit of Lima de Miranda and Snower (2020): each a term with its own argument in the household's wellbeing, which changes choices where its argument depends on them and wellbeing only where it does not.
+
 Each phase runs the same way: a scope note with a stop rule, agreed before any code; the build, tested on GitHub (exact reduction when off, a brute-force check where there is a kink); calibration of the three countries; the standing test battery; a tag, the state document, the scorecard. Nothing new enters a phase while it is open; ideas go to the list for the next scope note.
 
-### Phase 0. Version 1 frozen, in partial equilibrium (days)
+### Phase 0. Version 1's base frozen (days)
 
-The last runs read, the specification frozen, the grid solver run against the fast one (scorecard row N4), a model note of 10 to 15 pages for a first feedback round.
-- *Good enough*: version 1 shown as an S model with places, its limits stated.
-- *Too much*: polishing results that phase 1 will change.
+The specification of `v5.3-base` closed, the grid solver run against the fast one (scorecard row N4).
 
-### Phase 1. G: two assets with the state out of work (two to three weeks)
+### Phase 1. Version 1 completed: A and E as utilities, with the interactions (four to six weeks)
 
-The illiquid asset is housing; owners and tenants appear; the MPC and the wealth distribution are fitted the standard way (Kaplan and Violante 2014). Repairs the top of the asset grid in the fast solver (section 100).
-- *Good enough*: liquid and illiquid wealth on target in the three countries; the MPC within a quarter of the HFCS; the tenure gap in hand-to-mouth reproduced in sign and order.
-- *Too much*: a housing market, house prices, mortgages beyond one borrowing limit.
-- *Stop rule*: if the two assets cannot match liquid and illiquid wealth together in a country within the scope note's search, that country stays on one asset and the miss is stated.
+- **A's utility**, agency and security: its argument is the household's exposure to a fall (the chance and depth of losing work or reaching the floor, given its buffer), so it enters choices (precautionary saving: dread in choices, built and tested on 9 October as a variant) and wellbeing; with it, job-search effort as agency over job loss, and hours for those with control (built).
+- **E's utility**, place and environment: its argument is the place's environment (commuting time, built; exposure to air pollution; access to services), which households do not choose in version 1 (no moving), so it acts on wellbeing; E's behaviour stays in the place channels (composition, access to work, the state out of work, community).
+- **Interactions** that the design gives without new parameters: A with E (insecurity differs by place because job loss does), S with E (community, built), A with S (built).
+- **How strong each term is, without tuning**: where a term changes choices, its strength is fitted to a published behavioural estimate (for search effort, the response of unemployment duration to benefits; for dread, the evidence chosen in the scope note); where it changes wellbeing only, it is valued from published life-satisfaction estimates (the WELLBY library, `data/EVIDENCE_WELLBY.md`). The weights across dimensions stay the user's Better Life Index plan (phase 5).
+- *Good enough*: each of S, A and E moves at least one outcome by its published size and passes one untargeted test; the interactions reported.
+- *Too much*: migration between places; reservation wages; a full health or environment block.
+- **Release: version 1**, one asset, partial equilibrium, with a model note: for macroeconomists to read the choices and where version 2 goes, for the wellbeing readers to analyse the dimensions.
 
-### Phase 2. A with bite: search effort and the wellbeing of insecurity (two to three weeks)
+### Phase 2. Version 2: two assets with the state out of work (two to three weeks)
 
-A on: households choose how hard to search, at a cost fitted to the published response of unemployment duration to benefits; dread and the non-income cost of being out of work enter wellbeing at published values. A off: job finding as measured, no dread.
-- *Good enough*: the duration response on its published value in each country (or a stated transfer); A's welfare effect of a benefit change reported beside G's.
-- *Too much*: reservation wages, duration-dependent benefits beyond the first year.
-- **Release**: version 2 in partial equilibrium, for a wider macro audience.
+The illiquid asset is housing; owners and tenants appear; the MPC and the wealth distribution fitted the standard way (Kaplan and Violante 2014); the top of the asset grid repaired in the fast solver (section 100). E gains tenure by place.
+- *Good enough*: liquid and illiquid wealth on target; the MPC within a quarter of the HFCS; the tenure gap in hand-to-mouth in sign and order.
+- *Too much*: a housing market, house prices.
+- **Release: version 2**, partial equilibrium.
 
-### Phase 3. G: the labour market in equilibrium (four to six weeks)
+### Phase 3. The labour market in equilibrium (four to six weeks)
 
-Job finding from vacancies and a matching function, wages set by bargaining, the government budget closed, the interest rate fixed (a member of a currency union). Benefits then cost jobs through wages as well as through search (Landais, Michaillat and Saez 2018).
-- *Good enough*: steady-state equilibrium in the three countries on official vacancy and flow data; the macro response of job finding to benefits against the micro one (A).
-- *Too much*: sticky prices, monetary policy, a determined interest rate (a later validation test).
+Job finding from vacancies and matching, wages by bargaining, the budget closed, the interest rate fixed (a member of a currency union) (Landais, Michaillat and Saez 2018). E gains local labour markets.
 
-### Phase 4. E with bite: places on that labour market (three to four weeks)
+### Phase 4. Transitions through everything, A included (four weeks)
 
-Each place its own labour market (job finding responds to local conditions and to policy), tenure and housing cost by place from phase 1, community (a source for Germany), commuting and pollution in wellbeing.
-- *Good enough*: regional poverty, joblessness and hand-to-mouth in order and at least half the data's spread; the French failure by type of place repaired or explained by tenure.
-- *Too much*: migration between places; local prices beyond housing.
+Sequence-space method (Auclert, Bardóczy, Rognlie and Straub 2021).
 
-### Phase 5. Transitions through everything, then welfare across dimensions (four to six weeks)
+### Phase 5. Welfare across dimensions
 
-Paths for policies and shocks with every switch on, A included (sequence-space method of Auclert, Bardóczy, Rognlie and Straub 2021). Then the weights across dimensions from the Better Life Index users' rankings by country, and the welfare tables.
-- *Good enough*: a recession and a benefit reform as paths in every configuration; welfare by dimension and by group.
-- **Release**: version 3, ready for the three audiences.
+The weights from the Better Life Index users' rankings by country, mapped to the dimensions; the welfare tables. **Release: version 3**, ready for the three audiences.
 
 ## Releases and who sees them
 
-| release | when | for |
+| release | after | for |
 |---|---|---|
-| version 1, partial equilibrium | after phase 0 | WISE and beyond-GDP readers; one or two friendly macroeconomists for direction |
-| version 2, partial equilibrium with two assets and A | after phase 2 | macroeconomists more widely |
-| version 3, general equilibrium, E, paths, welfare | after phase 5 | all three audiences |
+| version 1: one asset, partial equilibrium, S, A, E with their utilities | phase 1 | macroeconomists (the choices, and where version 2 goes) and wellbeing readers (the dimensions) |
+| version 2: two assets, partial equilibrium | phase 2 | macroeconomists more widely |
+| version 3: general equilibrium, paths, welfare | phase 5 | all three audiences |
 
-Rough total: four to five months of sessions, if each stop rule holds. Calibrations and tests run on GitHub.
+Rough total: five to six months of sessions, if each stop rule holds.
 
-## Open decisions for the user
+## Decided by the user (14 October)
 
-1. The wellbeing channels of A and E (dread, the cost of being out of work, commuting, pollution) come in with their dimensions (phases 2 and 4), valued from published estimates; only the weights across dimensions wait for phase 5. This brings part of the parked wellbeing account forward.
-2. Two assets (phase 1) before search effort (phase 2).
-3. "Tested in data" means the official and survey data already in use (HFCS, EU-SILC, ESS, Eurostat regional tables) plus the published estimates each channel is fitted to.
+1. A and E are their own utilities, as S is, part of the wellbeing function (Lima de Miranda and Snower).
+2. Version 1 (one asset, partial equilibrium) is completed with S, A, E and the interactions before version 2 (two assets).
+3. "Tested in data": the official and survey data in use (HFCS, EU-SILC, ESS, Eurostat regional tables) and the published estimates each term is fitted to.
 
 ## Not on this roadmap
 
