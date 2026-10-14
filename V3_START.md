@@ -2857,10 +2857,12 @@ The two-asset solver has no state out of work (`sage_modular.jl` refuses the com
 
 | lever | France G+S | Germany G+S | Italy G+S | France G+S+A | Germany G+S+A | Italy G+S+A |
 |---|---|---|---|---|---|---|
-| benefit +0.10 | pass | pass | pass | rerunning | pass | rerunning |
-| minimum income +10% | pass | pass | rerunning | pass | pass | rerunning |
-| job finding +0.05 | pass | pass | rerunning | rerunning | pass | pass |
+| benefit +0.10 | pass | pass | pass | not obtained | pass | not obtained |
+| minimum income +10% | pass | pass | pass | pass | pass | not obtained |
+| job finding +0.05 | pass | pass | pass | not obtained | pass | pass |
 
 With S on a policy run solves the base and the policy economy from scratch (about 3 and 2 hours in G+S+A), so several stopped at six hours or died on the runner (runs 38490487642, 38490493396, 38490505434, 38490531496, 38490538452); the six missing are relaunched alone on four workers. Participation moves by at most 0.3 points under any lever, and the multiplier does not move (France 1.34, Germany 1.39, Italy 1.24 in G+S+A). With S and A the budget closes to 7e-5 of a unit, inside the tolerance with S on (5e-4 of mean income).
 
 **Not obtained in six hours, stated for version 1**: the doubled asset grid with S on in France and Italy (run 38483694707 cancelled on one worker), and Italy's G+S+A equilibria. France by type of place with S and A is relaunched on four workers.
+
+**Closed on 14 October, 19:45 UTC.** Italy's G+S levers pass (runs 38586707015, 38586717269), so every lever passes in every G+S economy. The four missing G+S+A levers (France: benefit, job finding; Italy: benefit, minimum income) and France by type of place with S and A did not run: on three workers they pass six hours, on four the runner is shut down at about two hours (memory; runs 38586727770 to 38586773999). **Recorded as not obtained.** Every lever passes in at least one economy with S and A (Germany all three), and nothing that was read failed.
