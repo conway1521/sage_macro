@@ -23,6 +23,18 @@ The rich-economy pattern (US and Italy solidarity falling, France flat) against 
 
 Data-quality flags carried from the authors: China and South Africa agency use only three of the five components, and China's solidarity omits social support. Cite the year and source because the working paper (2017) and dashboard (2018) differ by 0.00 to 0.02 on most indices; the 2007 values are identical across sources.
 
+## Correction (2026-10-14): the per-country weights were public, and are recoverable
+
+The section below concluded that per-country weights were not public. They were: the old site's "responses" page drew its map from its own data feed, `bli/rest/indexes/stats/country` (mean weight per topic and number of responses, by country of the user), with companion feeds by age and by gender. The site was replaced in 2025 by the Well-being Data Monitor, whose new Better Life Index (eleven dimensions of the 2025 framework) collects no responses, and the feed no longer answers. The Internet Archive holds 32 copies of the country feed from August 2014 to February 2024. `data/wellbeing/bli_user_weights.py` reads the copies of May 2020 and February 2024 and writes France, Germany, Italy and the total to `data/wellbeing/bli_user_weights.csv`.
+
+| February 2024 | France | Germany | Italy | all users |
+|---|---|---|---|---|
+| responses | 17,320 | 16,678 | 6,347 | 200,000 |
+| highest weight | health 10.8% | life satisfaction 10.7% | health 10.4% | health 10.3% |
+| lowest weight | civic engagement 6.2% | civic engagement 6.8% | civic engagement 7.0% | civic engagement 6.5% |
+
+The weights are compressed around equal weighting (1/11 = 9.1%), since every slider starts at 5, and the users choose themselves (40% aged 15 to 24 on the archived age feed of February 2023). Country differences are small: the May 2020 and February 2024 tables agree to 0.2 points.
+
 ## YBLI: the per-country weights do not exist publicly (important)
 
 The canonical analysis (Balestra, Boarini and Tosetto 2018, OECD SDD/DOC(2018)3, about 130,000 users May 2011 to December 2017) does NOT publish per-country dimension weights. It disaggregates only by sex, age, and four world regions (Asia-Pacific, Europe, North America, South America). Country enters the regressions only through objective Better Life Index performance, never as a weight. So the per-country YBLI weight vector the project hoped to wire into the country rows is not available from the public source.
