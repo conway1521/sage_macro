@@ -2848,3 +2848,19 @@ The two-asset solver has no state out of work (`sage_modular.jl` refuses the com
 **The cause, read in `egm_core.jl` (lines 154 to 167)**: beyond the last endogenous point the fast solver extrapolates the top segment for consumption and hours and caps next assets at the grid's top without adjusting consumption. Along a segment the budget holds exactly (everything is interpolated with the same weight); the cap breaks it, so a household there consumes less than its resources allow. The brute force keeps the budget. **The effect on the economy is below half a tolerance in every moment** (the doubled top of the grid passes in the three countries with A, and with S and A in Germany, Italy and France).
 
 **Recommended**: state it for version 1 as a boundary approximation and repair it (next assets at the top, consumption from the budget, hours from the intratemporal condition) with the solver work for transitions with A, since any change to `egm_core.jl` voids every family cache and calls for the recalibration that build will need anyway.
+
+## 101. Policy checks with S, and the benchmark confirmed (2026-10-14, 15:15 UTC)
+
+**The benchmark on a grid twice as fine, Italy** (run 38514593017): the gaps are unchanged (consumption 9.2e-3, value 3.8e-3), concentrated at the grid's top point. The fast solver's handling of the top of the asset grid (section 100) is the cause, confirmed; the repair goes with the solver work after version 1.
+
+**Policy checks with S on, read so far: every check passes.**
+
+| lever | France G+S | Germany G+S | Italy G+S | France G+S+A | Germany G+S+A | Italy G+S+A |
+|---|---|---|---|---|---|---|
+| benefit +0.10 | pass | pass | pass | rerunning | pass | rerunning |
+| minimum income +10% | pass | pass | rerunning | pass | pass | rerunning |
+| job finding +0.05 | pass | pass | rerunning | rerunning | pass | pass |
+
+With S on a policy run solves the base and the policy economy from scratch (about 3 and 2 hours in G+S+A), so several stopped at six hours or died on the runner (runs 38490487642, 38490493396, 38490505434, 38490531496, 38490538452); the six missing are relaunched alone on four workers. Participation moves by at most 0.3 points under any lever, and the multiplier does not move (France 1.34, Germany 1.39, Italy 1.24 in G+S+A). With S and A the budget closes to 7e-5 of a unit, inside the tolerance with S on (5e-4 of mean income).
+
+**Not obtained in six hours, stated for version 1**: the doubled asset grid with S on in France and Italy (run 38483694707 cancelled on one worker), and Italy's G+S+A equilibria. France by type of place with S and A is relaunched on four workers.
