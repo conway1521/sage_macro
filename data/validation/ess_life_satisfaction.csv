@@ -1,0 +1,20 @@
+"# European Social Survey rounds 6, 7, 10, 11; ages 20 to 64; life satisfaction 0 to 10 (stflife); against employees on unlimited contracts; aggregates only. Script: data/ess/ess_life_satisfaction.py"
+country,statistic,group,value,se,n
+FR,mean,unlimited,6.909,,2674
+FR,mean,limited,6.487,,366
+FR,mean,unemployed,5.266,,294
+FR,gap at the same income decile,unemployed,-1.057,0.212,3334
+FR,gap at the same income decile,limited,-0.21,0.144,3334
+FR,"one income decile higher, mean step",income,0.233,,3334
+DE,mean,unlimited,7.338,,5886
+DE,mean,limited,6.938,,656
+DE,mean,unemployed,5.456,,247
+DE,gap at the same income decile,unemployed,-1.061,0.234,6789
+DE,gap at the same income decile,limited,-0.203,0.108,6789
+DE,"one income decile higher, mean step",income,0.246,,6789
+IT,mean,unlimited,7.16,,1246
+IT,mean,limited,6.705,,204
+IT,mean,unemployed,5.601,,192
+IT,gap at the same income decile,unemployed,-1.047,0.201,1642
+IT,gap at the same income decile,limited,-0.274,0.166,1642
+IT,"one income decile higher, mean step",income,0.21,,1642
