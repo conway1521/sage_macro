@@ -1,5 +1,7 @@
 # Master plan (from 2026-09-28)
 
+**Superseded on 2026-10-14 by `ROADMAP.md`** for the order of work. Kept for its history.
+
 The single execution plan. Design detail lives in PLAN_AGENCY_V2.md (agency) and E_PLACE_CONCEPT.md (place). Where the code, data and compute live is in INFRASTRUCTURE.md. Work happens on `main`.
 
 ## What the model is for
