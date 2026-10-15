@@ -9,13 +9,15 @@
 #               who are mostly long spells; job loss and the exit from the state follow as they are defined
 #   insured     the first year replaced in full: what is left is the response to the prospect alone
 #
-#   julia --project=scripts/run_env scripts/probe_job_loss_fall.jl [CODE ...]
+#   julia --project=scripts/run_env scripts/probe_job_loss_fall.jl [CODE ...] [GA: A on, with dread in choices when the workflow's dread switch is on]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
-codes = isempty(ARGS) ? ["FR", "DE", "IT"] : uppercase.(ARGS)
+CFG = any(a -> uppercase(a) == "GA", ARGS) ? "GA" : "G"
+args_ = filter(a -> uppercase(a) != "GA", ARGS)
+codes = isempty(args_) ? ["FR", "DE", "IT"] : uppercase.(args_)
 QSHORT = Dict("FR" => 0.32, "DE" => 0.37, "IT" => 0.28)          # lfsi_long_e01, 2023, ages 15 to 74, out of work under a year
 for code in codes
-    c = country_config(code; config = "G", v3 = :v5m, S = false, A = false)
+    c = country_config(code; config = CFG, v3 = :v5m, S = false, A = CFG == "GA")
     row_ = country_rows()[code]; u = (parse(Float64, row_["u_low"]), parse(Float64, row_["u_high"]))
     s = (manual_input(code, "jobless_low"), manual_input(code, "jobless_high"))
     f2 = 1 - (1 - QSHORT[code])^4
@@ -24,8 +26,8 @@ for code in codes
                 ("no state", SAGEConfig(c; f_long = (NaN, NaN))),
                 ("new losers", SAGEConfig(c; f_find = f2, delta = d2, f_long = fl2)),
                 ("insured", SAGEConfig(c; rr = 1.0, rr_public = c.rr_public + 1 - c.rr))]
-    @printf("\n%s G | first year replaced at %.3f | finds work within the year %.3f (new losers %.3f) | exit from the state %.3f %.3f (new losers %.3f %.3f) | job loss %.4f %.4f (new losers %.4f %.4f)\n",
-            code, c.rr, c.f_find, f2, c.f_long..., fl2..., c.delta..., d2...)
+    @printf("\n%s %s | first year replaced at %.3f | finds work within the year %.3f (new losers %.3f) | exit from the state %.3f %.3f (new losers %.3f %.3f) | job loss %.4f %.4f (new losers %.4f %.4f)\n",
+            code, CFG * (c.dread_mode == :behaviour ? " (dread in choices)" : ""), c.rr, c.f_find, f2, c.f_long..., fl2..., c.delta..., d2...)
     @printf("  %-12s %10s %10s %10s %10s %10s\n", "", "fall", "htm", "median", "MPC", "out of work")
     for (nm, cv) in variants
         try
