@@ -2883,3 +2883,16 @@ Run 38651729599 (`dread=1`; files `calibration_v5m_<C>_<CFG>_D.txt`, read only w
 France's G+S+A with dread is calibrated (participation 0.203, 0.291 on target; multiplier 1.3). Germany's and Italy's handed over to new jobs that did not carry the dread switch (Germany's continuation solved without dread and wrote a wrong file, hand-to-mouth 0.374, kept out of the repository); the hand-over now passes the switch (`calibrate.yml`) and both are rerunning (run 38809665517).
 
 **Reading.** Households now save for peace of mind, so the fit asks for less patience (0.02 to 0.03 lower). That repairs Italy's two named misses, median liquid wealth (0.212 against 0.229, from 0.356) and the MPC (0.325, from 0.26), and Germany's median, and leaves France's median a miss. It costs the fall in consumption on job loss, which returns to about 0.29, twice the top of the literature's range. The stop rule of the scope note (targets met) is passed in the three countries. Search effort, next, shortens spells out of work and should lower that fall; the judgement on dread is made after it.
+
+**Where the fall on job loss comes from, with dread** (`probe_job_loss_fall.jl FR DE IT GA`, dread on, run 38810994389; nothing refitted; the 13 October figures without dread in brackets).
+
+| fall in consumption on job loss | France | Germany | Italy |
+|---|---|---|---|
+| as calibrated | 0.295 (0.214) | 0.281 (0.208) | 0.292 (0.185) |
+| first year fully insured: what is left is the prospect | 0.206 (0.117) | 0.200 (0.131) | 0.224 (0.127) |
+| first-year job finding of those out of work under a year | 0.222 (0.165) | 0.209 (0.166) | 0.219 (0.129) |
+| no state out of work after the first year | 0.183 (0.152) | 0.192 (0.153) | 0.156 (0.100) |
+
+1. **Most of the fall is the prospect, not the first year's income**: fully insuring the first year leaves 0.20 to 0.22 with dread, 0.12 to 0.13 without. Dread is a fear of exactly that prospect, so it adds about 0.08 to the part that is anticipation.
+2. **The first year's job finding is that of all the unemployed, most of them in long spells.** The state of the first year should exit at the rate of people out of work under a year (Eurostat `lfsi_long_e01`): 0.79, 0.84 and 0.73 a year against 0.55, 0.64 and 0.44. With it, the fall is 0.13 to 0.17 without dread, inside or at the edge of the literature's range, and 0.21 to 0.22 with dread. This is a correction to G's inputs, not a tuning: to be checked against the measured rates of job loss, since keeping unemployment by education then asks for higher job loss (Germany 0.021 to 0.028 for the lower education group).
+3. The length of the model's period is not shown to be the main cause; the quarterly probe stays a check for version 2.
