@@ -2866,3 +2866,20 @@ With S on a policy run solves the base and the policy economy from scratch (abou
 **Not obtained in six hours, stated for version 1**: the doubled asset grid with S on in France and Italy (run 38483694707 cancelled on one worker), and Italy's G+S+A equilibria. France by type of place with S and A is relaunched on four workers.
 
 **Closed on 14 October, 19:45 UTC.** Italy's G+S levers pass (runs 38586707015, 38586717269), so every lever passes in every G+S economy. The four missing G+S+A levers (France: benefit, job finding; Italy: benefit, minimum income) and France by type of place with S and A did not run: on three workers they pass six hours, on four the runner is shut down at about two hours (memory; runs 38586727770 to 38586773999). **Recorded as not obtained.** Every lever passes in at least one economy with S and A (Germany all three), and nothing that was read failed.
+
+## 102. Dread in choices, first calibrations (2026-10-15)
+
+Run 38651729599 (`dread=1`; files `calibration_v5m_<C>_<CFG>_D.txt`, read only with `SAGE_DREAD_CHOICE=1`, so the base is untouched). Dread at the weight in use (1.5, to be checked against the published Pagel table).
+
+| G+A with dread in choices against without (data) | France | Germany | Italy |
+|---|---|---|---|
+| hand-to-mouth, targeted | 0.269 (0.268) | 0.250 (0.252) | 0.209 (0.203) |
+| mean patience | 0.932, was 0.963 | 0.964, was 0.984 | 0.954, was 0.983 |
+| median liquid wealth over income, untargeted | 0.091, was 0.097 (0.047) | 0.118, was 0.137 (0.117) | **0.212, was 0.356 (0.229)** |
+| MPC, untargeted | 0.405, was 0.39 (0.33) | 0.348, was 0.33 (0.46) | **0.325, was 0.26 (0.49)** |
+| fall in consumption on job loss (literature 0.07 to 0.16) | **0.295, was 0.21** | **0.281, was 0.21** | **0.292, was 0.19** |
+| earnings response to a windfall (Sweden 0.011) | 0.015 | 0.014 | 0.011 |
+
+France's G+S+A with dread is calibrated (participation 0.203, 0.291 on target; multiplier 1.3). Germany's and Italy's handed over to new jobs that did not carry the dread switch (Germany's continuation solved without dread and wrote a wrong file, hand-to-mouth 0.374, kept out of the repository); the hand-over now passes the switch (`calibrate.yml`) and both are rerunning (run 38809665517).
+
+**Reading.** Households now save for peace of mind, so the fit asks for less patience (0.02 to 0.03 lower). That repairs Italy's two named misses, median liquid wealth (0.212 against 0.229, from 0.356) and the MPC (0.325, from 0.26), and Germany's median, and leaves France's median a miss. It costs the fall in consumption on job loss, which returns to about 0.29, twice the top of the literature's range. The stop rule of the scope note (targets met) is passed in the three countries. Search effort, next, shortens spells out of work and should lower that fall; the judgement on dread is made after it.
