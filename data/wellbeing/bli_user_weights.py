@@ -39,3 +39,19 @@ with open(os.path.join(HERE, "bli_user_weights.csv"), "w", newline="") as f:
     w.writerow(["snapshot", "country", "topic", "mean_weight", "responses"])
     w.writerows(out)
 print(len(out), "rows")
+
+# Who the users are: the companion feeds by age and by gender give, by country, the composition of those who
+# shared an index (not weights by group), archived last on 5 February 2023.
+comp = []
+for feed, ts in (("age", "20230205204649"), ("gender", "20230205204435")):
+    text = urllib.request.urlopen(f"https://web.archive.org/web/{ts}id_/https://www.oecdbetterlifeindex.org/bli/rest/indexes/stats/{feed}", timeout=120).read().decode("utf-8")
+    for r in csv.DictReader(io.StringIO(text), delimiter="\t"):
+        if r["country"] in KEEP:
+            comp.append([ts[:8], r["country"], feed, r[feed], round(float(r["percent"]), 2)])
+with open(os.path.join(HERE, "bli_user_composition.csv"), "w", newline="") as f:
+    w = csv.writer(f, lineterminator="\n")
+    w.writerow(["# OECD Better Life Index users who shared an index, percent by age group and by gender, by country; "
+                "the site's feeds bli/rest/indexes/stats/age and /gender as archived by the Internet Archive. Script: data/wellbeing/bli_user_weights.py"])
+    w.writerow(["snapshot", "country", "breakdown", "group", "percent"])
+    w.writerows(comp)
+print(len(comp), "composition rows")
