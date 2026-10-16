@@ -57,11 +57,14 @@ The specification of `v5.3-base` closed, the grid solver run against the fast on
 - *Too much*: migration between places; reservation wages; a full health or environment block.
 - **Release: version 1**, one asset, partial equilibrium, with a model note: for macroeconomists to read the choices and where version 2 goes, for the wellbeing readers to analyse the dimensions.
 
-### Phase 2. Version 2: two assets with the state out of work (two to three weeks)
+### Phase 2. Version 2: a quarterly period and two assets, with the state out of work (four to six weeks)
 
-The illiquid asset is housing; owners and tenants appear; the MPC and the wealth distribution fitted the standard way (Kaplan and Violante 2014); the top of the asset grid repaired in the fast solver (section 100). E gains tenure by place.
-- *Good enough*: liquid and illiquid wealth on target; the MPC within a quarter of the HFCS; the tenure gap in hand-to-mouth in sign and order.
+**The quarterly period (decided by the user, 16 October)**, first and in stages, each checked before the next: (1) every rate converted to a quarter, as `probe_quarterly.jl` does, and the quarterly economy shown to keep the annual one's long-run facts; (2) the one solver change, a first year out of work lasting four quarters; (3) the recalibration. The probe of 15 October (`V3_START.md` section 103) showed the period to be a large part of the fall in consumption on job loss (0.07 to 0.09 over a quarter against 0.10 to 0.15 over a year, without the state out of work and before refitting) and the quarterly MPC in the range of the quarterly literature.
+
+**Then the two assets**: the illiquid asset is housing; owners and tenants appear; the MPC and the wealth distribution fitted the standard way (Kaplan and Violante 2014, quarterly); the top of the asset grid repaired in the fast solver (section 100). E gains tenure by place.
+- *Good enough*: on the quarterly period, liquid and illiquid wealth on target; the MPC within a quarter of the HFCS; the fall in consumption on job loss inside or near the literature's range; the tenure gap in hand-to-mouth in sign and order.
 - *Too much*: a housing market, house prices.
+- *Stop rule for the quarterly stage*: if the refitted quarterly economy cannot meet the annual base's targets in a country, version 2 keeps the annual period there and states it.
 - **Release: version 2**, partial equilibrium.
 
 ### Phase 3. The labour market in equilibrium (four to six weeks)
@@ -81,10 +84,10 @@ The weights from the Better Life Index users' rankings by country, mapped to the
 | release | after | for |
 |---|---|---|
 | version 1: one asset, partial equilibrium, S, A, E with their utilities | phase 1 | macroeconomists (the choices, and where version 2 goes) and wellbeing readers (the dimensions) |
-| version 2: two assets, partial equilibrium | phase 2 | macroeconomists more widely |
+| version 2: quarterly, two assets, partial equilibrium | phase 2 | macroeconomists more widely |
 | version 3: general equilibrium, paths, welfare | phase 5 | all three audiences |
 
-Rough total: five to six months of sessions, if each stop rule holds.
+Rough total: six to seven months of sessions, if each stop rule holds.
 
 ## Decided by the user (14 October)
 
