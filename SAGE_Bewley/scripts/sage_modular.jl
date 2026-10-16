@@ -761,7 +761,7 @@ function floor_effort(c::SAGEConfig)
     # The same holds for the transitory part and the proportional tax (2026-10-06): the levels are
     # those of the economy with persistent risk alone and the tax raised per head.
     c1 = SAGEConfig(c; cfloor = 0.0, S = false, f_long = (NaN, NaN), sd_eps = 0.0, sd_eps_cell = (0.0, 0.0), tax_mode = :lump, tax_base = NaN,
-                    control_share = (0.0, 0.0), search = false)          # what a job asks does not depend on who may choose otherwise, or on how hard the unemployed search
+                    control_share = (0.0, 0.0), search = false, out_ls = 0.0)   # what a job asks does not depend on who may choose otherwise, on how hard the unemployed search, or on what being out of work costs them
     lv = if c.ref_prop && c.tax_mode === :prop
         # the reference economy pays its benefit bill T at a rate on labour income. The rate needs the
         # levels (it is T over labour income per head) and the levels the rate, so the pair is found
