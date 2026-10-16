@@ -40,22 +40,36 @@ c0 = country_config(code; config = "GA", v3 = :v5m, S = false, A = true)
 say(@sprintf("%s G+A%s | measured: first-year finding %.3f, exit from the state %.3f %.3f | curvature %.2f",
              code, c0.dread_mode == :behaviour ? " (dread in choices)" : "", c0.f_find, c0.f_long..., γs))
 
-# 1. the cost levels: log k moves by gamma times the log gap in the chance (x ~ k^(-1/gamma) at a given gain from work)
+# 1. the cost levels, by a secant in logs for each of the four (at a given gain from work x ~ k^(-1/gamma),
+# which gives the first step; the gain itself grows as search gets dearer, which the secant then learns)
 kU = [1.0, 1.0]; kL = [1.0, 1.0]
+tU = c0.f_find; tL = collect(c0.f_long)
+prev = Dict{Tuple{Symbol,Int},Tuple{Float64,Float64}}()
 c = c0; r = nothing
-for it in 1:14
+function step!(key, k, x, target)
+    lk, lx = log(k), log(max(x, 1e-6))
+    slope = -1 / γs
+    if haskey(prev, key)
+        (lk0, lx0) = prev[key]
+        abs(lk - lk0) > 1e-8 && (sl = (lx - lx0) / (lk - lk0); sl < -0.05 && (slope = sl))
+    end
+    prev[key] = (lk, lx)
+    exp(lk + clamp((log(target) - lx) / slope, -1.5, 1.5))
+end
+for it in 1:30
     global c = SAGEConfig(c0; search = true, search_gamma = γs, search_kU = Tuple(kU), search_kL = Tuple(kL))
     global r = exit_rates(c)
-    gap = maximum(max(abs(r[g][1] - c0.f_find), abs(r[g][2] - c0.f_long[g])) for g in 1:2)
+    gap = maximum(max(abs(r[g][1] - tU), abs(r[g][2] - tL[g])) for g in 1:2)
     say(@sprintf("  iteration %2d: k first year %.4g %.4g, beyond %.4g %.4g | chance first year %.4f %.4f, beyond %.4f %.4f | gap %.1e",
                  it, kU..., kL..., r[1][1], r[2][1], r[1][2], r[2][2], gap))
-    gap < 5e-4 && break
+    gap < 1e-3 && break
     for g in 1:2
-        kU[g] *= exp(γs * (log(max(r[g][1], 1e-6)) - log(c0.f_find)))
-        kL[g] *= exp(γs * (log(max(r[g][2], 1e-6)) - log(c0.f_long[g])))
+        kU[g] = step!((:U, g), kU[g], r[g][1], tU)
+        kL[g] = step!((:L, g), kL[g], r[g][2], tL[g])
     end
 end
 cS = c
+maximum(max(abs(r[g][1] - tU), abs(r[g][2] - tL[g])) for g in 1:2) < 1e-3 || say("  NOT CONVERGED: the costs below miss the measured rates")
 
 # 2. the response to the first year's benefit, holding the tax
 D(rU, rL) = 1 + (1 - rU) / rL
