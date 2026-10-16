@@ -2898,3 +2898,20 @@ France's G+S+A with dread is calibrated (participation 0.203, 0.291 on target; m
 3. The length of the model's period is not shown to be the main cause; the quarterly probe stays a check for version 2.
 
 **The correction of item 2 checked, and it fails (15 October).** In the base, job finding is the Labour Force Survey's year-on-year transition from unemployment to work (`lfsi_long_a`, 0.55, 0.64, 0.44) and job loss follows from unemployment by education, u f / (1 - u). The measured year-on-year rate from work to unemployment (same table, among those still in the labour force, 2023) is 0.030, 0.013 and 0.015; the base's job loss is already above it (about 0.039, 0.019 and 0.034 averaged over education). The first-year job finding of those out of work under a year (Eurostat `lfsi_long_e01`, 2023: 32%, 37%, 28% a quarter) compounded over four quarters raises job loss further, to about 0.056, 0.025 and 0.056, two to four times the measured rate. An annual model sees transitions a year apart, so the year-on-year rates are its consistent inputs; the quarterly rate of the newly unemployed describes exits within the year, which an annual model cannot hold. **Not adopted.** The fall on job loss then rests on the length of the period (every loss lasts a full year in the model, where the studies' job losers are mostly back within months) and on the prospect of the state out of work; the quarterly probe tests the first.
+
+## 103. The quarterly probe (2026-10-15)
+
+`probe_quarterly.jl` (runs 38842295239, 38842300803, 38842306370): each country's G, without the state out of work, solved annually and with every rate converted to a quarter (job finding so that four quarters give the year's chance of not finding work, job loss keeping unemployment by education, patience and the return to the quarter, the persistent income process at the same variance, the transitory part at four times the variance a quarter). **Nothing refitted.**
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| fall in consumption over a first period out of work: annual, quarterly (literature 0.07 to 0.16) | 0.152, **0.089** | 0.153, **0.090** | 0.100, **0.072** |
+| MPC over the period: annual, quarterly | 0.43, 0.17 | 0.34, 0.13 | 0.29, 0.11 |
+| liquid wealth below a week of annual income: annual, quarterly | 0.36, 0.13 | 0.25, 0.11 | 0.22, 0.14 |
+| median liquid wealth over annual income: annual, quarterly (HFCS) | 0.07, 0.17 (0.05) | 0.13, 0.23 (0.12) | 0.27, 0.41 (0.23) |
+
+1. **The period is a large part of the fall**: measured over a quarter, the horizon of the studies, it is 0.07 to 0.09, inside the literature's range, against 0.10 to 0.15 over a year.
+2. **The quarterly economy holds far more liquid wealth at the annual parameters**, so it must be refitted (less patience) before its numbers stand; refitting lowers the buffers and raises the fall again, so the refitted fall should lie between the two columns. With the state out of work, which adds the prospect of long joblessness (0.21 against 0.15 annually), it would rise further.
+3. The MPC over a quarter (0.11 to 0.17) is in the range the quarterly two-asset literature targets.
+
+**Reading**: the length of the period explains a large share of the fall; a quarterly period is worth building, with two assets, in version 2. Its one solver change is a first year out of work lasting four quarters.
