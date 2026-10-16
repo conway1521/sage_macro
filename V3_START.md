@@ -2969,3 +2969,15 @@ As expected from the model: the cost raises the reward to finding work in every 
 **The tension, for the user to decide.** The life-satisfaction gap measures how being out of work feels (experienced wellbeing); the response of search to benefits measures how households act. Taken at its life-satisfaction size into choices, the cost makes households act less on benefits than any estimate. Options: (a) the cost counts in wellbeing only, and search keeps its fit to behaviour (recommended); (b) in choices at its full size, the miss stated; (c) in choices at the lower within-person size (about 0.8), which still lowers the response. Revisited in version 2, where the quarterly period brings the moral hazard part and the full 0.53 becomes the test.
 
 **France's on/off test on the repaired solver** (run 38933559696, `onoff_v3.jl v5m FR cfg=G,GS`): **9 of 9 pass** (budget gaps 3e-14 and 1e-12; MPC in range; targets hit).
+
+## 107. Decided: the cost of being out of work in wellbeing only; search part of A; the recalibration and the wellbeing account (2026-10-16, night)
+
+**Decided by the user** ("yes for (a)"): the cost of being out of work counts in wellbeing, not in choices. Search keeps its fit to behaviour (the costs of section 105). The version in choices stays an option (`out_ls`, `out_M`), to be tested again in version 2 against the full response.
+
+**Search is now part of A with dread in choices.** The fitted cost levels are in files of their own, `scripts/search_v5m_<C>_GA.txt` and `_GSA.txt` (G+S+A takes G+A's costs, checked by its chances of finding work after its calibration), read by `country_config` whenever A is on with `SAGE_DREAD_CHOICE=1`; `search = false` turns it off. The calibration chain now carries dread and finds `_D` files (`.github/chain.sh`, `calibrate.yml`).
+
+**The recalibration on the repaired solver, launched**: G in three countries (run 38969504064, which starts G+S), G+A with dread and search in three countries (run 38969507646, which starts G+S+A). Then the costs are checked at the new G+A calibration (`probe_search.jl`): if the chances move by less than 0.005 the costs stay, else they are refitted and G+A recalibrated once more.
+
+**The welfare parts follow search** (`reporting_core.jl`): with search on, a searching state's transition in the policy evaluation is the one the household chose, not the measured matrix; dread (where it enters choices) and the cost of search are parts of their own (`Vd`, `Vk`), and `welfare_ce` splits them out. Off, unchanged. `solve_economy` reports `search_cost_out` and `search_UL` (the chances chosen in the first year and beyond).
+
+**The wellbeing account of version 1** (`wellbeing_account.jl CODE [CFG]`): A's dread, search cost and being out of work; S's taking part; E's air quality; per head and year in life-satisfaction points and consumption shares, through the Green Book bridge. Commuting is already a time cost in the model and is shown as a check only. Not summed: the weights across dimensions are phase 5's. First runs on the current files: 38969910427, 38969913988, 38969917356.
