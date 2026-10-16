@@ -1537,6 +1537,21 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
             base_ = joinpath(@__DIR__, "calibration_$(vtag)_$(code)_$(replace(config, "A" => ""))" * (illq ? "_I" : "") * ".txt")
             cal = (v5dread && isfile(ownd)) ? ownd : isfile(own) ? own : base_
         end
+        # JOB SEARCH with A and dread in choices (phase 1 of ROADMAP.md, V3_START.md sections 105 and 107): the
+        # cost levels fitted by probe_search.jl, in a file of their own so that a calibration never overwrites
+        # them. With the file, search is on (the keyword `search = false` turns it off); without it, off.
+        if vmin && v5dread && occursin('A', config)
+            sf = joinpath(@__DIR__, "search_$(vtag)_$(code)_$(config).txt")
+            if isfile(sf)
+                for ln in eachline(sf)
+                    t = strip(ln); (isempty(t) || startswith(t, "#")) && continue
+                    k, v = strip.(split(t, "=")); x = parse.(Float64, split(v))
+                    k in ("search_kU", "search_kL") ? (d[Symbol(k)] = (x[1], x[2])) :
+                        k == "search_gamma" ? (d[:search_gamma] = x[1]) : error("unknown key $k in $(basename(sf))")
+                end
+                d[:search] = true
+            end
+        end
         # In the floor regime places differ by the household's income per head (:conversion_hh): what
         # is not unemployment in a low employment rate stays in the place's income, so a poor place is
         # poor against the national floor and not only riskier (V3_START.md, sections 21 and 22).

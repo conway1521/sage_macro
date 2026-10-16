@@ -1,0 +1,4 @@
+# search cost levels fitted by probe_search.jl FR 0.35 (run 38940077883, 2026-10-16) at the G+A calibration with dread in choices, on the repaired solver; G+S+A takes G+A's costs (S changes participation, not the reward to work), checked by the unemployment rate after its calibration; read by country_config
+search_gamma = 0.3500
+search_kU = 8.88952 4.30955
+search_kL = 10.7318 3.42521

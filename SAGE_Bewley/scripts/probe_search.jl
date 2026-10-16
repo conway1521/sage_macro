@@ -49,7 +49,7 @@ function exit_rates(c)
     end
 end
 
-c0 = country_config(code; config = "GA", v3 = :v5m, S = false, A = true)
+c0 = country_config(code; config = "GA", v3 = :v5m, S = false, A = true, search = false)
 say(@sprintf("%s G+A%s | measured: first-year finding %.3f, exit from the state %.3f %.3f | curvature %.2f",
              code, c0.dread_mode == :behaviour ? " (dread in choices)" : "", c0.f_find, c0.f_long..., γs))
 cB = c0
@@ -119,4 +119,9 @@ for (lab, cv) in rows
                  rr_.wealth_p50 / rr_.median_income, rr_.mpc, rr_.unemployment, rr_.mean_effort_employed))
 end
 say(@sprintf("\nfitted: search_kU = %.6g %.6g, search_kL = %.6g %.6g (gamma %.2f; out_ls %.3f, out_M %.5g)", kU..., kL..., γs, cS.out_ls, cS.out_M))
+# the file country_config reads (scripts/search_v5m_CODE_GA.txt; committed by hand from this log)
+ls == 0 && open(joinpath(@__DIR__, "search_v5m_$(code)_GA.txt"), "w") do io
+    println(io, "# written by probe_search.jl $(code) $(γs): search cost levels fitted to the measured rates at the G+A calibration with dread in choices; read by country_config")
+    @printf(io, "search_gamma = %.4f\nsearch_kU = %.6g %.6g\nsearch_kL = %.6g %.6g\n", γs, kU..., kL...)
+end
 println("DONE")

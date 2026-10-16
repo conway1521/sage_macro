@@ -23,6 +23,7 @@ if [ "$kind" = 1 ]; then
   [ "$v5" = 1 ] && file=calibration_v5_${code}_${cfg}.txt        # version 5
   [ "$v5" = 1 ] && [ "$out" = 1 ] && file=calibration_v5o_${code}_${cfg}.txt        # version 5 with the state out of work
   [ "$v5" = 1 ] && [ "$out" = 2 ] && file=calibration_v5m_${code}_${cfg}.txt        # the same with one measured minimum income
+  [ "${SAGE_DREAD:-0}" = 1 ] && [[ "$cfg" == *A* ]] && [ "$v5" = 1 ] && [ "$out" = 2 ] && file=calibration_v5m_${code}_${cfg}_D.txt        # dread in choices: a configuration with A has its own file
   art=calibration-${code}-${cfg}
 else
   file=calibration_country_${code}_${cfg}_I.txt; art=calibration2-${code}-${cfg}
@@ -30,6 +31,7 @@ fi
 [ -f "SAGE_Bewley/scripts/$file" ] || { echo "no $file: nothing to chain"; exit 0; }
 pre="$GITHUB_RUN_ID:$art:$file"
 extra=""; [ "$out" != 0 ] && extra="-f out=$out"; [ -n "$pop" ] && extra="$extra -f pop=$pop"        # only when set: the base's chain passes neither
+[ "${SAGE_DREAD:-0}" = 1 ] && extra="$extra -f dread=1"        # dread in choices goes on to the calibrations this one starts
 run1() { gh workflow run calibrate.yml --ref "$GITHUB_REF_NAME" -f countries="$1" -f configs="$2" -f prereq="$pre" -f v3="$v3" -f floor="$floor" -f edu="$edu" -f trans="$trans" -f v4="$v4" -f v5="$v5" $extra -f floor_from="${SAGE_FLOOR_FROM:-G}"
          echo "started one-asset $1 $2, with $file from run $GITHUB_RUN_ID"; }
 run2() { gh workflow run calibrate2.yml --ref "$GITHUB_REF_NAME" -f countries="$1" -f configs="$2" -f chi_from="${3:-}" -f prereq="$pre"

@@ -159,7 +159,7 @@ jobs:
         if: steps.cal.outputs.code == '0' && inputs.chain == 'yes'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: SAGE_V3=${{ inputs.v3 }} SAGE_FLOOR=${{ inputs.floor }} SAGE_EDU=${{ inputs.edu }} SAGE_TRANS=${{ inputs.trans }} SAGE_V4=${{ inputs.v4 }} SAGE_V5=${{ inputs.v5 }} SAGE_OUT=${{ inputs.out }} SAGE_POP=${{ inputs.pop }} SAGE_FLOOR_FROM=${{ inputs.floor_from }} bash .github/chain.sh 1 ${{ matrix.code }} ${{ matrix.cfg }}
+        run: SAGE_V3=${{ inputs.v3 }} SAGE_FLOOR=${{ inputs.floor }} SAGE_EDU=${{ inputs.edu }} SAGE_TRANS=${{ inputs.trans }} SAGE_V4=${{ inputs.v4 }} SAGE_V5=${{ inputs.v5 }} SAGE_OUT=${{ inputs.out }} SAGE_POP=${{ inputs.pop }} SAGE_FLOOR_FROM=${{ inputs.floor_from }} SAGE_DREAD=${{ inputs.dread }} bash .github/chain.sh 1 ${{ matrix.code }} ${{ matrix.cfg }}
       - name: Resume in a new run
         if: steps.cal.outputs.code == '3' && inputs.hop < 5
         env:
