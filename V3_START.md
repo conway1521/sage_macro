@@ -2919,3 +2919,9 @@ France's G+S+A with dread is calibrated (participation 0.203, 0.291 on target; m
 **Dread in choices, G+S+A completed (16 October)** (run 38809665517; the files were written before the jobs stopped in their informational last step). Germany: participation 0.252 and 0.350 against 0.252 and 0.349, hand-to-mouth 0.252, multiplier 1.4, median liquid wealth 0.118 (HFCS 0.117), MPC 0.347, fall on job loss 0.280. Italy: participation 0.117 and 0.165 against 0.116 and 0.165, hand-to-mouth 0.205, multiplier 1.2, median 0.221 (0.229), MPC 0.319, fall 0.289. With France's, every configuration with A has its dread variant (`_D` files).
 
 **Roadmap**: the user added a quarterly period to version 2 (16 October), before the two assets and in three checked stages (`ROADMAP.md`, phase 2).
+
+## 104. The top of the asset grid repaired; job search built (2026-10-16)
+
+**The repair** (`egm_core.jl`, with the search build): past the last endogenous point next assets stay at the grid's top and consumption and hours come from the budget there. **Italy's failing benchmark problem now passes 4 of 4** (run 38933550778; the middle type of the tertiary cell): value gap 3.8e-3 to 5.8e-6, consumption gap 9.3e-3 to 7.1e-4, hours +0.28% to 0.00%. The kink was already exact. Every calibration is to be rerun on the repaired solver (with search, one recalibration for both).
+
+**Job search** (A; `search_k`, `search_gamma` in `SAGEParams`; `search`, `search_kU`, `search_kL` in `SAGEConfig`): out of work, the household chooses its chance of finding work at a cost with curvature 0.35 (DellaVigna and co-authors 2017, QJE, Table I column (1)). Each searching state's transition row is split into its part towards work and the rest, reweighted by the chosen effort, in the continuation value (with the envelope condition for its slope) and in the stationary distribution. Refused for the transition solver and two assets. First runs (`probe_search.jl`, at 0.35 and 0.40) are running.
