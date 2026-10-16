@@ -1,0 +1,81 @@
+# Search effort (A, phase 1 of ROADMAP.md; DIMENSIONS_SPEC.md, "Phase 1 scope"): the first run. On G+A at its
+# calibration (with dread in choices when the workflow's dread switch is on), nothing else refitted:
+#   1. the cost level of search by education cell, for the first year out of work and for the state beyond
+#      it, fitted so that the mean chances of finding work are the measured rates (f_find; f_long by cell),
+#      the curvature at DellaVigna, Lindner, Reizer and Schmieder's 0.40;
+#   2. the untargeted test: the response of time out of work to the first year's benefit, holding the tax,
+#      against the literature's median of 0.53 (Schmieder and von Wachter 2016; band 0.2 to 1.0), and the
+#      response of the first year's chance of finding work (Chetty 2008: -0.53);
+#   3. what search does to the economy: search off against on, at the fitted costs.
+# Time out of work from a job loss, in years: the first year, then 1 / f_L with chance 1 - f_U.
+#
+#   julia --project=scripts/run_env scripts/probe_search.jl CODE [gamma]
+include(joinpath(@__DIR__, "modular_workers.jl"))
+using Printf
+code = uppercase(ARGS[1]); γs = length(ARGS) >= 2 ? parse(Float64, ARGS[2]) : 0.40
+say(x...) = (println(x...); flush(stdout))
+
+"Mean chance of finding work, by education cell, in the first year out of work and beyond it."
+function exit_rates(c)
+    c = floor_effort(c); cs = cells_of(c); _, bw = betas_by_cell(c)
+    cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
+    map(1:2) do g
+        ps = params_of(cT, cs[g])
+        res = (nworkers() > 1 ? pmap : map)(ps) do p
+            p = update(p; social_strength = 0.0)
+            s = solve_participation_logit(p, 1.0; theta = c.theta, full = true)
+            (s.lambda, s.search_x)
+        end
+        mU = xU = mL = xL = 0.0
+        for (k, (λ, x)) in enumerate(res)
+            n = size(λ, 2); nB = n ÷ 3; w = bw[g][k]
+            for s in 1:nB;        m = sum(view(λ, :, s)); mU += w * m; xU += w * sum(view(λ, :, s) .* view(x, :, s)); end
+            for s in 2nB+1:n;     m = sum(view(λ, :, s)); mL += w * m; xL += w * sum(view(λ, :, s) .* view(x, :, s)); end
+        end
+        (xU / mU, xL / mL)
+    end
+end
+
+c0 = country_config(code; config = "GA", v3 = :v5m, S = false, A = true)
+say(@sprintf("%s G+A%s | measured: first-year finding %.3f, exit from the state %.3f %.3f | curvature %.2f",
+             code, c0.dread_mode == :behaviour ? " (dread in choices)" : "", c0.f_find, c0.f_long..., γs))
+
+# 1. the cost levels: log k moves by gamma times the log gap in the chance (x ~ k^(-1/gamma) at a given gain from work)
+kU = [1.0, 1.0]; kL = [1.0, 1.0]
+c = c0; r = nothing
+for it in 1:14
+    global c = SAGEConfig(c0; search = true, search_gamma = γs, search_kU = Tuple(kU), search_kL = Tuple(kL))
+    global r = exit_rates(c)
+    gap = maximum(max(abs(r[g][1] - c0.f_find), abs(r[g][2] - c0.f_long[g])) for g in 1:2)
+    say(@sprintf("  iteration %2d: k first year %.4g %.4g, beyond %.4g %.4g | chance first year %.4f %.4f, beyond %.4f %.4f | gap %.1e",
+                 it, kU..., kL..., r[1][1], r[2][1], r[1][2], r[2][2], gap))
+    gap < 5e-4 && break
+    for g in 1:2
+        kU[g] *= exp(γs * (log(max(r[g][1], 1e-6)) - log(c0.f_find)))
+        kL[g] *= exp(γs * (log(max(r[g][2], 1e-6)) - log(c0.f_long[g])))
+    end
+end
+cS = c
+
+# 2. the response to the first year's benefit, holding the tax
+D(rU, rL) = 1 + (1 - rU) / rL
+rrp = isnan(cS.rr_public) ? cS.rr : cS.rr_public
+r1 = exit_rates(SAGEConfig(cS; rr = 1.1 * cS.rr, rr_public = rrp + 0.1 * cS.rr))
+say("\n2. the first year's benefit 10% higher, the tax held")
+for g in 1:2
+    d0 = D(r[g]...); d1 = D(r1[g]...)
+    say(@sprintf("  cell %d: chance first year %.4f -> %.4f (elasticity %+.2f) | beyond %.4f -> %.4f | time out of work %.3f -> %.3f years: elasticity %+.2f",
+                 g, r[g][1], r1[g][1], log(r1[g][1] / r[g][1]) / log(1.1), r[g][2], r1[g][2], d0, d1, log(d1 / d0) / log(1.1)))
+end
+say("  literature: duration elasticity median 0.53, band 0.2 to 1.0 (Schmieder and von Wachter 2016); hazard elasticity -0.53 (Chetty 2008)")
+
+# 3. the economy with search off and on
+say("\n3. the economy, search off and on (nothing else refitted)")
+say(@sprintf("  %-12s %8s %8s %8s %8s %8s %8s", "", "fall", "htm", "median", "MPC", "out", "hours"))
+for (lab, cv) in (("search off", c0), ("search on", cS))
+    rr_ = solve_economy(cv; cache = false)
+    say(@sprintf("  %-12s %8.4f %8.4f %8.4f %8.4f %8.4f %8.4f", lab, rr_.consumption_drop, rr_.hand_to_mouth_kvw,
+                 rr_.wealth_p50 / rr_.median_income, rr_.mpc, rr_.unemployment, rr_.mean_effort_employed))
+end
+say(@sprintf("\nfitted: search_kU = %.6g %.6g, search_kL = %.6g %.6g (gamma %.2f)", kU..., kL..., γs))
+println("DONE")

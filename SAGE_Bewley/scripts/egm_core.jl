@@ -119,6 +119,14 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
             c = cend[j] + t * (cend[j+1] - cend[j])
             e = clamp(eend[j] + t * (eend[j+1] - eend[j]), 0.0, tmax)
             ap = a[j] + t * (a[j+1] - a[j])
+            if ap > a[end]
+                # THE TOP OF THE GRID (2026-10-16; V3_START.md section 100). Past the last endogenous point the
+                # interpolation runs beyond the grid's top. Next assets stay at the top, and consumption and
+                # hours come from the budget there, so the budget holds; until now only a' was capped.
+                cc, ec = egm_constrained(p, p.R * ai - a[end] + other, w, tfl, d; efix = efix)
+                isnan(cc) && continue
+                c = cc; e = ec; ap = a[end]
+            end
             # Above the first endogenous point the household is unconstrained:
             # the interpolated solution is taken as it is. Comparing it with the
             # constrained candidate there made the iteration cycle between two
@@ -158,7 +166,12 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
             ai > amax || continue     # beyond the endogenous grid: extrapolate the top segment
             t = (ai - aend[km]) / (aend[km+1] - aend[km])
             c = cend[km] + t * (cend[km+1] - cend[km]); e = clamp(eend[km] + t * (eend[km+1] - eend[km]), 0.0, tmax)
-            ap = min(a[km] + t * (a[km+1] - a[km]), a[end])
+            ap = a[km] + t * (a[km+1] - a[km])
+            if ap > a[end]                      # the top of the grid, as in the monotone case
+                cc, ec = egm_constrained(p, p.R * ai - a[end] + other, w, tfl, d; efix = efix)
+                isnan(cc) && continue
+                c = cc; e = ec; ap = a[end]
+            end
             if c > 0
                 v = egm_flow(p, c, tfl + κ * e + p.qbar * d) + belong * d - dread_at(p, s, ap) +
                     p.β * SAGEBewley.interp_lin(a, EVs, ap)
@@ -265,6 +278,25 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
         end
     end
 
+    # JOB SEARCH (A; `search_k`, SAGEBewley.jl). Each searching state's row of the transition matrix is split
+    # into its part towards work (Pf, normalised) and the rest (Ps); the household's search effort x, chosen
+    # at each next-asset node, weights them. Nothing changes where search_k is empty.
+    search = !isempty(p.search_k)
+    if search
+        length(p.search_k) == nz || error("search_k has length $(length(p.search_k)), the problem $nz states")
+        isEmp = z_vals .> 0
+        Pf = copy(Π); Ps = copy(Π)
+        for s in 1:nz
+            p.search_k[s] > 0 || continue
+            isEmp[s] && error("search_k is positive in a state in work ($s)")
+            rowE = Π[s, :] .* isEmp; fs = sum(rowE)
+            (0 < fs < 1) || error("search: state $s has no chance of work to reweight (it is $fs)")
+            Pf[s, :] = rowE ./ fs; Ps[s, :] = (Π[s, :] .- rowE) ./ (1 - fs)
+        end
+        EVf = zeros(na, nz); EVs_ = zeros(na, nz); EVfa = zeros(na, nz); EVsa = zeros(na, nz)
+        xs = zeros(na, nz)                       # search at each next-asset node
+        γs = p.search_gamma
+    end
     cd = (zeros(na, nz), zeros(na, nz)); e_d = (zeros(na, nz), zeros(na, nz))
     a_d = (zeros(na, nz), zeros(na, nz)); vd = (zeros(na, nz), zeros(na, nz))
     EV = similar(V); EVa = similar(Va); Vn = similar(V); Van = similar(Va)
@@ -279,7 +311,28 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
     floor_on = p.cfloor > 0
     hist = floor_on ? zeros(maxit) : Float64[]; relax = 1.0; stalled = false; stall = 0.0
     for it in 1:maxit
-        mul!(EV, V, Π'); mul!(EVa, Va, Π')
+        if search
+            mul!(EVf, V, Pf'); mul!(EVs_, V, Ps'); mul!(EVfa, Va, Pf'); mul!(EVsa, Va, Ps')
+            @inbounds for s in 1:nz
+                ks = p.search_k[s]
+                if ks <= 0
+                    for k in 1:na; EV[k, s] = EVf[k, s]; EVa[k, s] = EVfa[k, s]; end      # Pf is the row itself
+                    continue
+                end
+                for k in 1:na
+                    # beta x EVf + beta (1 - x) EVs - k x^(1+g)/(1+g): x = (beta (EVf - EVs) / k)^(1/g) within [0, 1].
+                    # The cost sits inside EV divided by beta, since the branch multiplies EV by beta; the
+                    # marginal value of assets follows by the envelope condition.
+                    Δ = EVf[k, s] - EVs_[k, s]
+                    x = Δ > 0 ? min((p.β * Δ / ks)^(1 / γs), 1.0) : 0.0
+                    xs[k, s] = x
+                    EV[k, s] = x * EVf[k, s] + (1 - x) * EVs_[k, s] - ks * x^(1 + γs) / ((1 + γs) * p.β)
+                    EVa[k, s] = x * EVfa[k, s] + (1 - x) * EVsa[k, s]
+                end
+            end
+        else
+            mul!(EV, V, Π'); mul!(EVa, Va, Π')
+        end
         for s in 1:nz, d in (0, 1)
             egm_branch!(cd[d+1], e_d[d+1], a_d[d+1], vd[d+1], p, a, view(EV, :, s), view(EVa, :, s),
                         s, d, wv[s], oth[s][d+1], tfl[s], bel[s], con_c[d+1], con_e[d+1], aend, cend, eend,
@@ -338,7 +391,19 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
     iters == maxit && !stalled && @warn "solve_participation_egm stopped at maxit without converging" maxit tol
     stall > 1e-4 && @warn "solve_participation_egm accepted a stalled iteration (floor on)" stall
 
-    λ = egm_distribution(a, Π, P1, a_d, na, nz)
+    λ = search ? egm_distribution(a, Π, P1, a_d, na, nz; Pf = Pf, Ps = Ps, xs = xs, searching = p.search_k .> 0) :
+                 egm_distribution(a, Π, P1, a_d, na, nz)
+    # the search effort at each grid point, at the next assets chosen (mixed over the participation branch)
+    x_d = zeros(na, nz)
+    if search
+        @inbounds for s in 1:nz
+            p.search_k[s] > 0 || continue
+            for i in 1:na
+                x_d[i, s] = (1 - P1[i, s]) * SAGEBewley.interp_lin(a, view(xs, :, s), a_d[1][i, s]) +
+                            P1[i, s] * SAGEBewley.interp_lin(a, view(xs, :, s), a_d[2][i, s])
+            end
+        end
+    end
     part = 0.0; meaninc = 0.0; partbase = 0.0
     @inbounds for i_z in 1:nz, i_a in 1:na
         w_ = λ[i_a, i_z]; p1 = P1[i_a, i_z]
@@ -349,7 +414,7 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
     if full
         return (Q = p.qbar * part, rate = part, meaninc = meaninc, partbase = partbase,
                 a = a, lambda = λ, P1 = P1, e_d = e_d, a_d = a_d, V = V, Va = Va,
-                z_vals = z_vals, iters = iters, theta = theta, c_d = cd, floor_d = fl)
+                z_vals = z_vals, iters = iters, theta = theta, c_d = cd, floor_d = fl, search_x = x_d)
     end
     return p.qbar * part, part, meaninc, partbase
 end
@@ -464,8 +529,9 @@ function solve_job_effort(p::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01, 
     merge(sol, (effort_set = e, effort_gap = gap, effort_iters = iters))
 end
 
-"The stationary distribution: the Young (2010) lottery over a', mixed over d."
-function egm_distribution(a, Π, P1, a_d, na, nz)
+"""The stationary distribution: the Young (2010) lottery over a', mixed over d. With job search the row of
+a searching state is x Pf + (1 - x) Ps, x the search chosen at the next assets (interpolated on `xs`)."""
+function egm_distribution(a, Π, P1, a_d, na, nz; Pf = nothing, Ps = nothing, xs = nothing, searching = nothing)
     n_s = na * nz
     sidx(i_a, i_z) = (i_z - 1) * na + i_a
     drows = Int[]; dcols = Int[]; dvals = Float64[]
@@ -477,8 +543,10 @@ function egm_distribution(a, Π, P1, a_d, na, nz)
             ap = a_d[d+1][i_a, i_z]
             k = clamp(searchsortedlast(a, ap), 1, na - 1)
             w = clamp((a[k+1] - ap) / (a[k+1] - a[k]), 0.0, 1.0)
+            srch = searching !== nothing && searching[i_z]
+            x = srch ? SAGEBewley.interp_lin(a, view(xs, :, i_z), ap) : 0.0
             for i_zn in 1:nz
-                pz = Π[i_z, i_zn] * pd
+                pz = (srch ? x * Pf[i_z, i_zn] + (1 - x) * Ps[i_z, i_zn] : Π[i_z, i_zn]) * pd
                 push!(drows, s); push!(dcols, sidx(k,   i_zn)); push!(dvals, pz * w)
                 push!(drows, s); push!(dcols, sidx(k+1, i_zn)); push!(dvals, pz * (1 - w))
             end

@@ -177,6 +177,15 @@ Base.@kwdef struct SAGEConfig
     # the others work the hours the job sets. From Eurostat (lfso_19fxwt01, who decides working time).
     # Active with A on only; zero is every earlier result.
     control_share::NTuple{2,Float64} = (0.0, 0.0)
+    # JOB SEARCH (A, phase 1 of ROADMAP.md, 2026-10-16; DIMENSIONS_SPEC.md, "Phase 1 scope"). With A on and
+    # `search`, those out of work choose their chance of finding work at a cost with curvature `search_gamma`
+    # (DellaVigna and co-authors 2017: 0.40); the cost's level by education cell, for the first year out of
+    # work (`search_kU`) and for the state beyond it (`search_kL`), is fitted so that the mean chances are the
+    # measured rates (`f_find`, `f_long`). A off, or `search` false: job finding as measured.
+    search::Bool = false
+    search_gamma::Float64 = 0.40
+    search_kU::NTuple{2,Float64} = (NaN, NaN)
+    search_kL::NTuple{2,Float64} = (NaN, NaN)
     # Household solver: :grid, the reference, or :egm (SOLVER_DESIGN.md). The
     # default can be set for a whole run with the environment variable
     # SAGE_SOLVER (grid or egm), which worker processes inherit.
@@ -494,7 +503,7 @@ function expand_transitory(p::SAGEParams, sd, nt)
     update(p; nz = ns * nt, z_vals_override = [z[s] * ε[t] for s in 1:ns for t in 1:nt], Π_override = kron(Π, ones(nt) * w'),
            α = ex(p.α), B = ex(p.B), transfer = ex(p.transfer), effort_set = ex(p.effort_set),
            belong_scale = ex(p.belong_scale), time_floor = ex(p.time_floor),
-           dread_q = ex(p.dread_q), dread_hi = ex(p.dread_hi), dread_lo = ex(p.dread_lo),
+           dread_q = ex(p.dread_q), dread_hi = ex(p.dread_hi), dread_lo = ex(p.dread_lo), search_k = ex(p.search_k),
            zstep = length(zp) > 1 ? log(zp[2] / zp[1]) : 0.0)
 end
 
@@ -571,6 +580,13 @@ function _params_of(c::SAGEConfig, cell)
     end
     if c.A && c.dread > 0 && c.unemployment
         ps = [dread_params(p, c, cell) for p in ps]
+    end
+    if c.A && c.search && c.unemployment
+        isnan(cell.fL) && error("search effort is built on the state out of work (f_long)")
+        (isnan(c.search_kU[cell.gi]) || isnan(c.search_kL[cell.gi])) && error("search on with no cost level for cell $(cell.gi): fit search_kU and search_kL")
+        nh = count(>(0), ps[1].z_vals_override)          # states (U, E, L) in blocks of nh
+        sk = vcat(fill(c.search_kU[cell.gi], nh), zeros(nh), fill(c.search_kL[cell.gi], nh))
+        ps = [update(p; search_k = sk, search_gamma = c.search_gamma) for p in ps]
     end
     c.solver === :grid || (ps = [update(p; solver = c.solver) for p in ps])
     cell.τ == 0 || (ps = [update(p; commute = cell.τ) for p in ps])
@@ -727,7 +743,7 @@ function floor_effort(c::SAGEConfig)
     # The same holds for the transitory part and the proportional tax (2026-10-06): the levels are
     # those of the economy with persistent risk alone and the tax raised per head.
     c1 = SAGEConfig(c; cfloor = 0.0, S = false, f_long = (NaN, NaN), sd_eps = 0.0, sd_eps_cell = (0.0, 0.0), tax_mode = :lump, tax_base = NaN,
-                    control_share = (0.0, 0.0))          # what a job asks does not depend on who may choose otherwise
+                    control_share = (0.0, 0.0), search = false)          # what a job asks does not depend on who may choose otherwise, or on how hard the unemployed search
     lv = if c.ref_prop && c.tax_mode === :prop
         # the reference economy pays its benefit bill T at a rate on labour income. The rate needs the
         # levels (it is T over labour income per head) and the levels the rate, so the pair is found
@@ -790,7 +806,7 @@ function floor_tax_of(c::SAGEConfig)
     key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.f_long, c0.assist_long, c0.assist_public, c0.rr_long, c0.long_public_share, c0.control_share, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
-                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop)))
+                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop, c0.search, c0.search_gamma, c0.search_kU, c0.search_kL)))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
     cs = cells_of(c0); _, bw = betas_by_cell(c0)
