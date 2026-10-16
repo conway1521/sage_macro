@@ -2945,3 +2945,27 @@ France's G+S+A with dread is calibrated (participation 0.203, 0.291 on target; m
 **The cost of being out of work, built** (`out_cost` in `SAGEParams`; `out_ls`, `out_M` in `SAGEConfig`; one line in `egm_core.jl`). A utility cost per year in the states out of work (first year and beyond), constant within a state, so it changes no saving, hours or participation choice, only the reward to finding work. Its size: the life-satisfaction gap between those out of work and in work at the same income decile (ESS, `data/validation/ess_life_satisfaction.csv`: 1.057, 1.061, 1.047 points), turned into consumption by the Green Book's bridge already in the repository (`data/EVIDENCE_WELLBY.md`: log-income coefficient 1.96105): being out of work is worth as much as losing 41.7%, 41.8% and 41.4% of the mean income, valued at the mean income for everyone (a stated normalisation). Off, the base exactly (the vector is empty). The probe now takes the gap (`probe_search.jl CODE 0.35 ess`): the costs refitted with it, the same benefit test, and a check that with the cost on and search off every aggregate is the base's. Runs 38958244190, 38958247183, 38958250138 (the first launch stopped at a guard: the reference economy that sets job effort levels has no state out of work and still carried the cost; it now drops it).
 
 The cross-section gap (1.06) is above the within-person estimates for Germany (Clark, Knabe and Rätzel, working paper: men 1.17, women 0.43); a band down to about 0.8 is to be shown with the result.
+
+## 106. The cost of being out of work in choices halves the response to benefits; France on/off on the repaired solver (2026-10-16, night)
+
+**Runs 38958244190, 38958247183, 38958250138** (`probe_search.jl CODE 0.35 ess`, dread in choices). Exactness: with the cost on and search off, every aggregate is the base's to four decimals in the three countries. The search costs refitted with the cost (converged, largest gap 1e-4 to 6e-4):
+
+| | first year, cell 1 | first year, cell 2 | beyond, cell 1 | beyond, cell 2 |
+|---|---|---|---|---|
+| France | 15.06 | 11.02 | 20.03 | 10.06 |
+| Germany | 26.03 | 36.27 | 50.47 | 67.37 |
+| Italy | 15.46 | 23.50 | 18.76 | 28.62 |
+
+**The response of the first year's chance of finding work to its benefit** (10% higher, tax held), without and with the cost in choices, against the liquidity part of Chetty (section 105):
+
+| | without | with | liquidity part |
+|---|---|---|---|
+| France | -0.23, -0.31 | -0.12, -0.16 | -0.21 |
+| Germany | -0.16, -0.11 | -0.07, -0.05 | -0.18 |
+| Italy | -0.14, -0.19 | -0.08, -0.09 | -0.23 |
+
+As expected from the model: the cost raises the reward to finding work in every state, the search costs rise to hold the measured rates, and the same change in the buffer then moves search proportionally less. With the cost in choices, all three countries fall to a third to a half of even the liquidity part. The economy barely moves (the fall on job loss +0.001 to +0.005, hand-to-mouth -0.008 to -0.010 in Germany and Italy against search alone).
+
+**The tension, for the user to decide.** The life-satisfaction gap measures how being out of work feels (experienced wellbeing); the response of search to benefits measures how households act. Taken at its life-satisfaction size into choices, the cost makes households act less on benefits than any estimate. Options: (a) the cost counts in wellbeing only, and search keeps its fit to behaviour (recommended); (b) in choices at its full size, the miss stated; (c) in choices at the lower within-person size (about 0.8), which still lowers the response. Revisited in version 2, where the quarterly period brings the moral hazard part and the full 0.53 becomes the test.
+
+**France's on/off test on the repaired solver** (run 38933559696, `onoff_v3.jl v5m FR cfg=G,GS`): **9 of 9 pass** (budget gaps 3e-14 and 1e-12; MPC in range; targets hit).
