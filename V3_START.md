@@ -2915,3 +2915,7 @@ France's G+S+A with dread is calibrated (participation 0.203, 0.291 on target; m
 3. The MPC over a quarter (0.11 to 0.17) is in the range the quarterly two-asset literature targets.
 
 **Reading**: the length of the period explains a large share of the fall; a quarterly period is worth building, with two assets, in version 2. Its one solver change is a first year out of work lasting four quarters.
+
+**Dread in choices, G+S+A completed (16 October)** (run 38809665517; the files were written before the jobs stopped in their informational last step). Germany: participation 0.252 and 0.350 against 0.252 and 0.349, hand-to-mouth 0.252, multiplier 1.4, median liquid wealth 0.118 (HFCS 0.117), MPC 0.347, fall on job loss 0.280. Italy: participation 0.117 and 0.165 against 0.116 and 0.165, hand-to-mouth 0.205, multiplier 1.2, median 0.221 (0.229), MPC 0.319, fall 0.289. With France's, every configuration with A has its dread variant (`_D` files).
+
+**Roadmap**: the user added a quarterly period to version 2 (16 October), before the two assets and in three checked stages (`ROADMAP.md`, phase 2).
