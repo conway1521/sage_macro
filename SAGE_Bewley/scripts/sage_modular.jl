@@ -186,6 +186,15 @@ Base.@kwdef struct SAGEConfig
     search_gamma::Float64 = 0.35
     search_kU::NTuple{2,Float64} = (NaN, NaN)
     search_kL::NTuple{2,Float64} = (NaN, NaN)
+    # THE COST OF BEING OUT OF WORK beyond the income lost (A; DIMENSIONS_SPEC.md, phase 1). `out_ls` is the
+    # life-satisfaction gap (0 to 10) between those out of work and in work at the same income, positive for a
+    # cost; it is turned into a utility cost by the Green Book's bridge (HM Treasury 2021, the formula
+    # ES = M [exp(beta_Q dQ / beta_Y) - 1] with beta_Y = 1.96105): being out of work is worth the same as
+    # consuming exp(-out_ls / beta_Y) times the mean income `out_M` instead of the mean income, valued once
+    # at that mean for everyone (a stated normalisation). Zero: none, the model without it exactly.
+    out_ls::Float64 = 0.0
+    out_M::Float64 = NaN
+    out_betaY::Float64 = 1.96105
     # Household solver: :grid, the reference, or :egm (SOLVER_DESIGN.md). The
     # default can be set for a whole run with the environment variable
     # SAGE_SOLVER (grid or egm), which worker processes inherit.
@@ -503,7 +512,7 @@ function expand_transitory(p::SAGEParams, sd, nt)
     update(p; nz = ns * nt, z_vals_override = [z[s] * ε[t] for s in 1:ns for t in 1:nt], Π_override = kron(Π, ones(nt) * w'),
            α = ex(p.α), B = ex(p.B), transfer = ex(p.transfer), effort_set = ex(p.effort_set),
            belong_scale = ex(p.belong_scale), time_floor = ex(p.time_floor),
-           dread_q = ex(p.dread_q), dread_hi = ex(p.dread_hi), dread_lo = ex(p.dread_lo), search_k = ex(p.search_k),
+           dread_q = ex(p.dread_q), dread_hi = ex(p.dread_hi), dread_lo = ex(p.dread_lo), search_k = ex(p.search_k), out_cost = ex(p.out_cost),
            zstep = length(zp) > 1 ? log(zp[2] / zp[1]) : 0.0)
 end
 
@@ -587,6 +596,15 @@ function _params_of(c::SAGEConfig, cell)
         nh = count(>(0), ps[1].z_vals_override)          # states (U, E, L) in blocks of nh
         sk = vcat(fill(c.search_kU[cell.gi], nh), zeros(nh), fill(c.search_kL[cell.gi], nh))
         ps = [update(p; search_k = sk, search_gamma = c.search_gamma) for p in ps]
+    end
+    if c.A && c.out_ls > 0 && c.unemployment
+        isnan(cell.fL) && error("the cost of being out of work is built on the state out of work (f_long)")
+        isnan(c.out_M) && error("out_ls is set with no mean income out_M to convert it at")
+        nh = count(>(0), ps[1].z_vals_override)
+        γ = ps[1].γ; θ = exp(-c.out_ls / c.out_betaY)
+        χ = c.out_M^(1 - γ) / (1 - γ) * (1 - θ^(1 - γ))
+        oc = vcat(fill(χ, nh), zeros(nh), fill(χ, nh))
+        ps = [update(p; out_cost = oc) for p in ps]
     end
     c.solver === :grid || (ps = [update(p; solver = c.solver) for p in ps])
     cell.τ == 0 || (ps = [update(p; commute = cell.τ) for p in ps])
@@ -806,7 +824,7 @@ function floor_tax_of(c::SAGEConfig)
     key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.f_long, c0.assist_long, c0.assist_public, c0.rr_long, c0.long_public_share, c0.control_share, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
-                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop, c0.search, c0.search_gamma, c0.search_kU, c0.search_kL)))
+                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop, c0.search, c0.search_gamma, c0.search_kU, c0.search_kL, c0.out_ls, c0.out_M, c0.out_betaY)))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
     cs = cells_of(c0); _, bw = betas_by_cell(c0)

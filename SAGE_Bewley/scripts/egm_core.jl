@@ -345,6 +345,7 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
             b0 = vd[1][i]; b1 = p.social_strength == 0 ? -Inf : vd[2][i]
             m = max(b0, b1)
             Vn[i] = m + theta * log(exp((b0 - m) / theta) + exp((b1 - m) / theta))
+            isempty(p.out_cost) || (Vn[i] -= p.out_cost[(i - 1) ÷ na + 1])     # out of work, beyond income (A)
             P1[i] = b1 == -Inf ? 0.0 : (b0 == -Inf ? 1.0 : 1 / (1 + exp((b0 - b1) / theta)))
             # on the floor an extra unit of assets is taken back by the transfer: no marginal value
             mu0 = (b0 == -Inf || fl[1][i]) ? 0.0 : cd[1][i]^(-p.γ)

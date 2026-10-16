@@ -263,6 +263,11 @@ Base.@kwdef struct SAGEParams
     # towards work and the rest; the chosen x reweights the two.
     search_k::Vector{Float64} = Float64[]
     search_gamma::Float64 = 0.35
+    # THE COST OF BEING OUT OF WORK beyond the income lost (A, phase 1 of ROADMAP.md, 2026-10-16): a utility
+    # cost per period in each state, positive in the states out of work, zero elsewhere; empty, none. A
+    # constant within a state, so it changes no saving, hours or participation choice, only the value of
+    # being out of work and so, with job search, how hard the unemployed search.
+    out_cost::Vector{Float64} = Float64[]
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."
