@@ -415,7 +415,8 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
     if full
         return (Q = p.qbar * part, rate = part, meaninc = meaninc, partbase = partbase,
                 a = a, lambda = λ, P1 = P1, e_d = e_d, a_d = a_d, V = V, Va = Va,
-                z_vals = z_vals, iters = iters, theta = theta, c_d = cd, floor_d = fl, search_x = x_d)
+                z_vals = z_vals, iters = iters, theta = theta, c_d = cd, floor_d = fl, search_x = x_d,
+                search_xs = search ? xs : zeros(0, 0))
     end
     return p.qbar * part, part, meaninc, partbase
 end

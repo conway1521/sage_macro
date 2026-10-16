@@ -676,7 +676,7 @@ function two_asset_welfare_parts(p0::SAGEParams, sol)
     end
     (vmass = vmass, vcmass = vcmass, vemass = vemass, vbmass = vbmass,
      mpsmass = mpsmass, mpemass = mpemass, mppmass = mppmass,
-     vbumass = vbumass, veumass = veumass, mppumass = mppumass)
+     vbumass = vbumass, veumass = veumass, mppumass = mppumass, vdmass = zeros(ns), vkmass = zeros(ns))   # dread and search not split on two assets
 end
 
 """
@@ -801,6 +801,6 @@ function two_asset_agency_summary(p::SAGEParams, sol)
         s > nh && cb[i] > 0 && (dmass[s] += mm * max(0.0, 1 - cbar[i, m, s - nh] / cb[i]))
     end
     merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = whmass,
-           mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = mpcwmass, rmass = rmass, xmass = xmass, cmass = cmass),
+           mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = mpcwmass, rmass = rmass, xmass = xmass, cmass = cmass, kmass = zeros(ns), smass = zeros(ns)),
           two_asset_welfare_parts(p, sol))
 end

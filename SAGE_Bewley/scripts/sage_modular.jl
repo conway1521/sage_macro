@@ -1169,6 +1169,9 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
                         Vc = sum(cs[g].share * sum(pooled[g].vcmass) for g in 1:2) / m_,
                         Ve = sum(cs[g].share * sum(pooled[g].vemass) for g in 1:2) / m_,
                         Vb = sum(cs[g].share * sum(pooled[g].vbmass) for g in 1:2) / m_,
+                        # A's parts (2026-10-16): dread where it enters choices, the cost of job search
+                        Vd = sum(cs[g].share * sum(pooled[g].vdmass) for g in 1:2) / m_,
+                        Vk = sum(cs[g].share * sum(pooled[g].vkmass) for g in 1:2) / m_,
                         cell = Tuple((V = sum(pooled[g].vmass) / sum(pooled[g].mass), Vc = sum(pooled[g].vcmass) / sum(pooled[g].mass),
                                       Ve = sum(pooled[g].vemass) / sum(pooled[g].mass), Vb = sum(pooled[g].vbmass) / sum(pooled[g].mass))
                                      for g in 1:2),
@@ -1197,6 +1200,14 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
             room = sum(cs[g].share * sum(pooled[g].rmass) for g in 1:2) /
                    sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
             dread_cost_E = mE <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].xmass[emp]) for g in 1:2) / mE,
+            # job search (A): the cost as a share of the year's consumption among those out of work, and the
+            # chance of finding work chosen, in the first year out of work and beyond (U, E, L blocks; NaN off)
+            search_cost_out = (mU = sum(cs[g].share * sum(pooled[g].mass[.!emp]) for g in 1:2);
+                               mU <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].kmass[.!emp]) for g in 1:2) / mU),
+            search_UL = (ns_ = length(emp); (c.A && c.search && ns_ % 3 == 0) ?
+                         Tuple((r_ = blk == 1 ? (1:ns_ ÷ 3) : (2ns_ ÷ 3 + 1:ns_);
+                                sum(cs[g].share * sum(pooled[g].smass[r_]) for g in 1:2) / sum(cs[g].share * sum(pooled[g].mass[r_]) for g in 1:2)) for blk in 1:2) :
+                         (NaN, NaN)),
             agrid = agrid, Wtot = Wtot, pooled = pooled, employed = emp, lumptax = T,
             kgrid = c.illiquid ? illiquid_grid(c.k_max, c.nk, c.pexp, c.k_mid) : [0.0],
             Ktot = sum(cs[g].share .* vec(sum(pooled[g].K, dims = 1)) for g in 1:2),
@@ -1673,8 +1684,8 @@ function welfare_ce(rB, rP; γ = 2.0)
     wB, wP = rB.welfare, rP.welfare
     tot = ce(wP.V - wB.V, wB.Vc)
     parts = (consumption = ce(wP.Vc - wB.Vc, wB.Vc), effort = ce(wP.Ve - wB.Ve, wB.Vc),
-             belonging = ce(wP.Vb - wB.Vb, wB.Vc),
-             choice_and_rest = ce((wP.V - wP.Vc - wP.Ve - wP.Vb) - (wB.V - wB.Vc - wB.Ve - wB.Vb), wB.Vc))
+             belonging = ce(wP.Vb - wB.Vb, wB.Vc), dread = ce(wP.Vd - wB.Vd, wB.Vc), search = ce(wP.Vk - wB.Vk, wB.Vc),
+             choice_and_rest = ce((wP.V - wP.Vc - wP.Ve - wP.Vb - wP.Vd - wP.Vk) - (wB.V - wB.Vc - wB.Ve - wB.Vb - wB.Vd - wB.Vk), wB.Vc))
     cells = Tuple(ce(wP.cell[g].V - wB.cell[g].V, wB.cell[g].Vc) for g in 1:2)
     status = Tuple(ce(wP.status[k].V - wB.status[k].V, wB.status[k].Vc) for k in 1:2)
     (total = tot, parts = parts, cells = cells, employed = status[1], unemployed = status[2])

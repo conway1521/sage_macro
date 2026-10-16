@@ -53,6 +53,19 @@ function welfare_parts(p::SAGEParams, sol)
     idx(i, s) = (s - 1) * na + i
     n = na * ns
     uc = zeros(n); ue = zeros(n); ub = zeros(n); ubu = zeros(n); ueu = zeros(n)
+    # A (2026-10-16): dread where it enters choices, and the cost of job search, as parts of their own; with
+    # search, a searching state's transition is the one the household chose (x towards work, as egm_core.jl)
+    ud = zeros(n); uk = zeros(n)
+    dreadV = p.dread > 0 && !isempty(p.dread_q)
+    search = !isempty(p.search_k) && hasproperty(sol, :search_xs) && !isempty(sol.search_xs)
+    if search
+        isEmp = z .> 0; Pf = copy(Π); Ps = copy(Π)
+        for s in 1:ns
+            p.search_k[s] > 0 || continue
+            rowE = Π[s, :] .* isEmp; fs = sum(rowE)
+            Pf[s, :] = rowE ./ fs; Ps[s, :] = (Π[s, :] .- rowE) ./ (1 - fs)
+        end
+    end
     abar = zeros(na, ns); lbar = zeros(na, ns); ybar = zeros(na, ns)
     rows = Int[]; cols = Int[]; vals = Float64[]
     @inbounds for s in 1:ns
@@ -75,11 +88,14 @@ function welfare_parts(p::SAGEParams, sol)
                     ubu[x] += w * bel
                     ueu[x] -= w * p.Γ * p.ϕ * (T^(1 + p.ψ) - (T - p.qbar)^(1 + p.ψ)) / (1 + p.ψ)
                 end
+                dreadV && (ud[x] -= w * dread_at(p, s, ap))
+                xsrch = (search && p.search_k[s] > 0) ? SAGEBewley.interp_lin(a, view(sol.search_xs, :, s), ap) : NaN
+                isnan(xsrch) || (uk[x] -= w * p.search_k[s] * xsrch^(1 + p.search_gamma) / (1 + p.search_gamma))
                 abar[i, s] += w * ap; lbar[i, s] += w * lab; ybar[i, s] += w * (lab + tr)
                 k = clamp(searchsortedlast(a, ap), 1, na - 1)
                 wk = clamp((a[k+1] - ap) / (a[k+1] - a[k]), 0.0, 1.0)
                 for s2 in 1:ns
-                    pr = Π[s, s2] * w; pr <= 0 && continue
+                    pr = (isnan(xsrch) ? Π[s, s2] : xsrch * Pf[s, s2] + (1 - xsrch) * Ps[s, s2]) * w; pr <= 0 && continue
                     push!(rows, x); push!(cols, idx(k, s2)); push!(vals, pr * wk)
                     push!(rows, x); push!(cols, idx(k + 1, s2)); push!(vals, pr * (1 - wk))
                 end
@@ -89,14 +105,15 @@ function welfare_parts(p::SAGEParams, sol)
     M = sparse(1:n, 1:n, ones(n), n, n) - p.β * sparse(rows, cols, vals, n, n)
     F = lu(M)
     Vc = F \ uc; Ve = F \ ue; Vb = F \ ub; Vbu = F \ ubu; Veu = F \ ueu
-    vmass = zeros(ns); vcmass = zeros(ns); vemass = zeros(ns); vbmass = zeros(ns)
+    Vd = dreadV ? F \ ud : ud; Vk = search ? F \ uk : uk
+    vmass = zeros(ns); vcmass = zeros(ns); vemass = zeros(ns); vbmass = zeros(ns); vdmass = zeros(ns); vkmass = zeros(ns)
     vbumass = zeros(ns); veumass = zeros(ns); mppumass = zeros(ns)
     mpsmass = zeros(ns); mpemass = zeros(ns); mppmass = zeros(ns)
     @inbounds for s in 1:ns, i in 1:na
         m = λ[i, s]; m <= 0 && continue
         x = idx(i, s)
         vmass[s] += m * sol.V[i, s]; vcmass[s] += m * Vc[x]; vemass[s] += m * Ve[x]; vbmass[s] += m * Vb[x]
-        vbumass[s] += m * Vbu[x]; veumass[s] += m * Veu[x]
+        vbumass[s] += m * Vbu[x]; veumass[s] += m * Veu[x]; vdmass[s] += m * Vd[x]; vkmass[s] += m * Vk[x]
         Δ = ybar[i, s] / 12
         if Δ > 0
             ai = a[i] + Δ / p.R
@@ -108,10 +125,11 @@ function welfare_parts(p::SAGEParams, sol)
     end
     (vmass = vmass, vcmass = vcmass, vemass = vemass, vbmass = vbmass,
      mpsmass = mpsmass, mpemass = mpemass, mppmass = mppmass,
-     vbumass = vbumass, veumass = veumass, mppumass = mppumass)
+     vbumass = vbumass, veumass = veumass, mppumass = mppumass, vdmass = vdmass, vkmass = vkmass)
 end
 
 "The same fields, NaN: for summaries whose welfare and propensities are not built yet (two assets)."
 welfare_parts_nan(ns) = (vmass = fill(NaN, ns), vcmass = fill(NaN, ns), vemass = fill(NaN, ns), vbmass = fill(NaN, ns),
                          mpsmass = fill(NaN, ns), mpemass = fill(NaN, ns), mppmass = fill(NaN, ns),
-                         vbumass = fill(NaN, ns), veumass = fill(NaN, ns), mppumass = fill(NaN, ns))
+                         vbumass = fill(NaN, ns), veumass = fill(NaN, ns), mppumass = fill(NaN, ns),
+                         vdmass = fill(NaN, ns), vkmass = fill(NaN, ns))

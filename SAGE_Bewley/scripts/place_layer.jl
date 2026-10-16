@@ -424,6 +424,9 @@ function solve_economy_places(c::SAGEConfig; thresholds = nothing, cache = true)
     for f in E_POP; nat[f] = sum(w[i] * getfield(rs[i], f) for i in eachindex(rs)); end
     for f in E_EMP; nat[f] = sum(wE[i] * getfield(rs[i], f) for i in eachindex(rs)); end
     nat[:rate_U] = sum(wU[i] * rs[i].rate_U for i in eachindex(rs))
+    # job search: its cost by the out-of-work weights; the chances chosen are each place's own (by_place)
+    nat[:search_cost_out] = sum(wU[i] * rs[i].search_cost_out for i in eachindex(rs))
+    nat[:search_UL] = (NaN, NaN)
     # participation by education cell: each place's cell weighted by its population and cell share
     cellw(g) = [w[i] * cells_of(cps[i])[g].share for i in eachindex(rs)]
     nat[:pooled] = Tuple((rate = sum(cellw(g)[i] * rs[i].pooled[g].rate for i in eachindex(rs)) / sum(cellw(g)),) for g in 1:2)
@@ -436,7 +439,7 @@ function solve_economy_places(c::SAGEConfig; thresholds = nothing, cache = true)
     hasproperty(rs[1], :Ktot) && (nat[:Ktot] = sum(w[i] .* rs[i].Ktot for i in eachindex(rs)); nat[:kgrid] = rs[1].kgrid)
     ws = [r.welfare for r in rs]
     comp(k) = sum(w[i] * getfield(ws[i], k) for i in eachindex(ws))
-    nat[:welfare] = (V = comp(:V), Vc = comp(:Vc), Ve = comp(:Ve), Vb = comp(:Vb),
+    nat[:welfare] = (V = comp(:V), Vc = comp(:Vc), Ve = comp(:Ve), Vb = comp(:Vb), Vd = comp(:Vd), Vk = comp(:Vk),
                      cell = Tuple((V = sum(cellw(g)[i] * ws[i].cell[g].V for i in eachindex(ws)) / sum(cellw(g)),
                                    Vc = sum(cellw(g)[i] * ws[i].cell[g].Vc for i in eachindex(ws)) / sum(cellw(g))) for g in 1:2),
                      status = ((V = sum(wE[i] * ws[i].status[1].V for i in eachindex(ws)), Vc = sum(wE[i] * ws[i].status[1].Vc for i in eachindex(ws))),

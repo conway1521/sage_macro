@@ -51,6 +51,8 @@ function agency_summary(p::SAGEParams, sol)
     ns = length(z)
     pmass = zeros(ns); pinc = zeros(ns); dmass = zeros(ns); hmass = zeros(ns)
     mpcmass = zeros(ns); mpchmass = zeros(ns); rmass = zeros(ns); xmass = zeros(ns); cmass = zeros(ns)
+    kmass = zeros(ns); smass = zeros(ns)        # job search (A): its cost as a consumption equivalent, and the chance chosen
+    srch = !isempty(p.search_k) && hasproperty(sol, :search_x)
     # blocks (U, E) or, with the long-term state, (U, E, L), each of nh latent productivity states;
     # a job is lost into U, and state u + nh is the employed state with u's productivity
     nh = count(>(0.0), z)
@@ -98,6 +100,16 @@ function agency_summary(p::SAGEParams, sol)
             k = 1 - (1 - p.γ) * D / (p.Γ * cbar[i, s]^(1 - p.γ))
             k > 0 && (xmass[s] += m * (1 - k^(1 / (1 - p.γ))))
         end
+        # Job search: the chance of finding work chosen, and its cost as a consumption equivalent, the share k of
+        # this year's consumption with Gamma u(c (1 - k)) = Gamma u(c) - cost, as for dread
+        if srch && p.search_k[s] > 0
+            xx = sol.search_x[i, s]; smass[s] += m * xx
+            K = p.search_k[s] * xx^(1 + p.search_gamma) / (1 + p.search_gamma)
+            if cbar[i, s] > 0
+                kq = 1 - (1 - p.γ) * K / (p.Γ * cbar[i, s]^(1 - p.γ))
+                kq > 0 && (kmass[s] += m * (1 - kq^(1 / (1 - p.γ))))
+            end
+        end
         haveU || continue
         pc = 0.0; py = 0.0
         for d in (0, 1)
@@ -118,7 +130,8 @@ function agency_summary(p::SAGEParams, sol)
         z[s] > 0 && cbar[i, s] > 0 && (dmass[s] += m * max(0.0, 1 - cbar[i, s - nh] / cbar[i, s]))
     end
     merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = zeros(ns),
-           mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = zeros(ns), rmass = rmass, xmass = xmass, cmass = cmass),
+           mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = zeros(ns), rmass = rmass, xmass = xmass, cmass = cmass,
+           kmass = kmass, smass = smass),
           welfare_parts(p, sol))
 end
 
@@ -143,7 +156,11 @@ collapse_agency(ds, w) = (pmass = sum(w[i] .* ds[i].pmass for i in eachindex(ds)
                           mppmass  = sum(w[i] .* ds[i].mppmass  for i in eachindex(ds)),
                           vbumass  = sum(w[i] .* ds[i].vbumass  for i in eachindex(ds)),
                           veumass  = sum(w[i] .* ds[i].veumass  for i in eachindex(ds)),
-                          mppumass = sum(w[i] .* ds[i].mppumass for i in eachindex(ds)))
+                          mppumass = sum(w[i] .* ds[i].mppumass for i in eachindex(ds)),
+                          kmass    = sum(w[i] .* ds[i].kmass    for i in eachindex(ds)),
+                          smass    = sum(w[i] .* ds[i].smass    for i in eachindex(ds)),
+                          vdmass   = sum(w[i] .* ds[i].vdmass   for i in eachindex(ds)),
+                          vkmass   = sum(w[i] .* ds[i].vkmass   for i in eachindex(ds)))
 collapse_all(ds, w) = merge(collapse(ds, w), collapse_agency(ds, w))
 
 """
