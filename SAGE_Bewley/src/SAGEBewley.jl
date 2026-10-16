@@ -257,12 +257,12 @@ Base.@kwdef struct SAGEParams
     qbar::Float64 = 0.10
     # JOB SEARCH (A, phase 1 of ROADMAP.md, 2026-10-16). Out of work, a household chooses search effort
     # x in [0, 1], its chance of moving to work next period, at a utility cost k x^(1+g)/(1+g) (DellaVigna,
-    # Lindner, Reizer and Schmieder 2017, QJE, whose standard model with savings gives g = 0.40). `search_k`
+    # Lindner, Reizer and Schmieder 2017, QJE, Table I column (1), p. 2000: g = 0.35, s.e. 0.04, in the standard model with savings). `search_k`
     # holds k for each state, zero where there is no search (those in work); empty, job finding is the
     # transition matrix's, as before. The matrix's row for a searching state is split into its part
     # towards work and the rest; the chosen x reweights the two.
     search_k::Vector{Float64} = Float64[]
-    search_gamma::Float64 = 0.40
+    search_gamma::Float64 = 0.35
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."

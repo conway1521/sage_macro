@@ -2,7 +2,7 @@
 # calibration (with dread in choices when the workflow's dread switch is on), nothing else refitted:
 #   1. the cost level of search by education cell, for the first year out of work and for the state beyond
 #      it, fitted so that the mean chances of finding work are the measured rates (f_find; f_long by cell),
-#      the curvature at DellaVigna, Lindner, Reizer and Schmieder's 0.40;
+#      the curvature at DellaVigna, Lindner, Reizer and Schmieder's 0.35 (QJE 2017, Table I column (1));
 #   2. the untargeted test: the response of time out of work to the first year's benefit, holding the tax,
 #      against the literature's median of 0.53 (Schmieder and von Wachter 2016; band 0.2 to 1.0), and the
 #      response of the first year's chance of finding work (Chetty 2008: -0.53);
@@ -12,7 +12,7 @@
 #   julia --project=scripts/run_env scripts/probe_search.jl CODE [gamma]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
-code = uppercase(ARGS[1]); γs = length(ARGS) >= 2 ? parse(Float64, ARGS[2]) : 0.40
+code = uppercase(ARGS[1]); γs = length(ARGS) >= 2 ? parse(Float64, ARGS[2]) : 0.35
 say(x...) = (println(x...); flush(stdout))
 
 "Mean chance of finding work, by education cell, in the first year out of work and beyond it."

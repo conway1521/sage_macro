@@ -179,11 +179,11 @@ Base.@kwdef struct SAGEConfig
     control_share::NTuple{2,Float64} = (0.0, 0.0)
     # JOB SEARCH (A, phase 1 of ROADMAP.md, 2026-10-16; DIMENSIONS_SPEC.md, "Phase 1 scope"). With A on and
     # `search`, those out of work choose their chance of finding work at a cost with curvature `search_gamma`
-    # (DellaVigna and co-authors 2017: 0.40); the cost's level by education cell, for the first year out of
+    # (DellaVigna and co-authors 2017, QJE, Table I column (1), p. 2000: 0.35); the cost's level by education cell, for the first year out of
     # work (`search_kU`) and for the state beyond it (`search_kL`), is fitted so that the mean chances are the
     # measured rates (`f_find`, `f_long`). A off, or `search` false: job finding as measured.
     search::Bool = false
-    search_gamma::Float64 = 0.40
+    search_gamma::Float64 = 0.35
     search_kU::NTuple{2,Float64} = (NaN, NaN)
     search_kL::NTuple{2,Float64} = (NaN, NaN)
     # Household solver: :grid, the reference, or :egm (SOLVER_DESIGN.md). The
