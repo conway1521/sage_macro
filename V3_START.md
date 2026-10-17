@@ -2981,3 +2981,19 @@ As expected from the model: the cost raises the reward to finding work in every 
 **The welfare parts follow search** (`reporting_core.jl`): with search on, a searching state's transition in the policy evaluation is the one the household chose, not the measured matrix; dread (where it enters choices) and the cost of search are parts of their own (`Vd`, `Vk`), and `welfare_ce` splits them out. Off, unchanged. `solve_economy` reports `search_cost_out` and `search_UL` (the chances chosen in the first year and beyond).
 
 **The wellbeing account of version 1** (`wellbeing_account.jl CODE [CFG]`): A's dread, search cost and being out of work; S's taking part; E's air quality; per head and year in life-satisfaction points and consumption shares, through the Green Book bridge. Commuting is already a time cost in the model and is shown as a check only. Not summed: the weights across dimensions are phase 5's. First runs on the current files: 38969910427, 38969913988, 38969917356.
+
+## 108. Recalibration: nine of twelve; G+S+A with search stalls; being out of work counted once (2026-10-17)
+
+**Committed** (repaired solver): G and G+S in France, Germany and Italy, and G+A with dread in choices and search (`_D`). G and G+S move little (patience within 0.0003 except Italy's G+S, 0.9806 to 0.9836; the income types shift slightly in France and Italy). G+A's patience rises with search: France 0.932 to 0.936, Germany 0.9639 to 0.9641, Italy 0.954 to 0.959, the education gap wider (0.073 to 0.077, 0.047 to 0.051, 0.076 to 0.089).
+
+**G+S+A with search did not finish in any country.** After two or three hand-overs each job ran into GitHub's six-hour limit inside one solve (Italy's full grid of families took 326 minutes). The first wellbeing accounts (on the old G+S+A files, with G+A's search costs) show why it matters: France's chances hold (first year 0.543 against 0.549; out of work 0.097), Germany's do not (first year 0.595 against 0.639; out of work 0.116 against 0.098), and Germany's household problems end on the floor's stall rule again and again. So G+S+A needs its own search costs, and the slowness needs a cause first: `probe_search_numerics.jl` (runs 39045599924 Germany, 39045601892 Italy) times the household problems with search off and on, S off and at three belonging scales. The search costs are checked at the new G+A calibration (`probe_search.jl`, runs 39045603773, 39045605586, 39045607719).
+
+**Being out of work counted once** (agreed by the user: "try it"). The ESS gap is measured among the unemployed looking for work, so it holds the strain of searching. The account now shows the gap as the whole cost of being out of work beyond income, with the model's search cost as a part of it and the rest beside it. On the first runs the search cost is 0.73 points a person out of work in France and 0.40 in Germany, under the measured 1.06: a test it could have failed.
+
+| per head and year, points | France | Germany |
+|---|---|---|
+| A, dread | -0.027 | -0.014 |
+| A, out of work beyond income (ESS) | -0.103 | -0.123 |
+| of which job search | -0.071 | -0.047 |
+| S, taking part (0.055 to 0.081) | +0.016 | +0.018 |
+| E, air quality (central of 0.3 to 0.8%) | -0.049 | -0.058 |
