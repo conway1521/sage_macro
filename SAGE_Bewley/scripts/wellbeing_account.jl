@@ -70,12 +70,20 @@ hasA && c.search && say(@sprintf("  search: the chance of finding work chosen, f
 
 rows = Tuple{String,Float64,Float64,String}[]          # term, points per head (central), share of consumption, note
 row!(t, p, s, n) = push!(rows, (t, p, s, n))
+# Being out of work: the measured gap is the whole cost beyond income (it is measured among the unemployed
+# looking for work, so it holds the strain of searching); the model's search cost is shown as a part of it and
+# the rest beside it, so nothing is counted twice (agreed by the user, 17 October; V3_START.md section 108).
+g = ess_gap(code)
+xs = (hasA && c.search) ? r.search_cost_out : 0.0
 if hasA
     xd = r.dread_cost_E; row!("A  dread of losing work", emp * pts(xd), emp * xd, @sprintf("%.4f of consumption among those in work", xd))
-    xs = r.search_cost_out; row!("A  the cost of job search", u * pts(xs), u * xs, @sprintf("%.4f of consumption among those out of work", xs))
 end
-g = ess_gap(code)
-row!("A  out of work, beyond income", -u * g, u * shr(g), @sprintf("gap %.2f points (ESS); at 0.8: %.4f points per head", g, -u * 0.8))
+row!("A  out of work beyond income", -u * g, u * shr(g), @sprintf("gap %.2f points a person (ESS); at 0.8: %.4f per head", g, -u * 0.8))
+if xs > 0
+    gs = -pts(xs)
+    row!("     of which job search", u * pts(xs), u * xs, @sprintf("%.2f points a person out of work (%.4f of their consumption)%s", gs, xs, gs > g ? ": ABOVE the measured gap" : ""))
+    row!("     of which the rest", -u * max(g - gs, 0.0), u * shr(max(g - gs, 0.0)), @sprintf("%.2f points a person out of work", max(g - gs, 0.0)))
+end
 if hasS
     row!("S  taking part", r.rate * 0.068, -r.rate * shr(0.068), @sprintf("0.055 to 0.081 points a participant: %.4f to %.4f per head", r.rate * 0.055, r.rate * 0.081))
 end
