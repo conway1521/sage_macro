@@ -1,4 +1,4 @@
-# search cost levels fitted by probe_search.jl DE 0.35 (run 38940086160, 2026-10-16) at the G+A calibration with dread in choices, on the repaired solver; G+S+A takes G+A's costs (S changes participation, not the reward to work), checked by the unemployment rate after its calibration; read by country_config
+# search cost levels fitted by probe_search.jl DE 0.35 GSA (run 39046769859, 2026-10-17) at the G+S+A calibration of 17 October, participation equilibrium held (rate 0.2786); the run reached the runner's six-hour limit at step 20, gap 1.7e-3 (under the 5e-3 rule; floor stalls leave noise of about 3e-3 in cell 1); read by country_config
 search_gamma = 0.3500
-search_kU = 13.1196 12.7808
-search_kL = 21.0986 19.8829
+search_kU = 11.68 11.10
+search_kL = 18.19 16.50
