@@ -966,7 +966,11 @@ OWN_GAP || say(@sprintf("  untargeted: participation gap between the cells %.4f 
 write_cal(phi, spread; kappa = best.κ, sigma = best.σ)
 
 # ------------------------------------- 6. the fixed-parameter four economies --
-if CFG == "GSA"
+# a report only, after the file is written: skipped when less than half the time budget is left, so that the
+# job ends cleanly instead of being stopped by the runner's limit inside it (2026-10-17, V3_START.md section 109)
+if CFG == "GSA" && (time() - t_start) / 60 > BUDGET / 2
+    say(@sprintf("\n6. the four economies skipped: %.0f of %.0f minutes used (a report; the calibration is written)", (time() - t_start) / 60, BUDGET))
+elseif CFG == "GSA"
     say("\n6. the four economies at ", CODE, "'s G+S+A parameters (the fixed-parameter view)")
     for (nm, S_, A_) in (("G     ", false, false), ("G+A   ", false, true), ("G+S   ", true, false), ("G+S+A ", true, true))
         (SKIP_GS && S_ && !A_) && (say(nm, " skipped (SKIP_GS)"); continue)
