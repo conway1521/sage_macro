@@ -2997,3 +2997,13 @@ As expected from the model: the cost raises the reward to finding work in every 
 | of which job search | -0.071 | -0.047 |
 | S, taking part (0.055 to 0.081) | +0.016 | +0.018 |
 | E, air quality (central of 0.3 to 0.8%) | -0.049 | -0.058 |
+
+## 109. Twelve of twelve calibrated; the slowness found; G+S+A's own search costs (2026-10-17)
+
+**Correction to section 108: G+S+A did calibrate in all three countries.** Each job wrote its file (`wrote calibration_v5m_<C>_GSA_D.txt`) and was then stopped inside step 6, a report of the four economies at G+S+A's parameters run after the file is written. The files are committed. Targets hit: France participation 0.2332 (cells 0.2031, 0.2915 against 0.203, 0.291), hand-to-mouth 0.2693 (0.27); Italy 0.1247 (0.1161, 0.1651 against 0.116, 0.165), 0.2049 (0.20); Germany 0.2786 (0.2516, 0.3492 against 0.252, 0.349), 0.2523 (0.25). Patience rises with search as in G+A (France 0.932 to 0.936, Italy 0.958 to 0.960, Germany 0.9645 to 0.9649). Step 6 is now skipped when half the time budget is gone (`calibrate_country.jl`).
+
+**The slowness** (`probe_search_numerics.jl`, runs 39045599924, 39045601892). One household problem takes 3 to 6 seconds with search off and 10 to 40% longer with it on; a few take 550 to 600 iterations with S on whether search is on or not (the floor's stall rule, there before search). So search is not what makes G+S+A slow: S is, through the 83 belonging scales each family solves (88 to 217 minutes a full solve).
+
+**An interaction of S with A, found on the way**: with S on, households out of work search less (Germany's low-education type 1: mean chance chosen 0.042 with S off, 0.022 at any positive belonging scale; tertiary type 1: 0.92 to 0.84; Italy 0.34 to 0.32). Taking part, which the unemployed have more time for, makes being out of work less bad, so the reward to finding work is smaller. This is why G+A's costs leave Germany's G+S+A short of the measured rates, and it is a mechanism the design gives without a parameter (A with S).
+
+**G+S+A's own costs** (`probe_search.jl CODE 0.35 GSA`; runs 39046768133 France, 39046769859 Germany, 39046771412 Italy): the participation equilibrium is solved once at the starting costs and held; the chances are those of each cell's households over the belonging scales the equilibrium puts them on (a coarse grid of 11 scales carrying the equilibrium's weights, the chances being smooth in the scale). Then G+S+A is recalibrated with its costs. The G+A costs are rechecked at the new G+A calibration (runs 39045603773, 39045605586, 39045607719).
