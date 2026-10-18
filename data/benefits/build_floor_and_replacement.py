@@ -430,6 +430,34 @@ for c in ("FR", "DE", "IT"):
                 "household-weighted TaxBEN first-year mean less the weighted month-60 rate (no social assistance) of the two-earner couple",
                 oecd_url("nrr"), "computed approximation; weights are a proxy")
 
+# (g) beyond the first year, for the state out of work beyond a year (V3_START.md section 112; the methods review
+#     of the version 2 design, 18 October): the mean of months 13 to 60 for the same three childless types and
+#     weights as (f), so that a working partner is kept beyond a year as in the first year. Version 1's income
+#     in that state, the ratio of jobless-household income to other households' (ilc_di07), drops the partner.
+def beyond_year(c, y, h, prev, part, sa, hb):
+    return sum(N[(c, y, h, prev, part, sa, hb, m)] for m in range(13, 61)) / 48
+
+
+for c in ("FR", "DE", "IT"):
+    for y in (2023, 2025):
+        for prev in ("AW67", "AW100"):
+            _, cells3 = WRR[(c, y, prev, "YES", "NO", False)]
+            ws = [w for w, _ in cells3]
+            by = [beyond_year(c, y, "S_C0", prev, "_Z", "YES", "NO"), beyond_year(c, y, "C_C0", prev, "AW67", "YES", "NO"),
+                  beyond_year(c, y, "C_C0", prev, "NOEARN_UNEMP_WO_CONBEN", "YES", "NO")]
+            v = sum(w * x for w, x in zip(ws, by))
+            SENS[("beyond_year", c, y, prev)] = (v, list(zip(ws, by)), by[0])
+            byh = [beyond_year(c, y, "S_C0", prev, "_Z", "YES", "YES"), beyond_year(c, y, "C_C0", prev, "AW67", "YES", "YES"),
+                   beyond_year(c, y, "C_C0", prev, "NOEARN_UNEMP_WO_CONBEN", "YES", "YES")]
+            fyh = [first_year(c, y, "S_C0", prev, "_Z", "YES", "YES"), first_year(c, y, "C_C0", prev, "AW67", "YES", "YES"),
+                   first_year(c, y, "C_C0", prev, "NOEARN_UNEMP_WO_CONBEN", "YES", "YES")]
+            SENS[("beyond_year_hb", c, y, prev)] = (sum(w * x for w, x in zip(ws, byh)), list(zip(ws, byh)), byh[0])
+            SENS[("first_year_hb", c, y, prev)] = (sum(w * x for w, x in zip(ws, fyh)), list(zip(ws, fyh)), fyh[0])
+            add("nrr_household_weighted_beyond_year", c, round(v, 4), "share of net household income before job loss", y,
+                f"three childless types; previous earnings {prev[2:]}% AW; social assistance yes; housing benefit no",
+                "TaxBEN months 13 to 60 (mean) weighted by Eurostat lfst_hhindws (not employed, age 25-54) and lfst_hhwhnpt", oecd_url("nrr"),
+                "computed; weights are a proxy (not employed, not unemployed)")
+
 with open(os.path.join(HERE, "computed_series.csv"), "w", newline="") as fh:
     w = csv.DictWriter(fh, fieldnames=["indicator", "country", "value", "unit", "year", "family_type", "source", "url", "status"], lineterminator="\n")
     w.writeheader(); w.writerows(OUT)
@@ -437,6 +465,10 @@ with open(os.path.join(HERE, "computed_series.csv"), "w", newline="") as fh:
 if __name__ == "__main__":
     pr = print
     pr("rows written:", len(OUT))
+    pr("beyond the first year (2023, AW100, three types):", {c: (round(SENS[("beyond_year", c, 2023, "AW100")][0], 4), [round(x, 3) for _, x in SENS[("beyond_year", c, 2023, "AW100")][1]]) for c in ("FR", "DE", "IT")})
+    pr("first year (2023, AW100):", {c: round(SENS[("first_year", c, 2023, "AW100")][0], 4) for c in ("FR", "DE", "IT")})
+    pr("with housing benefit, beyond the first year:", {c: (round(SENS[("beyond_year_hb", c, 2023, "AW100")][0], 4), [round(x, 3) for _, x in SENS[("beyond_year_hb", c, 2023, "AW100")][1]]) for c in ("FR", "DE", "IT")})
+    pr("with housing benefit, first year:", {c: round(SENS[("first_year_hb", c, 2023, "AW100")][0], 4) for c in ("FR", "DE", "IT")})
     pr("\ncheck against the repo (single, AW100, SA yes, HB no, 2023): ", {c: round(v, 4) for c, v in CHECK.items()}, " repo: FR 0.6529 DE 0.4563 IT 0.3742")
     pr("\naverage wage (gross, net):")
     for (c, y) in sorted(AW):
