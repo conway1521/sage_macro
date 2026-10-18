@@ -142,6 +142,9 @@ Base.@kwdef struct SAGEConfig
     # aggregate. quarantine2.jl confirmed this against an independent full
     # re-solve. The combinations that would break it are refused.
     unemployed_ratio::Union{Nothing,Float64} = nothing
+    # The measured ratio itself, kept when the rule is replaced by the unemployed's own choice (`belong_u` fitted to
+    # it, V3_START.md section 111): the target of that fit, read by probe_unemp_rule.jl. NaN: not set.
+    ratio_target::Float64 = NaN
     # COUNTRY DIALS. The defaults are France and reproduce every earlier
     # result exactly, because `params_of` leaves the parameters untouched at
     # these values. `phi` is the effort-disutility scale, calibrated per
@@ -1406,7 +1409,7 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
                          :B => (num("B_low"), num("B_high")),
                          :delta => (num("delta_low"), num("delta_high")),
                          :f_find => num("f_find"), :rr => num("rr"), :e_ref => num("e_ref"),
-                         :unemployed_ratio => num("ratio"))
+                         :unemployed_ratio => num("ratio"), :ratio_target => num("ratio"))
     for (col, key) in (("median_to_mean", :median_to_mean), ("rho", :rho), ("eta", :eta_z), ("dread", :dread))
         haskey(r, col) && r[col] != "NA" && (d[key] = num(col))
     end
@@ -1563,6 +1566,22 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
                 d[:search] = true
             end
         end
+        # THE UNEMPLOYED'S OWN PARTICIPATION (2026-10-19, V3_START.md section 111; the methods review of 18 October):
+        # in place of the measured ratio imposed when results are added up, the unemployed choose like everyone
+        # else, with a belonging scale of their own (`belong_u`) fitted by probe_unemp_rule.jl so that their chosen
+        # rate is the measured ratio times the employed rate. In a file of its own, read for every configuration
+        # with S; without it, the ratio is imposed as before.
+        if vmin && occursin('S', config)
+            uf = joinpath(@__DIR__, "unemp_$(vtag)_$(code)_$(config)" * (v5dread && occursin('A', config) ? "_D" : "") * ".txt")
+            if isfile(uf)
+                for ln in eachline(uf)
+                    t = strip(ln); (isempty(t) || startswith(t, "#")) && continue
+                    k, v = strip.(split(t, "="))
+                    k == "belong_u" ? (d[:belong_u] = parse(Float64, v)) : error("unknown key $k in $(basename(uf))")
+                end
+                d[:unemployed_ratio] = nothing
+            end
+        end
         # In the floor regime places differ by the household's income per head (:conversion_hh): what
         # is not unemployment in a low employment rate stays in the place's income, so a poor place is
         # poor against the national floor and not only riskier (V3_START.md, sections 21 and 22).
@@ -1601,6 +1620,10 @@ function country_config(code::AbstractString; config::AbstractString = "GSA", mi
     for (k, v) in kwargs
         d[k] = v
     end
+    # the floor's tax at the outlay of the economy with S (`floor_tax_S`, written by a calibration with S, 2026-10-19,
+    # V3_START.md section 111): used where S is on and no tax is given; a calibration passes NaN to fit without it
+    fts = pop!(d, :floor_tax_S, NaN)
+    (get(d, :S, false) === true && !isnan(fts) && isnan(get(d, :floor_tax_given, NaN))) && (d[:floor_tax_given] = fts)
     # one measured minimum income (v3 = :v5m): assistance in the state out of work is the floor's level,
     # given outright so that it stays when a step of the solution switches the floor off
     (v3 !== false && v3 !== true && string(v3) == "v5m" && !haskey(d, :assist_long) && get(d, :cfloor, 0.0) > 0) && (d[:assist_long] = d[:cfloor])

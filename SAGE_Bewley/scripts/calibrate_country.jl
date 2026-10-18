@@ -235,7 +235,7 @@ const DREAD_CHOICE = V5 && get(ENV, "SAGE_DREAD_CHOICE", "0") == "1"          # 
 # return on households' overnight deposits by country in place of the engine's 2%.
 # Decided by the user on 2026-10-09: version 5 has the measured return (country_config sets it under v3 = :v5).
 const R_DEPOSITS = (V5 || get(ENV, "SAGE_RLIQ", "") == "deposits") ? manual_input(CODE, "r_deposits_real") : NaN
-v3kw() = V3 && !isnan(ETA[]) ? merge(DREAD_CHOICE ? (dread_mode = :behaviour,) : (;), isnan(R_DEPOSITS) ? (;) : (R_one = R_DEPOSITS,), (V5O && !isnan(ASSIST[])) ? (assist_long = ASSIST[],) : (;), V5 ? (perm_sd = 0.0, perm_f = PF[], perm_w = PW[]) : V4 ? (perm_sd = ETA[],) : (eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
+v3kw() = V3 && !isnan(ETA[]) ? merge((floor_tax_S = NaN,), DREAD_CHOICE ? (dread_mode = :behaviour,) : (;), isnan(R_DEPOSITS) ? (;) : (R_one = R_DEPOSITS,), (V5O && !isnan(ASSIST[])) ? (assist_long = ASSIST[],) : (;), V5 ? (perm_sd = 0.0, perm_f = PF[], perm_w = PW[]) : V4 ? (perm_sd = ETA[],) : (eta_z = ETA[],), FLOORREG ? (cfloor = FL[] * E_REF_C,) : (;), EDUREG ? (beta_cell = (-BGAP[], 0.0),) : (;),
                                      isnan(RHO_TRIAL) ? (;) : (rho = RHO_TRIAL,), isnan(SDEPS_TRIAL) ? (;) : (sd_eps = SDEPS_TRIAL,)) : ()
 if FLOORREG
     if CFG == FLOOR_CFG
@@ -358,7 +358,7 @@ function budget_check(tag; factor = 1.3)
 end
 timed_scans(args...; kw...) = (t_ = time(); out = scans(args...; kw...); LASTSCAN[] = (time() - t_) / 60 + 5; out)
 
-function write_cal(phi, spread; kappa = nothing, sigma = nothing)
+function write_cal(phi, spread; kappa = nothing, sigma = nothing, ftax_S = NaN)
     open(OUTFILE, "w") do io
         println(io, "# written by calibrate_country.jl $(CODE) $(CFG)", V3 ? ", version 3 (effort set by the job, household replacement rate, liquid-wealth targets from the HFCS)" : "", "; read by country_config")
         V5 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\nperm_f = %s\nperm_w = %s\n%s", phi, spread, BB[], join([@sprintf("%.5f", v) for v in PF[]], " "), join([@sprintf("%.5f", v) for v in PW[]], " "),
@@ -366,6 +366,8 @@ function write_cal(phi, spread; kappa = nothing, sigma = nothing)
         V3 ? @printf(io, "phi = %.3f\nbeta_spread = %.4f\nbeta_bar = %.4f\n%s = %.4f\n%s", phi, spread, BB[], V4 ? "perm_sd" : "eta_z", ETA[], (FLOORREG ? @sprintf("cfloor = %.6f\n", FL[] * E_REF_C) : "") * (EDUREG ? @sprintf("beta_gap = %.4f\n", BGAP[]) : "")) :
              @printf(io, "phi = %.2f\nbeta_spread = %.3f\nbeta_bar = %.4f\n", phi, spread, BB[])
         kappa === nothing || @printf(io, "kappa = %.2f\nsigma_m = %.2f\n", kappa, sigma)
+        # the floor's tax at the outlay of the economy with S (section 111), so that the budget closes with S on
+        isnan(ftax_S) || @printf(io, "floor_tax_S = %.10f\n", ftax_S)
     end
     isfile(NOTCAL) && rm(NOTCAL)
     say("wrote ", basename(OUTFILE))
@@ -963,7 +965,11 @@ if 1 / (1 - r.slope) > MULT_MAX
 end
 OWN_GAP || say(@sprintf("  untargeted: participation gap between the cells %.4f against %.4f in the data (what A adds)",
                         r.pooled[2].rate - r.pooled[1].rate, PART[2] - PART[1]))
-write_cal(phi, spread; kappa = best.κ, sigma = best.σ)
+# the floor financed at the economy-with-S outlay: the tax of the economy without S plus what is left over in
+# this one (one linear step; the residual after it is second order), V3_START.md section 111
+ftS = (V3 && FLOORREG && r.config.cfloor > 0) ? floor_tax_of(r.config) + r.budget_gap : NaN
+isnan(ftS) || say(@sprintf("  the floor's tax with S on: %.6f (without S %.6f; budget gap closed: %+.1e)", ftS, ftS - r.budget_gap, r.budget_gap))
+write_cal(phi, spread; kappa = best.κ, sigma = best.σ, ftax_S = ftS)
 
 # ------------------------------------- 6. the fixed-parameter four economies --
 # a report only, after the file is written: skipped when less than half the time budget is left, so that the
