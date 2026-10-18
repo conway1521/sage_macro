@@ -23,7 +23,10 @@
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 CFG = any(==("GSA"), uppercase.(ARGS)) ? "GSA" : "GA"
-ARGV = [a for a in ARGS if !(uppercase(a) in ("GSA", "GA"))]
+# rate=X: the participation rate of the G+S+A calibration at the starting costs, from its log, in place of the
+# first full solve (which the runner's memory guard stopped twice in Italy, 17 October)
+RATE0 = (i = findfirst(a -> startswith(a, "rate="), ARGS); i === nothing ? NaN : parse(Float64, ARGS[i][6:end]))
+ARGV = [a for a in ARGS if !(uppercase(a) in ("GSA", "GA")) && !startswith(a, "rate=")]
 code = uppercase(ARGV[1]); γs = length(ARGV) >= 2 ? parse(Float64, ARGV[2]) : 0.35
 function ess_gap(code)
     for l in eachline(joinpath(@__DIR__, "..", "..", "data", "validation", "ess_life_satisfaction.csv"))
@@ -94,7 +97,10 @@ cF = country_config(code; config = CFG, v3 = :v5m, S = CFG == "GSA", A = true)  
 c0 = SAGEConfig(cF; search = false)
 say(@sprintf("%s %s%s | measured: first-year finding %.3f, exit from the state %.3f %.3f | curvature %.2f",
              code, CFG, c0.dread_mode == :behaviour ? " (dread in choices)" : "", c0.f_find, c0.f_long..., γs))
-if CFG == "GSA"
+if CFG == "GSA" && !isnan(RATE0)
+    ARGEQ[] = cF.omega + (1 - cF.omega) * RATE0
+    say(@sprintf("  the participation equilibrium at the starting costs: rate %.4f, from the calibration's log (held)", RATE0))
+elseif CFG == "GSA"
     t_ = @elapsed rS = solve_economy(cF; cache = false)
     ARGEQ[] = cF.omega + (1 - cF.omega) * rS.rate
     say(@sprintf("  the participation equilibrium at the starting costs: rate %.4f (held) | chances chosen %.4f %.4f; out of work %.4f  [%.0f min]",
