@@ -140,7 +140,7 @@ The household problem is solved by the endogenous grid method (Carroll 2006), wi
 
 Verification has five parts.
 
-1. **Exact switches.** With S off, participation is below $10^{-4}$ and no belonging enters welfare. With every place identical, E reproduces the nation to about $10^{-11}$. The budget balances to $10^{-12}$ or better without S and to 0.05% of mean income with S. These checks pass in every configuration and country.
+1. **Exact switches.** With S off, participation is below $10^{-4}$ and no belonging enters welfare. With every place identical, E reproduces the nation to about $10^{-11}$. The budget balances to $10^{-12}$ or better without S and to 0.05% of mean income with S. These checks pass in every configuration and country but one: in Germany's G+S+A the budget gap is 0.06% of mean income, where the relaxation rule at the floor ends some household problems early.
 2. **Euler errors.** Over 40 problems, the mean error lies between $10^{-4.9}$ and $10^{-6.4}$ and the worst point between $10^{-2.2}$ and $10^{-2.6}$.
 3. **Brute force at the kinks.** For households who choose hours under the floor, plain value iteration on 1,500 asset points, with full search over next assets, hours refined by golden section and the floor as an explicit option, is compared with the fast solver against pass rules set before the runs. On-floor status agrees for all of the mass in every problem, and hours agree within 0.3%. One problem in Italy failed on consumption and value at the top of the asset grid, and passes 4 of 4 after the repair described above. The benchmark is still to be extended to search.
 4. **Grid.** Doubling the asset grid moves the national moments within tolerance where it has been run. With S on in France and Italy it did not finish within the runner's six-hour limit.
@@ -179,20 +179,20 @@ Two interactions follow from the design without new parameters. First, with S on
 
 ## 7.4 The wellbeing account
 
-**Table 5. Wellbeing account, France, G+S+A (points per head per year).**
+**Table 5. Wellbeing account, G+S+A (points per head per year; share of consumption in brackets).**
 
-| term | points | share of consumption |
+| term | France | Germany |
 |---|---|---|
-| A: dread of job loss | $-0.027$ | 0.014 |
-| A: out of work beyond income (ESS gap 1.06) | $-0.101$ | 0.040 |
-| of which: job search | $-0.071$ | 0.030 |
-| of which: the rest | $-0.030$ | 0.014 |
-| S: taking part (0.055 to 0.081 a participant) | $+0.016$ | |
-| E: air quality, central (band 0.3 to 0.8%) | $-0.049$ | 0.025 |
+| A: dread of job loss | $-0.027$ (0.014) | $-0.015$ (0.008) |
+| A: out of work beyond income (ESS gap 1.06) | $-0.101$ (0.040) | $-0.106$ (0.042) |
+| of which: job search | $-0.071$ (0.030) | $-0.043$ (0.020) |
+| of which: the rest | $-0.030$ (0.014) | $-0.062$ (0.027) |
+| S: taking part (0.055 to 0.081 a participant) | $+0.016$ | $+0.019$ |
+| E: air quality, central (band 0.3 to 0.8%) | $-0.049$ (0.025) | $-0.058$ (0.029) |
 
-*Germany and Italy follow at the release.*
+*Italy follows at the release.*
 
-The job search cost the model needs to give measured job finding is worth 0.74 points a person out of work in France and 0.40 in Germany. Both lie below the measured gap of about 1.06, a test the model could have failed. The air-quality term is sizeable relative to the others, because exposure to PM2.5 lies above the WHO guideline for everyone, but at a band of a factor of 2.7 it is also the least precise.
+The job search cost the model needs to give measured job finding is worth 0.74 points a person out of work in France and 0.44 in Germany. Both lie below the measured gap of about 1.06, a test the model could have failed. The air-quality term is sizeable relative to the others, because exposure to PM2.5 lies above the WHO guideline for everyone, but at a band of a factor of 2.7 it is also the least precise.
 
 # 8. Limits and version 2
 
