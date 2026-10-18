@@ -1,4 +1,4 @@
-# search cost levels fitted by probe_search.jl IT 0.35 (run 39045607719, 2026-10-17) at the G+A calibration of 16 October on the repaired solver, with dread in choices; read by country_config
+# search cost levels fitted by probe_search.jl IT 0.35 (run 39113187155, 2026-10-18) at the G+A calibration of 17 October (second round), with dread in choices; read by country_config
 search_gamma = 0.3500
-search_kU = 8.70084 11.0223
-search_kL = 9.87475 12.3489
+search_kU = 8.87065 11.1587
+search_kL = 10.1147 12.5348

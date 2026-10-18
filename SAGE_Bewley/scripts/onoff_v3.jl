@@ -91,6 +91,9 @@ for code in codes
     for (nm, S_, A_) in CFGS
         f = joinpath(@__DIR__, "calibration_$(VTAG)_$(code)_$((V5 && get(ENV, "SAGE_DREAD_CHOICE", "0") != "1") ? replace(nm, "A" => "") : nm).txt")
         (V5M && occursin('A', nm) && isfile(joinpath(@__DIR__, "calibration_$(VTAG)_$(code)_$(nm).txt"))) && (f = joinpath(@__DIR__, "calibration_$(VTAG)_$(code)_$(nm).txt"))          # a configuration with S and A has its own once calibrated          # version 5: a configuration with A reads the file without it
+        # with dread in choices a configuration with A has its own `_D` file (country_config's rule, 2026-10-15)
+        fD = joinpath(@__DIR__, "calibration_$(VTAG)_$(code)_$(nm)_D.txt")
+        (V5M && occursin('A', nm) && get(ENV, "SAGE_DREAD_CHOICE", "0") == "1" && isfile(fD)) && (f = fD)
         isfile(f) || (println(nm, "      no calibration file yet"); push!(results, ("$code 4. $nm has a calibration", false)); continue)
         r = solve_economy(country_config(code; v3 = V3ARG, config = nm, S = S_, A = A_)); row(nm, r)
         ok = abs(r.mean_effort_employed - E) <= 0.005 && abs(r.hand_to_mouth_kvw - H) <= 0.02 && (!S_ || abs(r.rate - P) <= 0.005)
