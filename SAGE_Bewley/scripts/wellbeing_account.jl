@@ -4,7 +4,8 @@
 #
 # One bridge for every term, the Green Book's (HM Treasury 2021; data/EVIDENCE_WELLBY.md): a share x of
 # consumption lost is worth beta_Y ln(1 - x) points, beta_Y = 1.96105, and a gap of g points is worth the share
-# 1 - exp(-g / beta_Y). Terms from the model are turned into points, terms from the evidence into shares.
+# 1 - exp(-g / beta_Y). Terms from the model are turned into points, terms from the evidence into shares. A model
+# term is averaged over households as a share of consumption first and converted once, at that mean.
 #
 #   A, dread of losing work (in choices with SAGE_DREAD_CHOICE=1): the model's consumption equivalent among those
 #      in work (`dread_cost_E`), times the share in work.
@@ -76,7 +77,13 @@ row!(t, p, s, n) = push!(rows, (t, p, s, n))
 g = ess_gap(code)
 xs = (hasA && c.search) ? r.search_cost_out : 0.0
 if hasA
-    xd = r.dread_cost_E; row!("A  dread of losing work", emp * pts(xd), emp * xd, @sprintf("%.4f of consumption among those in work", xd))
+    # dread enters the choices of everyone facing a change of status next year, in work and out of it (the methods
+    # review of 18 October): its consumption equivalent averaged over the population, and shown by status
+    P = r.pooled; cs_ = cells_of(c); em = r.employed
+    msum(f, mk) = sum(cs_[g].share * sum(getfield(P[g], f)[mk]) for g in 1:2)
+    xall = msum(:xmass, trues(length(em))) / msum(:mass, trues(length(em)))
+    xE = msum(:xmass, em) / msum(:mass, em); xO = msum(:xmass, .!em) / msum(:mass, .!em)
+    row!("A  dread of a change of status", pts(xall), xall, @sprintf("%.4f of consumption in work, %.4f out of work", xE, xO))
 end
 row!("A  out of work beyond income", -u * g, u * shr(g), @sprintf("gap %.2f points a person (ESS); at 0.8: %.4f per head", g, -u * 0.8))
 if xs > 0
@@ -86,6 +93,12 @@ if xs > 0
 end
 if hasS
     row!("S  taking part", r.rate * 0.068, -r.rate * shr(0.068), @sprintf("0.055 to 0.081 points a participant: %.4f to %.4f per head", r.rate * 0.055, r.rate * 0.081))
+    # the model's own belonging, for comparison (the review): the share of consumption, every year, that losing the
+    # belonging part of lifetime value would cost (welfare_ce's formula), per head and per participant
+    γu = SAGEBewley.SAGEParams().γ
+    xb = 1 - (1 - r.welfare.Vb / r.welfare.Vc)^(1 / (1 - γu))        # positive: what belonging is worth
+    say(@sprintf("  S, the model's own belonging: %.4f of consumption per head (%.4f points), %.4f per participant (%.3f points a participant)",
+                 xb, -pts(xb), xb / r.rate, -pts(min(xb / r.rate, 0.99))))
 end
 pm = pm25(code); ex = pm.national - 5.0
 row!("E  air quality (PM2.5 above 5)", pts(ex * 0.0055), ex * 0.0055,
