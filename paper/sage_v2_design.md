@@ -1,6 +1,6 @@
 ---
 title: "SAGE, version 2: design note"
-subtitle: "Flows consistent with unemployment duration, a quarterly period and two assets. Draft for methods review before building"
+subtitle: "A quarterly model with flows consistent with unemployment duration, then two assets. Draft for methods review before building (revision 1)"
 author: "Alessandro Conway"
 date: "October 2026"
 geometry: margin=2.5cm
@@ -8,118 +8,141 @@ fontsize: 11pt
 linestretch: 1.15
 ---
 
-**Purpose.** This note sets out the design of version 2 of SAGE before any of it is built, so that problems in the design can be found while they are cheap to fix. Version 1, documented in a separate model note, is a one-asset, annual, partial-equilibrium Bewley economy for France, Germany and Italy, with social participation (S), agency and security (A) and place (E) as switches above a standard base (G). Version 2 keeps the dimensions and changes the base in three steps, in this order: the flows of the labour market made consistent with the duration of unemployment, a quarterly period, and a second, illiquid asset. Two smaller changes go with them: dread of job loss with a reference lottery that moves with the household's own search, and a decomposition of the response of job finding to benefits. Section 8 lists the questions on which I would most value a reviewer's view.
+**Purpose.** This note sets out the design of version 2 of SAGE before any of it is built, so that problems in the design can be found while they are cheap to fix. Version 1, documented in a separate model note, is a one-asset, annual, partial-equilibrium Bewley economy for France, Germany and Italy, with social participation (S), agency and security (A) and place (E) as switches above a standard base (G). Version 2 keeps the dimensions and changes the base in two steps: a quarterly model whose labour-market flows are consistent with the duration of unemployment, then a second, illiquid asset. Two further changes go with them: dread of job loss with a reference lottery that moves with the household's own search, and a decomposition of the response of job finding to benefits.
+
+This revision answers a first review of the design. That review found that the first draft did not identify the two exit rates it relied on, that its decomposition of the benefit response counted liquidity twice, and that its conversion of the income process to a quarter was not the normalisation it claimed to be. It also asked for the observation unit, the entitlement rules, the timing within a quarter, the cash flows of the illiquid asset, the link from that asset to housing tenure, and the treatment of a search problem that dread makes non-concave. Each is addressed below. Section 8 lists the questions that remain open.
 
 # 1. What version 1 leaves open
 
-Version 1 hits all of its targets in twelve configurations, and its switches return the model without them exactly. Five results are stated as limits, and the methods review of the version 1 note added two causes I had not stated.
+Version 1 hits all of its targets in twelve configurations, and its switches return the model without them exactly. Five results are stated as limits.
 
 1. **The fall in consumption on job loss** over a first year out of work is 0.28 to 0.29, about three times the 0.091 that Kolsrud, Landais, Nilsson and Spinnewijn (2018) measure in Swedish registers for those still out of work after 20 weeks. Most of the model's fall is the anticipation of the long-term state.
-2. **The long-term state is too persistent.** It is built from household joblessness, which includes inactive adults, and the job-finding rate of the Labour Force Survey, measured among all the unemployed, is assigned to the first year alone. Its share of the out of work is 63%, 83% and 69%, against 25%, 31% and 55% of the unemployed out of work for a year or more (Eurostat `une_ltu_a`, 2023). The implied mean stay is 11 to 14 years in Germany.
-3. **The response of job finding to benefits** has no moral hazard within the spell, because with an annual period the first year's benefit is paid whatever the household does. The model's elasticity of the first year's chance of finding work, $-0.11$ to $-0.31$, nets a liquidity effect against an insurance effect of opposite sign, against $-0.31$ to $-0.39$ for Chetty's (2008) full response converted to a yearly chance.
+2. **The long-term state is too persistent.** It is built from household joblessness, which includes inactive adults, and the job-finding rate of the Labour Force Survey, measured among all the unemployed, is assigned to the first year alone. Its share of the out of work is 63%, 83% and 69%, against 25%, 31% and 55% of the unemployed out of work for a year or more (Eurostat `une_ltu_a`, 2023).
+3. **The response of job finding to benefits** has no moral hazard within the spell, because with an annual period the first year's benefit is paid whatever the household does. The model's elasticity, $-0.11$ to $-0.31$, nets a liquidity effect against an effect of future entitlement of opposite sign.
 4. **The MPC** is in the survey's range but misordered: 0.40, 0.35 and 0.33 in France, Germany and Italy against 0.33, 0.46 and 0.49 in the HFCS.
 5. **Median liquid wealth** in France is twice the survey value.
 
-Items 1 and 2 are probably linked, and that is the main reason for the order of the steps below. If the long-term state is too persistent, households fear it too much and their consumption falls too far on entering unemployment. A quarterly period on its own would leave that untouched.
+Items 1 and 2 are probably linked: if the long-term state is too persistent, households fear it too much and their consumption falls too far on entering unemployment. A shorter period on its own would leave that untouched, which is why the flows are rebuilt in the same step as the period.
 
-# 2. Step 1: flows consistent with unemployment duration
+# 2. The observation unit and the employment states
 
-## 2.1 States
+**The unit.** The model's unit is a household with one main earner, whose labour-market state is the household's. Individual flow rates from the Labour Force Survey apply to the main earner. A partner's earnings enter, as in version 1, through the household-weighted replacement rates of OECD TaxBEN, which include a working partner where one is present. Household income in each state is therefore the main earner's earnings or benefits plus the partner's contribution embedded in those rates, and the share of adults in jobless households, a target in version 1, becomes an untargeted test of this mapping.
 
-The employment states become four: employed (E), unemployed with a duration below a year (U), unemployed for a year or more (L), and jobless and inactive (N). Version 1 merged L and N. Separating them lets each be fitted to its own data and lets the security motive rest on the risk of long unemployment rather than on the stock of jobless households.
+**The states** at a quarterly frequency are:
 
-With the quarterly period of Step 2, U is split into four quarters of duration, $U_1$ to $U_4$, so that benefits can follow their statutory profile and search can respond to the remaining duration of insurance. In Step 1, which stays annual, U is one state.
+- E, employed,
+- $U_1$ to $U_4$, unemployed for one to four quarters,
+- $L_1$, unemployed for five to eight quarters, and $L_2$, unemployed for nine or more,
+- N, inactive.
 
-## 2.2 Transitions
+Two long-term states serve two purposes. They let the exit from long unemployment fall with duration, which the duration data show, and they carry insurance entitlements that last beyond a year where the statute provides them.
 
-The transition matrix between employment states, by education cell $g$, is
-$$\Pi_g = \begin{pmatrix} 1-\delta_g-\iota^E_g & \delta_g & 0 & \iota^E_g \\ f^U & 0 & 1-f^U-\iota^U & \iota^U \\ f^L_g & 0 & 1-f^L_g-\iota^L & \iota^L \\ \nu^E_g & \nu^U_g & 0 & 1-\nu^E_g-\nu^U_g \end{pmatrix},$$
-with rows and columns ordered (E, U, L, N). The rates are fitted to three sets of official statistics:
+# 3. Step 1: a quarterly model with flows consistent with duration
 
-- **gross flows** between employment, unemployment and inactivity from the longitudinal Labour Force Survey (Eurostat `lfsi_long_q`, quarterly, and `lfsi_long_a`, annual), converted between frequencies with the correction for time aggregation of Shimer (2012),
-- **the duration of unemployment**: the share of the unemployed out of work for a year or more (`une_ltu_a`), by education where Eurostat publishes it and otherwise nationally, with the cells differing by their unemployment rates,
-- **stocks**: unemployment rates by education (OECD Education at a Glance) and inactivity rates of the working-age population (Eurostat).
+Step 1 runs in four stages, each checked and reported before the next, so that the effect of the period and the effect of the flows can be told apart.
 
-The key identification is between $f^U$ and $f^L$. The LFS flow from unemployment to employment is an average over all durations, $\bar f = (u f^U + l f^L)/(u + l)$, and the long-term share pins down how fast the exit falls with duration. Two moments determine the two rates in each cell. The jobless-household share used in version 1 becomes an untargeted test.
+## 3.1 Stage 1a: the period, with version 1's flows
 
-The structure follows the three-state models of gross worker flows (Krusell, Mukoyama, Rogerson and Şahin 2017), with duration added in the manner of McKay and Reis (2016). Inactivity is exogenous in version 2: N households do not search, receive the minimum income or the long-term income share of version 1, and leave N at measured rates. Making participation in the labour market a choice is outside version 2.
+Every rate is converted to a quarter. Patience becomes $\beta^{1/4}$ and the return $R^{1/4}$. The income process is **refitted, not converted**: the quarterly persistence and the variances of the persistent and transitory innovations are chosen so that the sums of quarterly income over a year have the published variance and first autocovariance of annual income, with job loss included, using the procedure that already purges the published process of job loss in version 1. The rule $\rho^{1/4}$ with the unconditional variance kept does not preserve the moments of annual sums, so it is not used.
 
-## 2.3 What changes elsewhere
+The check separates two kinds of outcome. Exogenous aggregates must be preserved to the calibration's tolerance: the annual moments of income, the annual equivalents of the flows, and the government's budget. Endogenous household outcomes, such as wealth, the MPC and the fall on job loss, are allowed to move, since households re-optimise four times as often, and they are reported.
 
-Search effort (A) applies in U and L, with its cost levels fitted to $f^U$ and $f^L$ as now. Dread uses the new transition rates. The places of E take their local access to work and long-term share from the regional LFS where published. The base is recalibrated in G, G+S, G+A and G+S+A before Step 2 begins, so that the effect of the flows on the fall in consumption and on the security motive is shown at an annual period first.
+## 3.2 Stage 1b: flows fitted to the duration of unemployment
 
-## 2.4 Test and stop rule
+**Why the first draft did not identify the exits.** In an annual model in which everyone in the first-year state leaves it after one period, stationarity of the long-term stock implies $\bar f = (1-h)(1-\iota^U) - h\,\iota^L$, where $\bar f$ is the average job-finding rate, $h$ the long-term share and $\iota$ the exits to inactivity. The two job-finding rates drop out. The average flow and the long-term share are one restriction, not two.
 
-The test is the fall on job loss and its decomposition at an annual period, before and after the change. If the fall moves little, the persistence of the long-term state was not the cause, and that is reported. The step stops if the four-state flows cannot match the LFS flows, the long-term share and the stocks at the same time in a country. In that case the long-term share takes priority, since it governs the security motive, and the miss on the flows is stated.
+**What identifies them instead.** The stock of the unemployed by duration (Eurostat `lfsa_ugad`, in bands of less than one month, 1 to 2, 3 to 5, 6 to 11, 12 to 17, 18 to 23, 24 to 47, and 48 months or more). In a steady state, the stock in each band is the inflow times the probability of surviving to that duration, so the shape of the distribution identifies the hazard of leaving unemployment at each duration. I estimate five quarterly exit hazards, constant within their bands: quarter 1 (bands below three months), quarter 2 (3 to 5 months), quarters 3 and 4 (6 to 11 months), $L_1$ (12 to 23 months) and $L_2$ (24 months or more). Eight bands for five hazards leave the fit over-identified, and I report its residuals. The total hazard at each duration is split between work and inactivity by the shares of the quarterly flows (`lfsi_long_q`). The split is assumed constant across durations, a stated assumption with a sensitivity in which long-term exits lean towards inactivity.
 
-# 3. Step 2: a quarterly period
+**The other flows.** Job loss $\delta_g$, the flows from employment to inactivity, and the flows out of inactivity to work and to unemployment come from `lfsi_long_q`. Stocks of unemployment by education (OECD Education at a Glance) and of inactivity (Eurostat) are matched. Where Eurostat publishes durations by education the hazards are fitted by cell, otherwise the national shape is used, with the cells differing in level so as to match their unemployment rates.
 
-The period becomes a quarter in three stages, each checked before the next. Version 1 contains a probe of the first stage, which shows that the period alone moves the fall over a first quarter to 0.07 to 0.09 and the quarterly MPC to 0.11 to 0.17.
+**Caveats.** The steady-state reading of a duration distribution is biased by cohort effects after large shocks. I therefore average the bands over several years outside recessions and report the fit year by year. I will show identification as in version 1, by the Jacobian of the band shares in the hazards.
 
-1. **Conversion.** Every rate is converted to a quarter as a stated normalisation, not a calibration. Flows come from the quarterly LFS directly. Persistence of income becomes $\rho^{1/4}$ with the unconditional variance kept, patience $\beta^{1/4}$, the return $R^{1/4}$, and the transitory shock carries four times the per-quarter variance so that a year's average carries the year's. The quarterly economy must keep the annual one's long-run facts within the tolerances of the calibration.
-2. **Benefits by quarter of duration.** $U_1$ to $U_4$ receive the household-weighted replacement rate of their quarter, from the monthly profile of OECD TaxBEN 2023, which the first stage averages over a year. Insurance that runs beyond a year moves into L's income where the statute provides it. This is where moral hazard enters: a household searching in $U_2$ weighs the benefit it would receive in $U_3$ if it failed.
-3. **Recalibration** of every configuration on the quarterly period.
+Search effort (A) applies in every unemployed state, with its cost levels fitted so that the mean chances of moving to work equal the fitted hazards to work. The places of E take their local hazards from the regional LFS where published.
 
-**Tests.** The fall over a first quarter against Kolsrud's 0.044 for the first 20 weeks, the response of job finding to benefits against Chetty's full $-0.53$ for a weekly hazard converted to a quarterly chance, and the duration elasticity against the median of 0.53 in Schmieder and von Wachter (2016). The quarterly MPC is compared with the survey and with the quarterly estimates the literature reports.
+## 3.3 Stage 1c: benefits, entitlement and timing
 
-**Stop rule.** A country whose refitted quarterly economy cannot meet the annual base's targets stays annual, and that is stated.
+**Benefits by duration.** $U_1$ to $U_4$ and, where the statute provides it, $L_1$ receive the household-weighted replacement rate of their quarter from the monthly profile of OECD TaxBEN 2023. Entitlement ends at the statutory maximum. A household whose entitlement ends within $L_1$ moves to the long-term income of version 1 (the measured ratio of jobless-household income to other households' income) and to the floor, and $L_2$ receives that income throughout. Where a statutory duration is not a whole number of quarters, the last quarter is paid pro rata.
 
-# 4. Step 3: two assets
+**Entitlement.** Households entering unemployment from work are entitled. Households entering from inactivity are not, and receive the long-term income and the floor. Both are stated simplifications of contribution rules, which I do not model.
 
-## 4.1 The household
+**Timing within a quarter.** Search effort is chosen at the start of the quarter. A household that finds work starts at the beginning of the next quarter and receives the current quarter's benefit in full, so benefits are paid by quarter of unemployment and search shortens the spell by whole quarters.
 
-The household holds liquid wealth $b \ge 0$ with return $r_b$ and illiquid wealth $k \ge 0$, housing and voluntary pensions, with return $r_k > r_b$, adjusted only at a fixed cost:
-$$c + b' + k' + \chi_0 \mathbf{1}[k' \neq k] = (1+r_b) b + (1+r_k) k + y - \tau(y) + \text{transfers},$$
-following Kaplan and Violante (2014). The fixed cost makes households adjust rarely, which produces the wealthy hand-to-mouth: households with housing and little cash, who spend a large share of a windfall. Households die at rate $1/45$ a year and are replaced by newborns with no illiquid wealth, so that the illiquid distribution is stationary (as in Kaplan, Moll and Violante 2018).
+## 3.4 Stage 1d: recalibration, and the tests
 
-The solver exists from earlier work: a nested endogenous grid method (Druedahl 2021), in which the household chooses each period between keeping $k$ and adjusting it, the keeper's problem is the one-asset problem with $k$ as a state, and the adjuster's is a one-dimensional choice over $k'$ with the keeper's value as continuation. The two branches are combined with a small logit smoothing. Its top-of-grid treatment, repaired in the one-asset solver in version 1, has to be carried over before it is used.
+Every configuration is recalibrated on the quarterly model. **A country whose refitted quarterly economy cannot meet the annual base's targets stays annual, and that is stated.**
 
-## 4.2 Parameters
+The tests are built to match their benchmarks' estimands.
+
+- **The fall on job loss**: the model's fall for households still unemployed at 20 weeks, measured over the same horizon as Kolsrud and co-authors' 0.044 and 0.091, and over the spell against their 0.08.
+- **The MPC**: the HFCS question asks how much of a windfall of one month's income would be spent within twelve months, so the model's MPC sums the responses of four quarters to the same windfall.
+- **The response of job finding to benefits**: Chetty's (2008) hazard elasticity of $-0.53$ for a weekly hazard, converted to a quarterly chance, and the median duration elasticity of 0.53 in Schmieder and von Wachter (2016).
+- **The long-term share** of the unemployed, now matched through the duration fit, and the jobless-household share as an untargeted test.
+
+The fall and its decomposition are reported after each stage, so that the part due to the period (1a), to the flows (1b) and to the benefit profile (1c) can be read separately.
+
+# 4. Step 2: two assets
+
+## 4.1 The asset and its cash flows
+
+The illiquid asset $k$ is **housing equity of the main residence**, net of mortgage debt. Voluntary pensions are left out, so that $k > 0$ identifies an owner and the tenure tests are defined. A household owns if its housing equity is at least $k_{min}$, the value of the smallest owned dwelling relative to income, set from the HFCS distribution of main-residence values among owners.
+
+The return on housing has two parts, and the model treats them differently. The **capital gain** $g_k$ accrues inside the asset. The **rental yield** $y_k$ is the rent an owner does not pay, so it frees cash relative to a tenant: owners receive $y_k k$ as a liquid flow and tenants pay rent from income at the measured share of rent in tenants' disposable income. Both rates come by country from the housing returns of Jordà, Knoll, Kuvshinov, Schularick and Taylor (2019), which separate the yield from the gain. The budget of a household that does not adjust is
+$$c + b' = (1+r_b) b + y_k k + y - \tau(y) - \text{rent}\cdot\mathbf{1}[k < k_{min}] + \text{transfers}, \qquad k' = (1 + g_k) k,$$
+and one that adjusts pays the fixed cost $\chi_0$ and chooses $k'$ freely. Owners cannot borrow against their equity except by adjusting, which stands for refinancing. Households die at rate $1/45$ a year and are replaced by newborn tenants with no housing equity, so that the distribution is stationary (as in Kaplan, Moll and Violante 2018).
+
+## 4.2 Parameters and tests
 
 | parameter | how it is set | source |
 |---|---|---|
-| illiquid premium $r_k - r_b$ | set from data | housing returns net of costs in Jordà, Knoll, Kuvshinov, Schularick and Taylor (2019), by country |
+| capital gain $g_k$, rental yield $y_k$ | set from data | Jordà et al. (2019), housing, by country |
+| rent of tenants | set from data | Eurostat, rent as a share of tenants' disposable income |
+| minimum owned dwelling $k_{min}$ | fitted | home-ownership rate (HFCS 2021) |
 | fixed cost $\chi_0$ | fitted | share of wealthy hand-to-mouth (HFCS 2021, the rule of Kaplan, Violante and Weidner 2014) |
 | patience $\bar\beta$ and gap $\Delta\beta$ | fitted, as now | hand-to-mouth share and its gap by education |
-| | becomes a test | median liquid wealth over income, the MPC, home ownership by income |
+| | becomes a test | median liquid wealth over income, the MPC, the tenure gap in hand-to-mouth by income |
 
-## 4.3 What it should change, and what it may not
+The solver exists from earlier work: a nested endogenous grid method (Druedahl 2021), with keeping and adjusting combined by a small logit smoothing. Its cash-flow equations are rewritten to the budget above before it is used, and its top-of-grid treatment, repaired in the one-asset solver in version 1, is carried over.
 
-Two assets are the standard route to MPCs of the size the survey reports in Germany and Italy, and they give E housing tenure by place, which the HFCS shows separates the hand-to-mouth across places in France. They may not shrink the fall on job loss: households rich in housing and poor in cash have little buffer, so the fall could rise for them. The test of the step is therefore the MPC and the tenure gap in hand-to-mouth, with the fall reported whatever it does.
+Two assets are the standard route to MPCs of the size the survey reports in Germany and Italy, and they give E housing tenure by place. They may not shrink the fall on job loss, since owners with little cash have little buffer, so the fall is reported whatever it does.
 
 # 5. Dread with a reference lottery that moves with search
 
-In version 1 the lottery a household dreads is set by the measured transition rates, and dread is evaluated at next period's resources. In version 2 the reference lottery is the household's own plan, the choice-acclimating personal equilibrium of Kőszegi and Rabin (2007), and dread is evaluated at next period's consumption, as in Pagel (2017):
-$$D(s, a', x) = \eta(\lambda-1)\, q_s(x)\,[1-q_s(x)]\,\big[u(c(a', s^{hi})) - u(c(a', s^{lo}))\big],$$
-where $q_s(x) = x$ in searching states and the measured rate elsewhere, and $c(\cdot)$ is next period's consumption policy. The search condition then gains the derivative of dread in $x$:
-$$k x^{\gamma_s} = \beta\,[EV_f(a') - EV_s(a')] - \eta(\lambda-1)(1-2x)\big[u(c^{hi}) - u(c^{lo})\big].$$
-Dread pushes search towards the extremes. Near $x = 1/2$ its effect is small, and below one half it lowers the marginal value of search, since a higher chance raises the variance of the lottery. In the endogenous grid method the consumption policy of the previous iteration provides $c(\cdot)$, and the search condition is solved at each node by bisection on $x$, since it is no longer in closed form. The weight stays at Pagel's 1.5. I will report the results under both specifications, the version 1 form and this one, for the configurations with A.
+**The lottery.** With four kinds of outcome next quarter, dread takes the general form of the expected gain-loss utility of Kőszegi and Rabin (2007) over a lottery:
+$$D(s, a', x) = \eta(\lambda-1) \sum_{i<j} p_i(x)\, p_j(x)\, \big|\,\bar u_i(a') - \bar u_j(a')\,\big|,$$
+where $i, j$ range over next quarter's employment outcomes (work, continued unemployment at the next duration, inactivity), $p_i(x)$ their probabilities, which depend on search $x$ in unemployed states, and $\bar u_i(a')$ the expected utility of next quarter's consumption in outcome $i$, with income shocks averaged within each outcome. Dread is over employment outcomes, not over income shocks, a stated reduction. With two outcomes the formula is version 1's.
+
+**The reference** is the household's own plan, the choice-acclimating personal equilibrium of Kőszegi and Rabin (2007), with the weight at Pagel's (2017) 1.5. Consumption in each outcome comes from the consumption policy of the previous iteration of the solver, and the solution is accepted only when the policy used inside dread equals the policy it produces, to the solver's tolerance.
+
+**Search** is chosen to maximise the full objective, $\beta\,EV(x) - k x^{1+\gamma_s}/(1+\gamma_s) - D(x)$, which dread can make non-concave. The first-order condition is therefore not solved by bisection. At each node I evaluate the objective on a grid of 101 values of $x$, refine around the best point by golden section, and compare with both boundaries, taking the lowest $x$ in a tie. The brute-force benchmark is extended to this choice.
+
+**Saving.** Dread depends on next period's assets through the consumption policies, so its derivative in $a'$ enters the Euler equation, as dread already does in version 1, using the slope of the previous iteration's policies.
+
+I report results under both specifications, version 1's and this one, for every configuration with A.
 
 # 6. Decomposing the response of job finding to benefits
 
-With the quarterly period, three experiments separate the channels the version 1 review identified, in the spirit of Chetty's (2008) decomposition:
+The decomposition follows the structure the review proposed.
 
-1. **liquidity**: a one-off transfer at the start of a spell equal to the benefit change over the insured duration, with the benefit schedule unchanged,
-2. **moral hazard**: the benefit raised in the remaining quarters of the current spell only, with future spells unchanged,
-3. **insurance value**: the benefit raised for future spells only, which changes the value of a job relative to remaining out of work.
+1. **The permanent change** (the benefit raised in every spell) is split into a **current-spell** change (the benefit raised for the remaining quarters of the spell under way) and a **future-entitlement** change (the benefit raised for spells that start later). At first order the two add up to the permanent change. For the finite change used, the interaction residual is reported so that the accounting is exact.
+2. The current-spell change is then split, as in Chetty (2008), into **liquidity** and **moral hazard**. The liquidity part is the response to a lump-sum transfer paid at the start of the quarter equal to the expected discounted value of the current-spell benefit change, using the household's baseline chances of remaining unemployed. The moral-hazard part is the residual.
 
-The permanent change is approximately the sum of the three. Chetty's estimate that about 60% of the response is liquidity becomes a test of the first two.
+Chetty's estimate that about 60% of the current-spell response is liquidity is a test of step 2. The future-entitlement effect has no published counterpart and is reported as the model's.
 
 # 7. What carries over, the order, and what stays out
 
-**Carries over unchanged.** S with the unemployed's own belonging scale fitted to the measured ratio of their participation, which version 1 introduced after its review. A's job search with the curvature of DellaVigna, Lindner, Reizer and Schmieder (2017), and hours for those who control them. E's channels and the national financing of places. The floor's tax at the outlay of the economy with S. The wellbeing account with the Green Book bridge.
+**Carries over unchanged.** S, with the unemployed's own belonging scale fitted to the measured ratio of their participation to the employed's, which version 1 introduced after its review. A's job search with the curvature of DellaVigna, Lindner, Reizer and Schmieder (2017), and hours for those who control them. E's channels and the national financing of places. The floor's tax at the outlay of the economy with S. The wellbeing account with the Green Book bridge.
 
-**Order and checks.** Steps 1, 2 and 3 in that order, each with the same battery as version 1: exact switches, Euler errors, the brute-force benchmark at the kinks (extended to search, and to the adjustment margin in Step 3), the asset grid's ceiling and density, and a comparison of the modules at fixed parameters beside the refitted configurations. Each step ends with a recalibration and a tag.
+**Order and checks.** Step 1 (stages 1a to 1d), then Step 2, with the new dread and the decomposition run at the end of Step 1 and again after Step 2. Every step runs the same battery as version 1: exact switches, Euler errors, the brute-force benchmark at the kinks (extended to search with dread, and to the adjustment margin in Step 2), the asset grid's ceiling and density, and a comparison of the modules at fixed parameters beside the refitted configurations. Each step ends with a recalibration and a tag.
 
-**Stays out of version 2.** Prices and wages remain fixed: a labour market in equilibrium, with vacancies, matching and bargaining at a fixed interest rate (Landais, Michaillat and Saez 2018), is the step after. Transition paths with A come after that, by the sequence-space method (Auclert, Bardóczy, Rognlie and Straub 2021). Housing markets, house prices, migration between places, and choosing whether to be in the labour force are not planned.
+**Stays out of version 2.** Prices and wages remain fixed: a labour market in equilibrium (Landais, Michaillat and Saez 2018) is the step after, and transition paths with A follow it (Auclert, Bardóczy, Rognlie and Straub 2021). Housing markets and house prices, migration between places, choosing whether to be in the labour force, contribution histories, and voluntary pensions are not planned.
 
 # 8. Questions for review
 
-1. Is a four-state structure (E, U, L, N) with exogenous inactivity enough to make the security motive credible, or does the persistence problem need a choice of labour-force participation?
-2. Is fitting the first-year and long-term exits to the LFS flow and the long-term share the right identification, given that the LFS flow is measured among all the unemployed and the share is a stock?
-3. Does the choice-acclimating personal equilibrium suit dread of job loss, where the lottery is partly the household's own search, or would a preferred personal equilibrium, or a reference fixed at the start of the period, be more defensible?
-4. Are the three experiments of Section 6 a clean decomposition at a quarterly period, and do they map onto Chetty's?
-5. Should two assets come before the quarterly period, given that the MPC is the gap they address and the quarterly period changes how the MPC is measured?
+1. Is a constant split of exits between work and inactivity across durations acceptable, or should the long-term hazards be split using flows by duration where the national surveys publish them?
+2. Is the steady-state reading of the duration bands, averaged over years outside recessions, adequate, or does it need a cohort correction?
+3. Is treating the rental yield as a liquid flow to owners (with rent paid by tenants) and the capital gain as accruing inside the asset the right split for the MPC of owners with little cash?
+4. Does the choice-acclimating personal equilibrium suit dread of job loss, where the lottery is partly the household's own search, or would a preferred personal equilibrium, or a reference fixed at the start of the quarter, be more defensible?
+5. Should two assets come before the quarterly model, given that the MPC is the gap they address and the quarterly model changes how the MPC is measured?
 
 # References
 
@@ -143,8 +166,6 @@ Kolsrud, J., Landais, C., Nilsson, P. and Spinnewijn, J. (2018). The optimal tim
 
 Kőszegi, B. and Rabin, M. (2007). Reference-dependent risk attitudes. *American Economic Review* 97(4), 1047-1073.
 
-Krusell, P., Mukoyama, T., Rogerson, R. and Şahin, A. (2017). Gross worker flows over the business cycle. *American Economic Review* 107(11), 3447-3476.
-
 Landais, C., Michaillat, P. and Saez, E. (2018). A macroeconomic approach to optimal unemployment insurance: theory. *American Economic Journal: Economic Policy* 10(2), 152-181.
 
 McKay, A. and Reis, R. (2016). The role of automatic stabilizers in the U.S. business cycle. *Econometrica* 84(1), 141-194.
@@ -152,5 +173,3 @@ McKay, A. and Reis, R. (2016). The role of automatic stabilizers in the U.S. bus
 Pagel, M. (2017). Expectations-based reference-dependent life-cycle consumption. *Review of Economic Studies* 84(2), 885-934.
 
 Schmieder, J. and von Wachter, T. (2016). The effects of unemployment insurance benefits: new evidence and interpretation. *Annual Review of Economics* 8, 547-581.
-
-Shimer, R. (2012). Reassessing the ins and outs of unemployment. *Review of Economic Dynamics* 15(2), 127-148.
