@@ -268,6 +268,11 @@ Base.@kwdef struct SAGEParams
     # constant within a state, so it changes no saving, hours or participation choice, only the value of
     # being out of work and so, with job search, how hard the unemployed search.
     out_cost::Vector{Float64} = Float64[]
+    # The residual at which a value iteration that cycles at the means-tested floor is accepted once its step has
+    # been relaxed to 1/16 (egm_core.jl). The residual is the span of the MacQueen-Porteus bounds, beta/(1-beta)
+    # times the spread of the last change, so it bounds the error in values. 1e-2 is every result so far; smaller
+    # values are a numerical check (the methods review of 18 October, V3_START.md section 111).
+    stall_tol::Float64 = 1e-2
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."

@@ -366,7 +366,7 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
         if floor_on
             hist[it] = dist
             if it > 100 && it % 50 == 0 && minimum(view(hist, it-49:it)) > 0.9 * minimum(view(hist, it-99:it-50))
-                relax > 1 / 16 ? (relax /= 2) : (dist < 1e-2 && (stalled = true))
+                relax > 1 / 16 ? (relax /= 2) : (dist < p.stall_tol && (stalled = true))
             end
         end
         if dist < tol || stalled
