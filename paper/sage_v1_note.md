@@ -8,7 +8,7 @@ fontsize: 11pt
 linestretch: 1.15
 ---
 
-**Abstract.** I describe version 1 of SAGE, a one-asset Bewley economy in partial equilibrium, calibrated to France, Germany and Italy, in which three dimensions of wellbeing can be switched on and off above a standard base. The base (G) has incomplete markets, uninsured income risk, job loss with a first insured year and a state of longer joblessness, a means-tested minimum income and hours set by the job. Social participation (S) is a logit choice with a social multiplier. Agency and security (A) adds anticipatory dread of job loss in the sense of Kőszegi and Rabin, costly job search with the curvature estimated by DellaVigna and co-authors, and chosen hours for those who control their working time. Place and environment (E) distributes households across regions or types of place, which differ in access to work, joblessness, commuting and community life, and values air quality in a wellbeing account. Every parameter is either a published estimate read at its source, an official statistic, or fitted to a named moment. Switched off, each dimension returns the model without it exactly. All twelve configurations hit their targets. The response of job finding to benefits has no moral hazard within the spell and comes out at about half the literature's, the search cost the model needs stays below the measured life-satisfaction cost of unemployment, and participation appears to lower search effort among the unemployed. Three gaps are stated rather than forced: the fall in consumption on job loss is about three times the Swedish register estimate for those still out of work, the response of job finding to benefits is about half the literature's, and the marginal propensity to consume is in range but misordered across countries. The state of long joblessness is too persistent, which is likely to explain part of the first gap. Version 2 moves to a quarterly period and two assets.
+**Abstract.** I describe version 1 of SAGE, a one-asset Bewley economy in partial equilibrium, calibrated to France, Germany and Italy, in which three dimensions of wellbeing can be switched on and off above a standard base. The base (G) has incomplete markets, uninsured income risk, job loss with a first insured year and a state of longer joblessness, a means-tested minimum income and hours set by the job. Social participation (S) is a logit choice with a social multiplier. Agency and security (A) adds anticipatory dread of job loss in the sense of Kőszegi and Rabin, costly job search with the curvature estimated by DellaVigna and co-authors, and chosen hours for those who control their working time. Place and environment (E) distributes households across regions or types of place, which differ in access to work, joblessness, commuting and community life, and values air quality in a wellbeing account. Every parameter is either a published estimate read at its source, an official statistic, or fitted to a named moment. Switched off, each dimension returns the model without it exactly. All twelve configurations hit their targets. The response of job finding to benefits has no moral hazard within the spell and comes out at about half the literature's, and the search cost the model needs stays below the measured life-satisfaction cost of unemployment. Three gaps are stated rather than forced: the fall in consumption on job loss is about three times the Swedish register estimate for those still out of work, the response of job finding to benefits is about half the literature's, and the marginal propensity to consume is in range but misordered across countries. The state of long joblessness is too persistent, which is likely to explain part of the first gap. Version 2 moves to a quarterly period and two assets.
 
 # 1. Introduction
 
@@ -50,7 +50,7 @@ In G hours are set by the job, not by the household. Each income state has one l
 
 With S on, each household chooses each year whether to take part in community life. Taking part costs time $\bar q$ and yields a belonging payoff
 $$\Lambda\, \kappa\, m\, B_g\, [\omega + (1-\omega) r],$$
-where $r$ is the aggregate participation rate, $m$ an idiosyncratic taste drawn from a lognormal with dispersion $\sigma_m$, $B_g$ the measured share of the cell with someone to ask for help (EU-SILC 2015, `ilc_scp15`, normalised to mean one), $\kappa$ the strength of the social technology and $\omega = 0.3$ the part of the payoff that does not depend on others. $\Lambda = 1$ is a normalisation. The choice is logit with a small scale (0.005), in the tradition of Brock and Durlauf (2001). Because the payoff rises with $r$, participation has a social multiplier. The equilibrium is the highest stable crossing of the aggregate participation map with the 45-degree line, found on a grid of 401 values of $r$. The unemployed choose like everyone else, with a belonging scale of their own, $b_U$, fitted so that their chosen participation rate is the measured multiple of the employed rate (0.56, 0.55, 0.94). An earlier version imposed that ratio only when results were added up, so that search inside the household problem answered to a participation rate that was not the one reported. With $b_U$ the household problem and the reported rates follow one decision rule.
+where $r$ is the aggregate participation rate, $m$ an idiosyncratic taste drawn from a lognormal with dispersion $\sigma_m$, $B_g$ the measured share of the cell with someone to ask for help (EU-SILC 2015, `ilc_scp15`, normalised to mean one), $\kappa$ the strength of the social technology and $\omega = 0.3$ the part of the payoff that does not depend on others. $\Lambda = 1$ is a normalisation. The choice is logit with a small scale (0.005), in the tradition of Brock and Durlauf (2001). Because the payoff rises with $r$, participation has a social multiplier. The equilibrium is the highest stable crossing of the aggregate participation map with the 45-degree line, found on a grid of 401 values of $r$. Participation among the unemployed is reported at a measured multiple of the employed rate (0.56, 0.55, 0.94), imposed when results are added up. Inside the household problem, however, the unemployed choose freely, and because they work no hours and the disutility of time is nearly flat at low hours (a Frisch elasticity of 0.143), taking part costs them almost nothing, so in the household problem they take part at about one half whatever their belonging. The search decisions of the unemployed therefore answer to a participation rate that is not the one reported. No result in this note rests on that choice. The evidence suggests the measured ratio mostly reflects who becomes unemployed rather than what unemployment does: within the person, job loss does not change volunteering in the German panel (Kunze and Suppa 2017), while across European countries the unemployed are about half as likely to take part in formal groups as the employed in a single cross-section (Dieckhoff and Gash 2015). Valuing participation time apart from paid work, with a status-specific cost fitted to the within-person evidence, is part of version 2.
 
 ## 3.2 A: agency and security
 
@@ -177,7 +177,7 @@ The model has no moral hazard within the spell, and the reason is structural. Wi
 
 ## 7.3 Interactions
 
-Two interactions follow from the design without new parameters. First, with S on, households out of work search less. The figures below come from the version in which the unemployed's participation ratio was imposed when results were added up, so their search answered to their own unconstrained participation. They are being recomputed under the rule of Section 3.1, and the release reports those. In Germany the mean chance chosen by the lowest permanent type below tertiary falls from 0.042 with S off to 0.022 at any positive belonging scale, and for the same type with tertiary education from 0.92 to 0.84. Taking part, for which the unemployed have more time, makes being out of work less bad, so the reward to finding work is smaller. To give the measured rates, Germany's search costs in G+S+A are 7 to 17% lower than in G+A. In France and Italy the effect is small and the costs differ by under 2%. Second, dread differs by place because job loss and the long-term state do, so security is unequal across regions even where incomes are not.
+One interaction follows from the design without new parameters: dread differs by place because job loss and the long-term state do, so security is unequal across regions even where incomes are not. A second, between participation and job search, was reported in an earlier draft: with S on, the households out of work searched less, and Germany's search costs in G+S+A had to be 7 to 17% lower than in G+A to give the measured rates. It rests on the unconstrained participation of the unemployed described in Section 3.1, so I do not claim it, and it is to be re-examined in version 2.
 
 ## 7.4 The wellbeing account
 
@@ -204,14 +204,15 @@ The job search cost the model needs to give measured job finding is worth 0.74 p
 2. The state of long joblessness is built from household joblessness and is too persistent: its share of the out of work is 63% to 83% against 25% to 55% for long-term unemployment, and the job-finding rate measured among all the unemployed is assigned to the first year alone.
 3. The lottery behind dread is set by the measured transition rates, not by the household's own search, and dread is evaluated at resources rather than at consumption.
 4. The response of job finding to benefits has no moral hazard within the spell, and its liquidity and insurance channels are not separated.
-5. The MPC is in range but misordered across countries.
-6. Median liquid wealth in France is twice the survey value.
-7. Wages, job finding and the interest rate are fixed (partial equilibrium). Policies with A are comparisons of steady states, not paths.
-8. Households do not move between places, and housing tenure is absent.
-9. Germany's community channel has no regional infrastructure source and stays national. The community elasticity is estimated on Italy.
-10. The social multiplier is a band, the Frisch elasticity a transfer from Sweden, and the cost of being out of work is valued at mean income.
-11. The brute-force benchmark does not yet cover search.
-12. G+S+A solves take one and a half to three and a half hours, and Germany's household problems sometimes end on the relaxation rule at the floor.
+5. The unemployed's participation is imposed at the measured ratio when results are added up, while inside the household problem they take part at about one half, since their time is nearly free. No result rests on it.
+6. The MPC is in range but misordered across countries.
+7. Median liquid wealth in France is twice the survey value.
+8. Wages, job finding and the interest rate are fixed (partial equilibrium). Policies with A are comparisons of steady states, not paths.
+9. Households do not move between places, and housing tenure is absent.
+10. Germany's community channel has no regional infrastructure source and stays national. The community elasticity is estimated on Italy.
+11. The social multiplier is a band, the Frisch elasticity a transfer from Sweden, and the cost of being out of work is valued at mean income.
+12. The brute-force benchmark does not yet cover search.
+13. G+S+A solves take one and a half to three and a half hours. In Germany some household problems end on the relaxation rule at the floor, which changes no result (Section 6), and the budget with S on closes to 0.06% of mean income, just over the allowance of 0.05%, because the floor's tax is set in the economy without S.
 
 **Version 2.** It starts with the flows: a transition matrix consistent with the duration of unemployment, the first-year exit and the long-term exit fitted to the LFS flows and duration stocks, and the long-term state separated from inactivity. The second change is a quarterly period, in three steps, each checked before the next:
 1. Every rate converted to a quarter, and the quarterly economy shown to keep the annual one's facts.
@@ -222,7 +223,7 @@ A country that cannot be refitted quarterly stays annual, and that is stated. Th
 
 The third change is two assets, liquid wealth and housing, in the manner of Kaplan and Violante (2014). Owners and tenants appear, along with households who own a house but hold little cash. This is the standard route to MPCs of the size the survey reports in Germany and Italy, and it gives E housing tenure by place. It may not shrink the fall on job loss, since households rich in housing and poor in cash have little buffer, so that gap may remain the one version 2 does not close.
 
-After version 2 come a labour market in equilibrium, with job finding from vacancies and matching and wages from bargaining at a fixed interest rate (Landais, Michaillat and Saez 2018), transition paths through every dimension by the sequence-space method (Auclert, Bardóczy, Rognlie and Straub 2021), and weights across dimensions from the Better Life Index.
+Version 2 also values the time spent taking part apart from paid work, so that those out of work do not take part at no cost, with a cost of taking part when out of work fitted to the within-person evidence and the cross-sectional gap as a test. After version 2 come a labour market in equilibrium, with job finding from vacancies and matching and wages from bargaining at a fixed interest rate (Landais, Michaillat and Saez 2018), transition paths through every dimension by the sequence-space method (Auclert, Bardóczy, Rognlie and Straub 2021), and weights across dimensions from the Better Life Index.
 
 # Data
 
@@ -250,6 +251,8 @@ Conway, A. (2020). Master's thesis, Sciences Po.
 
 DellaVigna, S., Lindner, A., Reizer, B. and Schmieder, J. (2017). Reference-dependent job search: evidence from Hungary. *Quarterly Journal of Economics* 132(4), 1969-2018.
 
+Dieckhoff, M. and Gash, V. (2015). Unemployed and alone? Unemployment and social participation in Europe. *International Journal of Sociology and Social Policy* 35(1/2), 67-90.
+
 HM Treasury (2021). Wellbeing guidance for appraisal: supplementary Green Book guidance. London.
 
 Iskhakov, F., Jørgensen, T., Rust, J. and Schjerning, B. (2017). The endogenous grid method for discrete-continuous dynamic choice models with (or without) taste shocks. *Quantitative Economics* 8(2), 317-365.
@@ -261,6 +264,8 @@ Kaplan, G., Violante, G. and Weidner, J. (2014). The wealthy hand-to-mouth. *Bro
 Kolsrud, J., Landais, C., Nilsson, P. and Spinnewijn, J. (2018). The optimal timing of unemployment benefits: theory and evidence from Sweden. *American Economic Review* 108(4-5), 985-1033.
 
 Kőszegi, B. and Rabin, M. (2009). Reference-dependent consumption plans. *American Economic Review* 99(3), 909-936.
+
+Kunze, L. and Suppa, N. (2017). Bowling alone or bowling at all? The effect of unemployment on social participation. *Journal of Economic Behavior and Organization* 133, 213-235.
 
 Landais, C., Michaillat, P. and Saez, E. (2018). A macroeconomic approach to optimal unemployment insurance: theory. *American Economic Journal: Economic Policy* 10(2), 152-181.
 

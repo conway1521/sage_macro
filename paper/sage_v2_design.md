@@ -10,7 +10,7 @@ linestretch: 1.15
 
 **Purpose.** This note sets out the design of version 2 of SAGE before any of it is built, so that problems in the design can be found while they are cheap to fix. Version 1, documented in a separate model note, is a one-asset, annual, partial-equilibrium Bewley economy for France, Germany and Italy, with social participation (S), agency and security (A) and place (E) as switches above a standard base (G). Version 2 keeps the dimensions and changes the base in two steps: a quarterly model whose labour-market flows are consistent with the duration of unemployment, then a second, illiquid asset. Two further changes go with them: dread of job loss with a reference lottery that moves with the household's own search, and a decomposition of the response of job finding to benefits.
 
-This is the second revision. A first review found that the first draft did not identify the two exit rates it relied on, that its decomposition of the benefit response counted liquidity twice, and that its conversion of the income process to a quarter was not a normalisation. A second review found that partner earnings were treated inconsistently across states, that the state space could not carry the entitlement rules, that the quarterly income process was still underidentified, that the duration bands were not mapped to a quarterly model with endogenous search, and that the housing budget counted avoided rent twice and mixed net equity with gross returns. Each is addressed below. Section 8 lists the questions that remain open.
+This is the second revision. A first review found that the first draft did not identify the two exit rates it relied on, that its decomposition of the benefit response counted liquidity twice, and that its conversion of the income process to a quarter was not a normalisation. A second review found that partner earnings were treated inconsistently across states, that the state space could not carry the entitlement rules, that the quarterly income process was still underidentified, that the duration bands were not mapped to a quarterly model with endogenous search, and that the housing budget counted avoided rent twice and mixed net equity with gross returns. Each is addressed below. Section 9 lists the questions that remain open.
 
 # 1. What version 1 leaves open
 
@@ -130,21 +130,32 @@ where $i, j$ range over next quarter's employment outcomes (work, continued unem
 
 I report results under both specifications, version 1's and this one, for every configuration with A.
 
-# 6. Decomposing the response of job finding to benefits
+# 6. Participation when out of work
+
+Version 1 values the time spent taking part (S) through the same disutility of time as paid work. With a Frisch elasticity of 0.143 that disutility is nearly flat at low hours, so households who work no hours take part at almost no cost, and in the household problem the unemployed take part at about one half whatever their belonging. Version 1 imposes the measured ratio of the unemployed's participation to the employed's only when results are added up, and states the inconsistency. With the inactive state N of version 2, a quarter of the working-age population, the problem would grow, so version 2 changes the design.
+
+- **The time of taking part is valued apart from paid work**, as leisure foregone, with its own weight, so that its cost does not vanish when hours are zero.
+- **A cost of taking part when out of work**, standing for stigma and the loss of work-based networks, which Kunze and Suppa (2017) identify. It is fitted to their within-person result: in the German panel, job loss does not change volunteering over the first three years of a spell. The target is that, among households who lose their job, participation is the same as when they were in work, a transfer from Germany for France and Italy.
+- **The cross-sectional ratio becomes a test.** Across European countries the unemployed are about half as likely as the employed to take part in formal groups (Dieckhoff and Gash 2015), which the measured ratios match (0.56, 0.55, 0.94). If participation does not change on job loss, that gap must come from who becomes unemployed, and the model's own composition by education and income is tested against it.
+- **Stigma links S to E.** Kunze and Suppa find the fall in public activities smaller where local unemployment is higher, and Dieckhoff and Gash find the gap smaller where aggregate unemployment is higher. Letting the cost fall with the local unemployment rate of E's places is an option, tested against those two results.
+
+The interaction between participation and search reported in an earlier version 1 draft is re-examined under this rule.
+
+# 7. Decomposing the response of job finding to benefits
 
 1. **The permanent change** (the benefit raised in every spell) is split into a **current-spell** change (the benefit raised for the remaining quarters of the spell under way) and a **future-entitlement** change (the benefit raised for spells that start later). At first order the two add up to the permanent change, and for the finite change used the interaction residual is reported so that the accounting is exact.
 2. **The comparison with Chetty (2008)** is made the way his estimate is made, not by labelling a residual. Chetty compares the response of durations to severance pay, a lump sum at job loss, with their response to benefits. I compute the same two responses in the model: to a lump sum paid at the start of a spell, and to the current-spell benefit change, both as elasticities at the baseline. Their ratio is the model's counterpart of his liquidity share, and that ratio is the test. I do not call the difference moral hazard, since in this model it also contains the timing of payments, their contingency on remaining unemployed, and their effect on dread.
 3. **Dread's part** is shown separately, by repeating both responses with dread off and every other parameter held.
 
-# 7. What carries over, the order, and what stays out
+# 8. What carries over, the order, and what stays out
 
-**Carries over unchanged.** S, with the unemployed's own belonging scale fitted to the measured ratio of their participation to the employed's, which version 1 introduced after its review. A's job search with the curvature of DellaVigna, Lindner, Reizer and Schmieder (2017), and hours for those who control them. E's channels and the national financing of places. The floor's tax at the outlay of the economy with S. The wellbeing account with the Green Book bridge.
+**Carries over unchanged.** S's belonging and social multiplier, with participation when out of work as in Section 6. A's job search with the curvature of DellaVigna, Lindner, Reizer and Schmieder (2017), and hours for those who control them. E's channels and the national financing of places. The floor's tax at the outlay of the economy with S. The wellbeing account with the Green Book bridge.
 
 **Order and checks.** Step 1 (stages 1a to 1d), then Step 2, with the new dread and the decomposition run at the end of Step 1 and again after Step 2. Every step runs the same battery as version 1: exact switches, Euler errors, the brute-force benchmark at the kinks (extended to search with dread, and to the adjustment margin in Step 2), the asset grid's ceiling and density, and a comparison of the modules at fixed parameters beside the refitted configurations. Each step ends with a recalibration and a tag.
 
 **Stays out of version 2.** Prices and wages remain fixed: a labour market in equilibrium (Landais, Michaillat and Saez 2018) is the step after, and transition paths with A follow it (Auclert, Bardóczy, Rognlie and Straub 2021). Housing markets and house prices, migration between places, choosing whether to be in the labour force, contribution histories, and voluntary pensions are not planned.
 
-# 8. Questions for review
+# 9. Questions for review
 
 1. Is a constant split of exits between work and inactivity across durations acceptable, or should the long-term hazards be split using flows by duration where national surveys publish them?
 2. Are arrival rates by duration group, common to both education cells, with effort chosen by households, a defensible way to let selection and duration dependence share the decline of exits with duration?
@@ -160,6 +171,8 @@ Chetty, R. (2008). Moral hazard versus liquidity and optimal unemployment insura
 
 DellaVigna, S., Lindner, A., Reizer, B. and Schmieder, J. (2017). Reference-dependent job search: evidence from Hungary. *Quarterly Journal of Economics* 132(4), 1969-2018.
 
+Dieckhoff, M. and Gash, V. (2015). Unemployed and alone? Unemployment and social participation in Europe. *International Journal of Sociology and Social Policy* 35(1/2), 67-90.
+
 Druedahl, J. (2021). A guide on solving non-convex consumption-saving models. *Computational Economics* 58(3), 747-775.
 
 Jordà, Ò., Knoll, K., Kuvshinov, D., Schularick, M. and Taylor, A. (2019). The rate of return on everything, 1870-2015. *Quarterly Journal of Economics* 134(3), 1225-1298.
@@ -173,6 +186,8 @@ Kaplan, G., Violante, G. and Weidner, J. (2014). The wealthy hand-to-mouth. *Bro
 Kolsrud, J., Landais, C., Nilsson, P. and Spinnewijn, J. (2018). The optimal timing of unemployment benefits: theory and evidence from Sweden. *American Economic Review* 108(4-5), 985-1033.
 
 Kőszegi, B. and Rabin, M. (2007). Reference-dependent risk attitudes. *American Economic Review* 97(4), 1047-1073.
+
+Kunze, L. and Suppa, N. (2017). Bowling alone or bowling at all? The effect of unemployment on social participation. *Journal of Economic Behavior and Organization* 133, 213-235.
 
 Landais, C., Michaillat, P. and Saez, E. (2018). A macroeconomic approach to optimal unemployment insurance: theory. *American Economic Journal: Economic Policy* 10(2), 152-181.
 
