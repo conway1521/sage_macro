@@ -284,7 +284,7 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
     search = !isempty(p.search_k)
     if search
         length(p.search_k) == nz || error("search_k has length $(length(p.search_k)), the problem $nz states")
-        isEmp = z_vals .> 0
+        isEmp = isemp(p)
         Pf = copy(Π); Ps = copy(Π)
         for s in 1:nz
             p.search_k[s] > 0 || continue

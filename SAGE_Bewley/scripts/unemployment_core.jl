@@ -90,10 +90,12 @@ function cell_params_u(αg; δ, f, rr, na = 200, ne = 80, a_max = 4.0, pexp = 3.
     n = length(up.z_vals)
     # insurance in the first year out of work, assistance (rrL, zero by default) beyond it
     b = [up.employed[i] ? 0.0 : (up.longterm[i] ? rrL : rr) * αg * up.z_latent[i] * base.Z * E_REF for i in 1:n]
+    nlat = count(up.employed)
     SAGEParams(na = na, ne = ne, nz = n, α = fill(αg, n), B = fill(1.0, n),
                z_vals_override = up.z_vals, Π_override = up.Π, transfer = b,
                a_max = a_max, pexp = pexp, subsidy = subsidy, lumptax = lumptax,
-               partcredit = partcredit, β = β, pcost = pcost)
+               partcredit = partcredit, β = β, pcost = pcost,
+               stype = [up.employed[i] ? :E : up.longterm[i] ? :L : :U for i in 1:n], lat = [(i - 1) % nlat + 1 for i in 1:n])
 end
 
 # ---------------------------------------------------- discount-factor types --

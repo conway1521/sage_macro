@@ -493,7 +493,7 @@ The employed states of a parameter set: positive productivity. Until 2026-10-02
 this was read from the transfer (no benefit means employed), which made everyone
 employed at a zero replacement rate and no one at a negative levy.
 """
-employed_states(p::SAGEParams) = p.z_vals_override === nothing ? trues(p.nz) : p.z_vals_override .> 0
+employed_states(p::SAGEParams) = isemp(p)
 
 """
     expand_transitory(p, sd, nt)
@@ -516,6 +516,7 @@ function expand_transitory(p::SAGEParams, sd, nt)
            α = ex(p.α), B = ex(p.B), transfer = ex(p.transfer), effort_set = ex(p.effort_set),
            belong_scale = ex(p.belong_scale), time_floor = ex(p.time_floor),
            dread_q = ex(p.dread_q), dread_hi = ex(p.dread_hi), dread_lo = ex(p.dread_lo), search_k = ex(p.search_k), out_cost = ex(p.out_cost),
+           stype = ex(p.stype), lat = isempty(p.lat) ? p.lat : [(p.lat[s] - 1) * nt + t for s in 1:ns for t in 1:nt],
            zstep = length(zp) > 1 ? log(zp[2] / zp[1]) : 0.0)
 end
 
@@ -582,8 +583,8 @@ function _params_of(c::SAGEConfig, cell)
     end
     c.ysmooth == 1 || (ps = [update(p; ysmooth = c.ysmooth) for p in ps])
     if !isnan(cell.fL)
-        al = assist_of(c); nl = count(>(0), ps[1].z_vals_override)
-        ps = [update(p; transfer = [s > 2nl ? p.transfer[s] + al : p.transfer[s] for s in eachindex(p.transfer)]) for p in ps]
+        al = assist_of(c); stl = stypes(ps[1])
+        ps = [update(p; transfer = [stl[s] === :L ? p.transfer[s] + al : p.transfer[s] for s in eachindex(p.transfer)]) for p in ps]
     end
     emp = employed_states(ps[1])
     if c.levy_employed != 0
@@ -596,17 +597,15 @@ function _params_of(c::SAGEConfig, cell)
     if c.A && c.search && c.unemployment
         isnan(cell.fL) && error("search effort is built on the state out of work (f_long)")
         (isnan(c.search_kU[cell.gi]) || isnan(c.search_kL[cell.gi])) && error("search on with no cost level for cell $(cell.gi): fit search_kU and search_kL")
-        nh = count(>(0), ps[1].z_vals_override)          # states (U, E, L) in blocks of nh
-        sk = vcat(fill(c.search_kU[cell.gi], nh), zeros(nh), fill(c.search_kL[cell.gi], nh))
+        sk = [t === :U ? c.search_kU[cell.gi] : t === :L ? c.search_kL[cell.gi] : 0.0 for t in stypes(ps[1])]
         ps = [update(p; search_k = sk, search_gamma = c.search_gamma) for p in ps]
     end
     if c.A && c.out_ls > 0 && c.unemployment
         isnan(cell.fL) && error("the cost of being out of work is built on the state out of work (f_long)")
         isnan(c.out_M) && error("out_ls is set with no mean income out_M to convert it at")
-        nh = count(>(0), ps[1].z_vals_override)
         γ = ps[1].γ; θ = exp(-c.out_ls / c.out_betaY)
         χ = c.out_M^(1 - γ) / (1 - γ) * (1 - θ^(1 - γ))
-        oc = vcat(fill(χ, nh), zeros(nh), fill(χ, nh))
+        oc = [t === :U || t === :L ? χ : 0.0 for t in stypes(ps[1])]
         ps = [update(p; out_cost = oc) for p in ps]
     end
     c.solver === :grid || (ps = [update(p; solver = c.solver) for p in ps])
@@ -644,16 +643,17 @@ latent productivity (see `unemployment_process`).
 function dread_params(p::SAGEParams, c::SAGEConfig, cell)
     n = length(p.transfer)
     z = p.z_vals_override; Π = p.Π_override
-    nh = count(>(0), z)                       # latent productivity states: blocks (U, E) or (U, E, L) of this size
-    isE(s) = nh < s <= 2nh; lat(s) = (s - 1) % nh + 1
-    q = [isE(s) ? sum(Π[s, 1:nh]) + (n > 2nh ? sum(Π[s, 2nh+1:n]) : 0.0) : sum(Π[s, nh+1:2nh]) for s in 1:n]
-    zl(s) = z[nh + lat(s)]
-    hi = [(1 + p.subsidy) * cell.α * zl(s) * p.Z * c.e_ref + p.transfer[nh + lat(s)] - p.lumptax
+    # by the chain's labels (version 2, stage 0): the chance of a change of status, and the incomes of the
+    # employed state and of the bad outcome that share this state's latent productivity
+    st = stypes(p); emp = st .== :E
+    pE = partner_index(p, :E); pU = partner_index(p, :U); pL = partner_index(p, :L)
+    q = [emp[s] ? sum(Π[s, .!emp]) : sum(Π[s, emp]) for s in 1:n]
+    hi = [(1 + p.subsidy) * cell.α * z[pE[s]] * p.Z * c.e_ref + p.transfer[pE[s]] - p.lumptax
           for s in 1:n]
     # what income falls to if the bad outcome comes: for those in work the first year's benefit; for those in
     # their first year out of work, with the state out of work, the assistance of the year after (2026-10-11:
     # until then their own benefit, as if it went on); for those beyond a year, the assistance they are on
-    lo = [p.transfer[isE(s) ? lat(s) : (n > 2nh && s <= nh) ? 2nh + lat(s) : s] - p.lumptax for s in 1:n]
+    lo = [p.transfer[emp[s] ? pU[s] : (st[s] === :U && pL[s] > 0) ? pL[s] : s] - p.lumptax for s in 1:n]
     c.dread_mode in (:overlay, :behaviour) || error("dread_mode must be :overlay or :behaviour")
     c.dread_mode == :behaviour ?
         update(p; dread = c.dread, dread_q = q .* (1 .- q), dread_hi = hi, dread_lo = lo) :
@@ -1207,8 +1207,8 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
             # chance of finding work chosen, in the first year out of work and beyond (U, E, L blocks; NaN off)
             search_cost_out = (mU = sum(cs[g].share * sum(pooled[g].mass[.!emp]) for g in 1:2);
                                mU <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].kmass[.!emp]) for g in 1:2) / mU),
-            search_UL = (ns_ = length(emp); (c.A && c.search && ns_ % 3 == 0) ?
-                         Tuple((r_ = blk == 1 ? (1:ns_ ÷ 3) : (2ns_ ÷ 3 + 1:ns_);
+            search_UL = (stv_ = stypes(params_of(cfgT, cs[1])[1]); (c.A && c.search && any(stv_ .=== :L)) ?
+                         Tuple((r_ = findall(stv_ .=== (blk == 1 ? :U : :L));
                                 sum(cs[g].share * sum(pooled[g].smass[r_]) for g in 1:2) / sum(cs[g].share * sum(pooled[g].mass[r_]) for g in 1:2)) for blk in 1:2) :
                          (NaN, NaN)),
             agrid = agrid, Wtot = Wtot, pooled = pooled, employed = emp, lumptax = T,

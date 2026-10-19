@@ -53,13 +53,14 @@ function welfare_parts(p::SAGEParams, sol)
     idx(i, s) = (s - 1) * na + i
     n = na * ns
     uc = zeros(n); ue = zeros(n); ub = zeros(n); ubu = zeros(n); ueu = zeros(n)
+    emp_ = isemp(p)                    # by the chain's labels (version 2, stage 0)
     # A (2026-10-16): dread where it enters choices, and the cost of job search, as parts of their own; with
     # search, a searching state's transition is the one the household chose (x towards work, as egm_core.jl)
     ud = zeros(n); uk = zeros(n)
     dreadV = p.dread > 0 && !isempty(p.dread_q)
     search = !isempty(p.search_k) && hasproperty(sol, :search_xs) && !isempty(sol.search_xs)
     if search
-        isEmp = z .> 0; Pf = copy(Π); Ps = copy(Π)
+        isEmp = isemp(p); Pf = copy(Π); Ps = copy(Π)
         for s in 1:ns
             p.search_k[s] > 0 || continue
             rowE = Π[s, :] .* isEmp; fs = sum(rowE)
@@ -84,7 +85,7 @@ function welfare_parts(p::SAGEParams, sol)
                 uc[x] += w * p.Γ * c^(1 - p.γ) / (1 - p.γ)
                 ue[x] -= w * p.Γ * p.ϕ * T^(1 + p.ψ) / (1 + p.ψ)
                 ub[x] += w * bel * d
-                if z[s] == 0 && d == 1      # participating while unemployed: belonging, and the time it takes
+                if !emp_[s] && d == 1      # participating while unemployed: belonging, and the time it takes
                     ubu[x] += w * bel
                     ueu[x] -= w * p.Γ * p.ϕ * (T^(1 + p.ψ) - (T - p.qbar)^(1 + p.ψ)) / (1 + p.ψ)
                 end

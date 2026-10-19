@@ -51,13 +51,13 @@ function exit_rates(c)
         res = (nworkers() > 1 ? pmap : map)(ps) do p
             p = update(p; social_strength = 0.0)
             s = solve_participation_logit(p, 1.0; theta = c.theta, full = true)
-            (s.lambda, s.search_x)
+            (s.lambda, s.search_x, stypes(p))
         end
         mU = xU = mL = xL = 0.0
-        for (k, (λ, x)) in enumerate(res)
-            n = size(λ, 2); nB = n ÷ 3; w = bw[g][k]
-            for s in 1:nB;        m = sum(view(λ, :, s)); mU += w * m; xU += w * sum(view(λ, :, s) .* view(x, :, s)); end
-            for s in 2nB+1:n;     m = sum(view(λ, :, s)); mL += w * m; xL += w * sum(view(λ, :, s) .* view(x, :, s)); end
+        for (k, (λ, x, st)) in enumerate(res)
+            w = bw[g][k]
+            for s in findall(st .=== :U); m = sum(view(λ, :, s)); mU += w * m; xU += w * sum(view(λ, :, s) .* view(x, :, s)); end
+            for s in findall(st .=== :L); m = sum(view(λ, :, s)); mL += w * m; xL += w * sum(view(λ, :, s) .* view(x, :, s)); end
         end
         (xU / mU, xL / mL)
     end
@@ -82,8 +82,8 @@ function exit_rates_S(c)
         res = (nworkers() > 1 ? pmap : map)(jobs) do (k, j)
             p = update(ps[k]; social_strength = UCOARSE[j])
             s = solve_participation_logit(p, 1.0; theta = c.theta, full = true)
-            λ, x = s.lambda, s.search_x; n = size(λ, 2); nB = n ÷ 3
-            (sum(view(λ, :, 1:nB)), sum(view(λ, :, 1:nB) .* view(x, :, 1:nB)), sum(view(λ, :, 2nB+1:n)), sum(view(λ, :, 2nB+1:n) .* view(x, :, 2nB+1:n)))
+            λ, x = s.lambda, s.search_x; st = stypes(p); iU = findall(st .=== :U); iL = findall(st .=== :L)
+            (sum(view(λ, :, iU)), sum(view(λ, :, iU) .* view(x, :, iU)), sum(view(λ, :, iL)), sum(view(λ, :, iL) .* view(x, :, iL)))
         end
         mU = xU = mL = xL = 0.0
         for ((k, j), (a1, a2, a3, a4)) in zip(jobs, res)

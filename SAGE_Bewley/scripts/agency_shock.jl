@@ -53,11 +53,11 @@ function agency_summary(p::SAGEParams, sol)
     mpcmass = zeros(ns); mpchmass = zeros(ns); rmass = zeros(ns); xmass = zeros(ns); cmass = zeros(ns)
     kmass = zeros(ns); smass = zeros(ns)        # job search (A): its cost as a consumption equivalent, and the chance chosen
     srch = !isempty(p.search_k) && hasproperty(sol, :search_x)
-    # blocks (U, E) or, with the long-term state, (U, E, L), each of nh latent productivity states;
-    # a job is lost into U, and state u + nh is the employed state with u's productivity
-    nh = count(>(0.0), z)
-    haveU = nh > 0 && ns > nh && ns % nh == 0
-    U = haveU ? collect(1:nh) : Int[]
+    # by the chain's labels (version 2, stage 0): a job is lost into the U states, and pE[u] is the employed
+    # state with u's latent productivity, pU[s] the U state with the employed state s's
+    stv = stypes(p); empv = stv .== :E
+    U = findall(stv .=== :U); haveU = !isempty(U) && any(empv)
+    pE = haveU ? partner_index(p, :E) : Int[]; pU = haveU ? partner_index(p, :U) : Int[]
     # Expected consumption and labour-plus-benefit income at every grid point,
     # mixing the participation choice with its own probability, from the same
     # budget the solver uses.
@@ -118,16 +118,16 @@ function agency_summary(p::SAGEParams, sol)
             ap = sol.a_d[d+1][i, s]
             for u in U
                 pr = Π[s, u]; pr <= 0 && continue
-                cE = SAGEBewley.interp_lin(a, view(cbar, :, u + nh), ap)
+                cE = SAGEBewley.interp_lin(a, view(cbar, :, pE[u]), ap)
                 cU = SAGEBewley.interp_lin(a, view(cbar, :, u), ap)
-                yE = SAGEBewley.interp_lin(a, view(ybar, :, u + nh), ap)
+                yE = SAGEBewley.interp_lin(a, view(ybar, :, pE[u]), ap)
                 yU = SAGEBewley.interp_lin(a, view(ybar, :, u), ap)
                 cE > 0 && (pc += w * pr * max(0.0, 1 - cU / cE))
                 yE > 0 && (py += w * pr * max(0.0, 1 - yU / yE))
             end
         end
         pmass[s] += m * pc; pinc[s] += m * py
-        z[s] > 0 && cbar[i, s] > 0 && (dmass[s] += m * max(0.0, 1 - cbar[i, s - nh] / cbar[i, s]))
+        empv[s] && cbar[i, s] > 0 && (dmass[s] += m * max(0.0, 1 - cbar[i, pU[s]] / cbar[i, s]))
     end
     merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = zeros(ns),
            mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = zeros(ns), rmass = rmass, xmass = xmass, cmass = cmass,

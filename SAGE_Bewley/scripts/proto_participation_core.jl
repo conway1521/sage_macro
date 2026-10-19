@@ -37,6 +37,19 @@ net_participation(p::SAGEParams, α, z) = p.partcredit * α * z * p.Z * p.qbar -
 # State-contingent value of belonging (stage 7): one unless belong_scale is set.
 belong_at(p::SAGEParams, i_z::Int) = isempty(p.belong_scale) ? 1.0 : p.belong_scale[i_z]
 
+# Labour-state labels (version 2, stage 0): the chain's types where it gives them, else employed if and only if
+# income is positive (every result before version 2 is built on that reading and is unchanged by the labels).
+stypes(p::SAGEParams) = !isempty(p.stype) ? p.stype :
+    p.z_vals_override === nothing ? fill(:E, p.nz) : [z > 0 ? :E : :U for z in p.z_vals_override]
+isemp(p::SAGEParams) = stypes(p) .== :E
+"For every state, the state of type `t` with the same latent productivity (0 if there is none)."
+function partner_index(p::SAGEParams, t::Symbol)
+    st = stypes(p); n = length(st)
+    isempty(p.lat) && error("partner states need the chain's labels (stype, lat)")
+    idx = Dict{Int,Int}(p.lat[s] => s for s in 1:n if st[s] === t)
+    [get(idx, p.lat[s], 0) for s in 1:n]
+end
+
 # Committed time before any choice (stage 8): zero unless time_floor is set.
 floor_at(p::SAGEParams, i_z::Int) = isempty(p.time_floor) ? 0.0 : p.time_floor[i_z]
 

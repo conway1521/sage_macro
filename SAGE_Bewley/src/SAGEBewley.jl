@@ -273,6 +273,12 @@ Base.@kwdef struct SAGEParams
     # times the spread of the last change, so it bounds the error in values. 1e-2 is every result so far; smaller
     # values are a numerical check (the methods review of 18 October, V3_START.md section 111).
     stall_tol::Float64 = 1e-2
+    # LABOUR-STATE LABELS (version 2, stage 0; V2_BUILD_PLAN.md). The type of every state (:E employed, :U in a
+    # first spell out of work, :L beyond it; version 2 adds :N, inactive) and its latent productivity index, which
+    # states of different types share. Built by the chain and carried through the transitory expansion; empty,
+    # the type is read off income (employed if and only if it is positive), as before.
+    stype::Vector{Symbol} = Symbol[]
+    lat::Vector{Int} = Int[]
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."

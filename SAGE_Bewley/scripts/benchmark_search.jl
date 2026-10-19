@@ -31,7 +31,7 @@ cs = cells_of(c)
 function brute(p, egm; nf = NF, nx = NX, tol = 1e-8, maxit = 4000)
     af = SAGEBewley.exponential_grid(p.a_min, p.a_max, nf, p.pexp)
     z, Π = SAGEBewley.income_process(p); nz = length(z)
-    isEmp = z .> 0
+    isEmp = isemp(p)                                             # by the chain's labels
     eh = [isEmp[s] ? p.effort_set[s] : 0.0 for s in 1:nz]               # hours set by the job
     κ = 1.0 + p.commute; X = p.cfloor; γs = p.search_gamma
     w = [(1 + p.subsidy) * p.α[s] * z[s] * p.Z for s in 1:nz]
