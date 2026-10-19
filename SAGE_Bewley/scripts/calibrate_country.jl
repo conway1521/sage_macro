@@ -967,7 +967,8 @@ OWN_GAP || say(@sprintf("  untargeted: participation gap between the cells %.4f 
                         r.pooled[2].rate - r.pooled[1].rate, PART[2] - PART[1]))
 # the floor financed at the economy-with-S outlay: the tax of the economy without S plus what is left over in
 # this one (one linear step; the residual after it is second order), V3_START.md section 111
-ftS = (V3 && FLOORREG && r.config.cfloor > 0) ? floor_tax_of(r.config) + r.budget_gap : NaN
+# off in version 1 (decided 2026-10-19, V3_START.md section 115: the fix moves to version 2); SAGE_FLOOR_TAX_S=1 turns it on
+ftS = (get(ENV, "SAGE_FLOOR_TAX_S", "0") == "1" && V3 && FLOORREG && r.config.cfloor > 0) ? floor_tax_of(r.config) + r.budget_gap : NaN
 isnan(ftS) || say(@sprintf("  the floor's tax with S on: %.6f (without S %.6f; budget gap closed: %+.1e)", ftS, ftS - r.budget_gap, r.budget_gap))
 write_cal(phi, spread; kappa = best.κ, sigma = best.σ, ftax_S = ftS)
 
