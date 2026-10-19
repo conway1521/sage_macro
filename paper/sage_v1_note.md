@@ -146,13 +146,13 @@ Verification has seven parts.
 4. **Grid.** Doubling the asset grid moves the national moments within tolerance where it has been run. With S on in France and Italy it did not finish within the runner's six-hour limit. A higher ceiling (eight years of mean income, with twice the points) tests whether the top of the grid binds for the richest types. It does not: the mass near the old ceiling is $1.8 \times 10^{-4}$, $1.5 \times 10^{-4}$ and $1.2 \times 10^{-3}$ in France, Germany and Italy, and hand-to-mouth, the MPC, the fall on job loss, the chances of finding work and their response to benefits are unchanged to the third decimal, with median liquid wealth higher by at most 0.002.
 5. **One stable equilibrium.** The participation map has one stable crossing in every country where it was checked. Italy's G+S+A check did not finish.
 6. **The residual at the floor.** Household problems of G+S+A at three belonging scales, every type of both cells, solved with the accepted residual at $10^{-2}$ and at $10^{-6}$. In France and Italy no problem stalls and the solutions are identical. In Germany the largest differences are $10^{-12}$ in participation, $6 \times 10^{-10}$ in search and $10^{-7}$ in consumption, with values differing by a level of $1.5 \times 10^{-3}$ that changes no choice.
-7. **Modules at fixed parameters.** Each module switched on and off at G+S+A's parameters separates what a module does from what refitting does (Table 3b). At fixed parameters A does most of the work: with G+S+A's lower patience, the economy without A has hand-to-mouth shares of 0.49 and 0.38 in France and Germany, and switching A on (dread in choices) brings them to 0.27 and 0.25, raises median liquid wealth and lowers the MPC, while the fall on job loss rises. S changes none of the economy's moments at fixed parameters, since taking part costs little time and no money, and moves only participation. Refitting absorbs A's saving motive through patience, which is why each configuration hits the same targets at its own calibration (in France patience is 0.962 in G and 0.935 in G+A).
+7. **Modules at fixed parameters.** Each module switched on and off at G+S+A's parameters separates what a module does from what refitting does (Table 3b). At fixed parameters A does most of the work: with G+S+A's lower patience, the economy without A has hand-to-mouth shares of 0.49, 0.38 and 0.32 in France, Germany and Italy, and switching A on (dread in choices) brings them to 0.27, 0.25 and 0.20, raises median liquid wealth and lowers the MPC, while the fall on job loss rises. S changes none of the economy's moments at fixed parameters, since taking part costs little time and no money, and moves only participation. Refitting absorbs A's saving motive through patience, which is why each configuration hits the same targets at its own calibration (in France patience is 0.962 in G and 0.935 in G+A).
 
 # 7. Results
 
 ## 7.1 Fit and untargeted moments
 
-**Table 3b. The modules at G+S+A's parameters (France, Germany).**
+**Table 3b. The modules at G+S+A's parameters.**
 
 | | participation | hand-to-mouth | median liquid / income | MPC | fall on job loss |
 |---|---|---|---|---|---|
@@ -164,8 +164,12 @@ Verification has seven parts.
 | DE, G+A | 0 | 0.248 | 0.114 | 0.350 | 0.271 |
 | DE, G+S | 0.265 | 0.383 | 0.060 | 0.442 | 0.227 |
 | DE, G+S+A | 0.279 | 0.252 | 0.115 | 0.345 | 0.277 |
+| IT, G | 0 | 0.316 | 0.117 | 0.401 | 0.218 |
+| IT, G+A | 0 | 0.203 | 0.213 | 0.326 | 0.292 |
+| IT, G+S | 0.115 | 0.316 | 0.117 | 0.401 | 0.218 |
+| IT, G+S+A | 0.125 | 0.203 | 0.214 | 0.325 | 0.292 |
 
-*Italy at the release.*
+*Italy's G+S+A row is its calibrated economy, at the same parameters; the run was cut at the six-hour limit after the first three rows.*
 
 **Table 4. G+S+A with dread and search, against data.**
 
