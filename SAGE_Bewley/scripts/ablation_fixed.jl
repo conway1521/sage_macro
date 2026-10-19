@@ -3,10 +3,10 @@
 # what a module does by itself is separated from what refitting does. Beside it, each configuration at its own
 # calibration, and the parameters that move between them.
 #
-#   julia --project=scripts/run_env scripts/ablation_fixed.jl CODE
+#   julia --project=scripts/run_env scripts/ablation_fixed.jl CODE [1]     (1: the first table only, which fits a job)
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
-code = uppercase(ARGS[1])
+code = uppercase(ARGS[1]); ONLY1 = length(ARGS) >= 2 && ARGS[2] == "1"
 say(x...) = (println(x...); flush(stdout))
 row(lab, r) = say(@sprintf("  %-14s %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f %7.4f", lab, r.rate, r.hand_to_mouth_kvw,
                            r.wealth_p50 / r.median_income, r.mpc, r.consumption_drop, r.unemployment,
@@ -20,6 +20,7 @@ for (lab, S_, A_) in (("G", false, false), ("G+A", false, true), ("G+S", true, f
     c = country_config(code; config = "GSA", v3 = :v5m, S = S_, A = A_, search = A_ && cG.search)
     row(lab, solve_economy(c; cache = false))
 end
+ONLY1 && (println("DONE"); exit(0))
 say("\n", code, " | 2. each configuration at its own calibration")
 hdr()
 for (lab, cfg, S_, A_) in (("G", "G", false, false), ("G+A", "GA", false, true), ("G+S", "GS", true, false), ("G+S+A", "GSA", true, true))

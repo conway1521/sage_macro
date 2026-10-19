@@ -143,14 +143,29 @@ Verification has seven parts.
 1. **Exact switches.** With S off, participation is below $10^{-4}$ and no belonging enters welfare. With every place identical, E reproduces the nation to about $10^{-11}$. The budget balances to $10^{-12}$ or better without S and to 0.05% of mean income with S. These checks pass in every configuration and country but one. The tax that pays for the floor is set in the economy without S, so with S on a small gap is allowed, and in Germany's G+S+A it is 0.06% of mean income, just over that allowance, because job search changes who reaches the floor.
 2. **Euler errors.** Over 40 problems, the mean error lies between $10^{-4.9}$ and $10^{-6.4}$ and the worst point between $10^{-2.2}$ and $10^{-2.6}$.
 3. **Brute force at the kinks.** For households who choose hours under the floor, plain value iteration on 1,500 asset points, with full search over next assets, hours refined by golden section and the floor as an explicit option, is compared with the fast solver against pass rules set before the runs. On-floor status agrees for all of the mass in every problem, and hours agree within 0.3%. One problem in Italy failed on consumption and value at the top of the asset grid, and passes 4 of 4 after the repair described above. For job search, the same plain value iteration, with the search choice maximised on a grid of 201 values refined by golden section instead of the closed form, is compared on twelve problems (the lowest and a middle type of each cell, households with hours set by the job, three countries) against pass rules set before the runs: all 48 checks pass. On-floor status agrees everywhere, consumption within 0.05% on average, values within $5 \times 10^{-6}$, and the chance of finding work within $3 \times 10^{-4}$ on average (largest difference at a single point 0.023).
-4. **Grid.** Doubling the asset grid moves the national moments within tolerance where it has been run. With S on in France and Italy it did not finish within the runner's six-hour limit. A higher ceiling (eight years of mean income, with twice the points) tests whether the top of the grid binds for the richest types. It does not: in France and Germany the mass near the old ceiling is below $2 \times 10^{-4}$, and hand-to-mouth, the MPC, the fall on job loss, the chances of finding work and their response to benefits are unchanged to the third decimal, with median liquid wealth higher by 0.001 [Italy at the release].
+4. **Grid.** Doubling the asset grid moves the national moments within tolerance where it has been run. With S on in France and Italy it did not finish within the runner's six-hour limit. A higher ceiling (eight years of mean income, with twice the points) tests whether the top of the grid binds for the richest types. It does not: the mass near the old ceiling is $1.8 \times 10^{-4}$, $1.5 \times 10^{-4}$ and $1.2 \times 10^{-3}$ in France, Germany and Italy, and hand-to-mouth, the MPC, the fall on job loss, the chances of finding work and their response to benefits are unchanged to the third decimal, with median liquid wealth higher by at most 0.002.
 5. **One stable equilibrium.** The participation map has one stable crossing in every country where it was checked. Italy's G+S+A check did not finish.
 6. **The residual at the floor.** Household problems of G+S+A at three belonging scales, every type of both cells, solved with the accepted residual at $10^{-2}$ and at $10^{-6}$. In France and Italy no problem stalls and the solutions are identical. In Germany the largest differences are $10^{-12}$ in participation, $6 \times 10^{-10}$ in search and $10^{-7}$ in consumption, with values differing by a level of $1.5 \times 10^{-3}$ that changes no choice.
-7. **Modules at fixed parameters.** Each module switched on and off at G+S+A's parameters, beside the refitted configurations, separates what a module does from what refitting does: [table at the release].
+7. **Modules at fixed parameters.** Each module switched on and off at G+S+A's parameters separates what a module does from what refitting does (Table 3b). At fixed parameters A does most of the work: with G+S+A's lower patience, the economy without A has hand-to-mouth shares of 0.49 and 0.38 in France and Germany, and switching A on (dread in choices) brings them to 0.27 and 0.25, raises median liquid wealth and lowers the MPC, while the fall on job loss rises. S changes none of the economy's moments at fixed parameters, since taking part costs little time and no money, and moves only participation. Refitting absorbs A's saving motive through patience, which is why each configuration hits the same targets at its own calibration (in France patience is 0.962 in G and 0.935 in G+A).
 
 # 7. Results
 
 ## 7.1 Fit and untargeted moments
+
+**Table 3b. The modules at G+S+A's parameters (France, Germany).**
+
+| | participation | hand-to-mouth | median liquid / income | MPC | fall on job loss |
+|---|---|---|---|---|---|
+| FR, G | 0 | 0.494 | 0.021 | 0.528 | 0.233 |
+| FR, G+A | 0 | 0.269 | 0.095 | 0.397 | 0.291 |
+| FR, G+S | 0.229 | 0.494 | 0.021 | 0.528 | 0.233 |
+| FR, G+S+A | 0.233 | 0.269 | 0.095 | 0.397 | 0.291 |
+| DE, G | 0 | 0.383 | 0.060 | 0.442 | 0.227 |
+| DE, G+A | 0 | 0.248 | 0.114 | 0.350 | 0.271 |
+| DE, G+S | 0.265 | 0.383 | 0.060 | 0.442 | 0.227 |
+| DE, G+S+A | 0.279 | 0.252 | 0.115 | 0.345 | 0.277 |
+
+*Italy at the release.*
 
 **Table 4. G+S+A with dread and search, against data.**
 
@@ -185,16 +200,17 @@ One interaction follows from the design without new parameters: dread differs by
 
 | term | France | Germany |
 |---|---|---|
-| A: dread of job loss (those in work only; to be recomputed for all who face a change) | $-0.027$ (0.014) | $-0.015$ (0.008) |
+| A: dread of a change of status | $-0.052$ (0.026) | $-0.028$ (0.014) |
 | A: out of work beyond income (ESS gap 1.06) | $-0.101$ (0.040) | $-0.106$ (0.042) |
 | of which: job search | $-0.071$ (0.030) | $-0.043$ (0.020) |
 | of which: the rest | $-0.030$ (0.014) | $-0.062$ (0.027) |
-| S: taking part (0.055 to 0.081 a participant) | $+0.016$ | $+0.019$ |
+| S: taking part (Meier and Stutzer, 0.055 to 0.081 a participant) | $+0.016$ | $+0.019$ |
+| S: the model's own belonging, per participant | $+0.12$ | $+0.60$ |
 | E: air quality, central (band 0.3 to 0.8%) | $-0.049$ (0.025) | $-0.058$ (0.029) |
 
 *Italy follows at the release.*
 
-The job search cost the model needs to give measured job finding is worth 0.74 points a person out of work in France and 0.44 in Germany. Both lie below the measured gap of about 1.06, a test the model could have failed. The air-quality term is sizeable relative to the others, because exposure to PM2.5 lies above the WHO guideline for everyone, but at a band of a factor of 2.7 it is also the least precise.
+The job search cost the model needs to give measured job finding is worth 0.74 points a person out of work in France and 0.44 in Germany. Both lie below the measured gap of about 1.06, a test the model could have failed. Dread falls mostly on those out of work: it is 1.5% of consumption in work and 13% out of work in France, 0.8% and 6.8% in Germany. The model's own belonging per participant is 1.5 to 2 times the fixed-effects estimate in France and about ten times in Germany. That difference is between decision utility, which explains a choice, and experienced utility, which life satisfaction measures (Kahneman, Wakker and Sarin 1997): people may take part out of habit, obligation or social pressure as well as for what it adds to how their life feels. The account therefore shows both, and welfare across dimensions (a later step) will use the experienced values wherever the two diverge. The rule throughout is that a term enters choices only where behaviour fits it, and wellbeing only where wellbeing evidence values it, which is why the cost of being out of work beyond income counts in wellbeing and not in choices. The air-quality term is sizeable relative to the others, because exposure to PM2.5 lies above the WHO guideline for everyone, but at a band of a factor of 2.7 it is also the least precise.
 
 # 8. Limits and version 2
 
@@ -255,6 +271,8 @@ Dieckhoff, M. and Gash, V. (2015). Unemployed and alone? Unemployment and social
 HM Treasury (2021). Wellbeing guidance for appraisal: supplementary Green Book guidance. London.
 
 Iskhakov, F., Jørgensen, T., Rust, J. and Schjerning, B. (2017). The endogenous grid method for discrete-continuous dynamic choice models with (or without) taste shocks. *Quantitative Economics* 8(2), 317-365.
+
+Kahneman, D., Wakker, P. and Sarin, R. (1997). Back to Bentham? Explorations of experienced utility. *Quarterly Journal of Economics* 112(2), 375-405.
 
 Kaplan, G. and Violante, G. (2014). A model of the consumption response to fiscal stimulus payments. *Econometrica* 82(4), 1199-1239.
 
