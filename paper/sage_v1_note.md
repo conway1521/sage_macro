@@ -198,19 +198,17 @@ One interaction follows from the design without new parameters: dread differs by
 
 **Table 5. Wellbeing account, G+S+A (points per head per year, share of consumption in brackets).**
 
-| term | France | Germany |
-|---|---|---|
-| A: dread of a change of status | $-0.052$ (0.026) | $-0.028$ (0.014) |
-| A: out of work beyond income (ESS gap 1.06) | $-0.101$ (0.040) | $-0.106$ (0.042) |
-| of which: job search | $-0.071$ (0.030) | $-0.043$ (0.020) |
-| of which: the rest | $-0.030$ (0.014) | $-0.062$ (0.027) |
-| S: taking part (Meier and Stutzer, 0.055 to 0.081 a participant) | $+0.016$ | $+0.019$ |
-| S: the model's own belonging, per participant | $+0.12$ | $+0.60$ |
-| E: air quality, central (band 0.3 to 0.8%) | $-0.049$ (0.025) | $-0.058$ (0.029) |
+| term | France | Germany | Italy |
+|---|---|---|---|
+| A: dread of a change of status | $-0.052$ (0.026) | $-0.028$ (0.014) | $-0.048$ (0.024) |
+| A: out of work beyond income (ESS gap 1.05 to 1.06) | $-0.101$ (0.040) | $-0.106$ (0.042) | $-0.104$ (0.041) |
+| of which: job search | $-0.071$ (0.030) | $-0.043$ (0.020) | $-0.080$ (0.033) |
+| of which: the rest | $-0.030$ (0.014) | $-0.062$ (0.027) | $-0.024$ (0.012) |
+| S: taking part (Meier and Stutzer, 0.055 to 0.081 a participant) | $+0.016$ | $+0.019$ | $+0.009$ |
+| S: the model's own belonging, per participant | $+0.12$ | $+0.60$ | $+0.18$ |
+| E: air quality, central (band 0.3 to 0.8%) | $-0.049$ (0.025) | $-0.058$ (0.029) | $-0.103$ (0.051) |
 
-*Italy follows at the release.*
-
-The job search cost the model needs to give measured job finding is worth 0.74 points a person out of work in France and 0.44 in Germany. Both lie below the measured gap of about 1.06, a test the model could have failed. Dread falls mostly on those out of work: it is 1.5% of consumption in work and 13% out of work in France, 0.8% and 6.8% in Germany. The model's own belonging per participant is 1.5 to 2 times the fixed-effects estimate in France and about ten times in Germany. That difference is between decision utility, which explains a choice, and experienced utility, which life satisfaction measures (Kahneman, Wakker and Sarin 1997): people may take part out of habit, obligation or social pressure as well as for what it adds to how their life feels. The account therefore shows both, and welfare across dimensions (a later step) will use the experienced values wherever the two diverge. The rule throughout is that a term enters choices only where behaviour fits it, and wellbeing only where wellbeing evidence values it, which is why the cost of being out of work beyond income counts in wellbeing and not in choices. The air-quality term is sizeable relative to the others, because exposure to PM2.5 lies above the WHO guideline for everyone, but at a band of a factor of 2.7 it is also the least precise.
+The job search cost the model needs to give measured job finding is worth 0.74 points a person out of work in France, 0.44 in Germany and 0.80 in Italy. Both lie below the measured gap of about 1.06, a test the model could have failed. Dread falls mostly on those out of work: it is 1.5% of consumption in work and 13% out of work in France, 0.8% and 6.8% in Germany, 1.3% and 12.8% in Italy. The model's own belonging per participant is 1.5 to 3 times the fixed-effects estimate in France and Italy and about ten times in Germany. That difference is between decision utility, which explains a choice, and experienced utility, which life satisfaction measures (Kahneman, Wakker and Sarin 1997): people may take part out of habit, obligation or social pressure as well as for what it adds to how their life feels. The account therefore shows both, and welfare across dimensions (a later step) will use the experienced values wherever the two diverge. The rule throughout is that a term enters choices only where behaviour fits it, and wellbeing only where wellbeing evidence values it, which is why the cost of being out of work beyond income counts in wellbeing and not in choices. The air-quality term is sizeable relative to the others, because exposure to PM2.5 lies above the WHO guideline for everyone, but at a band of a factor of 2.7 it is also the least precise.
 
 # 8. Limits and version 2
 
