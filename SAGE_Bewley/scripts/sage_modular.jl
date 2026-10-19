@@ -142,6 +142,13 @@ Base.@kwdef struct SAGEConfig
     # aggregate. quarantine2.jl confirmed this against an independent full
     # re-solve. The combinations that would break it are refused.
     unemployed_ratio::Union{Nothing,Float64} = nothing
+    # VERSION 2 (stage 1a, V2_BUILD_PLAN.md): periods a year (1 annual, version 1; 4 quarterly) and the periods of the
+    # first spell out of work tracked one by one (the labour chain, labour_chain.jl). Annual and 1: version 1.
+    period::Int = 1
+    nU::Int = 1
+    # the labour chain at an annual period with one period of first spell: version 1's model in the chain's
+    # representation, for the test that the chain reproduces version 1 exactly
+    chain::Bool = false
     # The measured ratio itself, kept when the rule is replaced by the unemployed's own choice (`belong_u` fitted to
     # it, V3_START.md section 111): the target of that fit, read by probe_unemp_rule.jl. NaN: not set.
     ratio_target::Float64 = NaN
@@ -494,6 +501,8 @@ this was read from the transfer (no benefit means employed), which made everyone
 employed at a zero replacement rate and no one at a negative levy.
 """
 employed_states(p::SAGEParams) = isemp(p)
+"Whether a configuration is built on the labour chain (version 2): a sub-annual period, a first spell of several periods, or forced."
+uses_chain(c) = c.chain || c.period > 1 || c.nU > 1
 
 """
     expand_transitory(p, sd, nt)
@@ -564,10 +573,15 @@ function _params_of(c::SAGEConfig, cell)
         error("with a transitory part or a proportional tax the job's effort levels are given: floor_effort(c) first")
     c.tax_mode in (:lump, :prop) || error("tax_mode is :lump or :prop")
     bs, _ = type_betas(c)
-    ps = [cell_params_u(cell.α; δ = cell.δ, f = c.f_find, rr = c.rr, na = c.na, ne = c.ne,
+    ps = !uses_chain(c) ?
+         [cell_params_u(cell.α; δ = cell.δ, f = c.f_find, rr = c.rr, na = c.na, ne = c.ne,
                         a_max = c.a_max, pexp = c.pexp, subsidy = c.subsidy, lumptax = c.lumptax,
                         partcredit = c.partcredit, β = b + cell.dβ, pcost = c.pcost, nz = c.nz,
-                        ρ = cell.ρ, η = cell.η, fL = cell.fL, rrL = c.rr_long) for b in bs]
+                        ρ = cell.ρ, η = cell.η, fL = cell.fL, rrL = c.rr_long) for b in bs] :
+         [cell_params_chain(cell.α; δ = cell.δ, hU = fill(c.f_find, c.nU), hL = cell.fL, rrU = fill(c.rr, c.nU), rrL = c.rr_long,
+                            nU = c.nU, ppy = c.period, na = c.na, ne = c.ne, a_max = c.a_max, pexp = c.pexp, subsidy = c.subsidy,
+                            lumptax = c.lumptax, partcredit = c.partcredit, β = b + cell.dβ, pcost = c.pcost, nz = c.nz,
+                            ρ = cell.ρ, η = cell.η) for b in bs]
     isnan(c.Lambda) || (ps = [update(p; Λ = c.Lambda) for p in ps])
     let (f, _) = perm_nodes(c), K = length(perm_nodes(c)[1])
         K > 1 && (ps = [update(p; Z = p.Z * f[(j - 1) % K + 1], transfer = p.transfer .* f[(j - 1) % K + 1]) for (j, p) in enumerate(ps)])
@@ -729,6 +743,7 @@ assist_public_of(c::SAGEConfig) = isnan(c.f_long[1]) ? 1.0 : isnan(c.assist_publ
 "What assistance in the long-term state costs per head: the state's mass in each cell times the amount (zero without the state)."
 function assist_tax_of(c::SAGEConfig)
     (c.unemployment && !isnan(c.f_long[1])) || return 0.0
+    uses_chain(c) && return sum(x.share * chain_mass_L(x.δ, c.nU, fill(c.f_find, c.nU), x.fL; nz = c.nz) for x in cells_of(c)) * assist_public_of(c)
     sum(x.share * unemployment_process(SAGEParams(nz = c.nz, α = fill(x.α, c.nz), B = fill(1.0, c.nz), ρ = c.rho, η = c.eta_z), x.δ, c.f_find; fL = x.fL).l
         for x in cells_of(c)) * assist_public_of(c)
 end
@@ -736,13 +751,14 @@ end
 "Unemployment-insurance tax implied by a config, closed form (zero when off)."
 function ui_tax_of(c::SAGEConfig)
     c.unemployment || return 0.0
-    assist_tax_of(c) + ui_tax([(share = x.share, α = x.α, δ = x.δ, fL = x.fL) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long * c.long_public_share) *
-        (c.e_ref / E_REF) + floor_tax_of(c)
+    ui_only_tax_of(c) + floor_tax_of(c)
 end
 
 "The unemployment-benefit part of the tax alone (closed form)."
-ui_only_tax_of(c::SAGEConfig) = c.unemployment ?
-    assist_tax_of(c) + ui_tax([(share = x.share, α = x.α, δ = x.δ, fL = x.fL) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long * c.long_public_share) * (c.e_ref / E_REF) : 0.0
+ui_only_tax_of(c::SAGEConfig) = !c.unemployment ? 0.0 : uses_chain(c) ?
+    assist_tax_of(c) + chain_ui_tax([(share = x.share, α = x.α, δ = x.δ, fL = x.fL) for x in cells_of(c)], c.nU, fill(c.f_find, c.nU),
+                                    isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long * c.long_public_share) * (c.e_ref / E_REF) :
+    assist_tax_of(c) + ui_tax([(share = x.share, α = x.α, δ = x.δ, fL = x.fL) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long * c.long_public_share) * (c.e_ref / E_REF)
 
 const FLOOR_EFFORT_CACHE = Dict{UInt,Any}()
 """
@@ -764,7 +780,7 @@ function floor_effort(c::SAGEConfig)
     long = !isnan(c.f_long[1])
     # The same holds for the transitory part and the proportional tax (2026-10-06): the levels are
     # those of the economy with persistent risk alone and the tax raised per head.
-    c1 = SAGEConfig(c; cfloor = 0.0, S = false, f_long = (NaN, NaN), sd_eps = 0.0, sd_eps_cell = (0.0, 0.0), tax_mode = :lump, tax_base = NaN,
+    c1 = SAGEConfig(c; cfloor = 0.0, S = false, f_long = c.period > 1 ? c.f_long : (NaN, NaN), sd_eps = 0.0, sd_eps_cell = (0.0, 0.0), tax_mode = :lump, tax_base = NaN,
                     control_share = (0.0, 0.0), search = false, out_ls = 0.0)   # what a job asks does not depend on who may choose otherwise, on how hard the unemployed search, or on what being out of work costs them
     lv = if c.ref_prop && c.tax_mode === :prop
         # the reference economy pays its benefit bill T at a rate on labour income. The rate needs the
@@ -786,7 +802,7 @@ function floor_effort(c::SAGEConfig)
     else
         get!(() -> job_effort_levels(c1), FLOOR_EFFORT_CACHE, hash(repr(c1)))
     end
-    long && (lv = Tuple(vcat(v, zeros(length(v) ÷ 2)) for v in lv))
+    (long && c.period == 1) && (lv = Tuple(vcat(v, zeros(length(v) ÷ 2)) for v in lv))   # on the labour chain the reference keeps every state
     SAGEConfig(c; effort_by_cell = lv)
 end
 
@@ -828,7 +844,7 @@ function floor_tax_of(c::SAGEConfig)
     key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.f_long, c0.assist_long, c0.assist_public, c0.rr_long, c0.long_public_share, c0.control_share, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
-                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop, c0.search, c0.search_gamma, c0.search_kU, c0.search_kL, c0.out_ls, c0.out_M, c0.out_betaY)))
+                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop, c0.search, c0.search_gamma, c0.search_kU, c0.search_kL, c0.out_ls, c0.out_M, c0.out_betaY, c0.period, c0.nU, c0.chain)))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
     cs = cells_of(c0); _, bw = betas_by_cell(c0)

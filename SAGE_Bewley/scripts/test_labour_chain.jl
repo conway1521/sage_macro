@@ -6,7 +6,6 @@
 #
 #   julia --project=scripts/run_env scripts/test_labour_chain.jl
 include(joinpath(@__DIR__, "modular_workers.jl"))
-include(joinpath(@__DIR__, "labour_chain.jl"))
 using Printf
 q4(x) = 1 - (1 - x)^(1 / 4)
 worst = 0.0

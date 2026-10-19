@@ -100,3 +100,49 @@ function quarterly_income(nz, n_eps, ρ, sη, sε; nU, hU, hL, δ, rrU, rrL, ite
     end
     (ρq = r, sηq = a, sεq = b, fit = g, target = target)
 end
+
+"""
+    cell_params_chain(αg; δ, hU, hL, rrU, rrL, nU, ppy, ...)
+
+The household problem of one cell on the labour chain (version 2, stage 1a): as `cell_params_u`, with the
+unemployed tracked by duration. Benefits are earnings-related, rrU[d] in the d-th period out of work and rrL in
+L, times α z Z E_REF, per period. Labels (type, duration, latent index) and periods per year are set.
+"""
+function cell_params_chain(αg; δ, hU, hL, rrU, rrL, nU, ppy, na = 200, ne = 80, a_max = 4.0, pexp = 3.0,
+                           subsidy = 0.0, lumptax = 0.0, partcredit = 0.0, β = 0.96, pcost = 0.0, nz = 11, ρ = 0.9, η = 0.1)
+    base = SAGEParams(na = na, ne = ne, nz = nz, α = fill(αg, nz), B = fill(1.0, nz), a_max = a_max, pexp = pexp, ρ = ρ, η = η)
+    ch = labour_chain(base; nU = nU, hU = hU, hL = hL, δ = δ)
+    n = length(ch.z_vals)
+    b = [ch.stype[i] === :E ? 0.0 : (ch.stype[i] === :L ? rrL : rrU[ch.dur[i]]) * αg * ch.z_latent[i] * base.Z * E_REF for i in 1:n]
+    SAGEParams(na = na, ne = ne, nz = n, α = fill(αg, n), B = fill(1.0, n),
+               z_vals_override = ch.z_vals, Π_override = ch.Π, transfer = b,
+               a_max = a_max, pexp = pexp, subsidy = subsidy, lumptax = lumptax,
+               partcredit = partcredit, β = β, pcost = pcost,
+               stype = ch.stype, lat = ch.lat, dur = ch.dur, ppy = ppy)
+end
+
+"""
+    chain_ui_tax(cells, nU, hU, rr; rrL, nz)
+
+The closed-form `ui_tax` on the labour chain: per head, the public benefit in the first spell's states and the
+public part of L's income, at the chain's stationary masses (computed numerically) and the mean latent
+productivity, as `ui_tax` takes them.
+"""
+function chain_ui_tax(cells, nU, hU, rr; rrL = 0.0, nz = 2, Z = 1.0)
+    T = 0.0
+    for c in cells
+        c.δ === nothing && continue
+        base = SAGEParams(nz = nz, α = fill(c.α, nz), B = fill(1.0, nz))
+        ch = labour_chain(base; nU = nU, hU = hU, hL = c.fL, δ = c.δ)
+        z2, Π2 = SAGEBewley.income_process(base)
+        πz = fill(1 / length(z2), length(z2))
+        for _ in 1:10_000; πn = Π2' * πz; maximum(abs, πn - πz) < 1e-15 && (πz = πn; break); πz = πn; end
+        Ez = sum(πz .* z2)
+        mU = sum(ch.mass[1:nU]); mL = ch.mass[nU + 2]
+        T += c.share * mU * rr * c.α * Ez * Z * E_REF
+        rrL > 0 && (T += c.share * mL * rrL * c.α * Ez * Z * E_REF)
+    end
+    T
+end
+"The mass in L of each cell on the labour chain (for the tax on assistance)."
+chain_mass_L(c_δ, nU, hU, hL; nz = 2) = labour_chain(SAGEParams(nz = nz, α = fill(1.0, nz), B = fill(1.0, nz)); nU = nU, hU = hU, hL = hL, δ = c_δ).mass[nU + 2]
