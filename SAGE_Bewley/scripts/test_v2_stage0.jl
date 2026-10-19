@@ -40,8 +40,9 @@ if length(ARGS) >= 1 && ARGS[1] == "compare" && isfile(base)
     worst = 0.0; wk = ""
     for (k, v) in out
         haskey(ref, k) || (println("missing in the baseline: ", k); continue)
-        d = abs(v - ref[k]) / max(abs(ref[k]), 1e-8)
-        d > worst && (worst = d; wk = k)
+        # relative, except for quantities at machine precision (budget gaps of 1e-12), compared in absolute terms
+        d = abs(ref[k]) < 1e-9 ? abs(v - ref[k]) / 1e-5 : abs(v - ref[k]) / abs(ref[k])
+        d > worst && (global worst = d; global wk = k)
     end
     @printf("\nlargest relative difference against version 1: %.2e at %s -> %s\n", worst, wk, worst < 1e-10 ? "PASS" : "FAIL")
 end
