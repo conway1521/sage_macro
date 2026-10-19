@@ -115,7 +115,7 @@ function welfare_parts(p::SAGEParams, sol)
         x = idx(i, s)
         vmass[s] += m * sol.V[i, s]; vcmass[s] += m * Vc[x]; vemass[s] += m * Ve[x]; vbmass[s] += m * Vb[x]
         vbumass[s] += m * Vbu[x]; veumass[s] += m * Veu[x]; vdmass[s] += m * Vd[x]; vkmass[s] += m * Vk[x]
-        Δ = ybar[i, s] / 12
+        Δ = ybar[i, s] * p.ppy / 12
         if Δ > 0
             ai = a[i] + Δ / p.R
             mpsmass[s] += m * (interp_ext(a, view(abar, :, s), ai) - abar[i, s]) / Δ

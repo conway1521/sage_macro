@@ -75,16 +75,16 @@ function agency_summary(p::SAGEParams, sol)
     end
     for s in 1:ns, i in 1:na
         m = λ[i, s]; m <= 0 && continue
-        htm = a[i] <= ybar[i, s] / 52
+        htm = a[i] <= ybar[i, s] * p.ppy / 52
         htm && (hmass[s] += m)
         # Room to manoeuvre: liquid wealth covering three months of own income.
-        a[i] >= ybar[i, s] / 4 && (rmass[s] += m)
+        a[i] >= ybar[i, s] * p.ppy / 4 && (rmass[s] += m)
         cmass[s] += m * cbar[i, s]
         # Marginal propensity to consume, within the year, out of a windfall of
         # one month of the household's own income (the size in Jappelli and
         # Pistaferri 2014 and the HFCS question): cash on hand rises by delta,
         # which is assets higher by delta / R.
-        Δ = ybar[i, s] / 12
+        Δ = ybar[i, s] * p.ppy / 12
         if Δ > 0
             mpc = p.pc * (interp_ext(a, view(cbar, :, s), a[i] + Δ / p.R) - cbar[i, s]) / Δ   # spending share
             mpcmass[s] += m * mpc; htm && (mpchmass[s] += m * mpc)

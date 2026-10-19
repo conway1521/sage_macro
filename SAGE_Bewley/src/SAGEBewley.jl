@@ -279,6 +279,11 @@ Base.@kwdef struct SAGEParams
     # the type is read off income (employed if and only if it is positive), as before.
     stype::Vector{Symbol} = Symbol[]
     lat::Vector{Int} = Int[]
+    # the period in which a state's duration out of work stands (1 for the first; 0 in work and in L); empty, one
+    dur::Vector{Int} = Int[]
+    # periods per year (1 annual, 4 quarterly): the fractions of a year's income that define hand-to-mouth (a week),
+    # the windfall (a month) and room to manoeuvre (three months) scale with it
+    ppy::Int = 1
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."

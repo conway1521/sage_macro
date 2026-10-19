@@ -46,8 +46,22 @@ isemp(p::SAGEParams) = stypes(p) .== :E
 function partner_index(p::SAGEParams, t::Symbol)
     st = stypes(p); n = length(st)
     isempty(p.lat) && error("partner states need the chain's labels (stype, lat)")
-    idx = Dict{Int,Int}(p.lat[s] => s for s in 1:n if st[s] === t)
+    # where several states of the type share a latent index (durations out of work), the entry state: the
+    # shortest duration, the one a job loss leads to
+    idx = Dict{Int,Int}()
+    for s in 1:n
+        st[s] === t || continue
+        k = p.lat[s]
+        (!haskey(idx, k) || (!isempty(p.dur) && p.dur[s] < p.dur[idx[k]])) && (idx[k] = s)
+    end
     [get(idx, p.lat[s], 0) for s in 1:n]
+end
+"For every state out of work in a first spell (type :U), the state it moves to if it does not find work: the next duration, or L after the last (same latent index); for every other state, itself."
+function next_out_index(p::SAGEParams)
+    st = stypes(p); n = length(st); du = isempty(p.dur) ? ones(Int, n) : p.dur
+    isempty(p.lat) && return collect(1:n)
+    key = Dict{Tuple{Symbol,Int,Int},Int}((st[s], du[s], p.lat[s]) => s for s in 1:n)
+    [st[s] === :U ? get(key, (:U, du[s] + 1, p.lat[s]), get(key, (:L, isempty(p.dur) ? 1 : 0, p.lat[s]), s)) : s for s in 1:n]
 end
 
 # Committed time before any choice (stage 8): zero unless time_floor is set.

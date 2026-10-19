@@ -516,7 +516,7 @@ function expand_transitory(p::SAGEParams, sd, nt)
            α = ex(p.α), B = ex(p.B), transfer = ex(p.transfer), effort_set = ex(p.effort_set),
            belong_scale = ex(p.belong_scale), time_floor = ex(p.time_floor),
            dread_q = ex(p.dread_q), dread_hi = ex(p.dread_hi), dread_lo = ex(p.dread_lo), search_k = ex(p.search_k), out_cost = ex(p.out_cost),
-           stype = ex(p.stype), lat = isempty(p.lat) ? p.lat : [(p.lat[s] - 1) * nt + t for s in 1:ns for t in 1:nt],
+           stype = ex(p.stype), lat = isempty(p.lat) ? p.lat : [(p.lat[s] - 1) * nt + t for s in 1:ns for t in 1:nt], dur = ex(p.dur),
            zstep = length(zp) > 1 ? log(zp[2] / zp[1]) : 0.0)
 end
 
@@ -653,7 +653,8 @@ function dread_params(p::SAGEParams, c::SAGEConfig, cell)
     # what income falls to if the bad outcome comes: for those in work the first year's benefit; for those in
     # their first year out of work, with the state out of work, the assistance of the year after (2026-10-11:
     # until then their own benefit, as if it went on); for those beyond a year, the assistance they are on
-    lo = [p.transfer[emp[s] ? pU[s] : (st[s] === :U && pL[s] > 0) ? pL[s] : s] - p.lumptax for s in 1:n]
+    nx = next_out_index(p)
+    lo = [p.transfer[emp[s] ? pU[s] : nx[s]] - p.lumptax for s in 1:n]
     c.dread_mode in (:overlay, :behaviour) || error("dread_mode must be :overlay or :behaviour")
     c.dread_mode == :behaviour ?
         update(p; dread = c.dread, dread_q = q .* (1 .- q), dread_hi = hi, dread_lo = lo) :
