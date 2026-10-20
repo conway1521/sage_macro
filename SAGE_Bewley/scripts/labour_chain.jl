@@ -93,11 +93,11 @@ The quarterly persistence and innovation sds whose annual averages, with job los
 autocovariances at lags 0, 1 and 2 that the published annual process (ρ, sη, sε) implies. Returns (ρq, sηq, sεq)
 and the check at lag 3.
 """
-function quarterly_income(nz, n_eps, ρ, sη, sε; nU, hU, hL, δ, rrU, rrL, iters = 200, tol = 1e-9)
+function quarterly_income(nz, n_eps, ρ, sη, sε; nU, hU, hL, δ, rrU, rrL, iters = 200, tol = 1e-9, flows = (;))
     vp = sη^2 / (1 - ρ^2)
     target = [vp + sε^2, ρ * vp, ρ^2 * vp, ρ^3 * vp]
     mom(r, a, b) = (base = SAGEParams(nz = nz, α = fill(1.0, nz), B = fill(1.0, nz), ρ = r, η = a);
-                    ch = labour_chain(base; nU = nU, hU = hU, hL = hL, δ = δ);
+                    ch = labour_chain(base; nU = nU, hU = hU, hL = hL, δ = δ, flows...);
                     q = chain_log_income(ch, b, n_eps, rrU, rrL); averaged_autocov(q.y, q.P))
     r = ρ^(1 / 4); a = sη / 2; b = sε * 2
     g = mom(r, a, b)
