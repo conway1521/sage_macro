@@ -156,7 +156,7 @@ Base.@kwdef struct SAGEConfig
     sU_vec::Vector{Float64} = Float64[]
     sL::Float64 = 0.0
     withN::Bool = false
-    iotaE::Float64 = 0.0
+    iotaE::NTuple{2,Float64} = (0.0, 0.0)      # by cell (set for each cell's inactive share)
     nuE::Float64 = 0.0
     nuU::Float64 = 0.0
     # The measured ratio itself, kept when the rule is replaced by the unemployed's own choice (`belong_u` fitted to
@@ -516,7 +516,7 @@ uses_chain(c) = c.chain || c.period > 1 || c.nU > 1
 "The exits from work by period of the first spell on the chain."
 chain_hU(c) = isempty(c.hU_vec) ? fill(c.f_find, c.nU) : c.hU_vec
 "The chain's flows to and from inactivity, as keywords of labour_chain."
-chain_flows(c) = (sU = isempty(c.sU_vec) ? zeros(c.nU) : c.sU_vec, sL = c.sL, ιE = c.iotaE, νE = c.nuE, νU = c.nuU, withN = c.withN)
+chain_flows(c, gi::Int) = (sU = isempty(c.sU_vec) ? zeros(c.nU) : c.sU_vec, sL = c.sL, ιE = c.iotaE[gi], νE = c.nuE, νU = c.nuU, withN = c.withN)
 
 """
     expand_transitory(p, sd, nt)
@@ -592,7 +592,7 @@ function _params_of(c::SAGEConfig, cell)
                         a_max = c.a_max, pexp = c.pexp, subsidy = c.subsidy, lumptax = c.lumptax,
                         partcredit = c.partcredit, β = b + cell.dβ, pcost = c.pcost, nz = c.nz,
                         ρ = cell.ρ, η = cell.η, fL = cell.fL, rrL = c.rr_long) for b in bs] :
-         [cell_params_chain(cell.α; δ = cell.δ, hU = chain_hU(c), hL = cell.fL, rrU = fill(c.rr, c.nU), rrL = c.rr_long, chain_flows(c)...,
+         [cell_params_chain(cell.α; δ = cell.δ, hU = chain_hU(c), hL = cell.fL, rrU = fill(c.rr, c.nU), rrL = c.rr_long, chain_flows(c, cell.gi)...,
                             nU = c.nU, ppy = c.period, na = c.na, ne = c.ne, a_max = c.a_max, pexp = c.pexp, subsidy = c.subsidy,
                             lumptax = c.lumptax, partcredit = c.partcredit, β = b + cell.dβ, pcost = c.pcost, nz = c.nz,
                             ρ = cell.ρ, η = cell.η) for b in bs]
@@ -757,7 +757,7 @@ assist_public_of(c::SAGEConfig) = isnan(c.f_long[1]) ? 1.0 : isnan(c.assist_publ
 "What assistance in the long-term state costs per head: the state's mass in each cell times the amount (zero without the state)."
 function assist_tax_of(c::SAGEConfig)
     (c.unemployment && !isnan(c.f_long[1])) || return 0.0
-    uses_chain(c) && return sum(x.share * chain_mass_L(x.δ, c.nU, chain_hU(c), x.fL; nz = c.nz, flows = chain_flows(c)) for x in cells_of(c)) * assist_public_of(c)
+    uses_chain(c) && return sum(x.share * chain_mass_L(x.δ, c.nU, chain_hU(c), x.fL; nz = c.nz, flows = chain_flows(c, x.gi)) for x in cells_of(c)) * assist_public_of(c)
     sum(x.share * unemployment_process(SAGEParams(nz = c.nz, α = fill(x.α, c.nz), B = fill(1.0, c.nz), ρ = c.rho, η = c.eta_z), x.δ, c.f_find; fL = x.fL).l
         for x in cells_of(c)) * assist_public_of(c)
 end
@@ -770,8 +770,8 @@ end
 
 "The unemployment-benefit part of the tax alone (closed form)."
 ui_only_tax_of(c::SAGEConfig) = !c.unemployment ? 0.0 : uses_chain(c) ?
-    assist_tax_of(c) + chain_ui_tax([(share = x.share, α = x.α, δ = x.δ, fL = x.fL) for x in cells_of(c)], c.nU, chain_hU(c),
-                                    isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long * c.long_public_share, flows = chain_flows(c)) * (c.e_ref / E_REF) :
+    assist_tax_of(c) + chain_ui_tax([(share = x.share, α = x.α, δ = x.δ, fL = x.fL, fl = chain_flows(c, x.gi)) for x in cells_of(c)], c.nU, chain_hU(c),
+                                    isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long * c.long_public_share) * (c.e_ref / E_REF) :
     assist_tax_of(c) + ui_tax([(share = x.share, α = x.α, δ = x.δ, fL = x.fL) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long * c.long_public_share) * (c.e_ref / E_REF)
 
 const FLOOR_EFFORT_CACHE = Dict{UInt,Any}()

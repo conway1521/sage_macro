@@ -73,25 +73,37 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7)
     htot = [hz[1], hz[2], hz[3], hz[3], hz[4], hz[4], hz[4], hz[4]][1:nU]
     ws = g("split", "share of exits to work")
     hU = ws .* htot; sU = (1 - ws) .* htot; hL = ws * hz[5]; sL = (1 - ws) * hz[5]
-    ιE = g("quarterly flow", "employed to inactive"); νE = g("quarterly flow", "inactive to employed"); νU = g("quarterly flow", "inactive to unemployed")
-    flows = (sU = sU, sL = sL, ιE = ιE, νE = νE, νU = νU, withN = true)
-    # job loss by cell: the cell's unemployment rate among the active (U types over E and U types)
-    δq = ntuple(2) do gi
-        u = c.delta[gi] / (c.delta[gi] + c.f_find)
-        lo, hi = 1e-7, 0.5
-        for _ in 1:100
-            m = (lo + hi) / 2
-            ch = labour_chain(SAGEParams(nz = 2, α = fill(1.0, 2), B = fill(1.0, 2)); nU = nU, hU = hU, hL = hL, δ = m, flows...)
-            mu = sum(ch.mass[1:nU]) + ch.mass[ch.iL]; ma = mu + ch.mass[ch.iE]
-            mu / ma < u ? (lo = m) : (hi = m)
+    # THE INACTIVE STATE AT THE HOUSEHOLD'S LEVEL (2026-10-20, V3_START.md section 120). The model's unit is the
+    # household's main earner: Eurostat's flows between activity and inactivity are of persons (students, carers,
+    # early retirees moving in and out), and applied to main earners they made a fifth to a quarter of households
+    # inactive and swamped the income process. So N's size is the household's: by cell, the share of adults in
+    # jobless households (EU-SILC ilc_lvhl14n, version 1's data) less the unemployed; the person flows give only how
+    # fast N is left, and where to (to work at nuE, to unemployment at nuU); the flow into N (iotaE) and job loss
+    # (delta) are set together, by cell, for N's share and the cell's unemployment rate.
+    νE = g("quarterly flow", "inactive to employed"); νU = g("quarterly flow", "inactive to unemployed")
+    mk(δ, ι) = labour_chain(SAGEParams(nz = 2, α = fill(1.0, 2), B = fill(1.0, 2)); nU = nU, hU = hU, hL = hL, δ = δ,
+                            sU = sU, sL = sL, ιE = ι, νE = νE, νU = νU, withN = true)
+    function bis(f, lo, hi)                 # f increasing: the root of f = 0
+        for _ in 1:80
+            m = (lo + hi) / 2; f(m) < 0 ? (lo = m) : (hi = m)
         end
         (lo + hi) / 2
     end
+    fit = ntuple(2) do gi
+        u = c.delta[gi] / (c.delta[gi] + c.f_find)
+        jl = manual_input(c.country, gi == 1 ? "jobless_low" : "jobless_high")
+        δfor(ι) = bis(δ -> (ch = mk(δ, ι); mu = sum(ch.mass[1:nU]) + ch.mass[ch.iL]; mu / (mu + ch.mass[ch.iE]) - u), 1e-7, 0.3)
+        Ufor(ι) = (ch = mk(δfor(ι), ι); sum(ch.mass[1:nU]) + ch.mass[ch.iL])
+        ι = bis(ι -> (ch = mk(δfor(ι), ι); ch.mass[ch.iN] - max(jl - (sum(ch.mass[1:nU]) + ch.mass[ch.iL]), 0.005)), 0.0, 0.2)
+        (δ = δfor(ι), ι = ι)
+    end
+    δq = (fit[1].δ, fit[2].δ); ιE = (fit[1].ι, fit[2].ι)
     pub(k) = manual_input(c.country, k)
     inc = ntuple(2) do gi
         lo = gi == 1 ? "low" : "high"
         quarterly_income(c.nz, c.n_eps, pub("rho_$lo"), sqrt(pub("var_persistent_$lo")), sqrt(pub("var_transitory_$lo"));
-                         nU = nU, hU = hU, hL = hL, δ = δq[gi], rrU = fill(c.rr, nU), rrL = c.rr_long, flows = flows)
+                         nU = nU, hU = hU, hL = hL, δ = δq[gi], rrU = fill(c.rr, nU), rrL = c.rr_long,
+                         flows = (sU = sU, sL = sL, ιE = ιE[gi], νE = νE, νU = νU, withN = true))
     end
     bq = c.beta_bar^(1 / ppy)
     dbq = ntuple(gi -> (c.beta_bar + c.beta_cell[gi])^(1 / ppy) - bq, 2)

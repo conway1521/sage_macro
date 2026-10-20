@@ -147,7 +147,7 @@ function chain_ui_tax(cells, nU, hU, rr; rrL = 0.0, nz = 2, Z = 1.0, flows = (;)
     for c in cells
         c.δ === nothing && continue
         base = SAGEParams(nz = nz, α = fill(c.α, nz), B = fill(1.0, nz))
-        ch = labour_chain(base; nU = nU, hU = hU, hL = c.fL, δ = c.δ, flows...)
+        ch = labour_chain(base; nU = nU, hU = hU, hL = c.fL, δ = c.δ, (hasproperty(c, :fl) ? c.fl : flows)...)
         z2, Π2 = SAGEBewley.income_process(base)
         πz = fill(1 / length(z2), length(z2))
         for _ in 1:10_000; πn = Π2' * πz; maximum(abs, πn - πz) < 1e-15 && (πz = πn; break); πz = πn; end
