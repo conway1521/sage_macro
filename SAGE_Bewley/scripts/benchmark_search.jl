@@ -54,8 +54,8 @@ function brute(p, egm; nf = NF, nx = NX, tol = 1e-8, maxit = 4000)
     W = similar(V); XB = zeros(nf, nz); G = zeros(ng, nz); Vn = similar(V)
     xs = range(0.0, 1.0, length = nx)
     # the search choice at one next-asset node: the best of a grid, refined by golden section, boundaries included
-    function best_x(ef, es, k_)
-        obj(x) = x * ef + (1 - x) * es - k_ * x^(1 + γs) / ((1 + γs) * p.β)
+    function best_x(ef, es, k_, lam = 1.0)
+        obj(x) = lam * x * ef + (1 - lam * x) * es - k_ * x^(1 + γs) / ((1 + γs) * p.β)
         vals = obj.(xs); j = argmax(vals)
         lo = xs[max(j - 1, 1)]; hi = xs[min(j + 1, nx)]
         for _ in 1:50
@@ -71,7 +71,7 @@ function brute(p, egm; nf = NF, nx = NX, tol = 1e-8, maxit = 4000)
         Threads.@threads for s in 1:nz
             for k in 1:nf
                 if srch[s]
-                    XB[k, s], W[k, s] = best_x(EVf[k, s], EVs[k, s], p.search_k[s])
+                    XB[k, s], W[k, s] = best_x(EVf[k, s], EVs[k, s], p.search_k[s], isempty(p.search_lam) ? 1.0 : p.search_lam[s])
                 else
                     W[k, s] = EV[k, s]
                 end

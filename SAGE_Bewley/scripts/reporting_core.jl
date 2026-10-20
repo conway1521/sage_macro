@@ -92,11 +92,12 @@ function welfare_parts(p::SAGEParams, sol)
                 dreadV && (ud[x] -= w * dread_at(p, s, ap))
                 xsrch = (search && p.search_k[s] > 0) ? SAGEBewley.interp_lin(a, view(sol.search_xs, :, s), ap) : NaN
                 isnan(xsrch) || (uk[x] -= w * p.search_k[s] * xsrch^(1 + p.search_gamma) / (1 + p.search_gamma))
+                pwk = isnan(xsrch) ? NaN : xsrch * (isempty(p.search_lam) ? 1.0 : p.search_lam[s])     # the chance of work (stage 1b)
                 abar[i, s] += w * ap; lbar[i, s] += w * lab; ybar[i, s] += w * (lab + tr)
                 k = clamp(searchsortedlast(a, ap), 1, na - 1)
                 wk = clamp((a[k+1] - ap) / (a[k+1] - a[k]), 0.0, 1.0)
                 for s2 in 1:ns
-                    pr = (isnan(xsrch) ? Π[s, s2] : xsrch * Pf[s, s2] + (1 - xsrch) * Ps[s, s2]) * w; pr <= 0 && continue
+                    pr = (isnan(xsrch) ? Π[s, s2] : pwk * Pf[s, s2] + (1 - pwk) * Ps[s, s2]) * w; pr <= 0 && continue
                     push!(rows, x); push!(cols, idx(k, s2)); push!(vals, pr * wk)
                     push!(rows, x); push!(cols, idx(k + 1, s2)); push!(vals, pr * (1 - wk))
                 end

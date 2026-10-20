@@ -19,34 +19,46 @@
 
 using LinearAlgebra
 
-"The labour chain on a Rouwenhorst base: transition matrix, incomes and labels (see the header)."
-function labour_chain(base::SAGEParams; nU::Int, hU::Vector{Float64}, hL::Float64, δ::Float64)
+"""
+The labour chain on a Rouwenhorst base: transition matrix, incomes and labels (see the header). Stage 1b adds
+the inactive state N (`withN`) and exits to it: from the d-th period out of work at sU[d], from L at sL, from work
+at ιE; out of N to work at νE and into the first period out of work at νU. All zero (the default): stage 1a's chain.
+"""
+function labour_chain(base::SAGEParams; nU::Int, hU::Vector{Float64}, hL::Float64, δ::Float64,
+                      sU::Vector{Float64} = zeros(nU), sL::Float64 = 0.0, ιE::Float64 = 0.0,
+                      νE::Float64 = 0.0, νU::Float64 = 0.0, withN::Bool = false)
     length(hU) == nU || error("hU needs one hazard per duration")
     z2, Π2 = SAGEBewley.income_process(base); nz = length(z2)
-    nl = nU + 2                                   # labour states: U_1..U_nU, E, L
-    iE = nU + 1; iL = nU + 2
+    nl = nU + 2 + (withN ? 1 : 0)                 # labour states: U_1..U_nU, E, L, (N)
+    iE = nU + 1; iL = nU + 2; iN = nU + 3
     Ps = zeros(nl, nl)
     for d in 1:nU
         Ps[d, iE] = hU[d]
-        Ps[d, d < nU ? d + 1 : iL] = 1 - hU[d]
+        withN && (Ps[d, iN] = sU[d])
+        Ps[d, d < nU ? d + 1 : iL] = 1 - hU[d] - (withN ? sU[d] : 0.0)
     end
-    Ps[iE, iE] = 1 - δ; Ps[iE, 1] = δ
-    Ps[iL, iE] = hL; Ps[iL, iL] = 1 - hL
+    Ps[iE, iE] = 1 - δ - (withN ? ιE : 0.0); Ps[iE, 1] = δ
+    Ps[iL, iE] = hL; Ps[iL, iL] = 1 - hL - (withN ? sL : 0.0)
+    if withN
+        Ps[iE, iN] = ιE; Ps[iL, iN] = sL
+        Ps[iN, iE] = νE; Ps[iN, 1] = νU; Ps[iN, iN] = 1 - νE - νU
+    end
+    minimum(Ps) >= -1e-12 || error("the labour chain has a negative transition probability: check the hazards")
     Π = kron(Ps, Π2)
-    lab = [d <= nU ? :U : d == iE ? :E : :L for d in 1:nl]
+    lab = [d <= nU ? :U : d == iE ? :E : d == iL ? :L : :N for d in 1:nl]
     stype = [lab[d] for d in 1:nl for _ in 1:nz]
     dur = [d <= nU ? d : 0 for d in 1:nl for _ in 1:nz]
     lat = [i for _ in 1:nl for i in 1:nz]
     zv = [lab[d] === :E ? z2[i] : 0.0 for d in 1:nl for i in 1:nz]
     # stationary masses of the labour states
     m = fill(1 / nl, nl)
-    for _ in 1:100_000
+    for _ in 1:200_000
         mn = Ps' * m
         maximum(abs, mn - m) < 1e-15 && (m = mn; break)
         m = mn
     end
     (z_vals = zv, Π = Π, stype = stype, dur = dur, lat = lat, z_latent = [z2[i] for _ in 1:nl for i in 1:nz],
-     Ps = Ps, mass = m, nz = nz)
+     Ps = Ps, mass = m, nz = nz, iE = iE, iL = iL, iN = withN ? iN : 0)
 end
 
 "Log income in every state of the chain crossed with the transitory nodes: earnings in work, a replacement rate out of it."
@@ -55,7 +67,7 @@ function chain_log_income(ch, sε, n_eps, rrU::Vector{Float64}, rrL::Float64)
     x = nt > 1 ? [sε * sqrt(nt - 1) * (2 * (t - 1) / (nt - 1) - 1) for t in 1:nt] : [0.0]
     w = nt > 1 ? [binomial(nt - 1, t - 1) / 2.0^(nt - 1) for t in 1:nt] : [1.0]
     ε = exp.(x); ε ./= dot(w, ε)
-    y = [log(ch.stype[s] === :E ? ch.z_latent[s] * ε[t] : ch.stype[s] === :L ? rrL * ch.z_latent[s] : rrU[ch.dur[s]] * ch.z_latent[s])
+    y = [log(ch.stype[s] === :E ? ch.z_latent[s] * ε[t] : ch.stype[s] in (:L, :N) ? rrL * ch.z_latent[s] : rrU[ch.dur[s]] * ch.z_latent[s])
          for s in eachindex(ch.stype) for t in 1:nt]
     P = kron(ch.Π, ones(nt) * w')
     (y = y, P = P)
@@ -109,11 +121,13 @@ unemployed tracked by duration. Benefits are earnings-related, rrU[d] in the d-t
 L, times α z Z E_REF, per period. Labels (type, duration, latent index) and periods per year are set.
 """
 function cell_params_chain(αg; δ, hU, hL, rrU, rrL, nU, ppy, na = 200, ne = 80, a_max = 4.0, pexp = 3.0,
-                           subsidy = 0.0, lumptax = 0.0, partcredit = 0.0, β = 0.96, pcost = 0.0, nz = 11, ρ = 0.9, η = 0.1)
+                           subsidy = 0.0, lumptax = 0.0, partcredit = 0.0, β = 0.96, pcost = 0.0, nz = 11, ρ = 0.9, η = 0.1,
+                           sU = zeros(nU), sL = 0.0, ιE = 0.0, νE = 0.0, νU = 0.0, withN = false)
     base = SAGEParams(na = na, ne = ne, nz = nz, α = fill(αg, nz), B = fill(1.0, nz), a_max = a_max, pexp = pexp, ρ = ρ, η = η)
-    ch = labour_chain(base; nU = nU, hU = hU, hL = hL, δ = δ)
+    ch = labour_chain(base; nU = nU, hU = hU, hL = hL, δ = δ, sU = sU, sL = sL, ιE = ιE, νE = νE, νU = νU, withN = withN)
     n = length(ch.z_vals)
-    b = [ch.stype[i] === :E ? 0.0 : (ch.stype[i] === :L ? rrL : rrU[ch.dur[i]]) * αg * ch.z_latent[i] * base.Z * E_REF for i in 1:n]
+    # the inactive state has the income of jobless households, as L (version 1's measured ratio)
+    b = [ch.stype[i] === :E ? 0.0 : (ch.stype[i] in (:L, :N) ? rrL : rrU[ch.dur[i]]) * αg * ch.z_latent[i] * base.Z * E_REF for i in 1:n]
     SAGEParams(na = na, ne = ne, nz = n, α = fill(αg, n), B = fill(1.0, n),
                z_vals_override = ch.z_vals, Π_override = ch.Π, transfer = b,
                a_max = a_max, pexp = pexp, subsidy = subsidy, lumptax = lumptax,
@@ -128,21 +142,24 @@ The closed-form `ui_tax` on the labour chain: per head, the public benefit in th
 public part of L's income, at the chain's stationary masses (computed numerically) and the mean latent
 productivity, as `ui_tax` takes them.
 """
-function chain_ui_tax(cells, nU, hU, rr; rrL = 0.0, nz = 2, Z = 1.0)
+function chain_ui_tax(cells, nU, hU, rr; rrL = 0.0, nz = 2, Z = 1.0, flows = (;))
     T = 0.0
     for c in cells
         c.δ === nothing && continue
         base = SAGEParams(nz = nz, α = fill(c.α, nz), B = fill(1.0, nz))
-        ch = labour_chain(base; nU = nU, hU = hU, hL = c.fL, δ = c.δ)
+        ch = labour_chain(base; nU = nU, hU = hU, hL = c.fL, δ = c.δ, flows...)
         z2, Π2 = SAGEBewley.income_process(base)
         πz = fill(1 / length(z2), length(z2))
         for _ in 1:10_000; πn = Π2' * πz; maximum(abs, πn - πz) < 1e-15 && (πz = πn; break); πz = πn; end
         Ez = sum(πz .* z2)
-        mU = sum(ch.mass[1:nU]); mL = ch.mass[nU + 2]
+        mU = sum(ch.mass[1:nU]); mL = ch.mass[nU + 2] + (ch.iN > 0 ? ch.mass[ch.iN] : 0.0)      # L and N alike
         T += c.share * mU * rr * c.α * Ez * Z * E_REF
         rrL > 0 && (T += c.share * mL * rrL * c.α * Ez * Z * E_REF)
     end
     T
 end
 "The mass in L of each cell on the labour chain (for the tax on assistance)."
-chain_mass_L(c_δ, nU, hU, hL; nz = 2) = labour_chain(SAGEParams(nz = nz, α = fill(1.0, nz), B = fill(1.0, nz)); nU = nU, hU = hU, hL = hL, δ = c_δ).mass[nU + 2]
+function chain_mass_L(c_δ, nU, hU, hL; nz = 2, flows = (;))
+    ch = labour_chain(SAGEParams(nz = nz, α = fill(1.0, nz), B = fill(1.0, nz)); nU = nU, hU = hU, hL = hL, δ = c_δ, flows...)
+    ch.mass[nU + 2] + (ch.iN > 0 ? ch.mass[ch.iN] : 0.0)                  # the assisted: L and N
+end

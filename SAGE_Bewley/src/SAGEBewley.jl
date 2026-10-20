@@ -284,6 +284,8 @@ Base.@kwdef struct SAGEParams
     # periods per year (1 annual, 4 quarterly): the fractions of a year's income that define hand-to-mouth (a week),
     # the windfall (a month) and room to manoeuvre (three months) scale with it
     ppy::Int = 1
+    # the rate at which job offers arrive, by state (version 2, stage 1b): the chance of work is search_lam x; empty, one
+    search_lam::Vector{Float64} = Float64[]
 end
 
 "Return a copy of `p` with the named fields overridden (kwdef has no reconstruct)."

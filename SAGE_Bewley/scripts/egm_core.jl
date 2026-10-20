@@ -323,11 +323,12 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
                     # beta x EVf + beta (1 - x) EVs - k x^(1+g)/(1+g): x = (beta (EVf - EVs) / k)^(1/g) within [0, 1].
                     # The cost sits inside EV divided by beta, since the branch multiplies EV by beta; the
                     # marginal value of assets follows by the envelope condition.
-                    Δ = EVf[k, s] - EVs_[k, s]
-                    x = Δ > 0 ? min((p.β * Δ / ks)^(1 / γs), 1.0) : 0.0
-                    xs[k, s] = x
-                    EV[k, s] = x * EVf[k, s] + (1 - x) * EVs_[k, s] - ks * x^(1 + γs) / ((1 + γs) * p.β)
-                    EVa[k, s] = x * EVfa[k, s] + (1 - x) * EVsa[k, s]
+                    # with offers arriving at rate lam (stage 1b) the chance of work is lam x, and k x^g = beta lam (EVf - EVs)
+                    Δ = EVf[k, s] - EVs_[k, s]; lam = isempty(p.search_lam) ? 1.0 : p.search_lam[s]
+                    x = Δ > 0 ? min((p.β * lam * Δ / ks)^(1 / γs), 1.0) : 0.0
+                    xs[k, s] = x; pw = lam * x
+                    EV[k, s] = pw * EVf[k, s] + (1 - pw) * EVs_[k, s] - ks * x^(1 + γs) / ((1 + γs) * p.β)
+                    EVa[k, s] = pw * EVfa[k, s] + (1 - pw) * EVsa[k, s]
                 end
             end
         else
@@ -392,7 +393,8 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
     iters == maxit && !stalled && @warn "solve_participation_egm stopped at maxit without converging" maxit tol
     stall > 1e-4 && @warn "solve_participation_egm accepted a stalled iteration (floor on)" stall
 
-    λ = search ? egm_distribution(a, Π, P1, a_d, na, nz; Pf = Pf, Ps = Ps, xs = xs, searching = p.search_k .> 0) :
+    λ = search ? egm_distribution(a, Π, P1, a_d, na, nz; Pf = Pf, Ps = Ps, xs = xs, searching = p.search_k .> 0,
+                                  lam = isempty(p.search_lam) ? nothing : p.search_lam) :
                  egm_distribution(a, Π, P1, a_d, na, nz)
     # the search effort at each grid point, at the next assets chosen (mixed over the participation branch)
     x_d = zeros(na, nz)
@@ -533,7 +535,7 @@ end
 
 """The stationary distribution: the Young (2010) lottery over a', mixed over d. With job search the row of
 a searching state is x Pf + (1 - x) Ps, x the search chosen at the next assets (interpolated on `xs`)."""
-function egm_distribution(a, Π, P1, a_d, na, nz; Pf = nothing, Ps = nothing, xs = nothing, searching = nothing)
+function egm_distribution(a, Π, P1, a_d, na, nz; Pf = nothing, Ps = nothing, xs = nothing, searching = nothing, lam = nothing)
     n_s = na * nz
     sidx(i_a, i_z) = (i_z - 1) * na + i_a
     drows = Int[]; dcols = Int[]; dvals = Float64[]
@@ -546,7 +548,7 @@ function egm_distribution(a, Π, P1, a_d, na, nz; Pf = nothing, Ps = nothing, xs
             k = clamp(searchsortedlast(a, ap), 1, na - 1)
             w = clamp((a[k+1] - ap) / (a[k+1] - a[k]), 0.0, 1.0)
             srch = searching !== nothing && searching[i_z]
-            x = srch ? SAGEBewley.interp_lin(a, view(xs, :, i_z), ap) : 0.0
+            x = srch ? SAGEBewley.interp_lin(a, view(xs, :, i_z), ap) * (lam === nothing ? 1.0 : lam[i_z]) : 0.0   # the chance of work
             for i_zn in 1:nz
                 pz = (srch ? x * Pf[i_z, i_zn] + (1 - x) * Ps[i_z, i_zn] : Π[i_z, i_zn]) * pd
                 push!(drows, s); push!(dcols, sidx(k,   i_zn)); push!(dvals, pz * w)
