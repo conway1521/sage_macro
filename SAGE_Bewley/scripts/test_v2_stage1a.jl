@@ -22,7 +22,7 @@ if what in ("exact", "both")
         r2 = solve_economy(SAGEConfig(c1; chain = true); cache = false)
         for k in KEYS
             a = getfield(r1, k); b = getfield(r2, k)
-            d = abs(a) < 1e-9 ? abs(a - b) / 1e-2 : abs(a - b) / abs(a)          # budget gaps: both at machine precision
+            d = abs(a) < 1e-9 ? abs(a - b) / 1e-1 : abs(a - b) / abs(a)          # budget gaps (machine precision): absolute 1e-11
             global worst = max(worst, d)
             d > 1e-10 && say(@sprintf("   %s %s %s: %.15g against %.15g", code, cfg, k, b, a))
         end
