@@ -564,9 +564,15 @@ function egm_distribution(a, Π, P1, a_d, na, nz; Pf = nothing, Ps = nothing, xs
         dd < 1e-12 && break
     end
     if dist_d >= 1e-12
-        Td = Matrix(transpose(Tt))
-        for _ in 1:45; Td = Td * Td; Td ./= sum(Td, dims = 2); end
-        λv = vec(sum(Td .* (1.0 / n_s), dims = 1))
+        # where power iteration has not settled (slow mixing: income persistence near one at a quarterly period),
+        # the stationary distribution solved directly: (T' - I) lambda = 0 with the last equation replaced by
+        # sum(lambda) = 1, a sparse system. It replaces squaring the dense transition matrix, which at quarterly
+        # sizes (about 20,000 states) took hours (version 2, stage 1a, 2026-10-20); version 1 checked by the regression.
+        A = sparse(Tt) - sparse(1.0I, n_s, n_s)
+        A = vcat(A[1:n_s-1, :], sparse(ones(1, n_s)))
+        rhs = zeros(n_s); rhs[n_s] = 1.0
+        λv = A \ rhs
+        λv .= max.(λv, 0.0)
     end
     λv ./= sum(λv)
     reshape(λv, na, nz)
