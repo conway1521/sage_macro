@@ -19,18 +19,25 @@
 
 using LinearAlgebra
 
+# Stage 1c: the durations of the spell without entitlement (U^n_d, entered from inactivity) carry the label NONENT + d,
+# so that they are told apart from the entitled spell (U^e_d, label d) by duration alone.
+const NONENT = 100
+
 """
 The labour chain on a Rouwenhorst base: transition matrix, incomes and labels (see the header). Stage 1b adds
 the inactive state N (`withN`) and exits to it: from the d-th period out of work at sU[d], from L at sL, from work
 at ιE; out of N to work at νE and into the first period out of work at νU. All zero (the default): stage 1a's chain.
+Stage 1c (`entN`, with N): those entering unemployment from inactivity are not entitled and go through a spell of
+their own, U^n_1 ... U^n_nU (same hazards, then L), labelled NONENT + d; those from work enter U^e_1 as before.
 """
 function labour_chain(base::SAGEParams; nU::Int, hU::Vector{Float64}, hL::Float64, δ::Float64,
                       sU::Vector{Float64} = zeros(nU), sL::Float64 = 0.0, ιE::Float64 = 0.0,
-                      νE::Float64 = 0.0, νU::Float64 = 0.0, withN::Bool = false)
+                      νE::Float64 = 0.0, νU::Float64 = 0.0, withN::Bool = false, entN::Bool = false)
     length(hU) == nU || error("hU needs one hazard per duration")
     z2, Π2 = SAGEBewley.income_process(base); nz = length(z2)
-    nl = nU + 2 + (withN ? 1 : 0)                 # labour states: U_1..U_nU, E, L, (N)
-    iE = nU + 1; iL = nU + 2; iN = nU + 3
+    entN && !withN && error("the spell without entitlement is entered from inactivity: withN")
+    nl = nU + 2 + (withN ? 1 : 0) + (entN ? nU : 0)          # labour states: U_1..U_nU, E, L, (N), (U^n_1..U^n_nU)
+    iE = nU + 1; iL = nU + 2; iN = nU + 3; iUn = entN ? collect(nU + 4:nU + 3 + nU) : Int[]
     Ps = zeros(nl, nl)
     for d in 1:nU
         Ps[d, iE] = hU[d]
@@ -41,13 +48,18 @@ function labour_chain(base::SAGEParams; nU::Int, hU::Vector{Float64}, hL::Float6
     Ps[iL, iE] = hL; Ps[iL, iL] = 1 - hL - (withN ? sL : 0.0)
     if withN
         Ps[iE, iN] = ιE; Ps[iL, iN] = sL
-        Ps[iN, iE] = νE; Ps[iN, 1] = νU; Ps[iN, iN] = 1 - νE - νU
+        Ps[iN, iE] = νE; Ps[iN, entN ? iUn[1] : 1] = νU; Ps[iN, iN] = 1 - νE - νU
+    end
+    for d in 1:length(iUn)
+        Ps[iUn[d], iE] = hU[d]; Ps[iUn[d], iN] = sU[d]
+        Ps[iUn[d], d < nU ? iUn[d + 1] : iL] = 1 - hU[d] - sU[d]
     end
     minimum(Ps) >= -1e-12 || error("the labour chain has a negative transition probability: check the hazards")
     Π = kron(Ps, Π2)
-    lab = [d <= nU ? :U : d == iE ? :E : d == iL ? :L : :N for d in 1:nl]
+    lab = [(d <= nU || d in iUn) ? :U : d == iE ? :E : d == iL ? :L : :N for d in 1:nl]
     stype = [lab[d] for d in 1:nl for _ in 1:nz]
-    dur = [d <= nU ? d : 0 for d in 1:nl for _ in 1:nz]
+    dl = [d <= nU ? d : d in iUn ? NONENT + d - nU - 3 : 0 for d in 1:nl]
+    dur = [dl[d] for d in 1:nl for _ in 1:nz]
     lat = [i for _ in 1:nl for i in 1:nz]
     zv = [lab[d] === :E ? z2[i] : 0.0 for d in 1:nl for i in 1:nz]
     # stationary masses of the labour states
@@ -58,7 +70,7 @@ function labour_chain(base::SAGEParams; nU::Int, hU::Vector{Float64}, hL::Float6
         m = mn
     end
     (z_vals = zv, Π = Π, stype = stype, dur = dur, lat = lat, z_latent = [z2[i] for _ in 1:nl for i in 1:nz],
-     Ps = Ps, mass = m, nz = nz, iE = iE, iL = iL, iN = withN ? iN : 0)
+     Ps = Ps, mass = m, nz = nz, iE = iE, iL = iL, iN = withN ? iN : 0, iUn = iUn, iU = vcat(collect(1:nU), iUn))
 end
 
 "Log income in every state of the chain crossed with the transitory nodes: earnings in work, a replacement rate out of it."
@@ -67,7 +79,7 @@ function chain_log_income(ch, sε, n_eps, rrU::Vector{Float64}, rrL::Float64; st
     x = nt > 1 ? [sε * sqrt(nt - 1) * (2 * (t - 1) / (nt - 1) - 1) for t in 1:nt] : [0.0]
     w = nt > 1 ? [binomial(nt - 1, t - 1) / 2.0^(nt - 1) for t in 1:nt] : [1.0]
     ε = exp.(x); ε ./= dot(w, ε)
-    y = [log(ch.stype[s] === :E ? ch.z_latent[s] * ε[t] : ch.stype[s] in (:L, :N) ? rrL * ch.z_latent[s] : rrU[ch.dur[s]] * ch.z_latent[s])
+    y = [log(ch.stype[s] === :E ? ch.z_latent[s] * ε[t] : (ch.stype[s] in (:L, :N) || ch.dur[s] > NONENT) ? rrL * ch.z_latent[s] : rrU[ch.dur[s]] * ch.z_latent[s])
          for s in eachindex(ch.stype) for t in 1:nt]
     M = stay == 0 ? ones(nt) * w' : stay * Matrix(1.0I, nt, nt) + (1 - stay) * ones(nt) * w'
     P = kron(ch.Π, M)
@@ -125,12 +137,12 @@ L, times α z Z E_REF, per period. Labels (type, duration, latent index) and per
 """
 function cell_params_chain(αg; δ, hU, hL, rrU, rrL, nU, ppy, na = 200, ne = 80, a_max = 4.0, pexp = 3.0,
                            subsidy = 0.0, lumptax = 0.0, partcredit = 0.0, β = 0.96, pcost = 0.0, nz = 11, ρ = 0.9, η = 0.1,
-                           sU = zeros(nU), sL = 0.0, ιE = 0.0, νE = 0.0, νU = 0.0, withN = false)
+                           sU = zeros(nU), sL = 0.0, ιE = 0.0, νE = 0.0, νU = 0.0, withN = false, entN = false)
     base = SAGEParams(na = na, ne = ne, nz = nz, α = fill(αg, nz), B = fill(1.0, nz), a_max = a_max, pexp = pexp, ρ = ρ, η = η)
-    ch = labour_chain(base; nU = nU, hU = hU, hL = hL, δ = δ, sU = sU, sL = sL, ιE = ιE, νE = νE, νU = νU, withN = withN)
+    ch = labour_chain(base; nU = nU, hU = hU, hL = hL, δ = δ, sU = sU, sL = sL, ιE = ιE, νE = νE, νU = νU, withN = withN, entN = entN)
     n = length(ch.z_vals)
     # the inactive state has the income of jobless households, as L (version 1's measured ratio)
-    b = [ch.stype[i] === :E ? 0.0 : (ch.stype[i] in (:L, :N) ? rrL : rrU[ch.dur[i]]) * αg * ch.z_latent[i] * base.Z * E_REF for i in 1:n]
+    b = [ch.stype[i] === :E ? 0.0 : ((ch.stype[i] in (:L, :N) || ch.dur[i] > NONENT) ? rrL : rrU[ch.dur[i]]) * αg * ch.z_latent[i] * base.Z * E_REF for i in 1:n]
     SAGEParams(na = na, ne = ne, nz = n, α = fill(αg, n), B = fill(1.0, n),
                z_vals_override = ch.z_vals, Π_override = ch.Π, transfer = b,
                a_max = a_max, pexp = pexp, subsidy = subsidy, lumptax = lumptax,
@@ -155,8 +167,9 @@ function chain_ui_tax(cells, nU, hU, rr; rrL = 0.0, nz = 2, Z = 1.0, flows = (;)
         πz = fill(1 / length(z2), length(z2))
         for _ in 1:10_000; πn = Π2' * πz; maximum(abs, πn - πz) < 1e-15 && (πz = πn; break); πz = πn; end
         Ez = sum(πz .* z2)
-        mU = sum(ch.mass[1:nU]); mL = ch.mass[nU + 2] + (ch.iN > 0 ? ch.mass[ch.iN] : 0.0)      # L and N alike
-        T += c.share * mU * rr * c.α * Ez * Z * E_REF
+        mL = ch.mass[nU + 2] + (ch.iN > 0 ? ch.mass[ch.iN] : 0.0) + sum(ch.mass[ch.iUn])     # L, N and the spell without entitlement alike
+        # the public benefit by period of the entitled spell (one rate, or one a period: stage 1c)
+        T += c.share * (rr isa AbstractVector ? sum(ch.mass[d] * rr[d] for d in 1:nU) : sum(ch.mass[1:nU]) * rr) * c.α * Ez * Z * E_REF
         rrL > 0 && (T += c.share * mL * rrL * c.α * Ez * Z * E_REF)
     end
     T
@@ -164,5 +177,5 @@ end
 "The mass in L of each cell on the labour chain (for the tax on assistance)."
 function chain_mass_L(c_δ, nU, hU, hL; nz = 2, flows = (;))
     ch = labour_chain(SAGEParams(nz = nz, α = fill(1.0, nz), B = fill(1.0, nz)); nU = nU, hU = hU, hL = hL, δ = c_δ, flows...)
-    ch.mass[nU + 2] + (ch.iN > 0 ? ch.mass[ch.iN] : 0.0)                  # the assisted: L and N
+    ch.mass[nU + 2] + (ch.iN > 0 ? ch.mass[ch.iN] : 0.0) + sum(ch.mass[ch.iUn])     # the assisted: L, N and the spell without entitlement
 end

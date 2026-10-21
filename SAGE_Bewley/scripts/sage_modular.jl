@@ -159,6 +159,12 @@ Base.@kwdef struct SAGEConfig
     iotaE::NTuple{2,Float64} = (0.0, 0.0)      # by cell (set for each cell's inactive share)
     nuE::Float64 = 0.0
     nuU::Float64 = 0.0
+    # STAGE 1c (V2_BUILD_PLAN.md; design section 3.3): the benefit by period of the entitled spell (`rrU_vec`, the
+    # household's rate, and its public part `rrU_pub_vec`; empty: rr in every period), and the spell without
+    # entitlement for those entering from inactivity (`entN`), paid as L
+    rrU_vec::Vector{Float64} = Float64[]
+    rrU_pub_vec::Vector{Float64} = Float64[]
+    entN::Bool = false
     # The transitory part's persistence at a sub-annual period: the chance it is kept from one period to the next
     # (else drawn afresh). 0: drawn afresh every period, as at an annual period; 0.75 at a quarterly period: it lasts a
     # year on average (the convention probed in V3_START.md section 122)
@@ -524,7 +530,7 @@ uses_chain(c) = c.chain || c.period > 1 || c.nU > 1
 "The exits from work by period of the first spell on the chain."
 chain_hU(c) = isempty(c.hU_vec) ? fill(c.f_find, c.nU) : c.hU_vec
 "The chain's flows to and from inactivity, as keywords of labour_chain."
-chain_flows(c, gi::Int) = (sU = isempty(c.sU_vec) ? zeros(c.nU) : c.sU_vec, sL = c.sL, ιE = c.iotaE[gi], νE = c.nuE, νU = c.nuU, withN = c.withN)
+chain_flows(c, gi::Int) = (sU = isempty(c.sU_vec) ? zeros(c.nU) : c.sU_vec, sL = c.sL, ιE = c.iotaE[gi], νE = c.nuE, νU = c.nuU, withN = c.withN, entN = c.entN)
 
 """
     expand_transitory(p, sd, nt)
@@ -601,7 +607,7 @@ function _params_of(c::SAGEConfig, cell)
                         a_max = c.a_max, pexp = c.pexp, subsidy = c.subsidy, lumptax = c.lumptax,
                         partcredit = c.partcredit, β = b + cell.dβ, pcost = c.pcost, nz = c.nz,
                         ρ = cell.ρ, η = cell.η, fL = cell.fL, rrL = c.rr_long) for b in bs] :
-         [cell_params_chain(cell.α; δ = cell.δ, hU = chain_hU(c), hL = cell.fL, rrU = fill(c.rr, c.nU), rrL = c.rr_long, chain_flows(c, cell.gi)...,
+         [cell_params_chain(cell.α; δ = cell.δ, hU = chain_hU(c), hL = cell.fL, rrU = isempty(c.rrU_vec) ? fill(c.rr, c.nU) : c.rrU_vec, rrL = c.rr_long, chain_flows(c, cell.gi)...,
                             nU = c.nU, ppy = c.period, na = c.na, ne = c.ne, a_max = c.a_max, pexp = c.pexp, subsidy = c.subsidy,
                             lumptax = c.lumptax, partcredit = c.partcredit, β = b + cell.dβ, pcost = c.pcost, nz = c.nz,
                             ρ = cell.ρ, η = cell.η) for b in bs]
@@ -621,7 +627,8 @@ function _params_of(c::SAGEConfig, cell)
     c.ysmooth == 1 || (ps = [update(p; ysmooth = c.ysmooth) for p in ps])
     if !isnan(cell.fL)
         al = assist_of(c); stl = stypes(ps[1])
-        ps = [update(p; transfer = [stl[s] in (:L, :N) ? p.transfer[s] + al : p.transfer[s] for s in eachindex(p.transfer)]) for p in ps]   # the inactive as L
+        dul = isempty(ps[1].dur) ? zeros(Int, length(stl)) : ps[1].dur
+        ps = [update(p; transfer = [(stl[s] in (:L, :N) || dul[s] > NONENT) ? p.transfer[s] + al : p.transfer[s] for s in eachindex(p.transfer)]) for p in ps]   # the inactive and the spell without entitlement as L
     end
     emp = employed_states(ps[1])
     if c.levy_employed != 0
@@ -781,7 +788,7 @@ end
 "The unemployment-benefit part of the tax alone (closed form)."
 ui_only_tax_of(c::SAGEConfig) = !c.unemployment ? 0.0 : uses_chain(c) ?
     assist_tax_of(c) + chain_ui_tax([(share = x.share, α = x.α, δ = x.δ, fL = x.fL, fl = chain_flows(c, x.gi)) for x in cells_of(c)], c.nU, chain_hU(c),
-                                    isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long * c.long_public_share) * (c.e_ref / E_REF) :
+                                    !isempty(c.rrU_pub_vec) ? c.rrU_pub_vec : isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long * c.long_public_share) * (c.e_ref / E_REF) :
     assist_tax_of(c) + ui_tax([(share = x.share, α = x.α, δ = x.δ, fL = x.fL) for x in cells_of(c)], c.f_find, isnan(c.rr_public) ? c.rr : c.rr_public; nz = c.nz, rrL = c.rr_long * c.long_public_share) * (c.e_ref / E_REF)
 
 const FLOOR_EFFORT_CACHE = Dict{UInt,Any}()
@@ -868,7 +875,7 @@ function floor_tax_of(c::SAGEConfig)
     key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.f_long, c0.assist_long, c0.assist_public, c0.rr_long, c0.long_public_share, c0.control_share, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
-                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop, c0.search, c0.search_gamma, c0.search_kU, c0.search_kL, c0.out_ls, c0.out_M, c0.out_betaY, c0.period, c0.nU, c0.chain, c0.hU_vec, c0.sU_vec, c0.sL, c0.withN, c0.iotaE, c0.nuE, c0.nuU, c0.eps_stay, c0.dread, c0.dread_mode, c0.dread_horizon)))
+                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop, c0.search, c0.search_gamma, c0.search_kU, c0.search_kL, c0.out_ls, c0.out_M, c0.out_betaY, c0.period, c0.nU, c0.chain, c0.hU_vec, c0.sU_vec, c0.sL, c0.withN, c0.iotaE, c0.nuE, c0.nuU, c0.eps_stay, c0.dread, c0.dread_mode, c0.dread_horizon, c0.rrU_vec, c0.rrU_pub_vec, c0.entN)))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
     cs = cells_of(c0); _, bw = betas_by_cell(c0)

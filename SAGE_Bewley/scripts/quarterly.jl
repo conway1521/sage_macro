@@ -64,7 +64,8 @@ unemployment, from an annual configuration. Nothing is refitted to wealth or par
 The durations, not the flows, set the exit hazards: the flows imply faster exits than the reported durations
 allow, most plausibly churning between unemployment and inactivity (V3_START.md section 119).
 """
-function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, eps_stay::Float64 = 0.0, fix_rho::Bool = true)
+function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, eps_stay::Float64 = 0.0, fix_rho::Bool = true,
+                         profile::Bool = false)
     c.period == 1 || error("give the annual configuration")
     c = SAGEConfig(c; nz = nz)               # seven persistent states pay for the larger chain (checked, V3_START.md section 116)
     tab = Dict{Tuple{String,String,String},Float64}()
@@ -87,8 +88,26 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, 
     # fast N is left, and where to (to work at nuE, to unemployment at nuU); the flow into N (iotaE) and job loss
     # (delta) are set together, by cell, for N's share and the cell's unemployment rate.
     νE = g("quarterly flow", "inactive to employed"); νU = g("quarterly flow", "inactive to unemployed")
+    # STAGE 1c (`profile`; design section 3.3; V3_START.md section 125): benefits by quarter of the entitled spell from
+    # TaxBEN's household-weighted profile (data/benefits/quarterly_profile.csv, part (h) of the benefits script), the
+    # one without social assistance, since the model's minimum income is its means-tested floor; beyond the eight
+    # quarters, and in the spell without entitlement of those entering from inactivity, the mean of months 25 to 60.
+    # The public part (the partner's earnings removed) finances the tax. Without `profile`: version 1's first-year
+    # rate in every quarter of the spell and its jobless-household income beyond, as at stage 1b.
+    rrU, rrUp, rrL, lps = fill(c.rr, nU), Float64[], c.rr_long, c.long_public_share
+    if profile
+        pt = Dict{Tuple{String,String},Tuple{Float64,Float64}}()
+        for (k, l) in enumerate(eachline(joinpath(@__DIR__, "..", "..", "data", "benefits", "quarterly_profile.csv")))
+            (k <= 2 || startswith(l, "#")) && continue
+            f = split(l, ","); length(f) >= 6 || continue
+            a = tryparse(Float64, f[5]); b = tryparse(Float64, f[6])
+            (a === nothing || b === nothing) || (pt[(f[1], f[2])] = (a, b))
+        end
+        rrU = [pt[(c.country, "q$d")][1] for d in 1:nU]; rrUp = [pt[(c.country, "q$d")][2] for d in 1:nU]
+        rrL, pL = pt[(c.country, "months 25-60")]; lps = rrL > 0 ? pL / rrL : 0.0
+    end
     mk(δ, ι) = labour_chain(SAGEParams(nz = 2, α = fill(1.0, 2), B = fill(1.0, 2)); nU = nU, hU = hU, hL = hL, δ = δ,
-                            sU = sU, sL = sL, ιE = ι, νE = νE, νU = νU, withN = true)
+                            sU = sU, sL = sL, ιE = ι, νE = νE, νU = νU, withN = true, entN = profile)
     function bis(f, lo, hi)                 # f increasing: the root of f = 0
         for _ in 1:80
             m = (lo + hi) / 2; f(m) < 0 ? (lo = m) : (hi = m)
@@ -98,9 +117,8 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, 
     fit = ntuple(2) do gi
         u = c.delta[gi] / (c.delta[gi] + c.f_find)
         jl = manual_input(c.country, gi == 1 ? "jobless_low" : "jobless_high")
-        δfor(ι) = bis(δ -> (ch = mk(δ, ι); mu = sum(ch.mass[1:nU]) + ch.mass[ch.iL]; mu / (mu + ch.mass[ch.iE]) - u), 1e-7, 0.3)
-        Ufor(ι) = (ch = mk(δfor(ι), ι); sum(ch.mass[1:nU]) + ch.mass[ch.iL])
-        ι = bis(ι -> (ch = mk(δfor(ι), ι); ch.mass[ch.iN] - max(jl - (sum(ch.mass[1:nU]) + ch.mass[ch.iL]), 0.005)), 0.0, 0.2)
+        δfor(ι) = bis(δ -> (ch = mk(δ, ι); mu = sum(ch.mass[ch.iU]) + ch.mass[ch.iL]; mu / (mu + ch.mass[ch.iE]) - u), 1e-7, 0.3)
+        ι = bis(ι -> (ch = mk(δfor(ι), ι); ch.mass[ch.iN] - max(jl - (sum(ch.mass[ch.iU]) + ch.mass[ch.iL]), 0.005)), 0.0, 0.2)
         (δ = δfor(ι), ι = ι)
     end
     δq = (fit[1].δ, fit[2].δ); ιE = (fit[1].ι, fit[2].ι)
@@ -108,8 +126,8 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, 
     inc = ntuple(2) do gi
         lo = gi == 1 ? "low" : "high"
         quarterly_income(c.nz, c.n_eps, pub("rho_$lo"), sqrt(pub("var_persistent_$lo")), sqrt(pub("var_transitory_$lo"));
-                         nU = nU, hU = hU, hL = hL, δ = δq[gi], rrU = fill(c.rr, nU), rrL = c.rr_long,
-                         flows = (sU = sU, sL = sL, ιE = ιE[gi], νE = νE, νU = νU, withN = true), stay = eps_stay, fix_rho = fix_rho)
+                         nU = nU, hU = hU, hL = hL, δ = δq[gi], rrU = rrU, rrL = rrL,
+                         flows = (sU = sU, sL = sL, ιE = ιE[gi], νE = νE, νU = νU, withN = true, entN = profile), stay = eps_stay, fix_rho = fix_rho)
     end
     for gi in 1:2
         @info @sprintf("stage 1b income, cell %d: quarterly persistence %.4f%s, sds %.4f / %.4f; annual autocovariances lags 0-2 %s against %s", gi,
@@ -118,7 +136,8 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, 
     bq = c.beta_bar^(1 / ppy)
     dbq = ntuple(gi -> (c.beta_bar + c.beta_cell[gi])^(1 / ppy) - bq, 2)
     SAGEConfig(c; period = ppy, nU = nU, f_find = hU[1], hU_vec = hU, sU_vec = sU, f_long = (hL, hL), sL = sL,
-               withN = true, iotaE = ιE, nuE = νE, nuU = νU, eps_stay = eps_stay, dread_horizon = ppy, delta = δq, beta_bar = bq, beta_cell = dbq,
+               withN = true, iotaE = ιE, nuE = νE, nuU = νU, eps_stay = eps_stay, entN = profile,
+               rrU_vec = profile ? rrU : Float64[], rrU_pub_vec = rrUp, rr_long = rrL, long_public_share = lps, dread_horizon = ppy, delta = δq, beta_bar = bq, beta_cell = dbq,
                rho_cell = (inc[1].ρq, inc[2].ρq), eta_cell = (inc[1].sηq, inc[2].sηq), sd_eps_cell = (inc[1].sεq, inc[2].sεq),
                R_one = isnan(c.R_one) ? NaN : c.R_one^(1 / ppy), a_max = ppy * c.a_max, na = max(c.na, 300))
 end

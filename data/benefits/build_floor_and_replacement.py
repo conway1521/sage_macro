@@ -458,6 +458,32 @@ for c in ("FR", "DE", "IT"):
                 "TaxBEN months 13 to 60 (mean) weighted by Eurostat lfst_hhindws (not employed, age 25-54) and lfst_hhwhnpt", oecd_url("nrr"),
                 "computed; weights are a proxy (not employed, not unemployed)")
 
+# (h) by quarter of the spell, for version 2's stage 1c (V2_BUILD_PLAN.md; paper/sage_v2_design.md, section 3.3): the
+#     household-weighted profile of (f) and (g), 2023, previous earnings 100% AW, social assistance yes, housing benefit
+#     no, as the mean of each quarter's three months up to month 60; its public part (the partner's earnings removed as
+#     in (e)); the mean of months 25 to 60 (after the eight quarters the model tracks one by one). With social
+#     assistance and without it: in v5m the minimum income is the model's means-tested floor, so the profile it uses is
+#     the one without social assistance, and the floor tops it up (V3_START.md section 125).
+QROWS = []
+for c in ("FR", "DE", "IT"):
+    y, prev = 2023, "AW100"
+    _, cells3 = WRR[(c, y, prev, "YES", "NO", False)]
+    ws = [w for w, _ in cells3]
+    tp = [("S_C0", "_Z"), ("C_C0", "AW67"), ("C_C0", "NOEARN_UNEMP_WO_CONBEN")]
+    hw = lambda m, sa="YES": sum(w * N[(c, y, h, prev, part, sa, "NO", m)] for w, (h, part) in zip(ws, tp))
+    priv = ws[1] * N[(c, y, "C_C0", prev, "AW67", "NO", "NO", 60)]
+    q_ = lambda a, b, sa: sum(hw(m, sa) for m in range(a, b + 1)) / (b - a + 1)
+    for q in range(1, 21):
+        v, v0 = q_(3 * q - 2, 3 * q, "YES"), q_(3 * q - 2, 3 * q, "NO")
+        QROWS.append([c, f"q{q}", round(v, 5), round(v - priv, 5), round(v0, 5), round(v0 - priv, 5)])
+    v, v0 = q_(25, 60, "YES"), q_(25, 60, "NO")
+    QROWS.append([c, "months 25-60", round(v, 5), round(v - priv, 5), round(v0, 5), round(v0 - priv, 5)])
+    QROWS.append([c, "months 1-12 (check: the first-year rate of (f))", round(q_(1, 12, "YES"), 5), "", round(q_(1, 12, "NO"), 5), ""])
+with open(os.path.join(HERE, "quarterly_profile.csv"), "w") as fh:
+    fh.write("# OECD TaxBEN net replacement rates 2023 by month (DSD_TAXBEN_NRR), three childless types weighted as in (f); script data/benefits/build_floor_and_replacement.py, part (h)\n")
+    fh.write("country,item,household,public_part,household_no_sa,public_part_no_sa\n")
+    for r_ in QROWS: fh.write(",".join(str(x) for x in r_) + "\n")
+
 with open(os.path.join(HERE, "computed_series.csv"), "w", newline="") as fh:
     w = csv.DictWriter(fh, fieldnames=["indicator", "country", "value", "unit", "year", "family_type", "source", "url", "status"], lineterminator="\n")
     w.writeheader(); w.writerows(OUT)
