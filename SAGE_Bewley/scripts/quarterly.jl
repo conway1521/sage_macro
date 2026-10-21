@@ -58,7 +58,9 @@ unemployment, from an annual configuration. Nothing is refitted to wealth or par
     refitted on this chain. With `fix_rho` (the default from 2026-10-21, V3_START.md section 123) the quarterly
     persistence is the fourth root of the published annual one and only the two sds are fitted (lags 0 and 1):
     the free fit put France's low cell at a near-unit root (unemployment spells add covariance across years),
-    which mixed slowly; the miss at lag 2 is reported. The hazards are national: the cells differ in job loss only.
+    which mixed slowly; the miss at lag 2 is reported.
+  - Dread, where A is on, is of the coming year's lottery felt each period (`dread_horizon = ppy`; Pagel's weight is
+    annual; decided by the user 2026-10-21, V3_START.md section 124). The hazards are national: the cells differ in job loss only.
 The durations, not the flows, set the exit hazards: the flows imply faster exits than the reported durations
 allow, most plausibly churning between unemployment and inactivity (V3_START.md section 119).
 """
@@ -116,7 +118,7 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, 
     bq = c.beta_bar^(1 / ppy)
     dbq = ntuple(gi -> (c.beta_bar + c.beta_cell[gi])^(1 / ppy) - bq, 2)
     SAGEConfig(c; period = ppy, nU = nU, f_find = hU[1], hU_vec = hU, sU_vec = sU, f_long = (hL, hL), sL = sL,
-               withN = true, iotaE = ιE, nuE = νE, nuU = νU, eps_stay = eps_stay, delta = δq, beta_bar = bq, beta_cell = dbq,
+               withN = true, iotaE = ιE, nuE = νE, nuU = νU, eps_stay = eps_stay, dread_horizon = ppy, delta = δq, beta_bar = bq, beta_cell = dbq,
                rho_cell = (inc[1].ρq, inc[2].ρq), eta_cell = (inc[1].sηq, inc[2].sηq), sd_eps_cell = (inc[1].sεq, inc[2].sεq),
                R_one = isnan(c.R_one) ? NaN : c.R_one^(1 / ppy), a_max = ppy * c.a_max, na = max(c.na, 300))
 end
