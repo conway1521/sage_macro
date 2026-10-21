@@ -62,14 +62,15 @@ function labour_chain(base::SAGEParams; nU::Int, hU::Vector{Float64}, hL::Float6
 end
 
 "Log income in every state of the chain crossed with the transitory nodes: earnings in work, a replacement rate out of it."
-function chain_log_income(ch, sε, n_eps, rrU::Vector{Float64}, rrL::Float64)
+function chain_log_income(ch, sε, n_eps, rrU::Vector{Float64}, rrL::Float64; stay = 0.0)
     nt = sε > 0 ? n_eps : 1
     x = nt > 1 ? [sε * sqrt(nt - 1) * (2 * (t - 1) / (nt - 1) - 1) for t in 1:nt] : [0.0]
     w = nt > 1 ? [binomial(nt - 1, t - 1) / 2.0^(nt - 1) for t in 1:nt] : [1.0]
     ε = exp.(x); ε ./= dot(w, ε)
     y = [log(ch.stype[s] === :E ? ch.z_latent[s] * ε[t] : ch.stype[s] in (:L, :N) ? rrL * ch.z_latent[s] : rrU[ch.dur[s]] * ch.z_latent[s])
          for s in eachindex(ch.stype) for t in 1:nt]
-    P = kron(ch.Π, ones(nt) * w')
+    M = stay == 0 ? ones(nt) * w' : stay * Matrix(1.0I, nt, nt) + (1 - stay) * ones(nt) * w'
+    P = kron(ch.Π, M)
     (y = y, P = P)
 end
 
@@ -93,20 +94,22 @@ The quarterly persistence and innovation sds whose annual averages, with job los
 autocovariances at lags 0, 1 and 2 that the published annual process (ρ, sη, sε) implies. Returns (ρq, sηq, sεq)
 and the check at lag 3.
 """
-function quarterly_income(nz, n_eps, ρ, sη, sε; nU, hU, hL, δ, rrU, rrL, iters = 200, tol = 1e-9, flows = (;))
+function quarterly_income(nz, n_eps, ρ, sη, sε; nU, hU, hL, δ, rrU, rrL, iters = 200, tol = 1e-9, flows = (;), stay = 0.0)
     vp = sη^2 / (1 - ρ^2)
     target = [vp + sε^2, ρ * vp, ρ^2 * vp, ρ^3 * vp]
     mom(r, a, b) = (base = SAGEParams(nz = nz, α = fill(1.0, nz), B = fill(1.0, nz), ρ = r, η = a);
                     ch = labour_chain(base; nU = nU, hU = hU, hL = hL, δ = δ, flows...);
-                    q = chain_log_income(ch, b, n_eps, rrU, rrL); averaged_autocov(q.y, q.P))
-    r = ρ^(1 / 4); a = sη / 2; b = sε * 2
+                    q = chain_log_income(ch, b, n_eps, rrU, rrL; stay = stay); averaged_autocov(q.y, q.P))
+    # the share of a period's transitory variance left in an annual average (1/4 when it is drawn afresh each quarter)
+    fε = sum(stay^abs(i - j) for i in 0:3, j in 0:3) / 16
+    r = ρ^(1 / 4); a = sη / 2; b = sε / sqrt(4fε)
     g = mom(r, a, b)
     for it in 1:iters
         # persistence from the ratio of the second to the first annual autocovariance, the persistent sd from the
         # first, the transitory sd from the variance
         r = clamp(r * (target[3] / target[2] / (g[3] / g[2]))^(1 / 4), 0.5, 0.9999)
         g = mom(r, a, b); a *= clamp(sqrt(target[2] / g[2]), 0.7, 1.4)
-        g = mom(r, a, b); b = sqrt(max(b^2 + (target[1] - g[1]) * 4, 1e-10))
+        g = mom(r, a, b); b = sqrt(max(b^2 + (target[1] - g[1]) / fε, 1e-10))
         g = mom(r, a, b)
         maximum(abs.(g[1:3] .- target[1:3])) < tol && break
     end

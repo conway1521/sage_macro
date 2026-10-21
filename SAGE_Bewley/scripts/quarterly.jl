@@ -59,7 +59,7 @@ unemployment, from an annual configuration. Nothing is refitted to wealth or par
 The durations, not the flows, set the exit hazards: the flows imply faster exits than the reported durations
 allow, most plausibly churning between unemployment and inactivity (V3_START.md section 119).
 """
-function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7)
+function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, eps_stay::Float64 = 0.0)
     c.period == 1 || error("give the annual configuration")
     c = SAGEConfig(c; nz = nz)               # seven persistent states pay for the larger chain (checked, V3_START.md section 116)
     tab = Dict{Tuple{String,String,String},Float64}()
@@ -104,12 +104,12 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7)
         lo = gi == 1 ? "low" : "high"
         quarterly_income(c.nz, c.n_eps, pub("rho_$lo"), sqrt(pub("var_persistent_$lo")), sqrt(pub("var_transitory_$lo"));
                          nU = nU, hU = hU, hL = hL, δ = δq[gi], rrU = fill(c.rr, nU), rrL = c.rr_long,
-                         flows = (sU = sU, sL = sL, ιE = ιE[gi], νE = νE, νU = νU, withN = true))
+                         flows = (sU = sU, sL = sL, ιE = ιE[gi], νE = νE, νU = νU, withN = true), stay = eps_stay)
     end
     bq = c.beta_bar^(1 / ppy)
     dbq = ntuple(gi -> (c.beta_bar + c.beta_cell[gi])^(1 / ppy) - bq, 2)
     SAGEConfig(c; period = ppy, nU = nU, f_find = hU[1], hU_vec = hU, sU_vec = sU, f_long = (hL, hL), sL = sL,
-               withN = true, iotaE = ιE, nuE = νE, nuU = νU, delta = δq, beta_bar = bq, beta_cell = dbq,
+               withN = true, iotaE = ιE, nuE = νE, nuU = νU, eps_stay = eps_stay, delta = δq, beta_bar = bq, beta_cell = dbq,
                rho_cell = (inc[1].ρq, inc[2].ρq), eta_cell = (inc[1].sηq, inc[2].sηq), sd_eps_cell = (inc[1].sεq, inc[2].sεq),
                R_one = isnan(c.R_one) ? NaN : c.R_one^(1 / ppy), a_max = ppy * c.a_max, na = max(c.na, 300))
 end

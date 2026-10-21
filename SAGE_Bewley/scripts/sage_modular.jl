@@ -159,6 +159,10 @@ Base.@kwdef struct SAGEConfig
     iotaE::NTuple{2,Float64} = (0.0, 0.0)      # by cell (set for each cell's inactive share)
     nuE::Float64 = 0.0
     nuU::Float64 = 0.0
+    # The transitory part's persistence at a sub-annual period: the chance it is kept from one period to the next
+    # (else drawn afresh). 0: drawn afresh every period, as at an annual period; 0.75 at a quarterly period: it lasts a
+    # year on average (the convention probed in V3_START.md section 122)
+    eps_stay::Float64 = 0.0
     # The measured ratio itself, kept when the rule is replaced by the unemployed's own choice (`belong_u` fitted to
     # it, V3_START.md section 111): the target of that fit, read by probe_unemp_rule.jl. NaN: not set.
     ratio_target::Float64 = NaN
@@ -526,7 +530,7 @@ every state becomes `nt` states, productivity times the draw, reached with the d
 probabilities whatever the state left. Everything else a state carries (the benefit, the job's
 effort, dread's reference points) is that of the persistent state.
 """
-function expand_transitory(p::SAGEParams, sd, nt)
+function expand_transitory(p::SAGEParams, sd, nt; stay = 0.0)
     (sd == 0 || nt <= 1) && return p
     p.z_vals_override === nothing && error("the transitory part needs the unemployment state space")
     z = p.z_vals_override; Π = p.Π_override; ns = length(z)
@@ -535,7 +539,8 @@ function expand_transitory(p::SAGEParams, sd, nt)
     ε = exp.(x); ε ./= dot(w, ε)
     ex(v) = isempty(v) ? v : repeat(v, inner = nt)
     zp = sort(unique(z[z .> 0]))
-    update(p; nz = ns * nt, z_vals_override = [z[s] * ε[t] for s in 1:ns for t in 1:nt], Π_override = kron(Π, ones(nt) * w'),
+    M = stay == 0 ? ones(nt) * w' : stay * Matrix(1.0I, nt, nt) + (1 - stay) * ones(nt) * w'
+    update(p; nz = ns * nt, z_vals_override = [z[s] * ε[t] for s in 1:ns for t in 1:nt], Π_override = kron(Π, M),
            α = ex(p.α), B = ex(p.B), transfer = ex(p.transfer), effort_set = ex(p.effort_set),
            belong_scale = ex(p.belong_scale), time_floor = ex(p.time_floor),
            dread_q = ex(p.dread_q), dread_hi = ex(p.dread_hi), dread_lo = ex(p.dread_lo), search_k = ex(p.search_k), out_cost = ex(p.out_cost),
@@ -573,7 +578,7 @@ end
 "Parameter sets for one cell, one per discount type."
 function params_of(c::SAGEConfig, cell)
     ps = _params_of(c, cell)
-    ps = cell.sε > 0 ? [expand_transitory(p, cell.sε, c.n_eps) for p in ps] : ps
+    ps = cell.sε > 0 ? [expand_transitory(p, cell.sε, c.n_eps; stay = c.eps_stay) for p in ps] : ps
     has_choosers(c) || return ps
     # the same households once per group; for the group that chooses its hours the job's levels are dropped
     vcat([g.chooses ? [update(p; job_effort = false, effort_set = Float64[]) for p in ps] : ps for g in control_groups(c, cell.gi)]...)
@@ -858,7 +863,7 @@ function floor_tax_of(c::SAGEConfig)
     key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.f_long, c0.assist_long, c0.assist_public, c0.rr_long, c0.long_public_share, c0.control_share, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
-                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop, c0.search, c0.search_gamma, c0.search_kU, c0.search_kL, c0.out_ls, c0.out_M, c0.out_betaY, c0.period, c0.nU, c0.chain, c0.hU_vec, c0.sU_vec, c0.sL, c0.withN, c0.iotaE, c0.nuE, c0.nuU)))
+                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop, c0.search, c0.search_gamma, c0.search_kU, c0.search_kL, c0.out_ls, c0.out_M, c0.out_betaY, c0.period, c0.nU, c0.chain, c0.hU_vec, c0.sU_vec, c0.sL, c0.withN, c0.iotaE, c0.nuE, c0.nuU, c0.eps_stay)))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
     cs = cells_of(c0); _, bw = betas_by_cell(c0)
