@@ -196,6 +196,10 @@ Base.@kwdef struct SAGEConfig
     # makes households save so much that the German and Italian hand-to-mouth
     # targets are out of reach at any plausible patience (MODULAR.md, 2026-09-28).
     dread_mode::Symbol = :overlay
+    # The horizon of the lottery dreaded, in periods: 1, the coming period's (version 1, annual). At a quarterly
+    # period, 4 keeps Pagel's (2017) weight, estimated at an annual period, on the coming year's lottery, felt each
+    # quarter: with CRRA this keeps dread's size relative to consumption utility (V3_START.md section 124)
+    dread_horizon::Int = 1
     # HOURS AS A CHOICE (A, 2026-10-11; DIMENSIONS_SPEC.md, "A, reopened and scoped"): the share of households
     # in each education cell who have control over their working time and choose their hours each year;
     # the others work the hours the job sets. From Eurostat (lfso_19fxwt01, who decides working time).
@@ -680,7 +684,8 @@ function dread_params(p::SAGEParams, c::SAGEConfig, cell)
     # employed state and of the bad outcome that share this state's latent productivity
     st = stypes(p); emp = st .== :E
     pE = partner_index(p, :E); pU = partner_index(p, :U); pL = partner_index(p, :L)
-    q = [emp[s] ? sum(Π[s, .!emp]) : sum(Π[s, emp]) for s in 1:n]
+    Πh = c.dread_horizon == 1 ? Π : Π^c.dread_horizon
+    q = [emp[s] ? sum(Πh[s, .!emp]) : sum(Πh[s, emp]) for s in 1:n]
     hi = [(1 + p.subsidy) * cell.α * z[pE[s]] * p.Z * c.e_ref + p.transfer[pE[s]] - p.lumptax
           for s in 1:n]
     # what income falls to if the bad outcome comes: for those in work the first year's benefit; for those in
@@ -863,7 +868,7 @@ function floor_tax_of(c::SAGEConfig)
     key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.f_long, c0.assist_long, c0.assist_public, c0.rr_long, c0.long_public_share, c0.control_share, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
-                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop, c0.search, c0.search_gamma, c0.search_kU, c0.search_kL, c0.out_ls, c0.out_M, c0.out_betaY, c0.period, c0.nU, c0.chain, c0.hU_vec, c0.sU_vec, c0.sL, c0.withN, c0.iotaE, c0.nuE, c0.nuU, c0.eps_stay)))
+                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop, c0.search, c0.search_gamma, c0.search_kU, c0.search_kL, c0.out_ls, c0.out_M, c0.out_betaY, c0.period, c0.nU, c0.chain, c0.hU_vec, c0.sU_vec, c0.sL, c0.withN, c0.iotaE, c0.nuE, c0.nuU, c0.eps_stay, c0.dread, c0.dread_mode, c0.dread_horizon)))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
     cs = cells_of(c0); _, bw = betas_by_cell(c0)
