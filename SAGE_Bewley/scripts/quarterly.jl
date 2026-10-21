@@ -71,7 +71,8 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7)
     g(stat, item) = tab[(c.country, stat, item)]
     hz = [g("exit hazard a quarter", k) for k in ("q1", "q2", "q3-4", "q5-8", "q9+")]
     htot = [hz[1], hz[2], hz[3], hz[3], hz[4], hz[4], hz[4], hz[4]][1:nU]
-    ws = g("split", "share of exits to work")
+    # exits to work at the flows' rate into work, the rest of the duration-based exit to inactivity (section 121)
+    ws = g("split", "share of exits to work (churn-adjusted)")
     hU = ws .* htot; sU = (1 - ws) .* htot; hL = ws * hz[5]; sL = (1 - ws) * hz[5]
     # THE INACTIVE STATE AT THE HOUSEHOLD'S LEVEL (2026-10-20, V3_START.md section 120). The model's unit is the
     # household's main earner: Eurostat's flows between activity and inactivity are of persons (students, carers,

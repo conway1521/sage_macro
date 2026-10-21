@@ -101,6 +101,11 @@ for g in GEOS:
     rows.append([g, "quarterly flow", "employed to unemployed", round(ee, 5), ""]); rows.append([g, "quarterly flow", "employed to inactive", round(ei, 5), ""])
     rows.append([g, "quarterly flow", "inactive to employed", round(ie, 5), ""]); rows.append([g, "quarterly flow", "inactive to unemployed", round(iu, 5), ""])
     rows.append([g, "split", "share of exits to work", round(work_share, 4), ""])
+    # the split read through Elsby, Hobijn and Sahin (2015): reversals between unemployment and inactivity are mostly
+    # spurious and do not end the reported spell, so the exit the durations imply is close to the flow into work
+    # alone; exits to work at the flows' rate, and only the rest of the duration-based exit to genuine inactivity
+    mean_exit_d = float(np.sum(model * np.array([h[0], h[1], h[2], h[3], h[3], h[4], h[4]])))
+    rows.append([g, "split", "share of exits to work (churn-adjusted)", round(min(ue / mean_exit_d, 1.0), 4), ""])
     rows.append([g, "fit", "largest log residual", round(float(np.max(np.abs(resid))), 4), ""])
     rows.append([g, "fit, unconstrained (for comparison)", "hazards", " ".join(str(round(x, 4)) for x in hu), ""])
     rows.append([g, "fit, unconstrained (for comparison)", "largest log residual", round(float(np.max(np.abs(residu))), 4), ""])
