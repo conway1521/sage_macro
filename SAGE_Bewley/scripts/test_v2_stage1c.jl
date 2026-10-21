@@ -21,7 +21,7 @@ for code in ("FR", "DE", "IT")
                     gi, sum(ch.mass), mu / (mu + ch.mass[ch.iE]), ca.delta[gi] / (ca.delta[gi] + ca.f_find), ch.mass[ch.iN],
                     sum(ch.mass[ch.iUn]) / mu, string(unique(ch.dur[ch.stype .=== :U])))
         end
-        p = params_of(cb, cells_of(cb)[1])[1]
+        p = params_of(SAGEConfig(cb; sd_eps_cell = (0.0, 0.0), tax_mode = :lump), cells_of(cb)[1])[1]      # the labels only
         pU = partner_index(p, :U); nx = next_out_index(p); st = stypes(p)
         e1 = findfirst(st .=== :E)
         @printf("   entry state of the first employed state: duration %d | where U^e_8 and U^n_8 go: %s %s | tax of benefits %.6f\n",
