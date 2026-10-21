@@ -3169,3 +3169,15 @@ Runs (GitHub, probe.yml): regression 39553337144 (stage 0), 39553343403 (1a), 39
 **The test**: `probe_v2_ga.jl`, G against G+A at the same patience (FR 0.86, DE 0.89, IT 0.925), dread at Pagel's weight in choices on the quarter's employment lottery (the same term as version 1, read per period: q(1-q) with the quarter's q, the gap in the quarter's utility), job search off (the data's hazards; version 1's search costs are annual and are refitted at stage 1d), the cost of being out of work left out (wellbeing only). Runs: regression 39625349482; FR G/GA 39625360391, 39625371159; DE 39625382843, 39625394924; IT 39625406285, 39625417538.
 
 **A point to settle at stage 1d, noted now**: news utility is per period, so the same weight on the quarter's lottery is a smaller dread than on the year's. With CRRA the utility gap relative to utility is the same at either period, so dread relative to consumption utility scales with the period's chance of a change of status: about a quarter of the annual term at the same weight. This test keeps the weight as published (per period of news) and reports dread's cost, so the size can be compared with version 1; whether the weight is per period or per year is a stage 1d decision, to be read in Kőszegi and Rabin (2009) and Pagel (2017).
+
+**Results** (regression 39625349482 passes, 3.5e-13; all six probes complete):
+
+| | patience | G: htm | G: median/yr | G: MPC | G: fall | G+A: htm | G+A: median/yr | G+A: MPC | G+A: fall | minutes (G, G+A) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| FR | 0.86 | 0.191 (0.268) | 0.107 | 0.241 | **0.124** | 0.158 | 0.125 | 0.213 | **0.157** | 36, 50 |
+| DE | 0.89 | 0.206 (0.252) | 0.101 | 0.219 | **0.105** | 0.162 | 0.124 | 0.185 | **0.144** | 21, 49 |
+| IT | 0.925 | 0.203 (0.203) | 0.264 | 0.153 | **0.113** | 0.176 | 0.286 | 0.139 | **0.132** | 58, 109 |
+
+Income fits with persistence fixed: lag 2 short by 4.8 / 1.9 per cent (FR low / high), 8.0 / 4.2 (DE), 2.2 / 1.6 (IT); lags 0 and 1 exact. **France solves in 36 minutes against five hours**, with its G results unchanged (fall 0.124 against 0.123 under the free fit): the near-unit root was the cause of the time. Germany's process changes more (quarterly persistence 0.9726 fixed against the free fit's 0.97 to 0.99 by cell), and its G moves towards its target (hand-to-mouth 0.206 against 0.163, the fall 0.105 against 0.082 at the same patience).
+
+**Reading.** Dread in choices adds 0.02 to 0.04 to the fall on job loss (version 1, annual: 0.08), and lowers hand-to-mouth by 0.03 to 0.04 (households save for peace of mind), so a G+A calibration would lower patience a little and raise the fall a little more. G+A's fall is 3.0 to 3.6 times Kolsrud and co-authors' 0.044 (G: 2.4 to 2.8). Part of dread's smaller effect is the period (the same weight on a quarter's lottery, section 123's note). Two things still inflate the first quarter's fall and are stage 1c's: benefits are at the first year's rate in all eight quarters of the spell then L (the benefit's profile by month, and its duration, from TaxBEN), and the fall's horizon (Kolsrud's first 20 weeks, a Swedish benchmark).
