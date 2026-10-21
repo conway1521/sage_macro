@@ -55,11 +55,14 @@ unemployment, from an annual configuration. Nothing is refitted to wealth or par
   - Job loss by cell: set so that each cell's unemployment rate (the unemployed, U and L, over the labour force)
     is the rate version 1 uses (OECD Education at a Glance, through delta = u f / (1 - u)).
   - Patience, return, the asset grid and the income process as in `quarterly_config`, the income process
-    refitted on this chain. The hazards are national: the cells differ in job loss only.
+    refitted on this chain. With `fix_rho` (the default from 2026-10-21, V3_START.md section 123) the quarterly
+    persistence is the fourth root of the published annual one and only the two sds are fitted (lags 0 and 1):
+    the free fit put France's low cell at a near-unit root (unemployment spells add covariance across years),
+    which mixed slowly; the miss at lag 2 is reported. The hazards are national: the cells differ in job loss only.
 The durations, not the flows, set the exit hazards: the flows imply faster exits than the reported durations
 allow, most plausibly churning between unemployment and inactivity (V3_START.md section 119).
 """
-function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, eps_stay::Float64 = 0.0)
+function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, eps_stay::Float64 = 0.0, fix_rho::Bool = true)
     c.period == 1 || error("give the annual configuration")
     c = SAGEConfig(c; nz = nz)               # seven persistent states pay for the larger chain (checked, V3_START.md section 116)
     tab = Dict{Tuple{String,String,String},Float64}()
@@ -104,7 +107,11 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, 
         lo = gi == 1 ? "low" : "high"
         quarterly_income(c.nz, c.n_eps, pub("rho_$lo"), sqrt(pub("var_persistent_$lo")), sqrt(pub("var_transitory_$lo"));
                          nU = nU, hU = hU, hL = hL, δ = δq[gi], rrU = fill(c.rr, nU), rrL = c.rr_long,
-                         flows = (sU = sU, sL = sL, ιE = ιE[gi], νE = νE, νU = νU, withN = true), stay = eps_stay)
+                         flows = (sU = sU, sL = sL, ιE = ιE[gi], νE = νE, νU = νU, withN = true), stay = eps_stay, fix_rho = fix_rho)
+    end
+    for gi in 1:2
+        @info @sprintf("stage 1b income, cell %d: quarterly persistence %.4f%s, sds %.4f / %.4f; annual autocovariances lags 0-2 %s against %s", gi,
+                       inc[gi].ρq, fix_rho ? " (fixed)" : "", inc[gi].sηq, inc[gi].sεq, string(round.(inc[gi].fit[1:3], digits = 5)), string(round.(inc[gi].target[1:3], digits = 5)))
     end
     bq = c.beta_bar^(1 / ppy)
     dbq = ntuple(gi -> (c.beta_bar + c.beta_cell[gi])^(1 / ppy) - bq, 2)

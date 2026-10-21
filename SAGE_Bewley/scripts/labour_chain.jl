@@ -94,7 +94,7 @@ The quarterly persistence and innovation sds whose annual averages, with job los
 autocovariances at lags 0, 1 and 2 that the published annual process (ρ, sη, sε) implies. Returns (ρq, sηq, sεq)
 and the check at lag 3.
 """
-function quarterly_income(nz, n_eps, ρ, sη, sε; nU, hU, hL, δ, rrU, rrL, iters = 200, tol = 1e-9, flows = (;), stay = 0.0)
+function quarterly_income(nz, n_eps, ρ, sη, sε; nU, hU, hL, δ, rrU, rrL, iters = 200, tol = 1e-9, flows = (;), stay = 0.0, fix_rho = false)
     vp = sη^2 / (1 - ρ^2)
     target = [vp + sε^2, ρ * vp, ρ^2 * vp, ρ^3 * vp]
     mom(r, a, b) = (base = SAGEParams(nz = nz, α = fill(1.0, nz), B = fill(1.0, nz), ρ = r, η = a);
@@ -107,11 +107,11 @@ function quarterly_income(nz, n_eps, ρ, sη, sε; nU, hU, hL, δ, rrU, rrL, ite
     for it in 1:iters
         # persistence from the ratio of the second to the first annual autocovariance, the persistent sd from the
         # first, the transitory sd from the variance
-        r = clamp(r * (target[3] / target[2] / (g[3] / g[2]))^(1 / 4), 0.5, 0.9999)
+        fix_rho || (r = clamp(r * (target[3] / target[2] / (g[3] / g[2]))^(1 / 4), 0.5, 0.9999))
         g = mom(r, a, b); a *= clamp(sqrt(target[2] / g[2]), 0.7, 1.4)
         g = mom(r, a, b); b = sqrt(max(b^2 + (target[1] - g[1]) / fε, 1e-10))
         g = mom(r, a, b)
-        maximum(abs.(g[1:3] .- target[1:3])) < tol && break
+        maximum(abs.(g[1:(fix_rho ? 2 : 3)] .- target[1:(fix_rho ? 2 : 3)])) < tol && break
     end
     (ρq = r, sηq = a, sεq = b, fit = g, target = target)
 end
