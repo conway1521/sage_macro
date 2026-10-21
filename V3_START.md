@@ -3189,3 +3189,13 @@ Income fits with persistence fixed: lag 2 short by 4.8 / 1.9 per cent (FR low / 
 **The translation** (`dread_horizon`, SAGEConfig; `dread_params`): each period the household dreads the lottery over the coming `dread_horizon` periods, the chance of a change of status from the h-step transition matrix, with the same utility gap between keeping and losing work. With CRRA and four quarters, the coming year's lottery felt each quarter at Pagel's weight keeps the term's size relative to consumption utility as in version 1 (per year: four quarters at a quarter of the year's consumption utility, each with the year's q, against one year with the year's q). 1 is the former term exactly. A stated translation of an annual estimate, not a new parameter; to be confirmed as stage 1d's convention by the user.
 
 Runs: regression 39642651937; G+A at horizon 4: FR 39642661751, DE 39642672274, IT 39642681845 (same patience as section 123, G's results there).
+
+**Results** (regression 39642651937 passes, 3.5e-13):
+
+| | G: htm / fall | G+A, horizon 1: htm / median/yr / fall | G+A, horizon 4: htm / median/yr / MPC / fall |
+|---|---|---|---|
+| FR (0.86) | 0.191 / 0.124 | 0.158 / 0.125 / 0.157 | 0.106 / 0.145 / 0.191 / **0.167** |
+| DE (0.89) | 0.206 / 0.105 | 0.162 / 0.124 / 0.144 | 0.101 / 0.159 / 0.158 / **0.127** |
+| IT (0.925) | 0.203 / 0.113 | 0.176 / 0.286 / 0.132 | 0.151 / 0.314 / 0.129 / **0.145** |
+
+**Reading.** Dread at its annual size roughly halves hand-to-mouth in France and Germany (0.19 to 0.11, 0.21 to 0.10) and lowers it by a quarter in Italy: households hold a buffer against the coming year's lottery. The fall on job loss moves little beyond horizon 1, and not in one direction (France and Italy up 0.01, Germany down 0.02), because the larger buffer offsets the stronger motive. So the fall in the quarterly economy is mostly G's (0.10 to 0.12), and dread's contribution is 0.02 to 0.05. The tension is version 1's, larger: with dread in choices at Pagel's weight, the liquid-wealth targets need much lower patience in a one-asset model. Under the decision of section 123, liquidity waits for the second asset, where dread can be met by wealth held outside cash. Dread's cost among the employed (per quarter, quarterly utility): 0.0088, 0.0087, 0.0062.
