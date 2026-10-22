@@ -65,7 +65,7 @@ The durations, not the flows, set the exit hazards: the flows imply faster exits
 allow, most plausibly churning between unemployment and inactivity (V3_START.md section 119).
 """
 function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, eps_stay::Float64 = 0.0, fix_rho::Bool = true,
-                         profile::Bool = false)
+                         profile::Bool = false, entitle::Bool = profile)
     c.period == 1 || error("give the annual configuration")
     c = SAGEConfig(c; nz = nz)               # seven persistent states pay for the larger chain (checked, V3_START.md section 116)
     tab = Dict{Tuple{String,String,String},Float64}()
@@ -107,7 +107,7 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, 
         rrL, pL = pt[(c.country, "months 25-60")]; lps = rrL > 0 ? pL / rrL : 0.0
     end
     mk(δ, ι) = labour_chain(SAGEParams(nz = 2, α = fill(1.0, 2), B = fill(1.0, 2)); nU = nU, hU = hU, hL = hL, δ = δ,
-                            sU = sU, sL = sL, ιE = ι, νE = νE, νU = νU, withN = true, entN = profile)
+                            sU = sU, sL = sL, ιE = ι, νE = νE, νU = νU, withN = true, entN = entitle)
     function bis(f, lo, hi)                 # f increasing: the root of f = 0
         for _ in 1:80
             m = (lo + hi) / 2; f(m) < 0 ? (lo = m) : (hi = m)
@@ -127,7 +127,7 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, 
         lo = gi == 1 ? "low" : "high"
         quarterly_income(c.nz, c.n_eps, pub("rho_$lo"), sqrt(pub("var_persistent_$lo")), sqrt(pub("var_transitory_$lo"));
                          nU = nU, hU = hU, hL = hL, δ = δq[gi], rrU = rrU, rrL = rrL,
-                         flows = (sU = sU, sL = sL, ιE = ιE[gi], νE = νE, νU = νU, withN = true, entN = profile), stay = eps_stay, fix_rho = fix_rho)
+                         flows = (sU = sU, sL = sL, ιE = ιE[gi], νE = νE, νU = νU, withN = true, entN = entitle), stay = eps_stay, fix_rho = fix_rho)
     end
     for gi in 1:2
         @info @sprintf("stage 1b income, cell %d: quarterly persistence %.4f%s, sds %.4f / %.4f; annual autocovariances lags 0-2 %s against %s", gi,
@@ -136,7 +136,7 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, 
     bq = c.beta_bar^(1 / ppy)
     dbq = ntuple(gi -> (c.beta_bar + c.beta_cell[gi])^(1 / ppy) - bq, 2)
     SAGEConfig(c; period = ppy, nU = nU, f_find = hU[1], hU_vec = hU, sU_vec = sU, f_long = (hL, hL), sL = sL,
-               withN = true, iotaE = ιE, nuE = νE, nuU = νU, eps_stay = eps_stay, entN = profile,
+               withN = true, iotaE = ιE, nuE = νE, nuU = νU, eps_stay = eps_stay, entN = entitle,
                rrU_vec = profile ? rrU : Float64[], rrU_pub_vec = rrUp, rr_long = rrL, long_public_share = lps, dread_horizon = ppy, delta = δq, beta_bar = bq, beta_cell = dbq,
                rho_cell = (inc[1].ρq, inc[2].ρq), eta_cell = (inc[1].sηq, inc[2].sηq), sd_eps_cell = (inc[1].sεq, inc[2].sεq),
                R_one = isnan(c.R_one) ? NaN : c.R_one^(1 / ppy), a_max = ppy * c.a_max, na = max(c.na, 300))
