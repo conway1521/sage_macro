@@ -3229,3 +3229,13 @@ Runs: chain test 39675920293; regression 39675928481 (stage 0), 39675936667 (1a)
 **Reading.** The benefit profile raises the fall on job loss by 0.04 to 0.05 in every country, France included, whose first two years are unchanged: the fall reflects the whole expected spell, and income beyond two years is now lower (0.34 against 0.48 in France, 0.33 against 0.51 in Germany, 0.24 against 0.44 in Italy). Germany's G holds less, not more (hand-to-mouth 0.21 to 0.26, median 0.10 to 0.07): with L's income near the floor more households expect to depend on a means-tested floor, which taxes saving (the mechanism of Hubbard, Skinner and Zeldes 1995), so Germany now meets its hand-to-mouth target at this patience. Stage 1b's lower falls were flattered by benefits more generous than the rules: two years at the first year's rate and version 1's jobless-household income after. The fall is now 0.15 to 0.16 in G and 0.18 to 0.21 with dread, three and a half to five times Kolsrud and co-authors' 0.044. The income fits miss lag 2 by more with the lower income in L (France's low cell 12 per cent, Italy's 9).
 
 **Speed.** On one worker the solves take 1.5 to 4 hours and Italy's G+A more than six. Test running: the same profile without the spell without entitlement (231 states, three workers), to measure what that spell changes: FR 39720088304 / 39720093509, DE 39720098830 / 39720104565, IT 39720112115 / 39720117899.
+
+**Without the spell without entitlement** (entrants from inactivity entitled as entrants from work; 231 states, three workers; 39720088304 to 39720117899):
+
+| | G: htm / median/yr / fall (with the spell) | G+A: htm / fall (with the spell) | minutes (G, G+A) |
+|---|---|---|---|
+| FR | 0.190 / 0.100 / 0.157 (0.162) | 0.118 / 0.205 (0.211) | 41, 68 |
+| DE | 0.257 / 0.071 / 0.149 (0.151) | 0.109 / 0.175 (0.176) | 24, 51 |
+| IT | 0.188 / 0.272 / 0.151 (0.156) | 0.140 / 0.203 (not finished) | 50, 81 |
+
+The spell changes the fall by 0.002 to 0.006 and hand-to-mouth by at most 0.004 (its entrants are 7 to 16 per cent of the unemployed, and the fall is measured on entrants from work), and it costs a factor of three to five in time and two thirds of the runner's workers. **Proposed**: stage 1d without it, a stated simplification of the design (entitlement for every entrant), with its size from this table; the option stays (`entitle = true`) for one check on the final calibration. Italy's G+A, which did not finish with the spell: fall 0.203.
