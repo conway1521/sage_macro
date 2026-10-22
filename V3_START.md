@@ -3239,3 +3239,5 @@ Runs: chain test 39675920293; regression 39675928481 (stage 0), 39675936667 (1a)
 | IT | 0.188 / 0.272 / 0.151 (0.156) | 0.140 / 0.203 (not finished) | 50, 81 |
 
 The spell changes the fall by 0.002 to 0.006 and hand-to-mouth by at most 0.004 (its entrants are 7 to 16 per cent of the unemployed, and the fall is measured on entrants from work), and it costs a factor of three to five in time and two thirds of the runner's workers. **Proposed**: stage 1d without it, a stated simplification of the design (entitlement for every entrant), with its size from this table; the option stays (`entitle = true`) for one check on the final calibration. Italy's G+A, which did not finish with the spell: fall 0.203.
+
+**Decision (the user, 2026-10-22)**: stage 1d runs without the spell without entitlement; `duration_config` defaults are now `profile = true, entitle = false`. One check with the spell on the final calibration.

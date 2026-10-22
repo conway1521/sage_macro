@@ -65,7 +65,7 @@ The durations, not the flows, set the exit hazards: the flows imply faster exits
 allow, most plausibly churning between unemployment and inactivity (V3_START.md section 119).
 """
 function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, eps_stay::Float64 = 0.0, fix_rho::Bool = true,
-                         profile::Bool = false, entitle::Bool = profile)
+                         profile::Bool = true, entitle::Bool = false)
     c.period == 1 || error("give the annual configuration")
     c = SAGEConfig(c; nz = nz)               # seven persistent states pay for the larger chain (checked, V3_START.md section 116)
     tab = Dict{Tuple{String,String,String},Float64}()
@@ -94,6 +94,8 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, 
     # quarters, and in the spell without entitlement of those entering from inactivity, the mean of months 25 to 60.
     # The public part (the partner's earnings removed) finances the tax. Without `profile`: version 1's first-year
     # rate in every quarter of the spell and its jobless-household income beyond, as at stage 1b.
+    # Defaults (the user, 2026-10-22, V3_START.md section 125): the profile on; the spell without entitlement off
+    # (`entitle`), a stated simplification: it moves the fall by 0.002 to 0.006 at three to five times the time.
     rrU, rrUp, rrL, lps = fill(c.rr, nU), Float64[], c.rr_long, c.long_public_share
     if profile
         pt = Dict{Tuple{String,String},Tuple{Float64,Float64}}()
