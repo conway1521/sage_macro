@@ -46,9 +46,21 @@
 # is affordable and no illiquid wealth, the slice k = 0 is the one-asset
 # problem exactly, which is the reduction test.
 
-using Printf
+using Printf, SparseArrays
 const GOLD = 0.6180339887498949
 const K_ROUNDS = 2          # rounds of (value iteration at fixed refined targets, refine again), k_sub > 1
+# SPEED (V3_START.md section 128; the user, 2026-10-22). With `fast` (the default; SAGE_EGM2_FAST=0 turns it off):
+# (1) the expectation over next period's income state uses the transition matrix as a sparse matrix when most of it is
+#     zero (the quarterly labour chain), the same product in another order;
+# (2) the inner problems (one per illiquid node) and the outer choice (one per income state) run on the process's
+#     threads, each with its own work arrays; they write disjoint parts of the arrays, so the result does not depend
+#     on the number of threads;
+# (3) each value iteration adds the midpoint of the MacQueen-Porteus bounds, beta/(1-beta) (dmin + dmax)/2, as the
+#     final step already did: the fixed point is unchanged (both bounds are zero there) and the error that the
+#     iteration removes at rate beta, a common shift of the value, is removed at once;
+# (4) a solve without a warm start starts from the last solution of a problem of the same size in this process
+#     (WARM2; SAGE_WARM2=0 turns it off). Starting values change the iterations, not the fixed point.
+const WARM2 = Dict{NTuple{4,Int},Any}()
 
 """
 Illiquid grid. With k_mid = 0: zero, then exponentially spaced to k_max. With
@@ -99,7 +111,8 @@ adjusting, and the grids, plus V and Vb for warm starts.
 """
 function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01,
                              theta_adj::Float64 = 0.01, full::Bool = false, tol::Float64 = 1e-9,
-                             maxit::Int = 5000, warm = nothing, trace::Bool = false)
+                             maxit::Int = 5000, warm = nothing, trace::Bool = false,
+                             fast::Bool = get(ENV, "SAGE_EGM2_FAST", "1") == "1")
     p0.cfloor == 0 || error("the means-tested floor is not built for two assets yet")
     isempty(p0.effort_set) && p0.job_effort && error("effort set by the job is not built for two assets yet")
     # survival enters discounting; the distribution adds the newborns
@@ -147,6 +160,8 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     shift = [(p.Rk * kg[m] - p.chi0 - kt[f]) / p.R for m in 1:nk, f in 1:nf]
 
     V = zeros(na, nk, nz); Vb = zeros(na, nk, nz)
+    wkey = (na, nk, nz, max(p.k_sub, 1))
+    warm === nothing && fast && get(ENV, "SAGE_WARM2", "1") == "1" && haskey(WARM2, wkey) && (warm = WARM2[wkey])
     if warm !== nothing
         V .= warm.V; Vb .= warm.Vb
     else
@@ -165,10 +180,14 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     Vn = similar(V); Vbn = similar(Vb); Padj = zeros(na, nk, nz)
     qadj = zeros(nk, na, nk, nz)          # adjusting options: weight of option j at (i, m, s)
     wsel = zeros(nk, na, nk, nz)          # the target option j stands for: this share of the way from k_j to k_j+1
-    Vo = zeros(nk); Mo = zeros(nk)
-    EV = zeros(na, nz); EVb = zeros(na, nz)
-    aend = zeros(na); cend = zeros(na); eend = zeros(na)
-    Vj = zeros(nf); Mj = zeros(nf); ptr = ones(Int, nf)
+    # work arrays, one set per thread
+    nth = Threads.nthreads()
+    Vo_t = [zeros(nk) for _ in 1:nth]; Mo_t = [zeros(nk) for _ in 1:nth]
+    EV_t = [zeros(na, nz) for _ in 1:nth]; EVb_t = [zeros(na, nz) for _ in 1:nth]
+    Vc_t = [zeros(na, nz) for _ in 1:nth]; Vbc_t = [zeros(na, nz) for _ in 1:nth]
+    aend_t = [zeros(na) for _ in 1:nth]; cend_t = [zeros(na) for _ in 1:nth]; eend_t = [zeros(na) for _ in 1:nth]
+    Vj_t = [zeros(nf) for _ in 1:nth]; Mj_t = [zeros(nf) for _ in 1:nth]; ptr_t = [ones(Int, nf) for _ in 1:nth]
+    Πts = sparse(Matrix(transpose(Π))); usesp = fast && nnz(Πts) < 0.35 * nz^2
     iters = 0
     t_in = 0.0; t_out = 0.0
     hist = zeros(maxit + 1); stall = 0.0; relax = 1.0; stalled = false
@@ -178,14 +197,23 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
         polish || (itp += 1)
         t0 = time()
         # inner: the liquid problem for every illiquid node taken as k'
-        for j in 1:nk
-            mul!(EV, view(V, :, j, :), Π'); mul!(EVb, view(Vb, :, j, :), Π')
+        let V = V, Vb = Vb          # bound for the threads (V and Vb are swapped below)
+        Threads.@threads for j in 1:nk
+            tid = Threads.threadid()
+            EV = EV_t[tid]; EVb = EVb_t[tid]
+            if usesp
+                copyto!(Vc_t[tid], view(V, :, j, :)); copyto!(Vbc_t[tid], view(Vb, :, j, :))
+                mul!(EV, Vc_t[tid], Πts); mul!(EVb, Vbc_t[tid], Πts)
+            else
+                mul!(EV, view(V, :, j, :), Π'); mul!(EVb, view(Vb, :, j, :), Π')
+            end
             for s in 1:nz, d in (0, 1)
                 egm_branch!(view(cin[d+1], :, j, :), view(ein[d+1], :, j, :), view(bpin[d+1], :, j, :),
                             view(vin[d+1], :, j, :), p, a, view(EV, :, s), view(EVb, :, s),
                             s, d, wv[s], oth[s][d+1], tfl[s], bel[s], con_c[d+1], con_e[d+1],
-                            aend, cend, eend, view(D, :, s), view(Dp, :, s))
+                            aend_t[tid], cend_t[tid], eend_t[tid], view(D, :, s), view(Dp, :, s))
             end
+        end
         end
         @inbounds for x in eachindex(Vin)
             b0 = vin[1][x]; b1 = p.social_strength == 0 ? -Inf : vin[2][x]; mx = max(b0, b1)          # S exactly off: no participation choice without a payoff
@@ -196,7 +224,11 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
         end
         t1 = time(); t_in += t1 - t0
         # outer: keep or adjust
-        @inbounds for s in 1:nz, m in 1:nk
+        let Vn = Vn, Vbn = Vbn, polish = polish, frozen = frozen
+        Threads.@threads for s in 1:nz
+          tid = Threads.threadid()
+          Vo = Vo_t[tid]; Mo = Mo_t[tid]; Vj = Vj_t[tid]; Mj = Mj_t[tid]; ptr = ptr_t[tid]
+          @inbounds for m in 1:nk
             jl = j0[m]; w = om[m]
             fill!(ptr, 1)
             for i in 1:na
@@ -302,6 +334,8 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                 end
                 Vbn[i, m, s] = p.R * Mbar
             end
+          end
+        end
         end
         t_out += time() - t1
         if polish                         # policies are in place; V and Vb stay the converged ones
@@ -336,7 +370,11 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
             if stalled
                 Vn .= 0.5 .* (Vn .+ V); Vbn .= 0.5 .* (Vbn .+ Vb); stall = dist
             end
-        elseif relax < 1
+        else
+            # the midpoint of the bounds, every iteration (fast; see the header)
+            fast && (Vn .+= p.β / (1 - p.β) * 0.5 * (dmin + dmax))
+        end
+        if !(dist < tol || stalled) && relax < 1
             @inbounds for x in eachindex(V)
                 Vn[x] = V[x] + relax * (Vn[x] - V[x]); Vbn[x] = Vb[x] + relax * (Vbn[x] - Vb[x])
             end
@@ -368,6 +406,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     get(ENV, "SAGE_MEM", "0") == "1" &&
         (println("  two-asset value iteration: ", iters, " iterations, ", nk, " nodes, ", nf, " targets, resident memory ", round(Sys.maxrss() / 1e9; digits = 2), " GB"); flush(stdout))
     trace && @printf("  value iteration: inner %.1f s, outer %.1f s\n", t_in, t_out)
+    fast && get(ENV, "SAGE_WARM2", "1") == "1" && (WARM2[wkey] = (V = copy(V), Vb = copy(Vb)))
     dist = two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
                                   wsel = wsel, ksh = ksh, death = p0.death, oth = oth, wv = wv, trs = [transfer_at(p, s) for s in 1:nz])
     λ = dist.lambda; P1s = dist.P1; es = dist.e
@@ -384,7 +423,8 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
      lambda = λ, P1 = P1s, e = es, e_d = dist.e_d, cbar = dist.cbar, ybar = dist.ybar, post = dist.post,
      Pi = Π, Padj = Padj, V = V, Vb = Vb, z_vals = z_vals,
      iters = iters, stalled = stall, relax = relax, theta = theta, inner = (c = cin, e = ein, bp = bpin, P1 = P1in), qadj = qadj,
-     j0 = j0, om = om, shift = shift, ksh = ksh, wsel = wsel, adjp = (Rk = p.Rk, chi0 = p.chi0, R = p.R))
+     j0 = j0, om = om, shift = shift, ksh = ksh, wsel = wsel, adjp = (Rk = p.Rk, chi0 = p.chi0, R = p.R),
+     timing = (inner = t_in, outer = t_out, threads = nth, sparse = usesp))
 end
 
 """

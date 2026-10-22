@@ -19,6 +19,9 @@ on:
       dread:
         description: "1: dread of job loss enters choices, configurations with A read their _D files (phase 1 of ROADMAP.md)"
         default: "0"
+      threads:
+        description: "Julia threads per process (the two-asset solver uses them; keep workers x threads at most 4)"
+        default: "1"
 jobs:
   probe:
     runs-on: ubuntu-latest
@@ -37,6 +40,7 @@ jobs:
           SAGE_MEM: "1"
           SAGE_SOLVER: ${{ inputs.solver }}
           SAGE_DREAD_CHOICE: ${{ inputs.dread }}
+          JULIA_NUM_THREADS: ${{ inputs.threads }}
         run: |
           cd SAGE_Bewley
           set -o pipefail
