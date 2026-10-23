@@ -3320,3 +3320,14 @@ Italy's G is calibrated on its first solve (file `calibration_v5q_IT_G.txt`: pat
 ## 131. Stage 1d: S on the quarterly economy (2026-10-23)
 
 `calibrate_quarterly_s.jl CODE CONFIG BETA GAP`: version 1's recipe for the social parameters (response families over the belonging grid, the measured ratio of the unemployed imposed, kappa and sigma_m scanned against the two cells' participation, the selected equilibrium, multiplier at most 5, root loss within 0.035) on the quarterly economy at the quarterly G (or G+A) patience; the economy at the best point solved, hand-to-mouth reported, patience refitted in a second pass if participation moved it beyond tolerance. Italy G+S launched on Italy's quarterly G (39979238942).
+
+**Calibrated** (files `calibration_v5q_*`, committed by hand):
+
+| | patience, gap (annual) | htm (target) | education gap (target) | median/yr (survey) | MPC 12m (survey) | fall Kolsrud | solves |
+|---|---|---|---|---|---|---|---|
+| FR G | 0.823, 0.138 | 0.273 (0.268) | 0.156 (0.177) | 0.063 (0.047) | 0.731 (0.331) | 0.165 | 4 |
+| DE G | 0.915, 0.066 | 0.253 (0.252) | 0.203 (0.200) | 0.074 (0.117) | 0.536 (0.464) | 0.168 | 4 |
+| IT G | 0.915, 0.038 | 0.194 (0.203) | 0.105 (0.126) | 0.253 (0.229) | 0.412 (0.486) | 0.170 | 1 |
+| DE G+A | 0.814, 0.116 | 0.254 (0.252) | 0.188 (0.200) | 0.058 (0.117) | 0.624 (0.464) | 0.222 | 4 |
+
+**Reading.** Every G is calibrated, with patience far below version 1's (France's cell below tertiary at 0.69 a year). France's MPC is more than twice its survey value and Germany's above, Italy's below; the fall on Kolsrud's estimand is 0.17 in G in all three and 0.22 with dread in Germany. The German G+S probe at version 1's social parameters (39978814131) was killed at 2.5 hours (exit 143, most plausibly memory with S on three workers): the S calibrations run on two workers. Germany's income fit with the profile misses lag 2 by about a quarter in the low cell (0.049 against 0.064): the fixed persistence with L's lower income; to revisit. Launched: FR G+S 40003867751, DE G+S 40003878586, DE G+S+A 40003888047.
