@@ -3316,3 +3316,7 @@ Runs: regression 39890687178; G at section 123's patience with the profile, no s
 | DE G+A | 0.83, 0.036 | 0.162 | 0.085 | 0.099 | 0.513 | 0.212 |
 
 Italy's G is calibrated on its first solve (file `calibration_v5q_IT_G.txt`: patience 0.915, gap 0.0375, to be committed). Relaunched from better starts: FR G 39978945728, DE G 39978956190, FR G+A 39978966578, DE G+A 39978976872, IT G+A 39978986916. Also running: G+S at version 1's social parameters, one solve each (`probe_v2_gs.jl`; FR 39978804379, DE 39978814131, IT 39978824274).
+
+## 131. Stage 1d: S on the quarterly economy (2026-10-23)
+
+`calibrate_quarterly_s.jl CODE CONFIG BETA GAP`: version 1's recipe for the social parameters (response families over the belonging grid, the measured ratio of the unemployed imposed, kappa and sigma_m scanned against the two cells' participation, the selected equilibrium, multiplier at most 5, root loss within 0.035) on the quarterly economy at the quarterly G (or G+A) patience; the economy at the best point solved, hand-to-mouth reported, patience refitted in a second pass if participation moved it beyond tolerance. Italy G+S launched on Italy's quarterly G (39979238942).
