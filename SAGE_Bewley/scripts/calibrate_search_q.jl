@@ -9,10 +9,15 @@
 # quarterly calibration of the configuration (calibration_v5q_<C>_<CFG>.txt), dread in choices over the year; the
 # cost of being out of work in wellbeing only. The response of job finding to benefits is a test, not a target.
 #
-#   SAGE_DREAD_CHOICE=1 julia --project=scripts/run_env scripts/calibrate_search_q.jl CODE CONFIG [ROUNDS]
+# RESUME (third argument `resume`): start from search_v5q_<C>_<CFG>.txt, the costs of an earlier run. The step is
+# damped (DAMP = 0.6 of the exact exponent): the cost of one period moves the gain from work in the periods before it,
+# so the undamped step overshot and alternated in the first two periods (Germany, run 40015089568).
+#
+#   SAGE_DREAD_CHOICE=1 julia --project=scripts/run_env scripts/calibrate_search_q.jl CODE CONFIG [ROUNDS] [resume]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
-code = uppercase(ARGS[1]); cfg = uppercase(ARGS[2]); rounds = length(ARGS) >= 3 ? parse(Int, ARGS[3]) : 6
+code = uppercase(ARGS[1]); cfg = uppercase(ARGS[2]); rounds = length(ARGS) >= 3 ? parse(Int, ARGS[3]) : 8
+resume = length(ARGS) >= 4 && ARGS[4] == "resume"; DAMP = 0.6
 say(x...) = (println(x...); flush(stdout))
 # dread in choices (SAGE_DREAD_CHOICE=1), or in wellbeing only where the country's calibration with it in choices
 # failed (France, section 133: the configuration's file then carries G's patience)
@@ -29,6 +34,11 @@ c = SAGEConfig(cb; beta_bar = β^(1 / 4), beta_cell = ((β - gap)^(1 / 4) - β^(
 S && (c = SAGEConfig(c; kappa = parse(Float64, q["kappa"]), sigma_m = parse(Float64, q["sigma_m"]), unemployed_ratio = parse(Float64, country_rows()[code]["ratio"])))
 target = vcat(cb.hU_vec, cb.f_long[1])
 k = [fill(kU[g], cb.nU + 1) for g in 1:2]; for g in 1:2; k[g][end] = kL[g]; end
+if resume
+    sq = readkv(joinpath(@__DIR__, "search_v5q_$(code)_$(cfg).txt"))
+    k = [parse.(Float64, split(sq["search_kq_cell$g"])) for g in 1:2]
+    say("resuming from search_v5q_$(code)_$(cfg).txt")
+end
 say(@sprintf("%s %s quarterly, patience %.4f gap %.4f: target exits to work by period of the spell %s, L %.4f", code, cfg, β, gap,
              string(round.(cb.hU_vec, digits = 4)), cb.f_long[1]))
 best = nothing
@@ -43,7 +53,7 @@ for it in 1:rounds
     global best = (k = deepcopy(k), err = err, r = r)
     err < 0.03 && break
     for g in 1:2, d in eachindex(target)
-        k[g][d] *= clamp((r.search_exit[g][d] / target[d])^γs, 0.5, 2.0)
+        k[g][d] *= clamp((r.search_exit[g][d] / target[d])^(DAMP * γs), 0.5, 2.0)
     end
 end
 say("# search_v5q_$(code)_$(cfg).txt, written by calibrate_search_q.jl ($(best.err < 0.03 ? "fitted" : "best round, worst error $(round(best.err, digits = 3))")); arrival rate one")
