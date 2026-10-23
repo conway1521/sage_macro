@@ -1210,6 +1210,7 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
             consumption_drop = mE <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].dmass[emp]) for g in 1:2) / mE,
             hand_to_mouth_kvw = sum(cs[g].share * sum(pooled[g].hmass) for g in 1:2) /
                                 sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
+            hand_to_mouth_cell = Tuple(sum(pooled[g].hmass) / sum(pooled[g].mass) for g in 1:2),
             # the wealthy hand-to-mouth: low liquid wealth, some illiquid (zero without the switch)
             wealthy_htm = sum(cs[g].share * sum(pooled[g].whmass) for g in 1:2) /
                           sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
