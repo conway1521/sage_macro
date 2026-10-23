@@ -3304,3 +3304,15 @@ Runs: regression 39890687178; G at section 123's patience with the profile, no s
 ## 130. Stage 1d: calibrating G on the quarterly economy (2026-10-23)
 
 `calibrate_quarterly.jl CODE CONFIG BETA0 GAP0 [MAXSOLVES]`: annual patience of the tertiary cell and its gap for the cell below, to the hand-to-mouth share (households not retired: 0.2680, 0.2517, 0.2028) and its gap by education (0.177, 0.200, 0.126), tolerances 0.01 and 0.03; Broyden from finite differences, steps at most 0.05; everything else from version 1's annual calibration, the job's hours recomputed. Tests: median liquid wealth, the twelve-month MPC, the fall as Kolsrud. The results gain `hand_to_mouth_cell`. Version 1's annual patience was 0.962, 0.984, 0.983 (gaps 0.043, 0.036, 0.038); the quarterly economy needs far lower patience for the same buffers (section 121), so the starts are 0.80, 0.88, 0.915. Runs: FR 39970086550, DE 39970095124, IT 39970104356. Under the design's rule (section 3.4), a country that cannot meet its targets on the quarterly economy stays annual, and that is stated.
+
+**First round** (the fit's loop failed after its first solve on a scoping error of the script, fixed; `test_egm2.jl` 39970445504 passes with the fast two-asset solver: the reduction to one asset within 5.6e-10):
+
+| | patience, gap | htm (target) | education gap (target) | median/yr (survey) | MPC 12m (survey) | fall Kolsrud |
+|---|---|---|---|---|---|---|
+| FR G | 0.80, 0.043 | 0.246 (0.268) | 0.082 (0.177) | 0.073 (0.047) | 0.700 (0.331) | 0.164 |
+| DE G | 0.88, 0.036 | 0.271 (0.252) | 0.162 (0.200) | 0.065 (0.117) | 0.573 (0.464) | 0.171 |
+| **IT G, calibrated** | 0.915, 0.038 | 0.194 (0.203) | 0.105 (0.126) | 0.253 (0.229) | 0.412 (0.486) | 0.170 |
+| FR G+A | 0.75, 0.043 | 0.184 | 0.037 | 0.083 | 0.673 | 0.212 |
+| DE G+A | 0.83, 0.036 | 0.162 | 0.085 | 0.099 | 0.513 | 0.212 |
+
+Italy's G is calibrated on its first solve (file `calibration_v5q_IT_G.txt`: patience 0.915, gap 0.0375, to be committed). Relaunched from better starts: FR G 39978945728, DE G 39978956190, FR G+A 39978966578, DE G+A 39978976872, IT G+A 39978986916. Also running: G+S at version 1's social parameters, one solve each (`probe_v2_gs.jl`; FR 39978804379, DE 39978814131, IT 39978824274).
