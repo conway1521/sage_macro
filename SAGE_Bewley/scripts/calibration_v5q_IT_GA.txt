@@ -1,0 +1,3 @@
+# calibration_v5q_IT_GA.txt, written by calibrate_quarterly.jl (run 39978986916, calibrated; the gap at the search's upper bound 0.15); the quarterly economy of stage 1c from calibration_v5m_IT_G.txt, dread in choices over the year
+beta_annual = 0.880688
+beta_gap_annual = 0.150000
