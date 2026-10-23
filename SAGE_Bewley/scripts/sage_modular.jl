@@ -220,6 +220,9 @@ Base.@kwdef struct SAGEConfig
     search_gamma::Float64 = 0.35
     search_kU::NTuple{2,Float64} = (NaN, NaN)
     search_kL::NTuple{2,Float64} = (NaN, NaN)
+    # Stage 1d (V3_START.md section 132): the cost level by period of the spell, by cell (nU entries for U_1 .. U_nU,
+    # then L), the arrival rate normalised to one as in DellaVigna et al. (2017); empty: search_kU and search_kL
+    search_kq::NTuple{2,Vector{Float64}} = (Float64[], Float64[])
     # THE COST OF BEING OUT OF WORK beyond the income lost (A; DIMENSIONS_SPEC.md, phase 1). `out_ls` is the
     # life-satisfaction gap (0 to 10) between those out of work and in work at the same income, positive for a
     # cost; it is turned into a utility cost by the Green Book's bridge (HM Treasury 2021, the formula
@@ -640,8 +643,14 @@ function _params_of(c::SAGEConfig, cell)
     end
     if c.A && c.search && c.unemployment
         isnan(cell.fL) && error("search effort is built on the state out of work (f_long)")
-        (isnan(c.search_kU[cell.gi]) || isnan(c.search_kL[cell.gi])) && error("search on with no cost level for cell $(cell.gi): fit search_kU and search_kL")
-        sk = [t === :U ? c.search_kU[cell.gi] : t === :L ? c.search_kL[cell.gi] : 0.0 for t in stypes(ps[1])]
+        kq = c.search_kq[cell.gi]
+        if isempty(kq)
+            (isnan(c.search_kU[cell.gi]) || isnan(c.search_kL[cell.gi])) && error("search on with no cost level for cell $(cell.gi): fit search_kU and search_kL")
+            sk = [t === :U ? c.search_kU[cell.gi] : t === :L ? c.search_kL[cell.gi] : 0.0 for t in stypes(ps[1])]
+        else
+            du_ = ps[1].dur
+            sk = [t === :U ? kq[du_[i] > NONENT ? du_[i] - NONENT : du_[i]] : t === :L ? kq[end] : 0.0 for (i, t) in enumerate(stypes(ps[1]))]
+        end
         ps = [update(p; search_k = sk, search_gamma = c.search_gamma) for p in ps]
     end
     if c.A && c.out_ls > 0 && c.unemployment
@@ -875,7 +884,7 @@ function floor_tax_of(c::SAGEConfig)
     key = hash(repr((c0.rr_public, c0.qbar, c0.effort_by_cell, c0.cfloor, c0.f_long, c0.assist_long, c0.assist_public, c0.rr_long, c0.long_public_share, c0.control_share, c0.alpha, c0.alpha_off, c0.A, c0.premium_base, c0.share, c0.delta, c0.f_find, c0.rr, c0.e_ref, c0.phi, c0.psi, c0.beta_bar,
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
-                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop, c0.search, c0.search_gamma, c0.search_kU, c0.search_kL, c0.out_ls, c0.out_M, c0.out_betaY, c0.period, c0.nU, c0.chain, c0.hU_vec, c0.sU_vec, c0.sL, c0.withN, c0.iotaE, c0.nuE, c0.nuU, c0.eps_stay, c0.dread, c0.dread_mode, c0.dread_horizon, c0.rrU_vec, c0.rrU_pub_vec, c0.entN)))
+                     c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop, c0.search, c0.search_gamma, c0.search_kU, c0.search_kL, c0.out_ls, c0.out_M, c0.out_betaY, c0.period, c0.nU, c0.chain, c0.hU_vec, c0.sU_vec, c0.sL, c0.withN, c0.iotaE, c0.nuE, c0.nuU, c0.eps_stay, c0.dread, c0.dread_mode, c0.dread_horizon, c0.rrU_vec, c0.rrU_pub_vec, c0.entN, c0.search_kq)))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
     cs = cells_of(c0); _, bw = betas_by_cell(c0)
@@ -1271,6 +1280,10 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
                          Tuple((r_ = findall(stv_ .=== (blk == 1 ? :U : :L));
                                 sum(cs[g].share * sum(pooled[g].smass[r_]) for g in 1:2) / sum(cs[g].share * sum(pooled[g].mass[r_]) for g in 1:2)) for blk in 1:2) :
                          (NaN, NaN)),
+            # stage 1d: the chance of finding work chosen, by cell and period of the spell (U_1 .. U_nU, then L); empty without search
+            search_exit = (c.A && c.search) ? Tuple((pg = params_of(cfgT, cs[g])[1]; stg = stypes(pg); dg = isempty(pg.dur) ? zeros(Int, length(stg)) : pg.dur;
+                                                    vcat([(r_ = findall((stg .=== :U) .& ((dg .== d) .| (dg .== NONENT + d))); sum(pooled[g].smass[r_]) / max(sum(pooled[g].mass[r_]), 1e-300)) for d in 1:max(c.nU, 1)],
+                                                         [(r_ = findall(stg .=== :L); sum(pooled[g].smass[r_]) / max(sum(pooled[g].mass[r_]), 1e-300))])) for g in 1:2) : (Float64[], Float64[]),
             agrid = agrid, Wtot = Wtot, pooled = pooled, employed = emp, lumptax = T,
             kgrid = c.illiquid ? illiquid_grid(c.k_max, c.nk, c.pexp, c.k_mid) : [0.0],
             Ktot = sum(cs[g].share .* vec(sum(pooled[g].K, dims = 1)) for g in 1:2),
