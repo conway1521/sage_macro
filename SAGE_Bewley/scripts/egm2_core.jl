@@ -841,6 +841,7 @@ function two_asset_agency_summary(p::SAGEParams, sol)
         s > nh && cb[i] > 0 && (dmass[s] += mm * max(0.0, 1 - cbar[i, m, s - nh] / cb[i]))
     end
     merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = whmass,
-           mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = mpcwmass, rmass = rmass, xmass = xmass, cmass = cmass, kmass = zeros(ns), smass = zeros(ns)),
+           mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = mpcwmass, rmass = rmass, xmass = xmass, cmass = cmass, kmass = zeros(ns), smass = zeros(ns),
+           mpc12mass = zeros(ns), kolmass = zeros(ns)),
           two_asset_welfare_parts(p, sol))
 end

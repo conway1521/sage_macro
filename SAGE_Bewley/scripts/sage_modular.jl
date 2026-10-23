@@ -1246,6 +1246,17 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
             # untargeted checks and the other agency parts (agency_shock.jl)
             mpc = sum(cs[g].share * sum(pooled[g].mpcmass) for g in 1:2) /
                   sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
+            # stage 1d (V3_START.md section 129): the MPC over twelve months (the HFCS question; the within-period MPC
+            # at an annual period), and the fall on job loss as Kolsrud et al. (2018) measure it: the mean drop over the
+            # first 20 weeks out of work among those still out of work, survival-weighted (a quarter is 13 weeks), against
+            # consumption in the last period in work; and its two quarters (NaN at an annual period)
+            mpc12 = c.period == 1 ? sum(cs[g].share * sum(pooled[g].mpcmass) for g in 1:2) / sum(cs[g].share * sum(pooled[g].mass) for g in 1:2) :
+                    sum(cs[g].share * sum(pooled[g].mpc12mass) for g in 1:2) / sum(cs[g].share * sum(pooled[g].mass) for g in 1:2),
+            fall_kolsrud = (K = sum(cs[g].share .* pooled[g].kolmass[1:5] for g in 1:2);
+                            K[1] <= 0 || K[4] <= 0 ? NaN : (c0 = K[2] / K[1]; S2 = K[4] / K[1];
+                                                           1 - (13 * K[3] / K[1] + 7 * S2 * K[5] / K[4]) / ((13 + 7 * S2) * c0))),
+            fall_q1 = (K = sum(cs[g].share .* pooled[g].kolmass[1:5] for g in 1:2); K[1] <= 0 ? NaN : 1 - K[3] / K[2]),
+            fall_q2 = (K = sum(cs[g].share .* pooled[g].kolmass[1:5] for g in 1:2); K[4] <= 0 ? NaN : 1 - (K[5] / K[4]) / (K[2] / K[1])),
             mpc_htm = (h = sum(cs[g].share * sum(pooled[g].hmass) for g in 1:2);
                        h <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].mpchmass) for g in 1:2) / h),
             room = sum(cs[g].share * sum(pooled[g].rmass) for g in 1:2) /

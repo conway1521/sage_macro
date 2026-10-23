@@ -24,4 +24,6 @@ HTM = Dict("FR" => 0.2680, "DE" => 0.2517, "IT" => 0.2028)
 t = @elapsed r = solve_economy(c; cache = false)
 @printf("%s stage %s %s (dread weight %.2f, horizon %d), annual patience %.4f: htm %.4f (target %.4f) | median/yr %.4f | MPC %.4f | fall %.4f | out %.4f | dread cost (E) %.5f | budget %.1e | %.1f min\n",
         code, prof ? (ARGS[5] == "1" ? "1c" : "1c without the spell without entitlement") : "1b", mode, mode == "GA" ? wt : 0.0, hz, βa, r.hand_to_mouth_kvw, HTM[code], r.wealth_p50 / (4 * r.median_income), r.mpc, r.consumption_drop, r.unemployment, r.dread_cost_E, r.budget_gap, t / 60)
+@printf("%s stage 1d measures: MPC within the quarter %.4f, over twelve months %.4f | fall as Kolsrud et al. (first 20 weeks) %.4f, quarter 1 %.4f, quarter 2 (still out of work) %.4f | the old fall (on entry, same assets) %.4f\n",
+        code, r.mpc, r.mpc12, r.fall_kolsrud, r.fall_q1, r.fall_q2, r.consumption_drop)
 println("DONE")

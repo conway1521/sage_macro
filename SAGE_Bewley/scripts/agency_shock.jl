@@ -129,9 +129,91 @@ function agency_summary(p::SAGEParams, sol)
         pmass[s] += m * pc; pinc[s] += m * py
         empv[s] && cbar[i, s] > 0 && (dmass[s] += m * max(0.0, 1 - cbar[i, pU[s]] / cbar[i, s]))
     end
+    # STAGE 1d's measures (V3_START.md section 129), at a sub-annual period only (zeros at an annual one, so version 1
+    # is unchanged): the twelve-month MPC and the fall on job loss as Kolsrud, Landais, Nilsson and Spinnewijn (2018)
+    # measure it. Both follow the households' own choices forward: next assets a_d, participation P1, and the
+    # transition the household chose where it searches (as welfare_parts).
+    mpc12mass = zeros(ns); kz = zeros(ns)            # kz[1:5]: entrant mass, its pre-loss consumption, quarter-1 consumption, survivors to quarter 2, their consumption
+    if p.ppy > 1
+        srch2 = !isempty(p.search_k) && hasproperty(sol, :search_xs) && !isempty(sol.search_xs)
+        Pf = Π; Ps = Π
+        if srch2
+            isEmp = isemp(p); Pf = copy(Π); Ps = copy(Π)
+            for s in 1:ns
+                p.search_k[s] > 0 || continue
+                rowE = Π[s, :] .* isEmp; fs = sum(rowE)
+                Pf[s, :] = rowE ./ fs; Ps[s, :] = (Π[s, :] .- rowE) ./ (1 - fs)
+            end
+        end
+        nzr = [findall(Π[s, :] .> 0) for s in 1:ns]
+        # the step from (i, s): (weight, bracket k, weight on k, probability of s2) for each branch d and next state s2
+        function step!(f, i, s)
+            for d in (0, 1)
+                w = d == 1 ? P1[i, s] : 1 - P1[i, s]; w <= 0 && continue
+                ap = sol.a_d[d+1][i, s]
+                k = clamp(searchsortedlast(a, ap), 1, na - 1); wk = clamp((a[k+1] - ap) / (a[k+1] - a[k]), 0.0, 1.0)
+                pw = (srch2 && p.search_k[s] > 0) ?
+                     SAGEBewley.interp_lin(a, view(sol.search_xs, :, s), ap) * (isempty(p.search_lam) ? 1.0 : p.search_lam[s]) : NaN
+                for s2 in nzr[s]
+                    pr = isnan(pw) ? Π[s, s2] : pw * Pf[s, s2] + (1 - pw) * Ps[s, s2]
+                    pr > 0 && f(w * pr, k, wk, s2)
+                end
+            end
+        end
+        # 1. The twelve-month MPC (the HFCS question: a windfall of one month's income, how much spent within twelve
+        #    months). G_t(a, s) is expected consumption t periods on from (a, s); C is its sum over the year's periods, and
+        #    the MPC the change in C from the windfall over the windfall, as the within-period MPC above.
+        G = copy(cbar); C = copy(cbar)
+        for t in 1:p.ppy-1
+            Gn = zeros(na, ns)
+            let Gc = G
+                for s in 1:ns, i in 1:na
+                    step!(i, s) do q, k, wk, s2
+                        Gn[i, s] += q * (wk * Gc[k, s2] + (1 - wk) * Gc[k+1, s2])
+                    end
+                end
+            end
+            G = Gn; C .+= G
+        end
+        for s in 1:ns, i in 1:na
+            m = λ[i, s]; m <= 0 && continue
+            Δ = ybar[i, s] * p.ppy / 12
+            Δ > 0 && (mpc12mass[s] += m * p.pc * (interp_ext(a, view(C, :, s), a[i] + Δ / p.R) - C[i, s]) / Δ)
+        end
+        # 2. The fall as Kolsrud and co-authors measure it: the cohort that loses its job (from work into the first
+        #    period out of work), its consumption in its last period in work, and in the first and second periods out
+        #    of work among those still out of work (into the second duration). Combined in sage_modular.jl.
+        dur = isempty(p.dur) ? zeros(Int, ns) : p.dur
+        U1 = falses(ns); U2 = falses(ns)
+        for s in 1:ns
+            stv[s] === :U && dur[s] == 1 && (U1[s] = true); stv[s] === :U && dur[s] == 2 && (U2[s] = true)
+        end
+        if any(U1) && any(U2)
+            c1 = zeros(na, ns)
+            for s in 1:ns
+                empv[s] || continue
+                for i in 1:na
+                    m = λ[i, s]; m <= 0 && continue
+                    step!(i, s) do q, k, wk, s2
+                        U1[s2] || return
+                        kz[1] += m * q; kz[2] += m * q * cbar[i, s]
+                        c1[k, s2] += m * q * wk; c1[k+1, s2] += m * q * (1 - wk)
+                    end
+                end
+            end
+            for s in 1:ns, i in 1:na
+                c1[i, s] > 0 || continue
+                kz[3] += c1[i, s] * cbar[i, s]
+                step!(i, s) do q, k, wk, s2
+                    U2[s2] || return
+                    kz[4] += c1[i, s] * q; kz[5] += c1[i, s] * q * (wk * cbar[k, s2] + (1 - wk) * cbar[k+1, s2])
+                end
+            end
+        end
+    end
     merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = zeros(ns),
            mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = zeros(ns), rmass = rmass, xmass = xmass, cmass = cmass,
-           kmass = kmass, smass = smass),
+           kmass = kmass, smass = smass, mpc12mass = mpc12mass, kolmass = kz),
           welfare_parts(p, sol))
 end
 
@@ -159,6 +241,8 @@ collapse_agency(ds, w) = (pmass = sum(w[i] .* ds[i].pmass for i in eachindex(ds)
                           mppumass = sum(w[i] .* ds[i].mppumass for i in eachindex(ds)),
                           kmass    = sum(w[i] .* ds[i].kmass    for i in eachindex(ds)),
                           smass    = sum(w[i] .* ds[i].smass    for i in eachindex(ds)),
+                          mpc12mass = sum(w[i] .* ds[i].mpc12mass for i in eachindex(ds)),
+                          kolmass  = sum(w[i] .* ds[i].kolmass  for i in eachindex(ds)),
                           vdmass   = sum(w[i] .* ds[i].vdmass   for i in eachindex(ds)),
                           vkmass   = sum(w[i] .* ds[i].vkmass   for i in eachindex(ds)))
 collapse_all(ds, w) = merge(collapse(ds, w), collapse_agency(ds, w))
