@@ -1,0 +1,3 @@
+# calibration_v5q_FR_G.txt, written by calibrate_quarterly.jl (run 39978945728, calibrated); the quarterly economy of stage 1c from calibration_v5m_FR_G.txt
+beta_annual = 0.823061
+beta_gap_annual = 0.137509
