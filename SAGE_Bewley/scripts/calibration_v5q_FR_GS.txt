@@ -1,0 +1,5 @@
+# calibration_v5q_FR_GS.txt, written by calibrate_quarterly_s.jl FR GS (run 40020507493, participation calibrated, root loss 0.0007, multiplier 1.35; 22 belonging scales); patience from calibration_v5q_FR_G.txt
+beta_annual = 0.823061
+beta_gap_annual = 0.137509
+kappa = 7.3000
+sigma_m = 1.6600
