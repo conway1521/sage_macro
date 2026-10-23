@@ -8,7 +8,8 @@ using Printf
 
 c = country_config("FR"; config = "GSA", S = true, A = true)
 cT = SAGEConfig(c; lumptax = c.lumptax + ui_tax_of(c))
-p0 = update(params_of(cT, cells_of(c)[1])[3]; social_strength = 4.0, solver = :egm)
+ps0 = params_of(cT, cells_of(c)[1])                   # the middle discount type where there are three (one in version 5)
+p0 = update(ps0[cld(length(ps0), 2)]; social_strength = 4.0, solver = :egm)
 
 # 1. reduction: no adjustment affordable, mass starts at k = 0
 r1 = solve_participation_egm(p0, 1.0; theta = c.theta, full = true)
