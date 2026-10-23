@@ -3287,3 +3287,14 @@ In `agency_shock.jl`, at a sub-annual period only (an annual period is unchanged
 - **The fall as Kolsrud and co-authors measure it** (`fall_kolsrud`): the cohort that moves from work into the first period out of work; its consumption in its last period in work (c0), in the first period out of work, and in the second among those still out of work (survival S2); ΔC1 = 1 - (13 c1 + 7 S2 c2) / ((13 + 7 S2) c0), weeks 1 to 20 with 13-week quarters. Also `fall_q1`, `fall_q2`. The former `consumption_drop` (on entry, at the same assets) is kept for comparison.
 
 Runs: regression 39890687178; G at section 123's patience with the profile, no spell without entitlement: FR 39890737771, DE 39890743198, IT 39890747816; FR G+A 39890752688. (Four runs launched first with the spell on by mistake, cancelled.)
+
+**Results** (regression 39890687178 passes, 3.5e-13; G at section 123's patience, stage 1c profile, no spell without entitlement):
+
+| | htm (target) | MPC in the quarter | **MPC over twelve months** (HFCS) | old fall (entry) | **fall as Kolsrud (weeks 1-20)** | quarter 1 | quarter 2, still out |
+|---|---|---|---|---|---|---|---|
+| FR G (0.86) | 0.190 (0.268) | 0.240 | **0.614** (0.392) | 0.157 | **0.167** | 0.162 | 0.182 |
+| DE G (0.89) | 0.257 (0.252) | 0.209 | **0.550** (0.468) | 0.149 | **0.168** | 0.153 | 0.228 |
+| IT G (0.925) | 0.188 (0.203) | 0.148 | **0.393** (0.469) | 0.151 | **0.170** | 0.162 | 0.191 |
+| FR G+A | 0.118 | 0.187 | 0.523 | 0.205 | 0.215 | 0.212 | 0.226 |
+
+**Reading.** (1) The MPC, read as the survey asks it, is no longer short: 0.61 and 0.55 in France and Germany are above the survey's 0.39 and 0.47, Italy's 0.39 below its 0.47. Version 1's MPC problem was mostly the horizon. In France, lowering patience to reach the hand-to-mouth target would raise the MPC further above the survey, so France's two targets now pull against each other in the one-asset model. (2) The fall on Kolsrud and co-authors' estimand is 0.17 in G (0.22 with dread in France), slightly above the old measure, as expected, and about 3.8 times their 4.4 per cent. It deepens in the second quarter among those still out of work, as in their data (4.4 to 9.1 per cent), with the model's ratio smaller.
