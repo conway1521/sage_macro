@@ -14,7 +14,9 @@ include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = uppercase(ARGS[1]); cfg = uppercase(ARGS[2]); rounds = length(ARGS) >= 3 ? parse(Int, ARGS[3]) : 6
 say(x...) = (println(x...); flush(stdout))
-get(ENV, "SAGE_DREAD_CHOICE", "0") == "1" || error("run with SAGE_DREAD_CHOICE=1")
+# dread in choices (SAGE_DREAD_CHOICE=1), or in wellbeing only where the country's calibration with it in choices
+# failed (France, section 133: the configuration's file then carries G's patience)
+say("dread ", get(ENV, "SAGE_DREAD_CHOICE", "0") == "1" ? "in choices" : "in wellbeing only")
 readkv(f) = (d = Dict{String,String}(); for l in eachline(f); t = strip(l); (isempty(t) || startswith(t, "#") || !occursin("=", t)) && continue;
                  k, v = strip.(split(t, "=", limit = 2)); d[k] = v; end; d)
 q = readkv(joinpath(@__DIR__, "calibration_v5q_$(code)_$(cfg).txt")); β = parse(Float64, q["beta_annual"]); gap = parse(Float64, q["beta_gap_annual"])

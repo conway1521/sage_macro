@@ -1,0 +1,4 @@
+# calibration_v5q_FR_GA.txt: France's G+A with dread in WELLBEING ONLY (V3_START.md section 133: with dread in choices the hand-to-mouth share needs patience about 0.70 and the education gap is not reached with a gap of 0.15, run 39978966578; the rule of DIMENSIONS_SPEC.md applied), so G's quarterly patience (calibration_v5q_FR_G.txt)
+beta_annual = 0.823061
+beta_gap_annual = 0.137509
+dread_mode = overlay
