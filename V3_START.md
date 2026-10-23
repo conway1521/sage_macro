@@ -3277,3 +3277,13 @@ France's baseline (39808036136): 11.1 s an iteration, 4,874 iterations, 165 minu
 Old and new give the same answer: distribution 1.4e-14, liquid and illiquid wealth and the adjusting share within 3e-14; the value 1.5e-6 relative (the bound's midpoint, inside the tolerance). Warm starts save 5 to 7 per cent of the iterations of a nearby problem.
 
 **Reading, and a correction of my own expectation.** The gain, a factor of three to four, is the threads. The sparse product gains nothing over the dense one (BLAS on 231 x 231 is already fast). The midpoint of the bounds changes no iteration count: the stopping rule is the span of the bounds, which a common shift does not change, so it improves the value's level and not the speed; I expected otherwise. The iteration count, 3,700 to 4,900 a problem, is what remains, and only policy-iteration (Howard) steps attack it. One problem now takes about half an hour: inside the middle band of the rule proposed to the user (3 to 10 times). `test_egm2.jl` (39837343747) failed on its own setup (it expects three discount types where the configuration now has one), not on the solver; to be updated.
+
+**Decision (the user, 2026-10-23)**: option 2. Version 2 is the quarterly one-asset model, recalibrated in stage 1d; the annual two-asset reference stays the model for wealth and the evidence that illiquid wealth closes most of the gap in the fall. The two-asset solver keeps its speed changes (threads three to four times faster; same answers).
+
+## 129. Stage 1d, first: the two measures every later step reads (2026-10-23)
+
+In `agency_shock.jl`, at a sub-annual period only (an annual period is unchanged):
+- **The twelve-month MPC** (`mpc12`), the HFCS question: expected consumption t periods on, G_t(a, s), by the household's own choices (next assets, participation, the transition it chose where it searches), summed over the year's periods; the MPC is the change in that sum from a windfall of one month's income over the windfall, mass-weighted as the within-period MPC.
+- **The fall as Kolsrud and co-authors measure it** (`fall_kolsrud`): the cohort that moves from work into the first period out of work; its consumption in its last period in work (c0), in the first period out of work, and in the second among those still out of work (survival S2); ΔC1 = 1 - (13 c1 + 7 S2 c2) / ((13 + 7 S2) c0), weeks 1 to 20 with 13-week quarters. Also `fall_q1`, `fall_q2`. The former `consumption_drop` (on entry, at the same assets) is kept for comparison.
+
+Runs: regression 39890687178; G at section 123's patience with the profile, no spell without entitlement: FR 39890737771, DE 39890743198, IT 39890747816; FR G+A 39890752688. (Four runs launched first with the spell on by mistake, cancelled.)
