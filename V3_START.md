@@ -3265,3 +3265,15 @@ In `egm2_core.jl`, behind `fast` (on by default; `SAGE_EGM2_FAST=0` restores the
 Tests (`test_egm2_fast.jl`, four threads): Germany on a small grid, old against new (39837316700); Germany and Italy at the probe's full size, new only, against the times above (39837325674, 39837334775); the reduction to one asset (`test_egm2.jl`, 39837343747).
 
 France's baseline (39808036136): 11.1 s an iteration, 4,874 iterations, 165 minutes, 2.7 GB (the warnings at maxit are the timed 2 and 30 iterations, by design).
+
+**Results** (four threads):
+
+| | old solver (one thread) | new solver | iterations |
+|---|---|---|---|
+| Germany, full size | 125 min | 31 min | 3,880 both |
+| Italy, full size | 102 min | 31 min | 3,700 both |
+| Germany, small grid (12 x 80), old and new paths both on four threads | 23.6 min | 23.5 min | 13,000 both (neither converged within maxit: cycling) |
+
+Old and new give the same answer: distribution 1.4e-14, liquid and illiquid wealth and the adjusting share within 3e-14; the value 1.5e-6 relative (the bound's midpoint, inside the tolerance). Warm starts save 5 to 7 per cent of the iterations of a nearby problem.
+
+**Reading, and a correction of my own expectation.** The gain, a factor of three to four, is the threads. The sparse product gains nothing over the dense one (BLAS on 231 x 231 is already fast). The midpoint of the bounds changes no iteration count: the stopping rule is the span of the bounds, which a common shift does not change, so it improves the value's level and not the speed; I expected otherwise. The iteration count, 3,700 to 4,900 a problem, is what remains, and only policy-iteration (Howard) steps attack it. One problem now takes about half an hour: inside the middle band of the rule proposed to the user (3 to 10 times). `test_egm2.jl` (39837343747) failed on its own setup (it expects three discount types where the configuration now has one), not on the solver; to be updated.
