@@ -7,11 +7,12 @@
 # twelve months, the fall as Kolsrud et al. measure it. Broyden steps from finite differences; every solve printed;
 # the file's lines are printed at the end, to be committed by hand (CI never commits).
 #
-#   SAGE_DREAD_CHOICE=1 julia --project=scripts/run_env scripts/calibrate_quarterly.jl CODE CONFIG BETA0 GAP0 [MAXSOLVES]
+#   SAGE_DREAD_CHOICE=1 julia --project=scripts/run_env scripts/calibrate_quarterly.jl CODE CONFIG BETA0 GAP0 [MAXSOLVES] [entitle]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = uppercase(ARGS[1]); cfg = uppercase(ARGS[2]); x = [parse(Float64, ARGS[3]), parse(Float64, ARGS[4])]
 maxs = length(ARGS) >= 5 ? parse(Int, ARGS[5]) : 9
+ent = length(ARGS) >= 6 && ARGS[6] == "entitle"        # the spell without entitlement on (the check of section 125), one worker
 say(x...) = (println(x...); flush(stdout))
 function hfcs(moment, group, sub)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
@@ -27,7 +28,7 @@ T_MPC = hfcs("mpc_mean", "not_retired", "not retired")
 TOL_HTM, TOL_GAP = 0.01, 0.03
 A = occursin('A', cfg)
 ca = country_config(code; config = "G", v3 = :v5m, S = false, A = false)
-cb = duration_config(ca)
+cb = duration_config(ca; entitle = ent)
 wt = A ? country_config(code; config = "GA", v3 = :v5m, S = false, A = true).dread : 0.0
 say(@sprintf("%s %s quarterly: targets hand-to-mouth %.4f, gap by education %.4f | tests: median liquid/yr %.4f, MPC %.4f | annual start: patience %.4f, gap %.4f",
              code, cfg, T_HTM, T_GAP, T_LIQ, T_MPC, ca.beta_bar, -ca.beta_cell[1]))
