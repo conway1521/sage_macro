@@ -3355,3 +3355,5 @@ France's G+A calibration with dread in choices (39978966578) reached the runner'
 **IT G+S calibrated** (40020499965): kappa 4.85, sigma_m 2.14 (version 1: 4.45, 1.96), root loss 0.0006, multiplier 1.20; hand-to-mouth 0.194 (0.203), no second pass.
 
 **DE G+A search, first run** (40015089568): six rounds, worst relative error 1.98, 0.84, 0.54, 0.44, 0.29, 0.22, not converged; the first two periods alternate (chosen 0.55 and 0.51 against 0.49 and 0.43 at the end), since the cost of one period moves the gain from work in the periods before it. The step is now damped (0.6 of the exact exponent), eight rounds, and the fit resumes from the last costs (`resume`; start file `search_v5q_DE_GA.txt`, marked not converged). Costs rise with duration (cell 1: 14 in the first quarter to 25 from the third, 29 in L). With search on, hand-to-mouth 0.255 and the fall 0.21.
+
+**IT G+S+A calibrated** (40020530191; families 186 minutes): kappa 3.70, sigma_m 1.94 (version 1: 3.65, 1.80), root loss 0.0002, multiplier 1.22; hand-to-mouth 0.199 (0.203), education gap 0.121 (0.126), no second pass; MPC 12m 0.529, fall Kolsrud 0.214; budget gap 2.4e-5.

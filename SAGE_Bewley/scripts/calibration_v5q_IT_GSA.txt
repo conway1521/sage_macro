@@ -1,0 +1,5 @@
+# calibration_v5q_IT_GSA.txt, written by calibrate_quarterly_s.jl IT GSA (run 40020530191, participation calibrated, root loss 0.0002, multiplier 1.22; 22 belonging scales); patience from calibration_v5q_IT_GA.txt, dread in choices over the year
+beta_annual = 0.880688
+beta_gap_annual = 0.150000
+kappa = 3.7000
+sigma_m = 1.9400
