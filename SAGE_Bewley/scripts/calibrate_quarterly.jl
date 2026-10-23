@@ -47,15 +47,16 @@ function F(x)
 end
 ok(f) = abs(f[1]) < TOL_HTM && abs(f[2]) < TOL_GAP
 clampx(x) = [clamp(x[1], 0.70, 0.995), clamp(x[2], 0.0, min(0.15, x[1] - 0.6))]
-f, r = F(x); best = (x = copy(x), f = f, r = r)
-if !ok(f)
+function fit(x)
+    f, r = F(x); best = (x = copy(x), f = f, r = r)
+    ok(f) && return best
     # the Jacobian by finite differences, then Broyden
     J = zeros(2, 2)
     for k in 1:2
         h = k == 1 ? -0.02 : 0.02; xk = copy(x); xk[k] += h
         fk, rk = F(xk); J[:, k] = (fk - f) / h
         sum(abs2, fk) < sum(abs2, best.f) && (best = (x = xk, f = fk, r = rk))
-        ok(fk) && (x = xk; f = fk; break)
+        ok(fk) && return best
     end
     while !ok(f) && nsolve[] < maxs
         dx = -(J \ f)
@@ -65,7 +66,9 @@ if !ok(f)
         x, f = xn, fn
         sum(abs2, fn) < sum(abs2, best.f) && (best = (x = copy(xn), f = fn, r = rn))
     end
+    best
 end
+best = fit(x)
 cal = ok(best.f)
 say(@sprintf("%s %s: %s | patience %.4f, gap %.4f | htm %.4f (%.4f), gap %.4f (%.4f)", code, cfg, cal ? "CALIBRATED" : "NOT CALIBRATED (best point)",
              best.x[1], best.x[2], best.f[1] + T_HTM, T_HTM, best.f[2] + T_GAP, T_GAP))
