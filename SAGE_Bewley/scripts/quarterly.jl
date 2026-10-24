@@ -143,3 +143,34 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, 
                rho_cell = (inc[1].ρq, inc[2].ρq), eta_cell = (inc[1].sηq, inc[2].sηq), sd_eps_cell = (inc[1].sεq, inc[2].sεq),
                R_one = isnan(c.R_one) ? NaN : c.R_one^(1 / ppy), a_max = ppy * c.a_max, na = max(c.na, 300))
 end
+
+"""
+    quarterly_calibrated(code, cfg)
+
+Version 2's calibrated configuration (V3_START.md section 134): stage 1c's quarterly economy (`duration_config`) at
+the patience and gap of `calibration_v5q_<code>_<cfg>.txt`, with kappa and sigma_m (and the measured ratio of the
+unemployed) where S is on, and with A: dread in choices over the year unless the file says `dread_mode = overlay`
+(France, section 133), and job search at the costs of `search_v5q_<code>_GA.txt` where that file exists (G+S+A takes
+G+A's, section 134). The cost of being out of work is in wellbeing only (out_ls = 0).
+"""
+function quarterly_calibrated(code::AbstractString, cfg::AbstractString)
+    kv(f) = (d = Dict{String,String}(); for l in eachline(f); t = strip(l); (isempty(t) || startswith(t, "#") || !occursin("=", t)) && continue;
+             k, v = strip.(split(t, "=", limit = 2)); d[k] = v; end; d)
+    S = occursin('S', cfg); A = occursin('A', cfg)
+    q = kv(joinpath(@__DIR__, "calibration_v5q_$(code)_$(cfg).txt"))
+    β = parse(Float64, q["beta_annual"]); gap = parse(Float64, q["beta_gap_annual"])
+    ca = country_config(code; config = cfg, v3 = :v5m, S = S, A = A)
+    c = SAGEConfig(duration_config(ca); beta_bar = β^(1 / 4), beta_cell = ((β - gap)^(1 / 4) - β^(1 / 4), 0.0), out_ls = 0.0, search = false)
+    S && (c = SAGEConfig(c; kappa = parse(Float64, q["kappa"]), sigma_m = parse(Float64, q["sigma_m"]),
+                         unemployed_ratio = parse(Float64, country_rows()[code]["ratio"])))
+    if A
+        get(q, "dread_mode", "") == "overlay" && (c = SAGEConfig(c; dread_mode = :overlay))
+        sf = joinpath(@__DIR__, "search_v5q_$(code)_GA.txt")
+        if isfile(sf)
+            s = kv(sf)
+            c = SAGEConfig(c; search = true, search_gamma = parse(Float64, s["search_gamma"]),
+                           search_kq = (parse.(Float64, split(s["search_kq_cell1"])), parse.(Float64, split(s["search_kq_cell2"]))))
+        end
+    end
+    c
+end

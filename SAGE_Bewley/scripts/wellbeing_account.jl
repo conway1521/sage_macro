@@ -23,10 +23,14 @@
 #   E, commuting: already in the model as time (the time cost of each unit of work); Stutzer and Frey's (2008)
 #      0.20 points per hour each way is shown as a check on its size and NOT added (DIMENSIONS_SPEC.md, E).
 #
-#   julia --project=scripts/run_env scripts/wellbeing_account.jl CODE [CFG]        (CFG: G GA GS GSA; default GSA)
+# Version 2 (third argument `q`, V3_START.md section 136): the calibrated quarterly economy (`quarterly_calibrated`),
+# solved once (no poverty thresholds, which the account does not use; a second pass would rebuild S's families). The
+# model's terms are shares of consumption, so they read the same at a quarterly period.
+#
+#   julia --project=scripts/run_env scripts/wellbeing_account.jl CODE [CFG] [q]        (CFG: G GA GS GSA; default GSA)
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
-code = uppercase(ARGS[1]); cfg = length(ARGS) >= 2 ? uppercase(ARGS[2]) : "GSA"
+code = uppercase(ARGS[1]); cfg = length(ARGS) >= 2 ? uppercase(ARGS[2]) : "GSA"; Q = length(ARGS) >= 3 && ARGS[3] == "q"
 const BY = 1.96105
 pts(x) = BY * log(1 - x)                  # a share of consumption lost, in points
 shr(g) = 1 - exp(-g / BY)                 # a gap in points, as a share of consumption
@@ -61,13 +65,14 @@ function commute_minutes(code)
 end
 
 hasS = occursin('S', cfg); hasA = occursin('A', cfg)
-c = country_config(code; config = cfg, v3 = :v5m, S = hasS, A = hasA)
+c = Q ? quarterly_calibrated(code, cfg) : country_config(code; config = cfg, v3 = :v5m, S = hasS, A = hasA)
 say(x...) = (println(x...); flush(stdout))
-say(@sprintf("%s %s | dread %s, search %s", code, cfg, hasA ? string(c.dread_mode) : "off", (hasA && c.search) ? "on" : "off"))
-r = solve_economy(c; cache = false)
+say(@sprintf("%s %s%s | dread %s, search %s", code, cfg, Q ? " (version 2, quarterly)" : "", hasA ? string(c.dread_mode) : "off", (hasA && c.search) ? "on" : "off"))
+r = Q ? _solve(c, nothing; disk = false, any_thresholds = true) : solve_economy(c; cache = false)
 u = r.unemployment; emp = 1 - u
 say(@sprintf("  out of work %.4f; taking part %.4f; consumption per head %.4f; mean income %.4f", u, r.rate, r.consumption, r.mean_income))
-hasA && c.search && say(@sprintf("  search: the chance of finding work chosen, first year %.4f, beyond %.4f (measured %.3f; %.3f %.3f by cell)", r.search_UL..., c.f_find, c.f_long...))
+hasA && c.search && !Q && say(@sprintf("  search: the chance of finding work chosen, first year %.4f, beyond %.4f (measured %.3f; %.3f %.3f by cell)", r.search_UL..., c.f_find, c.f_long...))
+hasA && c.search && Q && say("  search: the chance of finding work chosen by period of the spell, by cell: ", string(round.(r.search_exit[1], digits = 3)), " ", string(round.(r.search_exit[2], digits = 3)))
 
 rows = Tuple{String,Float64,Float64,String}[]          # term, points per head (central), share of consumption, note
 row!(t, p, s, n) = push!(rows, (t, p, s, n))
