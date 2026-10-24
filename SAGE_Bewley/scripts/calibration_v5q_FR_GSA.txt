@@ -1,0 +1,6 @@
+# calibration_v5q_FR_GSA.txt, written by calibrate_quarterly_s.jl FR GSA (run 40027147180, participation calibrated, root loss 0.0005, multiplier 1.34; 22 belonging scales; families 265 minutes); patience from calibration_v5q_FR_G.txt; dread in WELLBEING ONLY (section 133)
+beta_annual = 0.823061
+beta_gap_annual = 0.137509
+kappa = 7.1000
+sigma_m = 1.6600
+dread_mode = overlay

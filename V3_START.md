@@ -3365,3 +3365,26 @@ The check of the spell without entitlement at the calibrated G (one solve each, 
 **IT G+A search, first run** (40015097888): six rounds, worst error 4.24, 2.19, 1.36, 0.89, 0.61, 0.43, converging without alternating, about an hour a round; costs rise with duration (cell 1: 18 in the first quarter to 39 in the eighth, 53 in L). Resumed undamped (`DAMP` now an argument) from `search_v5q_IT_GA.txt`.
 
 **Entitlement check, Germany** (40042356015, the calibrated G with the spell without entitlement on, one worker, 124 minutes): hand-to-mouth 0.257 (0.253 without), education gap 0.210 (0.203), MPC 12m 0.535 (0.536), fall Kolsrud 0.169 (0.168); still within the calibration's tolerances. The simplification of section 125 holds at the calibrated point.
+
+**FR G+S+A calibrated** (40027147180, dread in wellbeing only; families 265 minutes, near the runner's limit): kappa 7.10, sigma_m 1.66 (version 1: 7.50, 1.70), root loss 0.0005, multiplier 1.34; hand-to-mouth 0.273, education gap 0.158, no second pass; MPC 12m 0.710, fall Kolsrud 0.163.
+
+## 134. Stage 1d: the twelve calibrations, together (2026-10-24)
+
+Patience and participation are fitted in every configuration of the three countries on the quarterly economy (files `calibration_v5q_<C>_<CFG>.txt`); job search is still being fitted (G+A; G+S+A takes G+A's costs).
+
+| | patience, gap | kappa, sigma_m | htm (target) | education gap (target) | MPC 12m (survey) | fall Kolsrud |
+|---|---|---|---|---|---|---|
+| FR G | 0.823, 0.138 | | 0.273 (0.268) | 0.156 (0.177) | 0.731 (0.331) | 0.165 |
+| FR G+A (dread in wellbeing) | as G | | as G | as G | as G | as G |
+| FR G+S | as G | 7.30, 1.66 | 0.272 | 0.156 | 0.731 | 0.165 |
+| FR G+S+A (dread in wellbeing) | as G | 7.10, 1.66 | 0.273 | 0.158 | 0.710 | 0.163 |
+| DE G | 0.915, 0.066 | | 0.253 (0.252) | 0.203 (0.200) | 0.536 (0.464) | 0.168 |
+| DE G+A | 0.814, 0.116 | | 0.254 | 0.188 | 0.624 | 0.222 |
+| DE G+S | as G | 11.25, 1.52 | 0.253 | 0.203 | 0.536 | 0.167 |
+| DE G+S+A | as G+A | 11.75, 1.64 | 0.254 | 0.185 | 0.624 | 0.222 |
+| IT G | 0.915, 0.038 | | 0.194 (0.203) | 0.105 (0.126) | 0.412 (0.486) | 0.170 |
+| IT G+A | 0.881, 0.150 | | 0.199 | 0.121 | 0.529 | 0.214 |
+| IT G+S | as G | 4.85, 2.14 | 0.194 | 0.105 | 0.412 | 0.170 |
+| IT G+S+A | as G+A | 3.70, 1.94 | 0.199 | 0.121 | 0.529 | 0.214 |
+
+**Reading.** (1) S carries over: participation is met within 0.001 everywhere, the social parameters move little from version 1, the equilibria are stable (multipliers 1.2 to 1.4), and switching S on leaves hand-to-mouth, the MPC and the fall where G has them, as the modular rule asks. (2) The MPC as the survey asks it is too high in France (more than twice) and Germany, too low in Italy without dread and close with it. (3) The fall on Kolsrud and co-authors' estimand is 0.16 to 0.17 without dread and 0.21 to 0.22 with it, 3.7 to 5 times their 4.4 per cent; the second asset is where version 1 showed the rest of the gap closing. (4) France cannot carry dread in choices on the quarterly economy, and its MPC test fails by the widest margin: under the design's rule (section 3.4) France is the candidate to stay annual, a decision for the user.
