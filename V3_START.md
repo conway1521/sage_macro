@@ -3448,3 +3448,5 @@ DE G+A account (40072592219) failed on the account's own reading of the inactive
 **FR G+A search** (40081907881, over-relaxed 1.8): worst error 1.12, 0.80, 1.01; the early quarters converge (tertiary first quarter 0.475, 0.459, 0.409 against 0.364), but the tertiary cell's quarters 7 and 8 alternate (0.37/0.26, then 0.22/0.41). Change (`grouped`): one cost per duration group of the data (quarter 1, quarter 2, quarters 3-4, 5-8, L), the groups the bands identify, each group stepped on its mean; France resumed with it (1.2, three rounds). Germany and Italy, fitted per quarter, are left as they are.
 
 **FR G+S account** (40090548901): taking part +0.016 (participation 0.233); the model's own belonging 0.012 of consumption per head, 0.107 points a participant (version 1: 0.12), close to the evidence's 0.055 to 0.081 (Germany's is about seven times it); unemployed -0.067, inactive -0.007, air quality -0.049.
+
+**IT G+S account** (40090553230): taking part +0.009 (participation 0.125); the model's own belonging 0.200 points a participant (version 1: 0.18); unemployed -0.073, inactive -0.007, air quality -0.103.
