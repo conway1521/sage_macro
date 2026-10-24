@@ -13,11 +13,15 @@
 # damped (DAMP = 0.6 of the exact exponent): the cost of one period moves the gain from work in the periods before it,
 # so the undamped step overshot and alternated in the first two periods (Germany, run 40015089568).
 #
-#   SAGE_DREAD_CHOICE=1 julia --project=scripts/run_env scripts/calibrate_search_q.jl CODE CONFIG [ROUNDS] [resume] [DAMP]
+#   SAGE_DREAD_CHOICE=1 julia --project=scripts/run_env scripts/calibrate_search_q.jl CODE CONFIG [ROUNDS] [resume] [DAMP] [grouped]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = uppercase(ARGS[1]); cfg = uppercase(ARGS[2]); rounds = length(ARGS) >= 3 ? parse(Int, ARGS[3]) : 8
 resume = length(ARGS) >= 4 && ARGS[4] == "resume"; DAMP = length(ARGS) >= 5 ? parse(Float64, ARGS[5]) : 0.6   # 1: the exact step (Italy converges without alternating)
+# GROUPED (sixth argument `grouped`): one cost level per duration group of the data (quarter 1, quarter 2, quarters 3-4,
+# quarters 5-8, L), the groups whose hazards the bands identify; each group's step from the mean chosen chance over its
+# quarters. Per quarter, neighbouring quarters' costs alternated in France's tertiary cell (run 40081907881).
+grouped = length(ARGS) >= 6 && ARGS[6] == "grouped"
 say(x...) = (println(x...); flush(stdout))
 # dread in choices (SAGE_DREAD_CHOICE=1), or in wellbeing only where the country's calibration with it in choices
 # failed (France, section 133: the configuration's file then carries G's patience)
@@ -39,6 +43,13 @@ if resume
     k = [parse.(Float64, split(sq["search_kq_cell$g"])) for g in 1:2]
     say("resuming from search_v5q_$(code)_$(cfg).txt")
 end
+GROUPS = [[1], [2], [3, 4], [5, 6, 7, 8], [9]]
+if grouped
+    for g in 1:2, G in GROUPS
+        m = sum(k[g][G]) / length(G); k[g][G] .= m
+    end
+    say("cost by duration group: ", string(GROUPS))
+end
 say(@sprintf("%s %s quarterly, patience %.4f gap %.4f: target exits to work by period of the spell %s, L %.4f", code, cfg, β, gap,
              string(round.(cb.hU_vec, digits = 4)), cb.f_long[1]))
 best = nothing
@@ -52,8 +63,15 @@ for it in 1:rounds
     end
     global best = (k = deepcopy(k), err = err, r = r)
     err < 0.03 && break
-    for g in 1:2, d in eachindex(target)
-        k[g][d] *= clamp((r.search_exit[g][d] / target[d])^(DAMP * γs), 0.5, 2.0)
+    if grouped
+        for g in 1:2, G in GROUPS
+            f = sum(r.search_exit[g][G]) / sum(target[G])
+            k[g][G] .*= clamp(f^(DAMP * γs), 0.5, 2.0)
+        end
+    else
+        for g in 1:2, d in eachindex(target)
+            k[g][d] *= clamp((r.search_exit[g][d] / target[d])^(DAMP * γs), 0.5, 2.0)
+        end
     end
 end
 say("# search_v5q_$(code)_$(cfg).txt, written by calibrate_search_q.jl ($(best.err < 0.03 ? "fitted" : "best round, worst error $(round(best.err, digits = 3))")); arrival rate one")

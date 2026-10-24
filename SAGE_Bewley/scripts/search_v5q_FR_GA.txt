@@ -1,4 +1,4 @@
-# search_v5q_FR_GA.txt, written by calibrate_search_q.jl FR GA (run 40073625882, dread in wellbeing only, NOT converged: worst error 1.116, the tertiary cell far above its targets, the cell below tertiary within about 0.2); a start for the next rounds
+# search_v5q_FR_GA.txt, written by calibrate_search_q.jl FR GA (run 40081907881, dread in wellbeing only, NOT converged: worst error 1.005; the tertiary cell's quarters 7 and 8 alternate); a start for the grouped rounds
 search_gamma = 0.3500
-search_kq_cell1 = 9.05244 9.24076 9.97488 10.18189 10.44554 10.78875 11.23031 11.93721 9.79990
-search_kq_cell2 = 8.01279 6.87041 6.55656 6.30006 6.17021 6.23369 6.60383 6.94083 8.01118
+search_kq_cell1 = 9.48683 9.86403 10.84220 11.23774 11.72508 12.31128 12.96667 14.13638 12.06145
+search_kq_cell2 = 10.95818 10.55450 11.33582 11.55887 11.84781 12.30365 13.88156 12.87849 16.26802
