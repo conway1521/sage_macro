@@ -85,7 +85,7 @@ end
 function ess_gap_inactive(code)
     for l in eachline(joinpath(DATA, "validation", "ess_life_satisfaction_inactive.csv"))
         f = split(l, ',')
-        length(f) >= 4 && f[1] == code && occursin("the four together", l) && return -parse(Float64, f[4])
+        length(f) >= 4 && f[1] == code && occursin("the four together", l) && return -parse(Float64, f[end-2])   # the group's name holds a comma
     end
     error("no ESS gap for the inactive in $code")
 end
