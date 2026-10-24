@@ -70,6 +70,15 @@ say(x...) = (println(x...); flush(stdout))
 say(@sprintf("%s %s%s | dread %s, search %s", code, cfg, Q ? " (version 2, quarterly)" : "", hasA ? string(c.dread_mode) : "off", (hasA && c.search) ? "on" : "off"))
 r = Q ? _solve(c, nothing; disk = false, any_thresholds = true) : solve_economy(c; cache = false)
 u = r.unemployment; emp = 1 - u
+# version 2 has the inactive state N, which `unemployment` counts as out of work; the ESS gap is measured among the
+# unemployed, so the term covers the unemployed (U and L) and the inactive share is shown beside it
+if Q
+    let P = r.pooled, cs_ = cells_of(c), st = stypes(params_of(SAGEConfig(c; effort_mode = :free), cs_[1])[1])
+        mN = sum(cs_[g].share * sum(P[g].mass[st .=== :N]) for g in 1:2) / sum(cs_[g].share * sum(P[g].mass) for g in 1:2)
+        say(@sprintf("  out of work %.4f, of which inactive (N) %.4f: the out-of-work term uses the unemployed, %.4f", u, mN, u - mN))
+        global u = u - mN
+    end
+end
 say(@sprintf("  out of work %.4f; taking part %.4f; consumption per head %.4f; mean income %.4f", u, r.rate, r.consumption, r.mean_income))
 hasA && c.search && !Q && say(@sprintf("  search: the chance of finding work chosen, first year %.4f, beyond %.4f (measured %.3f; %.3f %.3f by cell)", r.search_UL..., c.f_find, c.f_long...))
 hasA && c.search && Q && say("  search: the chance of finding work chosen by period of the spell, by cell: ", string(round.(r.search_exit[1], digits = 3)), " ", string(round.(r.search_exit[2], digits = 3)))
