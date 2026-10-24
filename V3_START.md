@@ -3428,3 +3428,5 @@ Patience and participation are fitted in every configuration of the three countr
 **IT G+A search** (40065012844, over-relaxed 1.6): worst error 0.206, 0.102, 0.049; hand-to-mouth 0.194, MPC 12m 0.525, fall Kolsrud 0.225. Resumed at 1.4, two rounds.
 
 DE G+A account (40072592219) failed on the account's own reading of the inactive's gap (the group's name holds a comma); fixed, DE G+A and G+S+A relaunched (40075265385, 40075269775). Its search line already showed the fitted exits: 0.498, 0.443, 0.234, ... against 0.488, 0.434, 0.230.
+
+**DE G+A account** (40075265385, version 2's first complete A account; points per head and year): dread of a change of status -0.053 (0.014 of consumption in work, 0.145 out of work; version 1: -0.028); out of work beyond income -0.027 (unemployed 0.025), of which job search -0.007 and the rest -0.020; inactive -0.017 (0.24 on 0.072); air quality -0.058. Dread is about twice version 1's (the year's lottery at Pagel's weight, section 124), and the out-of-work and inactive terms together, -0.045, are less than half version 1's -0.106 (the inactive separated, section 136).
