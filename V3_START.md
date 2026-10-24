@@ -3438,3 +3438,5 @@ DE G+A account (40072592219) failed on the account's own reading of the inactive
 **IT G+A search FITTED** (40074352288, over-relaxed 1.4): worst error 0.049, 0.027; hand-to-mouth 0.194, MPC 12m 0.524, fall Kolsrud 0.226. Costs (cell 1) 23 in the first quarter rising to 48 in the eighth, 71 in L. Launched: Italy's final benefit-response test and its G+A and G+S+A accounts.
 
 **IT G+A account** (40082776417): dread -0.033 (0.007 of consumption in work, 0.104 out of work); out of work beyond income -0.072 (unemployed 0.069), of which job search -0.046 (0.67 points a person out of work, 0.29 of their consumption) and the rest -0.026; inactive -0.007; air quality -0.103. In Italy search is two thirds of the measured gap (Germany a quarter): the slow exits need high costs.
+
+**DE G+S account** (40066981059): taking part +0.019 (participation 0.276 at Meier and Stutzer's 0.055 to 0.081); the model's own belonging 0.068 of consumption per head, 0.55 points a participant (version 1: 0.60), about seven times the evidence's value, as in version 1; unemployed -0.028, inactive -0.017 (by hand); air quality -0.058.
