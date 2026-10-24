@@ -1,0 +1,4 @@
+# search_v5q_IT_GA.txt, written by calibrate_search_q.jl IT GA (run 40015097888, round 6 of 6, NOT converged: worst error 0.43, converging without alternating); a start for the next rounds
+search_gamma = 0.3500
+search_kq_cell1 = 17.67044 19.69363 25.21006 27.68639 30.38512 33.31619 36.40934 39.02133 53.24244
+search_kq_cell2 = 25.61171 27.67098 34.25401 36.51878 38.94981 41.55562 44.30173 46.81971 62.66168

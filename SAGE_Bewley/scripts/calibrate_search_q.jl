@@ -13,11 +13,11 @@
 # damped (DAMP = 0.6 of the exact exponent): the cost of one period moves the gain from work in the periods before it,
 # so the undamped step overshot and alternated in the first two periods (Germany, run 40015089568).
 #
-#   SAGE_DREAD_CHOICE=1 julia --project=scripts/run_env scripts/calibrate_search_q.jl CODE CONFIG [ROUNDS] [resume]
+#   SAGE_DREAD_CHOICE=1 julia --project=scripts/run_env scripts/calibrate_search_q.jl CODE CONFIG [ROUNDS] [resume] [DAMP]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = uppercase(ARGS[1]); cfg = uppercase(ARGS[2]); rounds = length(ARGS) >= 3 ? parse(Int, ARGS[3]) : 8
-resume = length(ARGS) >= 4 && ARGS[4] == "resume"; DAMP = 0.6
+resume = length(ARGS) >= 4 && ARGS[4] == "resume"; DAMP = length(ARGS) >= 5 ? parse(Float64, ARGS[5]) : 0.6   # 1: the exact step (Italy converges without alternating)
 say(x...) = (println(x...); flush(stdout))
 # dread in choices (SAGE_DREAD_CHOICE=1), or in wellbeing only where the country's calibration with it in choices
 # failed (France, section 133: the configuration's file then carries G's patience)
