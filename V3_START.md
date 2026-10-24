@@ -3363,3 +3363,5 @@ The check of the spell without entitlement at the calibrated G (one solve each, 
 **Grid check passes** (40034749110, DE G+S on version 1's 42 belonging scales, 132 minutes): kappa 11.35 against 11.25 on 22 scales, sigma_m 1.52 both, participation 0.2791 against 0.2789, hand-to-mouth, the MPC and the fall identical to the fourth decimal. The 22-scale grid stands.
 
 **IT G+A search, first run** (40015097888): six rounds, worst error 4.24, 2.19, 1.36, 0.89, 0.61, 0.43, converging without alternating, about an hour a round; costs rise with duration (cell 1: 18 in the first quarter to 39 in the eighth, 53 in L). Resumed undamped (`DAMP` now an argument) from `search_v5q_IT_GA.txt`.
+
+**Entitlement check, Germany** (40042356015, the calibrated G with the spell without entitlement on, one worker, 124 minutes): hand-to-mouth 0.257 (0.253 without), education gap 0.210 (0.203), MPC 12m 0.535 (0.536), fall Kolsrud 0.169 (0.168); still within the calibration's tolerances. The simplification of section 125 holds at the calibrated point.
