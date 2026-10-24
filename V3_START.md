@@ -3410,3 +3410,5 @@ Patience and participation are fitted in every configuration of the three countr
 ## 136. Version 2's wellbeing account (2026-10-24)
 
 `quarterly_calibrated(code, cfg)` (quarterly.jl) builds any calibrated version 2 configuration from its files (patience and gap, kappa and sigma_m with the measured ratio, dread in choices or in wellbeing only, search costs from `search_v5q_<C>_GA.txt` where it exists, the cost of being out of work in wellbeing only). `wellbeing_account.jl CODE CFG q` runs version 1's account on it, solved once. Launched for G and G+S in the three countries (40065089584 to 40065106737); G+A and G+S+A once the search fits are in.
+
+**A correction before the results.** Version 2's `unemployment` counts the inactive state N as out of work (France G: 0.109 against version 1's 0.096), but the ESS gap is measured among the unemployed. The account's out-of-work term now uses the unemployed (U and L) and shows the inactive share beside it; the six accounts were relaunched (40066966085 to 40066985085). France's G under the first code, for the record: out-of-work term -0.115 points per head (on 0.109), air quality -0.049.
