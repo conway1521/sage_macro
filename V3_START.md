@@ -3422,3 +3422,5 @@ Patience and participation are fitted in every configuration of the three countr
 **G accounts, the three countries** (points per head and year): out of work FR -0.073, DE -0.045, IT -0.080 (version 1: -0.101, -0.106, -0.104); air quality -0.049, -0.058, -0.103. The fall in the out-of-work cost is the separation of the inactive, and is largest in Germany, where most jobless households are inactive.
 
 **DE G+A search FITTED** (40062685335, four rounds at 0.9): worst error 0.062, 0.048, 0.037, 0.028; with search, hand-to-mouth 0.252, MPC 12m 0.620, fall Kolsrud 0.228. Costs (cell 1) 17 in the first quarter, 21 in the second, 28 to 31 from the third, 36 in L. Launched: the final benefit-response test, and the G+A and G+S+A accounts for Germany.
+
+**FR G+A search, first run** (40053975356, dread in wellbeing only, about 95 minutes a round): worst error 2.58, 1.77, 1.35; the tertiary cell's chosen chances move erratically between rounds (its first quarter 0.92, 0.62, 0.54 against 0.36). Resumed two rounds a job (the runner's five-hour loss), damped 0.8.
