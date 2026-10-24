@@ -3359,3 +3359,5 @@ France's G+A calibration with dread in choices (39978966578) reached the runner'
 **IT G+S+A calibrated** (40020530191; families 186 minutes): kappa 3.70, sigma_m 1.94 (version 1: 3.65, 1.80), root loss 0.0002, multiplier 1.22; hand-to-mouth 0.199 (0.203), education gap 0.121 (0.126), no second pass; MPC 12m 0.529, fall Kolsrud 0.214; budget gap 2.4e-5.
 
 The check of the spell without entitlement at the calibrated G (one solve each, one worker): DE 40042356015, IT 40042361758.
+
+**Grid check passes** (40034749110, DE G+S on version 1's 42 belonging scales, 132 minutes): kappa 11.35 against 11.25 on 22 scales, sigma_m 1.52 both, participation 0.2791 against 0.2789, hand-to-mouth, the MPC and the fall identical to the fourth decimal. The 22-scale grid stands.
