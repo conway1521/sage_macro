@@ -3388,3 +3388,7 @@ Patience and participation are fitted in every configuration of the three countr
 | IT G+S+A | as G+A | 3.70, 1.94 | 0.199 | 0.121 | 0.529 | 0.214 |
 
 **Reading.** (1) S carries over: participation is met within 0.001 everywhere, the social parameters move little from version 1, the equilibria are stable (multipliers 1.2 to 1.4), and switching S on leaves hand-to-mouth, the MPC and the fall where G has them, as the modular rule asks. (2) The MPC as the survey asks it is too high in France (more than twice) and Germany, too low in Italy without dread and close with it. (3) The fall on Kolsrud and co-authors' estimand is 0.16 to 0.17 without dread and 0.21 to 0.22 with it, 3.7 to 5 times their 4.4 per cent; the second asset is where version 1 showed the rest of the gap closing. (4) France cannot carry dread in choices on the quarterly economy, and its MPC test fails by the widest margin: under the design's rule (section 3.4) France is the candidate to stay annual, a decision for the user.
+
+## 135. The response of job finding to benefits (2026-10-24)
+
+`probe_v2_benefit.jl CODE`: the calibrated quarterly G+A with its search costs, the entitled spell's benefit raised by 10 per cent in every quarter (tax unchanged), the elasticity of the mean chance of finding work over the entitled quarters. Benchmarks: Chetty (2008) -0.53 for a weekly hazard; Schmieder and von Wachter (2016) about 0.5 for median duration. Provisional runs on the first six rounds' costs (not converged): DE 40052887721, IT 40052892197; to be repeated on the fitted costs.
