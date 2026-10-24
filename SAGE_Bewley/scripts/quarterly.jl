@@ -161,8 +161,10 @@ function quarterly_calibrated(code::AbstractString, cfg::AbstractString)
     β = parse(Float64, q["beta_annual"]); gap = parse(Float64, q["beta_gap_annual"])
     ca = country_config(code; config = cfg, v3 = :v5m, S = S, A = A)
     c = SAGEConfig(duration_config(ca); beta_bar = β^(1 / 4), beta_cell = ((β - gap)^(1 / 4) - β^(1 / 4), 0.0), out_ls = 0.0, search = false)
+    # S on the belonging grid it was calibrated on (22 scales, calibrate_quarterly_s.jl; section 131)
     S && (c = SAGEConfig(c; kappa = parse(Float64, q["kappa"]), sigma_m = parse(Float64, q["sigma_m"]),
-                         unemployed_ratio = parse(Float64, country_rows()[code]["ratio"])))
+                         unemployed_ratio = parse(Float64, country_rows()[code]["ratio"]),
+                         ugrid = vcat(collect(0.0:1.0:12.0), collect(14.0:2.0:30.0))))
     if A
         get(q, "dread_mode", "") == "overlay" && (c = SAGEConfig(c; dread_mode = :overlay))
         sf = joinpath(@__DIR__, "search_v5q_$(code)_GA.txt")
