@@ -1,4 +1,4 @@
-# search_v5q_DE_GA.txt, written by calibrate_search_q.jl DE GA (run 40015089568, round 6 of 6, NOT converged: worst error 0.222); a start for the next rounds
+# search_v5q_DE_GA.txt, written by calibrate_search_q.jl DE GA (run 40040755690, 8 damped rounds after the first 6, NOT converged: worst error 0.062); a start for the next rounds
 search_gamma = 0.3500
-search_kq_cell1 = 14.43846 17.32452 23.35552 25.01816 25.55300 25.48213 25.25949 25.05705 29.24205
-search_kq_cell2 = 13.26693 15.33821 20.09156 21.57913 22.44174 22.75204 22.88935 23.22024 27.96521
+search_kq_cell1 = 16.44986 19.92462 27.00491 28.96487 29.82344 29.93572 29.94640 30.00713 34.57627
+search_kq_cell2 = 14.82550 17.27723 22.55971 24.14052 25.13502 25.55656 25.85152 26.14413 31.42392
