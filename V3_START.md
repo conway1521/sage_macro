@@ -3392,3 +3392,5 @@ Patience and participation are fitted in every configuration of the three countr
 ## 135. The response of job finding to benefits (2026-10-24)
 
 `probe_v2_benefit.jl CODE`: the calibrated quarterly G+A with its search costs, the entitled spell's benefit raised by 10 per cent in every quarter (tax unchanged), the elasticity of the mean chance of finding work over the entitled quarters. Benchmarks: Chetty (2008) -0.53 for a weekly hazard; Schmieder and von Wachter (2016) about 0.5 for median duration. Provisional runs on the first six rounds' costs (not converged): DE 40052887721, IT 40052892197; to be repeated on the fitted costs.
+
+**Long jobs lost.** France's G+A search fit (40027139630, dread in wellbeing only) ended at 4 hours 52 minutes with no log or output, as Italy's first G+S did at five hours: the runner appears to drop jobs near five hours. Search fits now run three rounds a job and resume from the costs printed by the last (France relaunched from the start, undamped, three rounds).
