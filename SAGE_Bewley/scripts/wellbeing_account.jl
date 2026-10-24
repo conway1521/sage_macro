@@ -76,8 +76,18 @@ if Q
     let P = r.pooled, cs_ = cells_of(c), st = stypes(params_of(SAGEConfig(c; effort_mode = :free), cs_[1])[1])
         mN = sum(cs_[g].share * sum(P[g].mass[st .=== :N]) for g in 1:2) / sum(cs_[g].share * sum(P[g].mass) for g in 1:2)
         say(@sprintf("  out of work %.4f, of which inactive (N) %.4f: the out-of-work term uses the unemployed, %.4f", u, mN, u - mN))
-        global u = u - mN
+        global u = u - mN; global uN = mN
     end
+end
+# the inactive's own gap (version 2): ESS, the working-age inactive by main activity pooled (not looking, sick or
+# disabled, retired under 65, housework and care) against employees on unlimited contracts at the same income decile
+# (data/validation/ess_life_satisfaction_inactive.csv; V3_START.md section 136)
+function ess_gap_inactive(code)
+    for l in eachline(joinpath(DATA, "validation", "ess_life_satisfaction_inactive.csv"))
+        f = split(l, ',')
+        length(f) >= 4 && f[1] == code && occursin("the four together", l) && return -parse(Float64, f[4])
+    end
+    error("no ESS gap for the inactive in $code")
 end
 say(@sprintf("  out of work %.4f; taking part %.4f; consumption per head %.4f; mean income %.4f", u, r.rate, r.consumption, r.mean_income))
 hasA && c.search && !Q && say(@sprintf("  search: the chance of finding work chosen, first year %.4f, beyond %.4f (measured %.3f; %.3f %.3f by cell)", r.search_UL..., c.f_find, c.f_long...))
@@ -100,6 +110,10 @@ if hasA
     row!("A  dread of a change of status", pts(xall), xall, @sprintf("%.4f of consumption in work, %.4f out of work", xE, xO))
 end
 row!("A  out of work beyond income", -u * g, u * shr(g), @sprintf("gap %.2f points a person (ESS); at 0.8: %.4f per head", g, -u * 0.8))
+if Q
+    gN = ess_gap_inactive(code)
+    row!("A  inactive (N) beyond income", -uN * gN, uN * shr(gN), @sprintf("gap %.2f points a person (ESS, the working-age inactive pooled), on %.4f inactive", gN, uN))
+end
 if xs > 0
     gs = -pts(xs)
     row!("     of which job search", u * pts(xs), u * xs, @sprintf("%.2f points a person out of work (%.4f of their consumption)%s", gs, xs, gs > g ? ": ABOVE the measured gap" : ""))

@@ -1,0 +1,17 @@
+"# European Social Survey rounds 6, 7, 10, 11; ages 20 to 64; life satisfaction 0 to 10; the working-age inactive by main activity against employees on unlimited contracts; aggregates only, groups under 30 suppressed. Script: data/ess/ess_inactive_gaps.py"
+country,statistic,group,value,se,n
+FR,gap at the same income decile,not looking,-1.011,0.292,95
+FR,gap at the same income decile,sick or disabled,-1.112,0.276,173
+FR,gap at the same income decile,retired under 65,0.279,0.153,401
+FR,gap at the same income decile,housework and care,0.187,0.24,191
+FR,gap at the same income decile,"inactive, the four together",-0.143,0.13,860
+DE,gap at the same income decile,not looking,-1.304,0.334,102
+DE,gap at the same income decile,sick or disabled,-1.328,0.244,240
+DE,gap at the same income decile,retired under 65,-0.038,0.148,491
+DE,gap at the same income decile,housework and care,0.087,0.098,737
+DE,gap at the same income decile,"inactive, the four together",-0.237,0.086,1570
+IT,gap at the same income decile,not looking,-0.496,0.353,61
+IT,gap at the same income decile,retired under 65,-0.11,0.2,108
+IT,gap at the same income decile,housework and care,0.076,0.178,214
+IT,gap at the same income decile,sick or disabled,suppressed,,under 30
+IT,gap at the same income decile,"inactive, the four together",-0.233,0.138,411
