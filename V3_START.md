@@ -3450,3 +3450,5 @@ DE G+A account (40072592219) failed on the account's own reading of the inactive
 **FR G+S account** (40090548901): taking part +0.016 (participation 0.233); the model's own belonging 0.012 of consumption per head, 0.107 points a participant (version 1: 0.12), close to the evidence's 0.055 to 0.081 (Germany's is about seven times it); unemployed -0.067, inactive -0.007, air quality -0.049.
 
 **IT G+S account** (40090553230): taking part +0.009 (participation 0.125); the model's own belonging 0.200 points a participant (version 1: 0.18); unemployed -0.073, inactive -0.007, air quality -0.103.
+
+**DE G+S+A account** (40090557430; Germany complete): chosen exits with G+A's costs 0.478, 0.424, 0.226 against 0.488, 0.434, 0.230 (within about 2 per cent: the carry-over holds); dread -0.053, out of work -0.029 (job search -0.007), inactive -0.017, taking part +0.019, the model's own belonging 0.54 points a participant, air quality -0.058.
