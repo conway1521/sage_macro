@@ -3426,3 +3426,5 @@ Patience and participation are fitted in every configuration of the three countr
 **FR G+A search, first run** (40053975356, dread in wellbeing only, about 95 minutes a round): worst error 2.58, 1.77, 1.35; the tertiary cell's chosen chances move erratically between rounds (its first quarter 0.92, 0.62, 0.54 against 0.36). Resumed two rounds a job (the runner's five-hour loss), damped 0.8.
 
 **IT G+A search** (40065012844, over-relaxed 1.6): worst error 0.206, 0.102, 0.049; hand-to-mouth 0.194, MPC 12m 0.525, fall Kolsrud 0.225. Resumed at 1.4, two rounds.
+
+DE G+A account (40072592219) failed on the account's own reading of the inactive's gap (the group's name holds a comma); fixed, DE G+A and G+S+A relaunched (40075265385, 40075269775). Its search line already showed the fitted exits: 0.498, 0.443, 0.234, ... against 0.488, 0.434, 0.230.
