@@ -3406,3 +3406,7 @@ Patience and participation are fitted in every configuration of the three countr
 **Billing, checked with the user (2026-10-24)**: the repository is public and every workflow runs on standard `ubuntu-latest` runners, so Actions minutes are not billed (the user's billing page: about $700 of usage at list price, $0 billed). Artifacts 5.8 MB; the package cache 10.8 GB in 117 entries, evicted by GitHub above its allowance. The repository should stay public while the heavy runs go on.
 
 **IT G+A search, resumed** (40053992828, exact step, three rounds): worst error 0.430, 0.299, 0.206, falling by about 0.7 a round without alternating (the gain from work moves with the cost, so the exact step for a fixed gain under-corrects); fall Kolsrud 0.21 with search. Resumed with an over-relaxed step (1.6 times), three rounds.
+
+## 136. Version 2's wellbeing account (2026-10-24)
+
+`quarterly_calibrated(code, cfg)` (quarterly.jl) builds any calibrated version 2 configuration from its files (patience and gap, kappa and sigma_m with the measured ratio, dread in choices or in wellbeing only, search costs from `search_v5q_<C>_GA.txt` where it exists, the cost of being out of work in wellbeing only). `wellbeing_account.jl CODE CFG q` runs version 1's account on it, solved once. Launched for G and G+S in the three countries (40065089584 to 40065106737); G+A and G+S+A once the search fits are in.
