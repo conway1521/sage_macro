@@ -7,12 +7,13 @@
 # twelve months, the fall as Kolsrud et al. measure it. Broyden steps from finite differences; every solve printed;
 # the file's lines are printed at the end, to be committed by hand (CI never commits).
 #
-#   SAGE_DREAD_CHOICE=1 julia --project=scripts/run_env scripts/calibrate_quarterly.jl CODE CONFIG BETA0 GAP0 [MAXSOLVES] [entitle]
+#   SAGE_DREAD_CHOICE=1 julia --project=scripts/run_env scripts/calibrate_quarterly.jl CODE CONFIG BETA0 GAP0 [MAXSOLVES] [entitle|no] [GAPMAX]
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = uppercase(ARGS[1]); cfg = uppercase(ARGS[2]); x = [parse(Float64, ARGS[3]), parse(Float64, ARGS[4])]
 maxs = length(ARGS) >= 5 ? parse(Int, ARGS[5]) : 9
 ent = length(ARGS) >= 6 && ARGS[6] == "entitle"        # the spell without entitlement on (the check of section 125), one worker
+GAPMAX = length(ARGS) >= 7 ? parse(Float64, ARGS[7]) : 0.15   # upper bound on the gap (Italy G+A sat at 0.15: the check of section 137)
 say(x...) = (println(x...); flush(stdout))
 function hfcs(moment, group, sub)
     for ln in eachline(joinpath(@__DIR__, "..", "..", "data", "hfcs_targets.csv"))
@@ -47,7 +48,7 @@ function F(x)
     ([h - T_HTM, g - T_GAP], r)
 end
 ok(f) = abs(f[1]) < TOL_HTM && abs(f[2]) < TOL_GAP
-clampx(x) = [clamp(x[1], 0.70, 0.995), clamp(x[2], 0.0, min(0.15, x[1] - 0.6))]
+clampx(x) = [clamp(x[1], 0.70, 0.995), clamp(x[2], 0.0, min(GAPMAX, x[1] - 0.6))]
 function fit(x)
     f, r = F(x); best = (x = copy(x), f = f, r = r)
     ok(f) && return best

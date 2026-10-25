@@ -21,6 +21,9 @@ resume = length(ARGS) >= 4 && ARGS[4] == "resume"; DAMP = length(ARGS) >= 5 ? pa
 # GROUPED (sixth argument `grouped`): one cost level per duration group of the data (quarter 1, quarter 2, quarters 3-4,
 # quarters 5-8, L), the groups whose hazards the bands identify; each group's step from the mean chosen chance over its
 # quarters. Per quarter, neighbouring quarters' costs alternated in France's tertiary cell (run 40081907881).
+# The test is then on the groups too: each group's exits over its stock (the chosen chance weighted by the mass in
+# each quarter), the object the band shares identify. Within a group the chance chosen may rise towards the end of
+# benefits (France, quarter 8), which the data's constant hazard by group neither shows nor rules out.
 grouped = length(ARGS) >= 6 && ARGS[6] == "grouped"
 say(x...) = (println(x...); flush(stdout))
 # dread in choices (SAGE_DREAD_CHOICE=1), or in wellbeing only where the country's calibration with it in choices
@@ -56,16 +59,20 @@ best = nothing
 for it in 1:rounds
     cc = SAGEConfig(c; search_kq = (copy(k[1]), copy(k[2])))
     t = @elapsed r = solve_economy(cc; cache = false)
-    err = maximum(abs(r.search_exit[g][d] / target[d] - 1) for g in 1:2, d in eachindex(target))
+    gexit(g, G) = sum(r.search_exit[g][G] .* r.search_mass[g][G]) / max(sum(r.search_mass[g][G]), 1e-300)
+    gtarget(G) = target[G[1]]                       # constant within each group
+    err = grouped ? maximum(abs(gexit(g, G) / gtarget(G) - 1) for g in 1:2, G in GROUPS) :
+                    maximum(abs(r.search_exit[g][d] / target[d] - 1) for g in 1:2, d in eachindex(target))
     say(@sprintf("round %d: worst relative error %.3f | htm %.4f | MPC 12m %.4f | fall Kolsrud %.4f | %.1f min", it, err, r.hand_to_mouth_kvw, r.mpc12, r.fall_kolsrud, t / 60))
     for g in 1:2
         say(@sprintf("  cell %d chosen %s | cost %s", g, string(round.(r.search_exit[g], digits = 4)), string(round.(k[g], digits = 3))))
+        grouped && say(@sprintf("  cell %d by group (exits over stock) %s against %s", g, string([round(gexit(g, G), digits = 4) for G in GROUPS]), string([round(gtarget(G), digits = 4) for G in GROUPS])))
     end
     global best = (k = deepcopy(k), err = err, r = r)
     err < 0.03 && break
     if grouped
         for g in 1:2, G in GROUPS
-            f = sum(r.search_exit[g][G]) / sum(target[G])
+            f = gexit(g, G) / gtarget(G)
             k[g][G] .*= clamp(f^(DAMP * γs), 0.5, 2.0)
         end
     else

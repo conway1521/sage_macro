@@ -1284,6 +1284,10 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
             search_exit = (c.A && c.search) ? Tuple((pg = params_of(cfgT, cs[g])[1]; stg = stypes(pg); dg = isempty(pg.dur) ? zeros(Int, length(stg)) : pg.dur;
                                                     vcat([(r_ = findall((stg .=== :U) .& ((dg .== d) .| (dg .== NONENT + d))); sum(pooled[g].smass[r_]) / max(sum(pooled[g].mass[r_]), 1e-300)) for d in 1:max(c.nU, 1)],
                                                          [(r_ = findall(stg .=== :L); sum(pooled[g].smass[r_]) / max(sum(pooled[g].mass[r_]), 1e-300))])) for g in 1:2) : (Float64[], Float64[]),
+            # the mass in each period of the spell (U_1 .. U_nU, then L), by cell, for exits by duration group
+            search_mass = (c.A && c.search) ? Tuple((pg = params_of(cfgT, cs[g])[1]; stg = stypes(pg); dg = isempty(pg.dur) ? zeros(Int, length(stg)) : pg.dur;
+                                                    vcat([sum(pooled[g].mass[findall((stg .=== :U) .& ((dg .== d) .| (dg .== NONENT + d)))]) for d in 1:max(c.nU, 1)],
+                                                         [sum(pooled[g].mass[findall(stg .=== :L)])])) for g in 1:2) : (Float64[], Float64[]),
             agrid = agrid, Wtot = Wtot, pooled = pooled, employed = emp, lumptax = T,
             kgrid = c.illiquid ? illiquid_grid(c.k_max, c.nk, c.pexp, c.k_mid) : [0.0],
             Ktot = sum(cs[g].share .* vec(sum(pooled[g].K, dims = 1)) for g in 1:2),
