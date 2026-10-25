@@ -153,14 +153,14 @@ unemployed) where S is on, and with A: dread in choices over the year unless the
 (France, section 133), and job search at the costs of `search_v5q_<code>_GA.txt` where that file exists (G+S+A takes
 G+A's, section 134). The cost of being out of work is in wellbeing only (out_ls = 0).
 """
-function quarterly_calibrated(code::AbstractString, cfg::AbstractString)
+function quarterly_calibrated(code::AbstractString, cfg::AbstractString; nz::Int = 7)
     kv(f) = (d = Dict{String,String}(); for l in eachline(f); t = strip(l); (isempty(t) || startswith(t, "#") || !occursin("=", t)) && continue;
              k, v = strip.(split(t, "=", limit = 2)); d[k] = v; end; d)
     S = occursin('S', cfg); A = occursin('A', cfg)
     q = kv(joinpath(@__DIR__, "calibration_v5q_$(code)_$(cfg).txt"))
     β = parse(Float64, q["beta_annual"]); gap = parse(Float64, q["beta_gap_annual"])
     ca = country_config(code; config = cfg, v3 = :v5m, S = S, A = A)
-    c = SAGEConfig(duration_config(ca); beta_bar = β^(1 / 4), beta_cell = ((β - gap)^(1 / 4) - β^(1 / 4), 0.0), out_ls = 0.0, search = false)
+    c = SAGEConfig(duration_config(ca; nz = nz); beta_bar = β^(1 / 4), beta_cell = ((β - gap)^(1 / 4) - β^(1 / 4), 0.0), out_ls = 0.0, search = false)
     # S on the belonging grid it was calibrated on (22 scales, calibrate_quarterly_s.jl; section 131)
     S && (c = SAGEConfig(c; kappa = parse(Float64, q["kappa"]), sigma_m = parse(Float64, q["sigma_m"]),
                          unemployed_ratio = parse(Float64, country_rows()[code]["ratio"]),
