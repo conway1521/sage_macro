@@ -94,12 +94,12 @@ Version 1's account is kept, with one correction. Version 1's long-term state he
 |---|---|---|---|
 | out of work beyond income, unemployed | -0.067 | -0.027 | -0.072 |
 | inactive beyond income | -0.007 | -0.017 | -0.007 |
-| dread of a change of status (G+A) | in wellbeing only, [to complete] | -0.053 | -0.033 |
-| of which job search, within the unemployed's term | [to complete] | -0.007 | -0.046 |
+| dread of a change of status (G+A) | -0.047 (in wellbeing only) | -0.053 | -0.033 |
+| of which job search, within the unemployed's term | -0.027 | -0.007 | -0.046 |
 | taking part (G+S, Meier and Stutzer 2008) | +0.016 | +0.019 | +0.009 |
 | air quality | -0.049 | -0.058 | -0.103 |
 
-The cost of being out of work falls by a third to a half against version 1, most in Germany, where most jobless households are inactive. Dread roughly doubles in Germany, since it now covers the year's lottery at its full size. In Italy job search accounts for two thirds of the unemployed's measured gap, because matching Italy's slow exits takes high search costs, against a quarter in Germany. The model's own value of belonging is 0.11, 0.55 and 0.20 points a participant against the evidence's 0.055 to 0.081, close in France and Italy and about seven times it in Germany, as in version 1. With all three dimensions on, the terms barely move: in G+S+A every A term in Germany and Italy lies within 2 per cent of its G+A value, taking part stays at +0.019 and +0.008, and G+A's search costs give exits within about 2 per cent of the targets.
+The cost of being out of work falls by a third to a half against version 1, most in Germany, where most jobless households are inactive. Dread roughly doubles in Germany, since it now covers the year's lottery at its full size. In Italy job search accounts for two thirds of the unemployed's measured gap, because matching Italy's slow exits takes high search costs, against two fifths in France and a quarter in Germany. The model's own value of belonging is 0.11, 0.55 and 0.20 points a participant against the evidence's 0.055 to 0.081, close in France and Italy and about seven times it in Germany, as in version 1. With all three dimensions on, the terms barely move: in G+S+A every A term in Germany and Italy lies within 2 per cent of its G+A value, taking part stays at +0.019 and +0.008, and G+A's search costs give exits within about 2 per cent of the targets.
 
 ## 7.4 Exact switches
 
