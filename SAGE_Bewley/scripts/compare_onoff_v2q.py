@@ -10,7 +10,7 @@ absolute for results near zero (budget gaps). Results that exist on one side onl
 import re
 import sys
 
-PAIRS = [("GS-S", "G"), ("GA-A", "G@GA"), ("GSA-S", "GA@GSA"), ("GSA-A", "GS@GSA"), ("GSA-SA", "G@GA")]
+PAIRS = [("GS-S", "G@GS"), ("GA-A", "G@GA"), ("GSA-S", "GA@GSA"), ("GSA-A", "GS@GSA"), ("GSA-SA", "G@GSA")]
 code = sys.argv[1].upper()
 res = {}
 pat = re.compile(r"RES (\S+) (\S+) = (\S+)")
