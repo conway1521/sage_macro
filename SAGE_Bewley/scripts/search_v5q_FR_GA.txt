@@ -1,4 +1,4 @@
-# search_v5q_FR_GA.txt, written by calibrate_search_q.jl FR GA (run 40081907881, dread in wellbeing only, NOT converged: worst error 1.005; the tertiary cell's quarters 7 and 8 alternate); a start for the grouped rounds
+# search_v5q_FR_GA.txt, written by calibrate_search_q.jl (run 40094751858, grouped, DAMP 1.2, best round, worst error 0.729 tested per quarter); arrival rate one; the start of the fit by group (exits over stock)
 search_gamma = 0.3500
-search_kq_cell1 = 9.48683 9.86403 10.84220 11.23774 11.72508 12.31128 12.96667 14.13638 12.06145
-search_kq_cell2 = 10.95818 10.55450 11.33582 11.55887 11.84781 12.30365 13.88156 12.87849 16.26802
+search_kq_cell1 = 9.72260 10.18654 11.48763 11.48763 13.41564 13.41564 13.41564 13.41564 12.92238
+search_kq_cell2 = 12.31225 12.53206 13.95390 13.95390 15.85654 15.85654 15.85654 15.85654 20.15196
