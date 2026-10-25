@@ -24,15 +24,18 @@ length(ARGS) >= 3 && ARGS[2] == "cohort" && (ENV["SAGE_COHORT_LUMP"] = ARGS[3])
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = uppercase(ARGS[1]); cfg = "GA"
-mode = length(ARGS) >= 2 ? ARGS[2] : "benefit"; nodread = "nodread" in ARGS[3:end]
+mode = length(ARGS) >= 2 ? ARGS[2] : "benefit"; nodread = "nodread" in ARGS[2:end]
 readkv(f) = (d = Dict{String,String}(); for l in eachline(f); t = strip(l); (isempty(t) || startswith(t, "#") || !occursin("=", t)) && continue;
                  k, v = strip.(split(t, "=", limit = 2)); d[k] = v; end; d)
 q = readkv(joinpath(@__DIR__, "calibration_v5q_$(code)_$(cfg).txt")); β = parse(Float64, q["beta_annual"]); gap = parse(Float64, q["beta_gap_annual"])
-sq = readkv(joinpath(@__DIR__, "search_v5q_$(code)_$(cfg).txt"))
+# TRIAL COSTS (an argument costs=SUFFIX): search_v5q_<C>_GA_<SUFFIX>.txt, with its own curvature (section 137)
+ct = something(findfirst(a -> startswith(a, "costs="), ARGS), 0)
+sq = readkv(joinpath(@__DIR__, "search_v5q_$(code)_$(cfg)" * (ct > 0 ? "_" * split(ARGS[ct], "=")[2] : "") * ".txt"))
+γq = parse(Float64, sq["search_gamma"])
 kq = (parse.(Float64, split(sq["search_kq_cell1"])), parse.(Float64, split(sq["search_kq_cell2"])))
 ca = country_config(code; config = cfg, v3 = :v5m, S = false, A = true)
 cb = duration_config(ca)
-c = SAGEConfig(cb; beta_bar = β^(1 / 4), beta_cell = ((β - gap)^(1 / 4) - β^(1 / 4), 0.0), out_ls = 0.0, search = true, search_gamma = 0.35, search_kq = kq)
+c = SAGEConfig(cb; beta_bar = β^(1 / 4), beta_cell = ((β - gap)^(1 / 4) - β^(1 / 4), 0.0), out_ls = 0.0, search = true, search_gamma = γq, search_kq = kq)
 get(q, "dread_mode", "") == "overlay" && (c = SAGEConfig(c; dread_mode = :overlay))
 nodread && (c = SAGEConfig(c; dread_mode = :overlay))
 println(code, " G+A, ", mode, ", dread ", c.dread_mode === :overlay ? "in wellbeing only" : "in choices")

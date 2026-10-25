@@ -25,6 +25,11 @@ resume = length(ARGS) >= 4 && ARGS[4] == "resume"; DAMP = length(ARGS) >= 5 ? pa
 # each quarter), the object the band shares identify. Within a group the chance chosen may rise towards the end of
 # benefits (France, quarter 8), which the data's constant hazard by group neither shows nor rules out.
 grouped = length(ARGS) >= 6 && ARGS[6] == "grouped"
+# GAMMA TRIAL (an argument gamma=G, section 137): the curvature's sensitivity, not a calibration. The costs start from the
+# file's, moved so that k x^gamma, the marginal cost at the target chance, is unchanged (the gain from work held), and
+# the costs printed at the end are for that curvature; nothing is written over the calibrated file.
+gtrial = something(findfirst(a -> startswith(a, "gamma="), ARGS), 0)
+γtrial = gtrial > 0 ? parse(Float64, split(ARGS[gtrial], "=")[2]) : NaN
 say(x...) = (println(x...); flush(stdout))
 # dread in choices (SAGE_DREAD_CHOICE=1), or in wellbeing only where the country's calibration with it in choices
 # failed (France, section 133: the configuration's file then carries G's patience)
@@ -33,7 +38,7 @@ readkv(f) = (d = Dict{String,String}(); for l in eachline(f); t = strip(l); (ise
                  k, v = strip.(split(t, "=", limit = 2)); d[k] = v; end; d)
 q = readkv(joinpath(@__DIR__, "calibration_v5q_$(code)_$(cfg).txt")); β = parse(Float64, q["beta_annual"]); gap = parse(Float64, q["beta_gap_annual"])
 s1 = readkv(joinpath(@__DIR__, "search_v5m_$(code)_GA.txt"))
-kU = parse.(Float64, split(s1["search_kU"])); kL = parse.(Float64, split(s1["search_kL"])); γs = 0.35
+kU = parse.(Float64, split(s1["search_kU"])); kL = parse.(Float64, split(s1["search_kL"])); γs = isnan(γtrial) ? 0.35 : γtrial
 S = occursin('S', cfg)
 ca = country_config(code; config = cfg, v3 = :v5m, S = S, A = true)
 cb = duration_config(ca)
@@ -45,6 +50,11 @@ if resume
     sq = readkv(joinpath(@__DIR__, "search_v5q_$(code)_$(cfg).txt"))
     k = [parse.(Float64, split(sq["search_kq_cell$g"])) for g in 1:2]
     say("resuming from search_v5q_$(code)_$(cfg).txt")
+    if !isnan(γtrial)
+        γ0 = parse(Float64, sq["search_gamma"])
+        for g in 1:2; k[g] .*= target .^ (γ0 - γtrial); end
+        say("curvature trial: gamma $(γtrial) (calibrated $(γ0)); costs moved by the target chances to the power $(γ0 - γtrial)")
+    end
 end
 GROUPS = [[1], [2], [3, 4], [5, 6, 7, 8], [9]]
 if grouped
@@ -81,7 +91,7 @@ for it in 1:rounds
         end
     end
 end
-say("# search_v5q_$(code)_$(cfg).txt, written by calibrate_search_q.jl ($(best.err < 0.03 ? "fitted" : "best round, worst error $(round(best.err, digits = 3))")); arrival rate one")
+say("# search_v5q_$(code)_$(cfg)$(isnan(γtrial) ? "" : "_g" * string(round(Int, 100γtrial))).txt, written by calibrate_search_q.jl ($(best.err < 0.03 ? "fitted" : "best round, worst error $(round(best.err, digits = 3))")); arrival rate one")
 say(@sprintf("search_gamma = %.4f", γs))
 for g in 1:2; say("search_kq_cell$g = ", join([@sprintf("%.5f", x) for x in best.k[g]], " ")); end
 println("DONE")
