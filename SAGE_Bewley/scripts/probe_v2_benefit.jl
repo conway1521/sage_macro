@@ -16,10 +16,15 @@
 # NODREAD (third argument `nodread`): dread moved out of choices (wellbeing only), every other parameter held.
 #
 #   SAGE_DREAD_CHOICE=1 julia --project=scripts/run_env scripts/probe_v2_benefit.jl CODE [benefit|severance] [nodread]
+# COHORT (second argument `cohort`, third the lump sum X as a share of a period's income in work, fourth optionally
+# `nodread`): the current spell only, as severance pay is (Chetty 2008). Solved once: the job losers' cohort is
+# followed with the baseline's policies, its assets on entry raised by X (agency_shock.jl, part 3). X is the equal cash
+# value printed by the severance mode. Set before the workers start, which inherit it.
+length(ARGS) >= 3 && ARGS[2] == "cohort" && (ENV["SAGE_COHORT_LUMP"] = ARGS[3])
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = uppercase(ARGS[1]); cfg = "GA"
-mode = length(ARGS) >= 2 ? ARGS[2] : "benefit"; nodread = length(ARGS) >= 3 && ARGS[3] == "nodread"
+mode = length(ARGS) >= 2 ? ARGS[2] : "benefit"; nodread = "nodread" in ARGS[3:end]
 readkv(f) = (d = Dict{String,String}(); for l in eachline(f); t = strip(l); (isempty(t) || startswith(t, "#") || !occursin("=", t)) && continue;
                  k, v = strip.(split(t, "=", limit = 2)); d[k] = v; end; d)
 q = readkv(joinpath(@__DIR__, "calibration_v5q_$(code)_$(cfg).txt")); β = parse(Float64, q["beta_annual"]); gap = parse(Float64, q["beta_gap_annual"])
@@ -42,6 +47,14 @@ function exits(r)
     num / den
 end
 r0 = solve_economy(c; cache = false)
+if mode == "cohort"
+    lc = r0.lump_cohort
+    @printf("%s G+A, cohort: lump sum %s of a period's income in work at the start of the spell, current spell only | chance of finding work over the entitled quarters %.6f -> %.6f, log change %.6f\n",
+            code, ARGS[3], lc.base, lc.lump, log(lc.lump / lc.base))
+    println("  by quarter: ", round.(lc.base_q, digits = 5), " -> ", round.(lc.lump_q, digits = 5))
+    @printf("  baseline (check against the economy's own): mean entitled chance %.6f, hand-to-mouth %.4f\n", exits(r0), r0.hand_to_mouth_kvw)
+    println("DONE"); exit()
+end
 if mode == "severance"
     nU = cb.nU
     m = [sum(cells_of(c)[g].share * r0.search_mass[g][d] for g in 1:2) for d in 1:nU]

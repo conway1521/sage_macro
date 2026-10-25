@@ -1267,6 +1267,13 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
                                                            1 - (13 * K[3] / K[1] + 7 * S2 * K[5] / K[4]) / ((13 + 7 * S2) * c0))),
             fall_q1 = (K = sum(cs[g].share .* pooled[g].kolmass[1:5] for g in 1:2); K[1] <= 0 ? NaN : 1 - K[3] / K[2]),
             fall_q2 = (K = sum(cs[g].share .* pooled[g].kolmass[1:5] for g in 1:2); K[4] <= 0 ? NaN : 1 - (K[5] / K[4]) / (K[2] / K[1])),
+            # the job losers' cohort with a lump sum at the start of the spell (agency_shock.jl, part 3): its chance of
+            # finding work over the entitled quarters, exits over the stock, without and with the lump sum, and by quarter
+            lump_cohort = (hasproperty(pooled[1], :lumpmass) && c.period > 1 && 4 * c.nU <= length(pooled[1].lumpmass)) ?
+                          (L = sum(cs[g].share .* pooled[g].lumpmass for g in 1:2); n = c.nU;
+                           (base = sum(L[n+1:2n]) / max(sum(L[1:n]), 1e-300), lump = sum(L[3n+1:4n]) / max(sum(L[2n+1:3n]), 1e-300),
+                            base_q = L[n+1:2n] ./ max.(L[1:n], 1e-300), lump_q = L[3n+1:4n] ./ max.(L[2n+1:3n], 1e-300))) :
+                          (base = NaN, lump = NaN, base_q = Float64[], lump_q = Float64[]),
             mpc_htm = (h = sum(cs[g].share * sum(pooled[g].hmass) for g in 1:2);
                        h <= 0 ? 0.0 : sum(cs[g].share * sum(pooled[g].mpchmass) for g in 1:2) / h),
             room = sum(cs[g].share * sum(pooled[g].rmass) for g in 1:2) /

@@ -133,6 +133,7 @@ function agency_summary(p::SAGEParams, sol)
     # is unchanged): the twelve-month MPC and the fall on job loss as Kolsrud, Landais, Nilsson and Spinnewijn (2018)
     # measure it. Both follow the households' own choices forward: next assets a_d, participation P1, and the
     # transition the household chose where it searches (as welfare_parts).
+    lumpm = zeros(ns)                                 # the lump sum's cohort (part 3 below)
     mpc12mass = zeros(ns); kz = zeros(ns)            # kz[1:5]: entrant mass, its pre-loss consumption, quarter-1 consumption, survivors to quarter 2, their consumption
     if p.ppy > 1
         srch2 = !isempty(p.search_k) && hasproperty(sol, :search_xs) && !isempty(sol.search_xs)
@@ -209,11 +210,55 @@ function agency_summary(p::SAGEParams, sol)
                     kz[4] += c1[i, s] * q; kz[5] += c1[i, s] * q * (wk * cbar[k, s2] + (1 - wk) * cbar[k+1, s2])
                 end
             end
+            # 3. A lump sum at the start of the spell, for the current spell only (design section 7; V3_START.md section
+            #    137): the job losers' assets on entry raised by SAGE_COHORT_LUMP times their last period's income in work
+            #    (cash on hand up by that, assets by it over R), the policies the baseline's, since the future is
+            #    unchanged. The cohort is followed through the spell's quarters, with and without the lump sum: in
+            #    lumpmass, the mass in each quarter of the spell and its exits to work, base then with the lump sum.
+            LUMP = parse(Float64, get(ENV, "SAGE_COHORT_LUMP", "0.1"))
+            ds_ = [stv[s] === :U && dur[s] < NONENT ? dur[s] : 0 for s in 1:ns]; nUq = maximum(ds_)
+            if 4 * nUq <= ns && LUMP > 0
+                cl = zeros(na, ns)
+                for s in 1:ns
+                    empv[s] || continue
+                    for i in 1:na
+                        m = λ[i, s]; m <= 0 && continue
+                        Δ = LUMP * ybar[i, s]
+                        for d in (0, 1)
+                            w = d == 1 ? P1[i, s] : 1 - P1[i, s]; w <= 0 && continue
+                            ap = sol.a_d[d+1][i, s] + Δ / p.R
+                            k = clamp(searchsortedlast(a, ap), 1, na - 1); wk = clamp((a[k+1] - ap) / (a[k+1] - a[k]), 0.0, 1.0)
+                            for s2 in nzr[s]
+                                (U1[s2] && Π[s, s2] > 0) || continue
+                                cl[k, s2] += m * w * Π[s, s2] * wk; cl[k+1, s2] += m * w * Π[s, s2] * (1 - wk)
+                            end
+                        end
+                    end
+                end
+                for (j, c0) in enumerate((c1, cl))
+                    cur = c0
+                    for dq in 1:nUq
+                        nxt = zeros(na, ns)
+                        for s in 1:ns, i in 1:na
+                            mm = cur[i, s]; mm > 0 || continue
+                            lumpm[(j-1)*2*nUq+dq] += mm
+                            step!(i, s) do q, k, wk, s2
+                                if empv[s2]
+                                    lumpm[(j-1)*2*nUq+nUq+dq] += mm * q
+                                elseif stv[s2] === :U && ds_[s2] == dq + 1
+                                    nxt[k, s2] += mm * q * wk; nxt[k+1, s2] += mm * q * (1 - wk)
+                                end
+                            end
+                        end
+                        cur = nxt
+                    end
+                end
+            end
         end
     end
     merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = zeros(ns),
            mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = zeros(ns), rmass = rmass, xmass = xmass, cmass = cmass,
-           kmass = kmass, smass = smass, mpc12mass = mpc12mass, kolmass = kz),
+           kmass = kmass, smass = smass, mpc12mass = mpc12mass, kolmass = kz, lumpmass = lumpm),
           welfare_parts(p, sol))
 end
 
@@ -243,6 +288,7 @@ collapse_agency(ds, w) = (pmass = sum(w[i] .* ds[i].pmass for i in eachindex(ds)
                           smass    = sum(w[i] .* ds[i].smass    for i in eachindex(ds)),
                           mpc12mass = sum(w[i] .* ds[i].mpc12mass for i in eachindex(ds)),
                           kolmass  = sum(w[i] .* ds[i].kolmass  for i in eachindex(ds)),
+                          lumpmass = sum(w[i] .* ds[i].lumpmass for i in eachindex(ds)),
                           vdmass   = sum(w[i] .* ds[i].vdmass   for i in eachindex(ds)),
                           vkmass   = sum(w[i] .* ds[i].vkmass   for i in eachindex(ds)))
 collapse_all(ds, w) = merge(collapse(ds, w), collapse_agency(ds, w))
