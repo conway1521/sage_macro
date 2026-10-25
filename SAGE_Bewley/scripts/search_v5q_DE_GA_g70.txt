@@ -1,0 +1,4 @@
+# search_v5q_DE_GA_g70.txt, written by calibrate_search_q.jl DE GA (run 40226130840, curvature TRIAL gamma 0.7, fitted per quarter: worst error 0.025); not a calibration (V3_START.md section 137); arrival rate one
+search_gamma = 0.7000
+search_kq_cell1 = 19.17497 25.57167 44.72278 49.47146 53.60922 55.69356 57.82092 60.39026 115.24326
+search_kq_cell2 = 17.46553 22.53605 37.97380 41.80121 45.68073 48.07089 50.45670 52.95362 99.58544
