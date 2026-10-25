@@ -72,6 +72,10 @@ x0, x1 = exits(r0), exits(r1)
 el = log(x1 / x0) / log(1.1)
 @printf("%s G+A, %s: mean chance of finding work in the entitled quarters %.6f -> %.6f, log change %.6f; as an elasticity to a 10%% rise %.4f (Chetty 2008: -0.53 for a weekly hazard) | fall Kolsrud %.4f -> %.4f | htm %.4f -> %.4f\n",
         code, mode, x0, x1, log(x1 / x0), el, r0.fall_kolsrud, r1.fall_kolsrud, r0.hand_to_mouth_kvw, r1.hand_to_mouth_kvw)
+# the same response on the job losers' cohort (exits over its stock through the entitled quarters, lump_cohort.base),
+# the basis of the cohort mode, so that the two compare like with like
+@printf("  job losers' cohort: chance over the entitled quarters %.6f -> %.6f, log change %.6f\n",
+        r0.lump_cohort.base, r1.lump_cohort.base, log(r1.lump_cohort.base / r0.lump_cohort.base))
 for g in 1:2
     @printf("  cell %d chance by quarter: %s -> %s\n", g, string(round.(r0.search_exit[g], digits = 5)), string(round.(r1.search_exit[g], digits = 5)))
 end
