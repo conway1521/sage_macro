@@ -3542,3 +3542,5 @@ DE G+A account (40072592219) failed on the account's own reading of the inactive
 **Income grid, Italy's G+A** (40212431585): nine states: hand-to-mouth 0.1942 / 0.1936, median 0.1727 / 0.1726, MPC 0.5234 / 0.5243, fall 0.2256 / 0.2256: within 0.3 per cent. The income grid passes with A on in Germany and Italy.
 
 **Curvature sensitivity trial** (not a calibration; the decision is the user's): Germany's search costs refitted at gamma 0.7 and 1.0 (`calibrate_search_q.jl DE GA 3 resume 0.9 pq gamma=G`; costs start where the marginal cost at the target chance is unchanged), to be followed by the benefit response and the cohort lump sum on those costs (`probe_v2_benefit.jl ... costs=g70`). Launched (see the run list).
+
+**Grid, Italy's G+A at 500 points** (40208693403, one worker, 305 minutes): hand-to-mouth 0.1935 / 0.1936 on 300, median 0.1738 / 0.1726, MPC 0.5240 / 0.5243, fall 0.2257 / 0.2256: within 0.7 per cent. France's G+A at 500 points (one worker) is the last grid run.
