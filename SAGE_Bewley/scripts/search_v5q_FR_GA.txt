@@ -1,4 +1,4 @@
-# search_v5q_FR_GA.txt, written by calibrate_search_q.jl (run 40169650543, grouped, tested by group as exits over stock, DAMP 1.2, best round, worst error 0.091); arrival rate one
+# search_v5q_FR_GA.txt, written by calibrate_search_q.jl FR GA (run 40180288568, FITTED by duration group as exits over stock: worst error 0.027; grouped, DAMP 2.2; dread in wellbeing only); arrival rate one
 search_gamma = 0.3500
-search_kq_cell1 = 9.80060 10.27934 11.57330 11.57330 13.41821 13.41821 13.41821 13.41821 13.27141
-search_kq_cell2 = 13.09402 13.56666 15.16745 15.16745 17.37540 17.37540 17.37540 17.37540 22.66414
+search_kq_cell1 = 9.85287 10.34625 11.63508 11.63508 13.58138 13.58138 13.58138 13.58138 13.45050
+search_kq_cell2 = 13.84602 14.46775 16.34059 16.34059 18.92796 18.92796 18.92796 18.92796 25.06253
