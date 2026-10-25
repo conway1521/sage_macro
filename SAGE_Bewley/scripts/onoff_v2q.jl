@@ -10,6 +10,7 @@
 #   GSA-A   against  GS@GSA    GSA-SA  against  G@GSA
 #
 #   julia --project=scripts/run_env scripts/onoff_v2q.jl CODE VARIANT[,VARIANT...]
+ENV["SAGE_STALL_LOG"] = "1"            # workers inherit it: every stalled acceptance is printed
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = uppercase(ARGS[1])
@@ -34,7 +35,7 @@ function variant(v)
     quarterly_calibrated(code, v)
 end
 for v in uppercase.(split(ARGS[2], ","))
-c = variant(v)
+c = variant(String(split(v, "#")[1]))
 say(@sprintf("%s %s: S %s, A %s, search %s, dread %s (%s), patience %.6f, cell gap %.6f", code, v, c.S, c.A, c.search, c.dread, c.dread_mode, c.beta_bar, c.beta_cell[1]))
 t = @elapsed r = solve_economy(c; cache = false)
 say(@sprintf("%s solved in %.1f min", v, t / 60))

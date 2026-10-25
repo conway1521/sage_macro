@@ -392,6 +392,8 @@ function solve_participation_egm(p::SAGEParams, Q_agg::Float64; theta::Float64 =
     end
     iters == maxit && !stalled && @warn "solve_participation_egm stopped at maxit without converging" maxit tol
     stall > 1e-4 && @warn "solve_participation_egm accepted a stalled iteration (floor on)" stall
+    # every stalled acceptance, however small, when SAGE_STALL_LOG=1 (the on/off test's diagnostic, section 137)
+    stalled && stall <= 1e-4 && get(ENV, "SAGE_STALL_LOG", "0") == "1" && println("STALL accepted at ", stall, " after ", iters, " iterations")
 
     λ = search ? egm_distribution(a, Π, P1, a_d, na, nz; Pf = Pf, Ps = Ps, xs = xs, searching = p.search_k .> 0,
                                   lam = isempty(p.search_lam) ? nothing : p.search_lam) :
