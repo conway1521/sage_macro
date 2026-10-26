@@ -78,7 +78,7 @@ for it in 1:rounds
         say(@sprintf("  cell %d chosen %s | cost %s", g, string(round.(r.search_exit[g], digits = 4)), string(round.(k[g], digits = 3))))
         grouped && say(@sprintf("  cell %d by group (exits over stock) %s against %s", g, string([round(gexit(g, G), digits = 4) for G in GROUPS]), string([round(gtarget(G), digits = 4) for G in GROUPS])))
     end
-    global best = (k = deepcopy(k), err = err, r = r)
+    (best === nothing || err < best.err) && (global best = (k = deepcopy(k), err = err, r = r))   # the lowest-error round, not the last
     err < 0.03 && break
     if grouped
         for g in 1:2, G in GROUPS
