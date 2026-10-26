@@ -139,7 +139,9 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                              maxit::Int = 5000, warm = nothing, trace::Bool = false,
                              fast::Bool = get(ENV, "SAGE_EGM2_FAST", "1") == "1",
                              howard::Int = parse(Int, get(ENV, "SAGE_HOWARD", "0")))
-    p0.cfloor == 0 || error("the means-tested floor is not built for two assets yet")
+    # THE MEANS-TESTED FLOOR (V3_START.md section 141): as in the one-asset solver (`apply_floor!`), in each inner
+    # problem, on the cash after rent, so a tenant on the floor has its rent covered (as Germany's Buergergeld covers
+    # the housing costs on top of the standard rate); points on the floor have no marginal value of liquid wealth.
     isempty(p0.effort_set) && p0.job_effort && error("effort set by the job is not built for two assets yet")
     # survival enters discounting; the distribution adds the newborns
     p = p0.death > 0 ? update(p0; β = p0.β * (1 - p0.death)) : p0
@@ -218,6 +220,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     Vn = similar(V); Vbn = similar(Vb); Padj = zeros(na, nk, nz)
     # Howard steps: each branch's flow at the full step's policy, the value less beta E V at its next liquid wealth
     flw = howard > 0 ? (zeros(na, nsl, nz), zeros(na, nsl, nz)) : (zeros(0, 0, 0), zeros(0, 0, 0))
+    flr = p.cfloor > 0 ? (falses(na, nsl, nz), falses(na, nsl, nz)) : (falses(0, 0, 0), falses(0, 0, 0))
     qadj = zeros(nk, na, nk, nz)          # adjusting options: weight of option j at (i, m, s)
     wsel = zeros(nk, na, nk, nz)          # the target option j stands for: this share of the way from k_j to k_j+1
     # work arrays, one set per thread
@@ -253,6 +256,9 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                             view(vin[d+1], :, jj, :), p, a, view(EV, :, s), view(EVb, :, s),
                             s, d, wv[s], oo[s][d+1], tfl[s], bel[s], cc_[d+1], ce_[d+1],
                             aend_t[tid], cend_t[tid], eend_t[tid], view(D, :, s), view(Dp, :, s))
+                p.cfloor > 0 && apply_floor!(view(cin[d+1], :, jj, :), view(ein[d+1], :, jj, :), view(bpin[d+1], :, jj, :),
+                                             view(vin[d+1], :, jj, :), view(flr[d+1], :, jj, :), p, a, view(EV, :, s), s, d,
+                                             wv[s], oo[s][d+1], tfl[s], bel[s], view(D, :, s))
                 if howard > 0
                     fl = flw[d+1]; vv = vin[d+1]; bb = bpin[d+1]; EVs = view(EV, :, s)
                     @inbounds for i in 1:na
@@ -267,7 +273,8 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
             b0 = vin[1][x]; b1 = p.social_strength == 0 ? -Inf : vin[2][x]; mx = max(b0, b1)          # S exactly off: no participation choice without a payoff
             Vin[x] = mx == -Inf ? -Inf : mx + theta * log(exp((b0 - mx) / theta) + exp((b1 - mx) / theta))
             P1in[x] = b1 == -Inf ? 0.0 : (b0 == -Inf ? 1.0 : 1 / (1 + exp((b0 - b1) / theta)))
-            mu0 = b0 == -Inf ? 0.0 : cin[1][x]^(-p.γ); mu1 = b1 == -Inf ? 0.0 : cin[2][x]^(-p.γ)
+            mu0 = (b0 == -Inf || (p.cfloor > 0 && flr[1][x])) ? 0.0 : cin[1][x]^(-p.γ)
+            mu1 = (b1 == -Inf || (p.cfloor > 0 && flr[2][x])) ? 0.0 : cin[2][x]^(-p.γ)
             muin[x] = p.Γ * ((1 - P1in[x]) * mu0 + P1in[x] * mu1) / p.pc   # marginal value of a euro: u'(c) / pc
         end
         t1 = time(); t_in += t1 - t0
@@ -482,7 +489,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
      Pi = Π, Padj = Padj, V = V, Vb = Vb, z_vals = z_vals,
      iters = iters, stalled = stall, relax = relax, theta = theta, inner = (c = cin, e = ein, bp = bpin, P1 = P1in), qadj = qadj,
      j0 = j0, om = om, shift = shift, ksh = ksh, wsel = wsel, adjp = (Rk = p.Rk, chi0 = p.chi0, R = p.R),
-     off = off, rent = rentv, tenant = [kg[m] < p.k_min && hasT for m in 1:nk],
+     off = off, rent = rentv, tenant = [kg[m] < p.k_min && hasT for m in 1:nk], floor = flr,
      timing = (inner = t_in, outer = t_out, howard = t_how, howard_steps = nhow, threads = nth, sparse = usesp))
 end
 
@@ -582,7 +589,8 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
     e0s = zeros(na, nk, nz); e1s = zeros(na, nk, nz)
     cbar = zeros(na, nk, nz); ybar = zeros(na, nk, nz)
     haveC = oth !== nothing
-    # consumption from the budget with the policies, as agency_summary does for
+    X = p.cfloor                      # with the floor, resources below it are topped up to it (0: no floor)
+    cc(res, bp) = ((X > 0 ? max(res, X) : res) - bp) / p.pc    # consumption from the budget with the policies, as agency_summary does for
     # one asset, so the two agree exactly when the illiquid asset is inert
     function blot!(from, bp, j, s, wt)
         k = clamp(searchsortedlast(a, bp), 1, na - 1)
@@ -608,8 +616,8 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
                 es[i, m, s] += wt * ((1 - p1) * e0 + p1 * e1)
                 e0s[i, m, s] += wt * (1 - p1) * e0; e1s[i, m, s] += wt * p1 * e1
                 if haveC
-                    c0 = (p.R * be + wv[s] * e0 + oth[s][1] - rt - b0) / p.pc
-                    c1 = (p.R * be + wv[s] * e1 + oth[s][2] - rt - b1) / p.pc
+                    c0 = cc(p.R * be + wv[s] * e0 + oth[s][1] - rt, b0)
+                    c1 = cc(p.R * be + wv[s] * e1 + oth[s][2] - rt, b1)
                     p1 < 1 && (cbar[i, m, s] += wt * (1 - p1) * c0; ybar[i, m, s] += wt * (1 - p1) * (wv[s] * e0 + trs[s]))
                     p1 > 0 && (cbar[i, m, s] += wt * p1 * c1; ybar[i, m, s] += wt * p1 * (wv[s] * e1 + trs[s]))
                 end
@@ -622,8 +630,8 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
             es[i, m, s] += wt * ((1 - p1) * ein[1][i, jj, s] + p1 * ein[2][i, jj, s])
             e0s[i, m, s] += wt * (1 - p1) * ein[1][i, jj, s]; e1s[i, m, s] += wt * p1 * ein[2][i, jj, s]
             if haveC
-                c0 = (p.R * a[i] + wv[s] * ein[1][i, jj, s] + oth[s][1] - rt - bpin[1][i, jj, s]) / p.pc   # real consumption
-                c1 = (p.R * a[i] + wv[s] * ein[2][i, jj, s] + oth[s][2] - rt - bpin[2][i, jj, s]) / p.pc
+                c0 = cc(p.R * a[i] + wv[s] * ein[1][i, jj, s] + oth[s][1] - rt, bpin[1][i, jj, s])   # real consumption
+                c1 = cc(p.R * a[i] + wv[s] * ein[2][i, jj, s] + oth[s][2] - rt, bpin[2][i, jj, s])
                 p1 < 1 && (cbar[i, m, s] += wt * (1 - p1) * c0; ybar[i, m, s] += wt * (1 - p1) * (wv[s] * ein[1][i, jj, s] + trs[s]))
                 p1 > 0 && (cbar[i, m, s] += wt * p1 * c1; ybar[i, m, s] += wt * p1 * (wv[s] * ein[2][i, jj, s] + trs[s]))
             end
@@ -650,8 +658,8 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
             es[i, m, s] += wt * ((1 - p1) * e0 + p1 * e1)
             e0s[i, m, s] += wt * (1 - p1) * e0; e1s[i, m, s] += wt * p1 * e1
             if haveC
-                c0 = (p.R * be + wv[s] * e0 + oth[s][1] - rt - b0) / p.pc
-                c1 = (p.R * be + wv[s] * e1 + oth[s][2] - rt - b1) / p.pc
+                c0 = cc(p.R * be + wv[s] * e0 + oth[s][1] - rt, b0)
+                c1 = cc(p.R * be + wv[s] * e1 + oth[s][2] - rt, b1)
                 p1 < 1 && (cbar[i, m, s] += wt * (1 - p1) * c0; ybar[i, m, s] += wt * (1 - p1) * (wv[s] * e0 + trs[s]))
                 p1 > 0 && (cbar[i, m, s] += wt * p1 * c1; ybar[i, m, s] += wt * p1 * (wv[s] * e1 + trs[s]))
             end
@@ -801,7 +809,8 @@ function two_asset_welfare_parts(p0::SAGEParams, sol)
         x = idx(i, m, s)
         rt = hasproperty(sol, :tenant) && sol.tenant[m] ? sol.rent[s] : 0.0
         each_branch_full(sol, i, m, s) do wt, d, bp, j, e, be
-            c = max((p.R * be + wv[s] * e + oth[s][d+1] - rt - bp) / p.pc, 1e-10)
+            res = p.R * be + wv[s] * e + oth[s][d+1] - rt
+            c = max(((p.cfloor > 0 ? max(res, p.cfloor) : res) - bp) / p.pc, 1e-10)   # the floor's top-up
             T = tfl[s] + κ * e + p.qbar * d
             uc[x] += wt * p.Γ * c^(1 - p.γ) / (1 - p.γ)
             ue[x] -= wt * p.Γ * p.ϕ * T^(1 + p.ψ) / (1 + p.ψ)
