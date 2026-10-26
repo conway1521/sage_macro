@@ -231,6 +231,31 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     aend_t = [zeros(na) for _ in 1:nth]; cend_t = [zeros(na) for _ in 1:nth]; eend_t = [zeros(na) for _ in 1:nth]
     Vj_t = [zeros(nf) for _ in 1:nth]; Mj_t = [zeros(nf) for _ in 1:nth]; ptr_t = [ones(Int, nf) for _ in 1:nth]
     Πts = sparse(Matrix(transpose(Π))); usesp = fast && nnz(Πts) < 0.35 * nz^2
+    # JOB SEARCH (A; V3_START.md section 141), as in the one-asset solver: each searching state's row of the
+    # transition is split into its part towards work (Pf) and the rest (Ps), and the search x chosen at each next
+    # liquid node and next illiquid node weights them; its cost sits inside EV divided by beta. xs[k, j, s].
+    search = !isempty(p.search_k)
+    if search
+        length(p.search_k) == nz || error("search_k has length $(length(p.search_k)), the problem $nz states")
+        isEmp = isemp(p); Pf = copy(Π); Ps = copy(Π)
+        for s in 1:nz
+            p.search_k[s] > 0 || continue
+            isEmp[s] && error("search_k is positive in a state in work ($s)")
+            rowE = Π[s, :] .* isEmp; fs = sum(rowE)
+            (0 < fs < 1) || error("search: state $s has no chance of work to reweight (it is $fs)")
+            Pf[s, :] = rowE ./ fs; Ps[s, :] = (Π[s, :] .- rowE) ./ (1 - fs)
+        end
+        PfT = sparse(Matrix(transpose(Pf))); PsT = sparse(Matrix(transpose(Ps)))
+        xs = zeros(na, nk, nz)
+        EVf_t = [zeros(na, nz) for _ in 1:nth]; EVs_t = [zeros(na, nz) for _ in 1:nth]
+        EVfb_t = [zeros(na, nz) for _ in 1:nth]; EVsb_t = [zeros(na, nz) for _ in 1:nth]
+    else
+        Pf = Π; Ps = Π; PfT = Πts; PsT = Πts; xs = zeros(0, 0, 0)
+        EVf_t = EV_t; EVs_t = EV_t; EVfb_t = EV_t; EVsb_t = EV_t
+    end
+    sch = (on = search, PfT = PfT, PsT = PsT, xs = xs, k = p.search_k, lam = p.search_lam, γ = p.search_gamma,
+           EVf = EVf_t, EVs = EVs_t, EVfb = EVfb_t, EVsb = EVsb_t)
+    oc = isempty(p.out_cost) ? zeros(nz) : p.out_cost        # A's cost of being out of work, beyond income
     iters = 0
     t_in = 0.0; t_out = 0.0; t_how = 0.0; nhow = 0
     hist = zeros(maxit + 1); stall = 0.0; relax = 1.0; stalled = false
@@ -244,7 +269,10 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
         Threads.@threads for j in 1:nk
             tid = Threads.threadid()
             EV = EV_t[tid]; EVb = EVb_t[tid]
-            if usesp
+            if search
+                copyto!(Vc_t[tid], view(V, :, j, :)); copyto!(Vbc_t[tid], view(Vb, :, j, :))
+                search_mix!(EV, EVb, Vc_t[tid], Vbc_t[tid], sch, tid, j, p.β, false)
+            elseif usesp
                 copyto!(Vc_t[tid], view(V, :, j, :)); copyto!(Vbc_t[tid], view(Vb, :, j, :))
                 mul!(EV, Vc_t[tid], Πts); mul!(EVb, Vbc_t[tid], Πts)
             else
@@ -271,7 +299,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
         end
         @inbounds for x in eachindex(Vin)
             b0 = vin[1][x]; b1 = p.social_strength == 0 ? -Inf : vin[2][x]; mx = max(b0, b1)          # S exactly off: no participation choice without a payoff
-            Vin[x] = mx == -Inf ? -Inf : mx + theta * log(exp((b0 - mx) / theta) + exp((b1 - mx) / theta))
+            Vin[x] = mx == -Inf ? -Inf : mx + theta * log(exp((b0 - mx) / theta) + exp((b1 - mx) / theta)) - oc[(x - 1) ÷ (na * nsl) + 1]
             P1in[x] = b1 == -Inf ? 0.0 : (b0 == -Inf ? 1.0 : 1 / (1 + exp((b0 - b1) / theta)))
             mu0 = (b0 == -Inf || (p.cfloor > 0 && flr[1][x])) ? 0.0 : cin[1][x]^(-p.γ)
             mu1 = (b1 == -Inf || (p.cfloor > 0 && flr[2][x])) ? 0.0 : cin[2][x]^(-p.γ)
@@ -450,7 +478,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
             th = time()
             for _ in 1:howard
                 howard_step!(Vn, V, Vin, p, a, kg, Π, Πts, usesp, flw, bpin, P1in, j0, om, ksh, qadj, wsel, Padj,
-                             theta, theta_adj, EV_t, Vc_t, off, hasT)
+                             theta, theta_adj, EV_t, Vc_t, off, hasT, sch, oc)
                 V, Vn = Vn, V
             end
             t_how += time() - th; nhow += howard
@@ -474,7 +502,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     fast && get(ENV, "SAGE_WARM2", "1") == "1" && (WARM2[wkey] = (V = copy(V), Vb = copy(Vb)))
     dist = two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
                                   wsel = wsel, ksh = ksh, death = p0.death, oth = oth, wv = wv, trs = [transfer_at(p, s) for s in 1:nz],
-                                  off = off, rent = rentv)
+                                  off = off, rent = rentv, sch = sch, Pf = Pf, Ps = Ps)
     λ = dist.lambda; P1s = dist.P1; es = dist.e
     trace && @printf("  distribution %.1f s\n", time() - t2)
     part = 0.0; meaninc = 0.0; partbase = 0.0
@@ -491,6 +519,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
      iters = iters, stalled = stall, relax = relax, theta = theta, inner = (c = cin, e = ein, bp = bpin, P1 = P1in), qadj = qadj,
      j0 = j0, om = om, shift = shift, ksh = ksh, wsel = wsel, adjp = (Rk = p.Rk, chi0 = p.chi0, R = p.R),
      off = off, rent = rentv, tenant = [kg[m] < p.k_min && hasT for m in 1:nk], floor = flr,
+     search_xs = xs, Pf = Pf, Ps = Ps,
      timing = (inner = t_in, outer = t_out, howard = t_how, howard_steps = nhow, threads = nth, sparse = usesp))
 end
 
@@ -505,6 +534,46 @@ end
     (1 - ω) * lin_at(a, view(Vin, :, o + off, s), be, q) + ω * lin_at(a, view(Vin, :, o + 1 + off, s), be, q)
 end
 
+"""
+The expectation over next period's state at illiquid node j with job search (`sch`): EV and EVb from the parts of
+the transition towards work and the rest, mixed by the search x chosen at each next liquid node (stored in
+sch.xs[:, j, s]) or, with `fixed`, by the x stored there (Howard steps; EVb === nothing). As in egm_core.jl:
+x = (beta lam (EVf - EVs) / k)^(1/gamma) within [0, 1], the cost inside EV divided by beta.
+"""
+function search_mix!(EV, EVb, Vc, Vbc, sch, tid, j, β, fixed)
+    EVf = sch.EVf[tid]; EVs = sch.EVs[tid]
+    mul!(EVf, Vc, sch.PfT); mul!(EVs, Vc, sch.PsT)
+    if EVb !== nothing
+        mul!(sch.EVfb[tid], Vbc, sch.PfT); mul!(sch.EVsb[tid], Vbc, sch.PsT)
+    end
+    na, nz = size(EV); γs = sch.γ
+    @inbounds for s in 1:nz
+        ks = sch.k[s]
+        if ks <= 0
+            for k in 1:na; EV[k, s] = EVf[k, s]; end
+            EVb !== nothing && for k in 1:na; EVb[k, s] = sch.EVfb[tid][k, s]; end
+            continue
+        end
+        lam = isempty(sch.lam) ? 1.0 : sch.lam[s]
+        for k in 1:na
+            if fixed
+                x = sch.xs[k, j, s]
+            else
+                Δ = EVf[k, s] - EVs[k, s]
+                x = Δ > 0 ? min((β * lam * Δ / ks)^(1 / γs), 1.0) : 0.0
+                sch.xs[k, j, s] = x
+            end
+            pw = lam * x
+            EV[k, s] = pw * EVf[k, s] + (1 - pw) * EVs[k, s] - ks * x^(1 + γs) / ((1 + γs) * β)
+            EVb !== nothing && (EVb[k, s] = pw * sch.EVfb[tid][k, s] + (1 - pw) * sch.EVsb[tid][k, s])
+        end
+    end
+end
+
+"The chance of work chosen by a searching household of state s that goes to next liquid wealth bp at node j (0 if not searching)."
+@inline search_pw(sch, a, bp, j, s) = (sch.on && sch.k[s] > 0) ?
+    SAGEBewley.interp_lin(a, view(sch.xs, :, j, s), bp) * (isempty(sch.lam) ? 1.0 : sch.lam[s]) : NaN
+
 # x log x with 0 log 0 = 0
 @inline xlogx(x) = x > 0 ? x * log(x) : 0.0
 
@@ -515,11 +584,13 @@ entropy. Outer: the keeper's value, the adjusting options at their targets and p
 probability, each logit with its entropy. Vin is a work array.
 """
 function howard_step!(Vout, V, Vin, p, a, kg, Π, Πts, usesp, flw, bpin, P1in, j0, om, ksh, qadj, wsel, Padj,
-                      theta, theta_adj, EV_t, Vc_t, off, hasT)
+                      theta, theta_adj, EV_t, Vc_t, off, hasT, sch, oc)
     na, nk, nz = size(V)
     Threads.@threads for j in 1:nk
         tid = Threads.threadid(); EV = EV_t[tid]
-        if usesp
+        if sch.on
+            copyto!(Vc_t[tid], view(V, :, j, :)); search_mix!(EV, nothing, Vc_t[tid], nothing, sch, tid, j, p.β, true)
+        elseif usesp
             copyto!(Vc_t[tid], view(V, :, j, :)); mul!(EV, Vc_t[tid], Πts)
         else
             mul!(EV, view(V, :, j, :), Π')
@@ -537,7 +608,7 @@ function howard_step!(Vout, V, Vin, p, a, kg, Π, Πts, usesp, flw, bpin, P1in, 
                     v1 = flw[2][i, jj, s] + p.β * SAGEBewley.interp_lin(a, EVs, bpin[2][i, jj, s])
                     v += P * v1; ent += xlogx(P)
                 end
-                Vin[i, jj, s] = v == -Inf ? -Inf : v - theta * ent
+                Vin[i, jj, s] = v == -Inf ? -Inf : v - theta * ent - oc[s]
             end
         end
     end
@@ -577,7 +648,7 @@ participation probability and expected effort by state.
 """
 function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
                                 wsel = nothing, ksh = nothing, death = 0.0, oth = nothing, wv = nothing, trs = nothing,
-                                off = nothing, rent = nothing)
+                                off = nothing, rent = nothing, sch = nothing, Pf = nothing, Ps = nothing)
     na, nk, nz = length(a), length(kg), size(Π, 1)
     off === nothing && (off = zeros(Int, nk)); rent === nothing && (rent = zeros(nz))
     n = na * nk * nz
@@ -593,11 +664,23 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
     X = p.cfloor                      # with the floor, resources below it are topped up to it (0: no floor)
     cc(res, bp) = ((X > 0 ? max(res, X) : res) - bp) / p.pc    # consumption from the budget with the policies, as agency_summary does for
     # one asset, so the two agree exactly when the illiquid asset is inert
+    # with job search a searching branch's mass is split, before the income step, into the part that goes on with
+    # the transition towards work (weight pw, the chance chosen at its next wealth) and the rest (`rowsS`)
+    srch = sch !== nothing && sch.on
+    rowsS = Int[]; colsS = Int[]; valsS = Float64[]
     function blot!(from, bp, j, s, wt)
         k = clamp(searchsortedlast(a, bp), 1, na - 1)
         w = clamp((a[k+1] - bp) / (a[k+1] - a[k]), 0.0, 1.0)
-        push!(rows, from); push!(cols, idx(k, j, s)); push!(vals, wt * w)
-        push!(rows, from); push!(cols, idx(k + 1, j, s)); push!(vals, wt * (1 - w))
+        pw = srch ? search_pw(sch, a, bp, j, s) : NaN
+        if isnan(pw)
+            push!(rows, from); push!(cols, idx(k, j, s)); push!(vals, wt * w)
+            push!(rows, from); push!(cols, idx(k + 1, j, s)); push!(vals, wt * (1 - w))
+        else
+            push!(rows, from); push!(cols, idx(k, j, s)); push!(vals, wt * w * pw)
+            push!(rows, from); push!(cols, idx(k + 1, j, s)); push!(vals, wt * (1 - w) * pw)
+            push!(rowsS, from); push!(colsS, idx(k, j, s)); push!(valsS, wt * w * (1 - pw))
+            push!(rowsS, from); push!(colsS, idx(k + 1, j, s)); push!(valsS, wt * (1 - w) * (1 - pw))
+        end
     end
     @inbounds for s in 1:nz, m in 1:nk, i in 1:na
         from = idx(i, m, s); pa = Padj[i, m, s]
@@ -670,6 +753,9 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
         end
     end
     Tt = transpose(sparse(rows, cols, vals, n, n))
+    TtS = srch ? transpose(sparse(rowsS, colsS, valsS, n, n)) : nothing
+    empty!(rowsS); empty!(colsS); empty!(valsS)
+    postS = srch ? zeros(n) : Float64[]
     # the triplets are the largest objects of a solve and nothing downstream reads them: released here
     # (they were returned with the solution until 2026-10-04, and sent from every worker to the master)
     nent = length(vals)
@@ -697,7 +783,13 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
         nit = it
         mul!(post, Tt, λ)
         P = reshape(post, na * nk, nz); Nx = reshape(nxt, na * nk, nz)
-        mul!(Nx, P, Π)
+        if srch
+            # searching states: towards work Pf on the first part, Ps on the rest (Pf is Pi's row elsewhere)
+            mul!(postS, TtS, λ)
+            mul!(Nx, P, Pf); mul!(Nx, reshape(postS, na * nk, nz), Ps, 1.0, 1.0)
+        else
+            mul!(Nx, P, Π)
+        end
         if death > 0
             nxt .*= 1 - death
             for s in 1:nz; nxt[idx(1, 1, s)] += death * born[s]; end
@@ -804,8 +896,12 @@ function two_asset_welfare_parts(p0::SAGEParams, sol)
     idx(i, m, s) = i + (m - 1) * na + (s - 1) * na * nk
     n = na * nk * ns
     uc = zeros(n); ue = zeros(n); ub = zeros(n); ubu = zeros(n); ueu = zeros(n)      # the last two: reporting_core.jl
+    ud = zeros(n); uk = zeros(n)          # dread in choices and the cost of job search, as in reporting_core.jl
+    dreadV = p.dread > 0 && !isempty(p.dread_q)
+    sch = hasproperty(sol, :search_xs) && !isempty(sol.search_xs) ?
+          (on = true, xs = sol.search_xs, k = p.search_k, lam = p.search_lam) : (on = false,)
     sbar = zeros(na, nk, ns); lbar = zeros(na, nk, ns)
-    rows = Int[]; cols = Int[]; vals = Float64[]
+    rows = Int[]; cols = Int[]; vals = Float64[]; rowsS = Int[]; colsS = Int[]; valsS = Float64[]
     @inbounds for s in 1:ns, m in 1:nk, i in 1:na
         x = idx(i, m, s)
         rt = hasproperty(sol, :tenant) && sol.tenant[m] ? sol.rent[s] : 0.0
@@ -822,11 +918,23 @@ function two_asset_welfare_parts(p0::SAGEParams, sol)
             end
             sbar[i, m, s] += wt * (bp + p.R * (a[i] - be))     # R (b - be) is the net illiquid outlay
             lbar[i, m, s] += wt * wv[s] * e
+            dreadV && (ud[x] -= wt * dread_at(p, s, bp))
             k = clamp(searchsortedlast(a, bp), 1, na - 1)
             wk = clamp((a[k+1] - bp) / (a[k+1] - a[k]), 0.0, 1.0)
-            # the decision only (same income state); the income transition is applied in the iteration
-            push!(rows, x); push!(cols, idx(k, j, s)); push!(vals, wt * wk)
-            push!(rows, x); push!(cols, idx(k + 1, j, s)); push!(vals, wt * (1 - wk))
+            # the decision only (same income state); the income transition is applied in the iteration. With job
+            # search the searching branch is split between the transition towards work (pw) and the rest.
+            pw = search_pw(sch, a, bp, j, s)
+            if isnan(pw)
+                push!(rows, x); push!(cols, idx(k, j, s)); push!(vals, wt * wk)
+                push!(rows, x); push!(cols, idx(k + 1, j, s)); push!(vals, wt * (1 - wk))
+            else
+                xx = pw / (isempty(p.search_lam) ? 1.0 : p.search_lam[s])
+                uk[x] -= wt * p.search_k[s] * xx^(1 + p.search_gamma) / (1 + p.search_gamma)
+                push!(rows, x); push!(cols, idx(k, j, s)); push!(vals, wt * wk * pw)
+                push!(rows, x); push!(cols, idx(k + 1, j, s)); push!(vals, wt * (1 - wk) * pw)
+                push!(rowsS, x); push!(colsS, idx(k, j, s)); push!(valsS, wt * wk * (1 - pw))
+                push!(rowsS, x); push!(colsS, idx(k + 1, j, s)); push!(valsS, wt * (1 - wk) * (1 - pw))
+            end
         end
     end
     # Policy evaluation by iteration on V = u + beta D (V Pi'), with D the decision operator and Pi the
@@ -835,29 +943,33 @@ function two_asset_welfare_parts(p0::SAGEParams, sol)
     # household problem. That, and not the solver, is what killed the two-asset runs on the runners and
     # restarted the laptop three times on 3 October.
     D = sparse(rows, cols, vals, n, n)
+    DS = sch.on ? sparse(rowsS, colsS, valsS, n, n) : nothing
     empty!(rows); empty!(cols); empty!(vals); sizehint!(rows, 0); sizehint!(cols, 0); sizehint!(vals, 0)
-    U = hcat(uc, ue, ub, ubu, ueu); X = U ./ (1 - p.β); Y = similar(X); Xn = similar(X)
-    Πt = Matrix(transpose(Π)); nb_ = na * nk
+    empty!(rowsS); empty!(colsS); empty!(valsS)
+    U = hcat(uc, ue, ub, ubu, ueu, ud, uk); X = U ./ (1 - p.β); Y = similar(X); Xn = similar(X)
+    Πt = Matrix(transpose(sch.on ? sol.Pf : Π)); nb_ = na * nk
+    PsT = sch.on ? Matrix(transpose(sol.Ps)) : Πt; YS = sch.on ? similar(X) : X
     for it in 1:20_000
         for q in 1:size(X, 2)
             mul!(reshape(view(Y, :, q), nb_, ns), reshape(view(X, :, q), nb_, ns), Πt)
+            sch.on && mul!(reshape(view(YS, :, q), nb_, ns), reshape(view(X, :, q), nb_, ns), PsT)
         end
-        mul!(Xn, D, Y); Xn .= U .+ p.β .* Xn
+        mul!(Xn, D, Y); sch.on && mul!(Xn, DS, YS, 1.0, 1.0); Xn .= U .+ p.β .* Xn
         dd = maximum(abs, Xn .- X); X, Xn = Xn, X
         dd * p.β / (1 - p.β) < 1e-11 * (1 + maximum(abs, X)) && break
         it == 20_000 && @warn "two_asset_welfare_parts: the policy evaluation stopped at its iteration limit" dd
     end
-    Vc = X[:, 1]; Ve = X[:, 2]; Vb = X[:, 3]; Vbu = X[:, 4]; Veu = X[:, 5]
+    Vc = X[:, 1]; Ve = X[:, 2]; Vb = X[:, 3]; Vbu = X[:, 4]; Veu = X[:, 5]; Vd = X[:, 6]; Vk = X[:, 7]
     get(ENV, "SAGE_MEM", "0") == "1" &&
         (println("  two-asset welfare parts: ", nnz(D), " decision entries, resident memory ", round(Sys.maxrss() / 1e9; digits = 2), " GB"); flush(stdout))
     vmass = zeros(ns); vcmass = zeros(ns); vemass = zeros(ns); vbmass = zeros(ns)
-    vbumass = zeros(ns); veumass = zeros(ns); mppumass = zeros(ns)
+    vbumass = zeros(ns); veumass = zeros(ns); mppumass = zeros(ns); vdmass = zeros(ns); vkmass = zeros(ns)
     mpsmass = zeros(ns); mpemass = zeros(ns); mppmass = zeros(ns)
     @inbounds for s in 1:ns, m in 1:nk, i in 1:na
         mm = λ[i, m, s]; mm <= 0 && continue
         x = idx(i, m, s)
         vmass[s] += mm * sol.V[i, m, s]; vcmass[s] += mm * Vc[x]; vemass[s] += mm * Ve[x]; vbmass[s] += mm * Vb[x]
-        vbumass[s] += mm * Vbu[x]; veumass[s] += mm * Veu[x]
+        vbumass[s] += mm * Vbu[x]; veumass[s] += mm * Veu[x]; vdmass[s] += mm * Vd[x]; vkmass[s] += mm * Vk[x]
         Δ = sol.ybar[i, m, s] / 12
         if Δ > 0
             ai = a[i] + Δ / p.R
@@ -869,7 +981,7 @@ function two_asset_welfare_parts(p0::SAGEParams, sol)
     end
     (vmass = vmass, vcmass = vcmass, vemass = vemass, vbmass = vbmass,
      mpsmass = mpsmass, mpemass = mpemass, mppmass = mppmass,
-     vbumass = vbumass, veumass = veumass, mppumass = mppumass, vdmass = zeros(ns), vkmass = zeros(ns))   # dread and search not split on two assets
+     vbumass = vbumass, veumass = veumass, mppumass = mppumass, vdmass = vdmass, vkmass = vkmass)
 end
 
 """
@@ -960,7 +1072,8 @@ wealth, wealthy hand-to-mouth some (Kaplan, Violante and Weidner 2014). Windfall
 wealth. The households' own choices are followed forward through both assets (`each_branch`): next liquid wealth by
 the lottery on the liquid grid, next illiquid node j. A job is lost into the U states, pE[u] the employed state with
 u's latent productivity and pU[s] the U state with s's. Deaths are left out of the cohorts followed (one in 180 a
-quarter). Job search (A) is not built for two assets: its fields are zero.
+quarter). With job search a searching branch moves on with the transition towards work at the chance it chose and
+with the rest otherwise, as in the distribution.
 """
 function two_asset_agency_summary(p::SAGEParams, sol)
     a = sol.a; kg = sol.k; λ = sol.lambda; z = sol.z_vals; Π = sol.Pi
@@ -973,14 +1086,20 @@ function two_asset_agency_summary(p::SAGEParams, sol)
     pE = haveU ? partner_index(p, :E) : Int[]; pU = haveU ? partner_index(p, :U) : Int[]
     dw = dread_weight(p)
     nzr = [findall(Π[s, :] .> 0) for s in 1:ns]
+    sch = hasproperty(sol, :search_xs) && !isempty(sol.search_xs) ?
+          (on = true, xs = sol.search_xs, k = p.search_k, lam = p.search_lam) : (on = false,)
+    Pf = sch.on ? sol.Pf : Π; Ps = sch.on ? sol.Ps : Π
+    kmass = zeros(ns); smass = zeros(ns)
     # the step from (i, m, s): f(probability, liquid bracket k, weight on k, next illiquid node j, next state s2),
     # next liquid wealth raised by `shift` (a windfall carried into next period)
     function step!(f, i, m, s, shift = 0.0)
         each_branch(sol, i, m, s) do wt, d, bp, j
             b2 = bp + shift
             k = clamp(searchsortedlast(a, b2), 1, na - 1); wk = clamp((a[k+1] - b2) / (a[k+1] - a[k]), 0.0, 1.0)
+            pw = search_pw(sch, a, bp, j, s)
             for s2 in nzr[s]
-                f(wt * Π[s, s2], k, wk, j, s2)
+                pr = isnan(pw) ? Π[s, s2] : pw * Pf[s, s2] + (1 - pw) * Ps[s, s2]
+                pr > 0 && f(wt * pr, k, wk, j, s2)
             end
         end
     end
@@ -1004,6 +1123,19 @@ function two_asset_agency_summary(p::SAGEParams, sol)
             end
             kk = 1 - (1 - p.γ) * D / (p.Γ * cb[i]^(1 - p.γ))
             kk > 0 && (xmass[s] += mm * (1 - kk^(1 / (1 - p.γ))))
+        end
+        # job search: the chance chosen, and its cost as a consumption equivalent (as agency_shock.jl)
+        if sch.on && p.search_k[s] > 0
+            xx = 0.0
+            each_branch(sol, i, m, s) do wt, d, bp, j
+                xx += wt * SAGEBewley.interp_lin(a, view(sch.xs, :, j, s), bp)
+            end
+            smass[s] += mm * xx
+            K = p.search_k[s] * xx^(1 + p.search_gamma) / (1 + p.search_gamma)
+            if cb[i] > 0
+                kq = 1 - (1 - p.γ) * K / (p.Γ * cb[i]^(1 - p.γ))
+                kq > 0 && (kmass[s] += mm * (1 - kq^(1 / (1 - p.γ))))
+            end
         end
         haveU || continue
         pc = 0.0; py = 0.0
@@ -1119,6 +1251,6 @@ function two_asset_agency_summary(p::SAGEParams, sol)
     end
     merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = whmass,
            mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = mpcwmass, rmass = rmass, xmass = xmass, cmass = cmass,
-           kmass = zeros(ns), smass = zeros(ns), mpc12mass = mpc12mass, kolmass = kz, lumpmass = lumpm, nonempmass = nonem),
+           kmass = kmass, smass = smass, mpc12mass = mpc12mass, kolmass = kz, lumpmass = lumpm, nonempmass = nonem),
           two_asset_welfare_parts(p, sol))
 end

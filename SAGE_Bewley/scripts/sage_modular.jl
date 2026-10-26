@@ -629,7 +629,8 @@ function _params_of(c::SAGEConfig, cell)
     let (f, _) = perm_nodes(c), K = length(perm_nodes(c)[1])
         K > 1 && (ps = [update(p; Z = p.Z * f[(j - 1) % K + 1], transfer = p.transfer .* f[(j - 1) % K + 1], rent = p.rent .* f[(j - 1) % K + 1], hb = p.hb .* f[(j - 1) % K + 1]) for (j, p) in enumerate(ps)])
     end
-    (!isnan(cell.fL) && c.illiquid) && error("the long-term state is not built for two assets")
+    # version 1's annual long-term state was not built for two assets; the quarterly chain's L is (section 141)
+    (!isnan(cell.fL) && c.illiquid && !uses_chain(c)) && error("the long-term state is not built for two assets on the annual model")
     if c.tax_mode === :prop && c.lumptax != 0
         # the same revenue per head, raised in proportion to labour income
         τ = c.lumptax / (isnan(c.tax_base) ? labour_base(c) : c.tax_base)

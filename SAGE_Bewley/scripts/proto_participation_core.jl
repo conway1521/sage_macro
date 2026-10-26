@@ -331,8 +331,8 @@ function solve_participation_logit(p::SAGEParams, Q_agg::Float64; theta::Float64
         return solve_job_effort(p, Q_agg; theta = theta, full = full, tol = tol, maxit = maxit,
                                 warm = V0 isa NamedTuple ? V0 : nothing)
     end
-    isempty(p.search_k) || (p.solver === :egm && !p.illiquid) || error("job search (A) needs solver = :egm and one asset")
-    isempty(p.out_cost) || (p.solver === :egm && !p.illiquid) || error("the cost of being out of work (A) needs solver = :egm and one asset")
+    isempty(p.search_k) || p.solver === :egm || error("job search (A) needs solver = :egm")              # two assets: section 141
+    isempty(p.out_cost) || p.solver === :egm || error("the cost of being out of work (A) needs solver = :egm")
     if p.illiquid
         p.solver === :egm || error("the illiquid asset needs solver = :egm")
         return solve_two_asset_egm(p, Q_agg; theta = theta, full = full, tol = tol, maxit = maxit,

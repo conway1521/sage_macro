@@ -4,14 +4,16 @@
 # two-asset problem is the one-asset problem, so its distribution, consumption and participation must agree with
 # the one-asset solver's to the solvers' tolerance. Also reports the share on the floor in both.
 #
-#   JULIA_NUM_THREADS=4 julia --project=scripts/run_env scripts/test_egm2_floor.jl CODE [H]
+#   JULIA_NUM_THREADS=4 julia --project=scripts/run_env scripts/test_egm2_floor.jl CODE [H] [CFG]
+# CFG (default G): GA tests job search, A's cost of being out of work and dread with two assets the same way
+# (SAGE_DREAD_CHOICE=1 for dread in choices, as version 2's G+A).
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
-code = uppercase(ARGS[1]); H = length(ARGS) >= 2 ? parse(Int, ARGS[2]) : 0
+code = uppercase(ARGS[1]); H = length(ARGS) >= 2 ? parse(Int, ARGS[2]) : 0; cfg = length(ARGS) >= 3 ? uppercase(ARGS[3]) : "G"
 say(x...) = (println(x...); flush(stdout))
-c = floor_effort(quarterly_calibrated(code, "G"))        # the job's hours, as the economy uses them
+c = floor_effort(quarterly_calibrated(code, cfg))        # the job's hours, as the economy uses them
 p = params_of(c, cells_of(c)[1])[1]
-say(@sprintf("%s G: %d states, %d liquid points, floor %.4f, R %.5f, beta %.5f, social strength %.2f", code, p.nz, p.na, p.cfloor, p.R, p.β, p.social_strength))
+say(@sprintf("%s %s: %d states, %d liquid points, floor %.4f, R %.5f, beta %.5f, social strength %.2f", code, cfg, p.nz, p.na, p.cfloor, p.R, p.β, p.social_strength))
 t1 = @elapsed s1 = solve_participation_egm(p, 1.0; full = true)
 p2 = update(p; illiquid = true, chi0 = 1e6, nk = 2, k_max = 1.0, k_mid = 0.0, k_sub = 1, Rk = 1.0, death = 0.0, solver = :egm)
 t2 = @elapsed s2 = solve_two_asset_egm(p2, 1.0; full = true, howard = H)
@@ -31,7 +33,8 @@ if hasproperty(s1, :floor_d) && p.cfloor > 0
 end
 # the summaries (agency_summary, both solvers): every field summed over states, and the fall and time out of work
 g1 = agency_summary(p, s1); g2 = agency_summary(p2, s2)
-for k in (:hmass, :whmass, :rmass, :cmass, :mpcmass, :mpc12mass, :pmass, :pinc, :dmass, :kolmass, :nonempmass, :lumpmass, :vmass)
+for k in (:hmass, :whmass, :rmass, :cmass, :mpcmass, :mpc12mass, :pmass, :pinc, :dmass, :kolmass, :nonempmass, :lumpmass, :vmass,
+          :smass, :kmass, :xmass, :vcmass, :vemass, :vdmass, :vkmass)
     x = sum(getfield(g1, k)); y = sum(getfield(g2, k))
     say(@sprintf("  %-11s one asset %.10f  two assets %.10f  difference %.1e", k, x, y, abs(x - y)))
 end
