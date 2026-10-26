@@ -939,31 +939,45 @@ end
 """
     two_asset_agency_summary(p, sol)
 
-`agency_summary` for the two-asset solution, the same fields plus the wealthy
-hand-to-mouth. Hand-to-mouth, room to manoeuvre, the MPC and dread are on
-LIQUID wealth. Poor hand-to-mouth hold no illiquid wealth and wealthy
-hand-to-mouth some (Kaplan, Violante and Weidner 2014). The MPC is out of a
-liquid windfall at unchanged illiquid wealth. The drop on job loss is at the
-same liquid and illiquid wealth, and the expected loss follows every branch of
-next year's wealth.
+`agency_summary` for the two-asset solution, the same fields plus the wealthy hand-to-mouth, rewritten for the
+labour chain and a sub-annual period (V3_START.md section 141) as the one-asset summary is (agency_shock.jl).
+Hand-to-mouth, room to manoeuvre, the MPCs and dread are on LIQUID wealth: poor hand-to-mouth hold no illiquid
+wealth, wealthy hand-to-mouth some (Kaplan, Violante and Weidner 2014). Windfalls are liquid, at unchanged illiquid
+wealth. The households' own choices are followed forward through both assets (`each_branch`): next liquid wealth by
+the lottery on the liquid grid, next illiquid node j. A job is lost into the U states, pE[u] the employed state with
+u's latent productivity and pU[s] the U state with s's. Deaths are left out of the cohorts followed (one in 180 a
+quarter). Job search (A) is not built for two assets: its fields are zero.
 """
 function two_asset_agency_summary(p::SAGEParams, sol)
     a = sol.a; kg = sol.k; λ = sol.lambda; z = sol.z_vals; Π = sol.Pi
     na, nk, ns = length(a), length(kg), length(z)
-    cbar = sol.cbar; ybar = sol.ybar
+    cbar = sol.cbar; ybar = sol.ybar; ppy = p.ppy
     pmass = zeros(ns); pinc = zeros(ns); dmass = zeros(ns); hmass = zeros(ns); whmass = zeros(ns)
     mpcmass = zeros(ns); mpchmass = zeros(ns); mpcwmass = zeros(ns); rmass = zeros(ns); xmass = zeros(ns); cmass = zeros(ns)
-    U = findall(==(0.0), z); nh = length(U)
-    haveU = !isempty(U) && 2 * nh == ns
+    stv = stypes(p); empv = stv .== :E
+    U = findall(stv .=== :U); haveU = !isempty(U) && any(empv)
+    pE = haveU ? partner_index(p, :E) : Int[]; pU = haveU ? partner_index(p, :U) : Int[]
     dw = dread_weight(p)
+    nzr = [findall(Π[s, :] .> 0) for s in 1:ns]
+    # the step from (i, m, s): f(probability, liquid bracket k, weight on k, next illiquid node j, next state s2),
+    # next liquid wealth raised by `shift` (a windfall carried into next period)
+    function step!(f, i, m, s, shift = 0.0)
+        each_branch(sol, i, m, s) do wt, d, bp, j
+            b2 = bp + shift
+            k = clamp(searchsortedlast(a, b2), 1, na - 1); wk = clamp((a[k+1] - b2) / (a[k+1] - a[k]), 0.0, 1.0)
+            for s2 in nzr[s]
+                f(wt * Π[s, s2], k, wk, j, s2)
+            end
+        end
+    end
     @inbounds for s in 1:ns, m in 1:nk, i in 1:na
         mm = λ[i, m, s]; mm <= 0 && continue
         cb = view(cbar, :, m, s)
-        htm = a[i] <= ybar[i, m, s] / 52
+        htm = a[i] <= ybar[i, m, s] * ppy / 52
         htm && (m == 1 ? (hmass[s] += mm) : (whmass[s] += mm))
-        a[i] >= ybar[i, m, s] / 4 && (rmass[s] += mm)
+        a[i] >= ybar[i, m, s] * ppy / 4 && (rmass[s] += mm)
         cmass[s] += mm * cb[i]
-        Δ = ybar[i, m, s] / 12
+        Δ = ybar[i, m, s] * ppy / 12
         if Δ > 0
             mpc = p.pc * (interp_ext(a, cb, a[i] + Δ / p.R) - cb[i]) / Δ   # spending share of the windfall
             mpcmass[s] += mm * mpc
@@ -982,19 +996,115 @@ function two_asset_agency_summary(p::SAGEParams, sol)
         each_branch(sol, i, m, s) do wt, d, bp, j
             for u in U
                 pr = Π[s, u]; pr <= 0 && continue
-                cE = SAGEBewley.interp_lin(a, view(cbar, :, j, u + nh), bp)
+                cE = SAGEBewley.interp_lin(a, view(cbar, :, j, pE[u]), bp)
                 cU = SAGEBewley.interp_lin(a, view(cbar, :, j, u), bp)
-                yE = SAGEBewley.interp_lin(a, view(ybar, :, j, u + nh), bp)
+                yE = SAGEBewley.interp_lin(a, view(ybar, :, j, pE[u]), bp)
                 yU = SAGEBewley.interp_lin(a, view(ybar, :, j, u), bp)
                 cE > 0 && (pc += wt * pr * max(0.0, 1 - cU / cE))
                 yE > 0 && (py += wt * pr * max(0.0, 1 - yU / yE))
             end
         end
         pmass[s] += mm * pc; pinc[s] += mm * py
-        s > nh && cb[i] > 0 && (dmass[s] += mm * max(0.0, 1 - cbar[i, m, s - nh] / cb[i]))
+        empv[s] && cb[i] > 0 && (dmass[s] += mm * max(0.0, 1 - cbar[i, m, pU[s]] / cb[i]))
+    end
+    lumpm = zeros(ns); nonem = zeros(ns); mpc12mass = zeros(ns); kz = zeros(ns)
+    if ppy > 1
+        # 1. the twelve-month MPC: expected consumption t periods on, summed over the year
+        G = copy(cbar); C = copy(cbar)
+        for t in 1:ppy-1
+            Gn = zeros(na, nk, ns)
+            let Gc = G
+                for s in 1:ns, m in 1:nk, i in 1:na
+                    step!(i, m, s) do q, k, wk, j, s2
+                        Gn[i, m, s] += q * (wk * Gc[k, j, s2] + (1 - wk) * Gc[k+1, j, s2])
+                    end
+                end
+            end
+            G = Gn; C .+= G
+        end
+        for s in 1:ns, m in 1:nk, i in 1:na
+            mm = λ[i, m, s]; mm <= 0 && continue
+            Δ = ybar[i, m, s] * ppy / 12
+            Δ > 0 && (mpc12mass[s] += mm * p.pc * (interp_ext(a, view(C, :, m, s), a[i] + Δ / p.R) - C[i, m, s]) / Δ)
+        end
+        # 2. the fall as Kolsrud, Landais, Nilsson and Spinnewijn (2018) measure it
+        dur = isempty(p.dur) ? zeros(Int, ns) : p.dur
+        U1 = [stv[s] === :U && dur[s] == 1 for s in 1:ns]; U2 = [stv[s] === :U && dur[s] == 2 for s in 1:ns]
+        if any(U1) && any(U2)
+            c1 = zeros(na, nk, ns)
+            for s in 1:ns
+                empv[s] || continue
+                for m in 1:nk, i in 1:na
+                    mm = λ[i, m, s]; mm <= 0 && continue
+                    step!(i, m, s) do q, k, wk, j, s2
+                        U1[s2] || return
+                        kz[1] += mm * q; kz[2] += mm * q * cbar[i, m, s]
+                        c1[k, j, s2] += mm * q * wk; c1[k+1, j, s2] += mm * q * (1 - wk)
+                    end
+                end
+            end
+            for s in 1:ns, m in 1:nk, i in 1:na
+                c1[i, m, s] > 0 || continue
+                kz[3] += c1[i, m, s] * cbar[i, m, s]
+                step!(i, m, s) do q, k, wk, j, s2
+                    U2[s2] || return
+                    kz[4] += c1[i, m, s] * q; kz[5] += c1[i, m, s] * q * (wk * cbar[k, j, s2] + (1 - wk) * cbar[k+1, j, s2])
+                end
+            end
+            # 4. time out of work after job loss (U, L, N), the cohort's mass still out of work by quarter
+            let cur = copy(c1), T = min(ns, 40)
+                for t in 1:T
+                    nxt = zeros(na, nk, ns)
+                    for s in 1:ns, m in 1:nk, i in 1:na
+                        mq = cur[i, m, s]; mq > 0 || continue
+                        nonem[t] += mq
+                        step!(i, m, s) do q, k, wk, j, s2
+                            empv[s2] && return
+                            nxt[k, j, s2] += mq * q * wk; nxt[k+1, j, s2] += mq * q * (1 - wk)
+                        end
+                    end
+                    cur = nxt
+                end
+            end
+            # 3. a lump sum at the start of the spell, the current spell only (SAGE_COHORT_LUMP times the last
+            #    period's income in work, into liquid wealth)
+            LUMP = parse(Float64, get(ENV, "SAGE_COHORT_LUMP", "0.1"))
+            ds_ = [stv[s] === :U && dur[s] < NONENT ? dur[s] : 0 for s in 1:ns]; nUq = maximum(ds_)
+            if 4 * nUq <= ns && LUMP > 0
+                cl = zeros(na, nk, ns)
+                for s in 1:ns
+                    empv[s] || continue
+                    for m in 1:nk, i in 1:na
+                        mm = λ[i, m, s]; mm <= 0 && continue
+                        step!(i, m, s, LUMP * ybar[i, m, s] / p.R) do q, k, wk, j, s2
+                            U1[s2] || return
+                            cl[k, j, s2] += mm * q * wk; cl[k+1, j, s2] += mm * q * (1 - wk)
+                        end
+                    end
+                end
+                for (jj, c0) in enumerate((c1, cl))
+                    cur = c0
+                    for dq in 1:nUq
+                        nxt = zeros(na, nk, ns)
+                        for s in 1:ns, m in 1:nk, i in 1:na
+                            mq = cur[i, m, s]; mq > 0 || continue
+                            lumpm[(jj-1)*2*nUq+dq] += mq
+                            step!(i, m, s) do q, k, wk, j, s2
+                                if empv[s2]
+                                    lumpm[(jj-1)*2*nUq+nUq+dq] += mq * q
+                                elseif stv[s2] === :U && ds_[s2] == dq + 1
+                                    nxt[k, j, s2] += mq * q * wk; nxt[k+1, j, s2] += mq * q * (1 - wk)
+                                end
+                            end
+                        end
+                        cur = nxt
+                    end
+                end
+            end
+        end
     end
     merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = whmass,
-           mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = mpcwmass, rmass = rmass, xmass = xmass, cmass = cmass, kmass = zeros(ns), smass = zeros(ns),
-           mpc12mass = zeros(ns), kolmass = zeros(ns), lumpmass = zeros(ns), nonempmass = zeros(ns)),
+           mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = mpcwmass, rmass = rmass, xmass = xmass, cmass = cmass,
+           kmass = zeros(ns), smass = zeros(ns), mpc12mass = mpc12mass, kolmass = kz, lumpmass = lumpm, nonempmass = nonem),
           two_asset_welfare_parts(p, sol))
 end

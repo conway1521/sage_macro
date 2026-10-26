@@ -29,4 +29,12 @@ if hasproperty(s1, :floor_d) && p.cfloor > 0
     f2 = sum(s2.lambda[:, 1, :] .* ((1 .- s2.inner.P1[:, 1, :]) .* s2.floor[1][:, 1, :] .+ s2.inner.P1[:, 1, :] .* s2.floor[2][:, 1, :]))
     say(@sprintf("share on the floor %.6f against %.6f", f1, f2))
 end
+# the summaries (agency_summary, both solvers): every field summed over states, and the fall and time out of work
+g1 = agency_summary(p, s1); g2 = agency_summary(p2, s2)
+for k in (:hmass, :whmass, :rmass, :cmass, :mpcmass, :mpc12mass, :pmass, :pinc, :dmass, :kolmass, :nonempmass, :lumpmass, :vmass)
+    x = sum(getfield(g1, k)); y = sum(getfield(g2, k))
+    say(@sprintf("  %-11s one asset %.10f  two assets %.10f  difference %.1e", k, x, y, abs(x - y)))
+end
+kz1 = g1.kolmass; kz2 = g2.kolmass
+say(@sprintf("fall (Kolsrud): %.6f against %.6f", 1 - (kz1[5] / kz1[4]) / (kz1[2] / kz1[1]), 1 - (kz2[5] / kz2[4]) / (kz2[2] / kz2[1])))
 println("DONE")
