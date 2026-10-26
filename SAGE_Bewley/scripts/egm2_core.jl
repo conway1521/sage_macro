@@ -60,6 +60,16 @@ const K_ROUNDS = 2          # rounds of (value iteration at fixed refined target
 #     iteration removes at rate beta, a common shift of the value, is removed at once;
 # (4) a solve without a warm start starts from the last solution of a problem of the same size in this process
 #     (WARM2; SAGE_WARM2=0 turns it off). Starting values change the iterations, not the fixed point.
+# HOWARD STEPS (V3_START.md section 139; `howard` = H, SAGE_HOWARD, 0 by default until tested). The iteration count,
+# 3,700 to 4,900 a problem, is the discount rate's: the span of the bounds falls at about beta a step. After each full
+# step that has not converged, H steps of the same policy's evaluation follow (modified policy iteration, Puterman
+# 1994, section 6.5): consumption, effort and next liquid wealth in each inner problem, the participation
+# probabilities, the adjusting targets and their probabilities all held at the full step's, the value updated as
+# V <- flow + beta E V, with the logit choices' value at fixed probabilities (the expected value plus theta times
+# their entropy, which equals the log-sum at those probabilities). Such a step costs a fraction of a full one (no
+# Euler inversion, no search over the 93 targets). The stopping rule is unchanged and judged on full steps only, so
+# the fixed point is the same; the marginal value Vb is updated on full steps only. Not used while the relaxation
+# below is active (relax < 1) or in a refining pass.
 const WARM2 = Dict{NTuple{4,Int},Any}()
 
 """
@@ -112,7 +122,8 @@ adjusting, and the grids, plus V and Vb for warm starts.
 function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.01,
                              theta_adj::Float64 = 0.01, full::Bool = false, tol::Float64 = 1e-9,
                              maxit::Int = 5000, warm = nothing, trace::Bool = false,
-                             fast::Bool = get(ENV, "SAGE_EGM2_FAST", "1") == "1")
+                             fast::Bool = get(ENV, "SAGE_EGM2_FAST", "1") == "1",
+                             howard::Int = parse(Int, get(ENV, "SAGE_HOWARD", "0")))
     p0.cfloor == 0 || error("the means-tested floor is not built for two assets yet")
     isempty(p0.effort_set) && p0.job_effort && error("effort set by the job is not built for two assets yet")
     # survival enters discounting; the distribution adds the newborns
@@ -178,6 +189,8 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     bpin = (zeros(na, nk, nz), zeros(na, nk, nz)); vin = (zeros(na, nk, nz), zeros(na, nk, nz))
     Vin = zeros(na, nk, nz); P1in = zeros(na, nk, nz); muin = zeros(na, nk, nz)
     Vn = similar(V); Vbn = similar(Vb); Padj = zeros(na, nk, nz)
+    # Howard steps: each branch's flow at the full step's policy, the value less beta E V at its next liquid wealth
+    flw = howard > 0 ? (zeros(na, nk, nz), zeros(na, nk, nz)) : (zeros(0, 0, 0), zeros(0, 0, 0))
     qadj = zeros(nk, na, nk, nz)          # adjusting options: weight of option j at (i, m, s)
     wsel = zeros(nk, na, nk, nz)          # the target option j stands for: this share of the way from k_j to k_j+1
     # work arrays, one set per thread
@@ -189,7 +202,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     Vj_t = [zeros(nf) for _ in 1:nth]; Mj_t = [zeros(nf) for _ in 1:nth]; ptr_t = [ones(Int, nf) for _ in 1:nth]
     Πts = sparse(Matrix(transpose(Π))); usesp = fast && nnz(Πts) < 0.35 * nz^2
     iters = 0
-    t_in = 0.0; t_out = 0.0
+    t_in = 0.0; t_out = 0.0; t_how = 0.0; nhow = 0
     hist = zeros(maxit + 1); stall = 0.0; relax = 1.0; stalled = false
     polish = false                        # a refining pass, k_sub > 1: targets refined, value kept
     frozen = false; rounds = 0; itp = 0; hitmax = false     # value iteration at the refined targets; iterations in this phase
@@ -212,6 +225,13 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                             view(vin[d+1], :, j, :), p, a, view(EV, :, s), view(EVb, :, s),
                             s, d, wv[s], oth[s][d+1], tfl[s], bel[s], con_c[d+1], con_e[d+1],
                             aend_t[tid], cend_t[tid], eend_t[tid], view(D, :, s), view(Dp, :, s))
+                if howard > 0
+                    fl = flw[d+1]; vv = vin[d+1]; bb = bpin[d+1]; EVs = view(EV, :, s)
+                    @inbounds for i in 1:na
+                        v = vv[i, j, s]
+                        fl[i, j, s] = v == -Inf ? -Inf : v - p.β * SAGEBewley.interp_lin(a, EVs, bb[i, j, s])
+                    end
+                end
             end
         end
         end
@@ -390,6 +410,15 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
         V, Vn = Vn, V; Vb, Vbn = Vbn, Vb
         iters += 1
         isnan(dist) && error("the two-asset household problem has a state with no feasible choice (value NaN at iteration $it)")
+        if howard > 0 && relax == 1 && !(dist < tol || stalled || itp == maxit)
+            th = time()
+            for _ in 1:howard
+                howard_step!(Vn, V, Vin, p, a, kg, Π, Πts, usesp, flw, bpin, P1in, j0, om, ksh, qadj, wsel, Padj,
+                             theta, theta_adj, EV_t, Vc_t)
+                V, Vn = Vn, V
+            end
+            t_how += time() - th; nhow += howard
+        end
         if dist < tol || stalled || itp == maxit
             (itp == maxit && !(dist < tol || stalled)) && (hitmax = true)
             nsub > 1 || break
@@ -405,7 +434,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     t2 = time()
     get(ENV, "SAGE_MEM", "0") == "1" &&
         (println("  two-asset value iteration: ", iters, " iterations, ", nk, " nodes, ", nf, " targets, resident memory ", round(Sys.maxrss() / 1e9; digits = 2), " GB"); flush(stdout))
-    trace && @printf("  value iteration: inner %.1f s, outer %.1f s\n", t_in, t_out)
+    trace && @printf("  value iteration: inner %.1f s, outer %.1f s, Howard %.1f s (%d steps)\n", t_in, t_out, t_how, nhow)
     fast && get(ENV, "SAGE_WARM2", "1") == "1" && (WARM2[wkey] = (V = copy(V), Vb = copy(Vb)))
     dist = two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
                                   wsel = wsel, ksh = ksh, death = p0.death, oth = oth, wv = wv, trs = [transfer_at(p, s) for s in 1:nz])
@@ -424,7 +453,82 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
      Pi = Π, Padj = Padj, V = V, Vb = Vb, z_vals = z_vals,
      iters = iters, stalled = stall, relax = relax, theta = theta, inner = (c = cin, e = ein, bp = bpin, P1 = P1in), qadj = qadj,
      j0 = j0, om = om, shift = shift, ksh = ksh, wsel = wsel, adjp = (Rk = p.Rk, chi0 = p.chi0, R = p.R),
-     timing = (inner = t_in, outer = t_out, threads = nth, sparse = usesp))
+     timing = (inner = t_in, outer = t_out, howard = t_how, howard_steps = nhow, threads = nth, sparse = usesp))
+end
+
+"Value only of adjusting to option o at share ω (`adj_eval` without the marginal value)."
+@inline function adj_value(a, Vin, s, o, ω, ai, num, kg, R)
+    be = ai + (num - (ω == 0 ? kg[o] : (1 - ω) * kg[o] + ω * kg[o+1])) / R
+    be < a[1] && return -Inf
+    be = min(be, a[end])
+    q = clamp(searchsortedlast(a, be), 1, length(a) - 1)
+    ω == 0 && return lin_at(a, view(Vin, :, o, s), be, q)
+    ω == 1 && return lin_at(a, view(Vin, :, o + 1, s), be, q)
+    (1 - ω) * lin_at(a, view(Vin, :, o, s), be, q) + ω * lin_at(a, view(Vin, :, o + 1, s), be, q)
+end
+
+# x log x with 0 log 0 = 0
+@inline xlogx(x) = x > 0 ? x * log(x) : 0.0
+
+"""
+One Howard step (see the header): Vout = the value of the full step's policy evaluated on V. Inner: each branch's
+flow plus beta E V at its next liquid wealth, the branches combined at the participation probabilities with their
+entropy. Outer: the keeper's value, the adjusting options at their targets and probabilities, the keep-or-adjust
+probability, each logit with its entropy. Vin is a work array.
+"""
+function howard_step!(Vout, V, Vin, p, a, kg, Π, Πts, usesp, flw, bpin, P1in, j0, om, ksh, qadj, wsel, Padj,
+                      theta, theta_adj, EV_t, Vc_t)
+    na, nk, nz = size(V)
+    Threads.@threads for j in 1:nk
+        tid = Threads.threadid(); EV = EV_t[tid]
+        if usesp
+            copyto!(Vc_t[tid], view(V, :, j, :)); mul!(EV, Vc_t[tid], Πts)
+        else
+            mul!(EV, view(V, :, j, :), Π')
+        end
+        @inbounds for s in 1:nz
+            EVs = view(EV, :, s)
+            for i in 1:na
+                P = P1in[i, j, s]; v = 0.0; ent = 0.0
+                if P < 1
+                    f0 = flw[1][i, j, s]
+                    v0 = f0 == -Inf ? -Inf : f0 + p.β * SAGEBewley.interp_lin(a, EVs, bpin[1][i, j, s])
+                    v += (1 - P) * v0; ent += xlogx(1 - P)
+                end
+                if P > 0
+                    v1 = flw[2][i, j, s] + p.β * SAGEBewley.interp_lin(a, EVs, bpin[2][i, j, s])
+                    v += P * v1; ent += xlogx(P)
+                end
+                Vin[i, j, s] = v == -Inf ? -Inf : v - theta * ent
+            end
+        end
+    end
+    Threads.@threads for s in 1:nz
+        @inbounds for m in 1:nk
+            jl = j0[m]; w = om[m]; num = p.Rk * kg[m] - p.chi0
+            for i in 1:na
+                if ksh[m] == 0
+                    Vk = (1 - w) * Vin[i, jl, s] + w * Vin[i, jl+1, s]
+                else
+                    bk = min(a[i] + ksh[m], a[end]); qk = clamp(searchsortedlast(a, bk), 1, na - 1)
+                    Vk = (1 - w) * lin_at(a, view(Vin, :, jl, s), bk, qk) + w * lin_at(a, view(Vin, :, jl + 1, s), bk, qk)
+                end
+                pa = Padj[i, m, s]
+                if pa == 0
+                    Vout[i, m, s] = Vk; continue
+                end
+                Va = 0.0; ent = 0.0
+                for o in 1:nk
+                    q = qadj[o, i, m, s]; q == 0 && continue
+                    Va += q * adj_value(a, Vin, s, o, wsel[o, i, m, s], a[i], num, kg, p.R); ent += xlogx(q)
+                end
+                out = pa * (Va - theta_adj * ent) - theta_adj * xlogx(pa)
+                pa < 1 && (out += (1 - pa) * Vk - theta_adj * xlogx(1 - pa))
+                Vout[i, m, s] = out
+            end
+        end
+    end
+    Vout
 end
 
 """
