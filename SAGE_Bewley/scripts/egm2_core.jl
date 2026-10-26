@@ -891,6 +891,12 @@ function two_asset_cell_summary(p::SAGEParams, sol; thresholds = nothing)
     thr = thresholds === nothing ? Tuple{Float64,Float64}[] : collect(thresholds)
     np = length(thr)
     jinc = zeros(nz, np); jboth = zeros(nz, np); eff_E = 0.0
+    # the public outlay (V3_START.md section 141): the floor's top-ups, branch by branch, and the housing benefit of
+    # tenants; the tax that finances the floor (floor_tax_of) finances both
+    fout = 0.0
+    wvv = [(1 + p.subsidy) * p.α[s] * z[s] * p.Z for s in 1:nz]
+    othv = [(-p.lumptax + transfer_at(p, s), -p.lumptax + net_participation(p, p.α[s], z[s]) + transfer_at(p, s)) for s in 1:nz]
+    ten = hasproperty(sol, :tenant) ? sol.tenant : falses(nk)
     @inbounds for i_z in 1:nz, m in 1:nk, i_a in 1:na
         w = λ[i_a, m, i_z]
         w <= 0 && continue
@@ -900,6 +906,14 @@ function two_asset_cell_summary(p::SAGEParams, sol; thresholds = nothing)
         t = clamp((nw - NWGRID[q]) / (NWGRID[q+1] - NWGRID[q]), 0.0, 1.0)
         N[i_z, q] += w * (1 - t); N[i_z, q+1] += w * t
         p1 = P1[i_a, m, i_z]; part[i_z] += w * p1
+        ten[m] && !isempty(p.hb) && (fout += w * p.hb[i_z])
+        if p.cfloor > 0
+            rt = ten[m] ? sol.rent[i_z] : 0.0
+            each_branch_full(sol, i_a, m, i_z) do wt, d, bp, j, e, be
+                res = p.R * be + wvv[i_z] * e + othv[i_z][d+1] - rt
+                res < p.cfloor && (fout += w * wt * (p.cfloor - res))
+            end
+        end
         α = p.α[i_z]; zz = z[i_z]
         cap = (p.R - 1) * a[i_a]
         credit = p.partcredit * α * zz * p.Z * p.qbar
@@ -933,7 +947,7 @@ function two_asset_cell_summary(p::SAGEParams, sol; thresholds = nothing)
     cumsum!(Y, Y); cumsum!(ypoor, ypoor)
     (W = W, K = K, N = N, mass = mass, part = part, Y = Y, Ys = Ys, ymean = ymean, ym_s = ym_s,
      ymin_E = ymin_E, rate = sol.rate, minc = sol.meaninc, pbase = sol.partbase,
-     jinc = jinc, jboth = jboth, thresholds = thr, eff_E = eff_E, ypoor = ypoor, fout = 0.0)
+     jinc = jinc, jboth = jboth, thresholds = thr, eff_E = eff_E, ypoor = ypoor, fout = fout)
 end
 
 """

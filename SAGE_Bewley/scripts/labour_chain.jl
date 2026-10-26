@@ -149,8 +149,10 @@ function cell_params_chain(αg; δ, hU, hL, rrU, rrL, nU, ppy, na = 200, ne = 80
     rent = rent_share > 0 ?
         [(rent_share - (ch.stype[i] === :E ? 0.0 : (ch.stype[i] in (:L, :N) || ch.dur[i] > NONENT) ? hbL : hbU[ch.dur[i]])) *
          αg * ch.z_latent[i] * base.Z * E_REF for i in 1:n] : Float64[]
+    hbv = rent_share > 0 ? [(ch.stype[i] === :E ? 0.0 : (ch.stype[i] in (:L, :N) || ch.dur[i] > NONENT) ? hbL : hbU[ch.dur[i]]) *
+                            αg * ch.z_latent[i] * base.Z * E_REF for i in 1:n] : Float64[]
     SAGEParams(na = na, ne = ne, nz = n, α = fill(αg, n), B = fill(1.0, n),
-               z_vals_override = ch.z_vals, Π_override = ch.Π, transfer = b, rent = rent,
+               z_vals_override = ch.z_vals, Π_override = ch.Π, transfer = b, rent = rent, hb = hbv,
                a_max = a_max, pexp = pexp, subsidy = subsidy, lumptax = lumptax,
                partcredit = partcredit, β = β, pcost = pcost,
                stype = ch.stype, lat = ch.lat, dur = ch.dur, ppy = ppy)

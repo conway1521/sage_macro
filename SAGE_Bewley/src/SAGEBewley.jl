@@ -221,6 +221,8 @@ Base.@kwdef struct SAGEParams
     # model's income units) out of the period's cash. Empty rent or k_min = 0: nobody pays rent, as before.
     k_min::Float64 = 0.0
     rent::Vector{Float64} = Float64[]
+    # the housing benefit in rent (its gross amount, for the public outlay; empty: none)
+    hb::Vector{Float64} = Float64[]
     # Log distance between two neighbouring PERSISTENT productivity states, set when the states
     # also carry a transitory part (sage_modular.jl, expand_transitory), for the smoothed shares
     # below an income line. NaN: read from the states themselves, as before.

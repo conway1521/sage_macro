@@ -564,7 +564,7 @@ function expand_transitory(p::SAGEParams, sd, nt; stay = 0.0)
     zp = sort(unique(z[z .> 0]))
     M = stay == 0 ? ones(nt) * w' : stay * Matrix(1.0I, nt, nt) + (1 - stay) * ones(nt) * w'
     update(p; nz = ns * nt, z_vals_override = [z[s] * ε[t] for s in 1:ns for t in 1:nt], Π_override = kron(Π, M),
-           α = ex(p.α), B = ex(p.B), transfer = ex(p.transfer), effort_set = ex(p.effort_set), rent = ex(p.rent),
+           α = ex(p.α), B = ex(p.B), transfer = ex(p.transfer), effort_set = ex(p.effort_set), rent = ex(p.rent), hb = ex(p.hb),
            belong_scale = ex(p.belong_scale), time_floor = ex(p.time_floor),
            dread_q = ex(p.dread_q), dread_hi = ex(p.dread_hi), dread_lo = ex(p.dread_lo), search_k = ex(p.search_k), out_cost = ex(p.out_cost),
            stype = ex(p.stype), lat = isempty(p.lat) ? p.lat : [(p.lat[s] - 1) * nt + t for s in 1:ns for t in 1:nt], dur = ex(p.dur), search_lam = ex(p.search_lam),
@@ -627,7 +627,7 @@ function _params_of(c::SAGEConfig, cell)
                             hbU = isempty(c.hbU_vec) ? zeros(c.nU) : c.hbU_vec, hbL = c.hb_long) for b in bs]
     isnan(c.Lambda) || (ps = [update(p; Λ = c.Lambda) for p in ps])
     let (f, _) = perm_nodes(c), K = length(perm_nodes(c)[1])
-        K > 1 && (ps = [update(p; Z = p.Z * f[(j - 1) % K + 1], transfer = p.transfer .* f[(j - 1) % K + 1], rent = p.rent .* f[(j - 1) % K + 1]) for (j, p) in enumerate(ps)])
+        K > 1 && (ps = [update(p; Z = p.Z * f[(j - 1) % K + 1], transfer = p.transfer .* f[(j - 1) % K + 1], rent = p.rent .* f[(j - 1) % K + 1], hb = p.hb .* f[(j - 1) % K + 1]) for (j, p) in enumerate(ps)])
     end
     (!isnan(cell.fL) && c.illiquid) && error("the long-term state is not built for two assets")
     if c.tax_mode === :prop && c.lumptax != 0
@@ -636,7 +636,7 @@ function _params_of(c::SAGEConfig, cell)
         ps = [update(p; lumptax = p.lumptax - c.lumptax, subsidy = p.subsidy - τ) for p in ps]
     end
     if c.phi != 14.0 || c.e_ref != E_REF
-        ps = [update(p; ϕ = c.phi, transfer = p.transfer .* (c.e_ref / E_REF), rent = p.rent .* (c.e_ref / E_REF)) for p in ps]
+        ps = [update(p; ϕ = c.phi, transfer = p.transfer .* (c.e_ref / E_REF), rent = p.rent .* (c.e_ref / E_REF), hb = p.hb .* (c.e_ref / E_REF)) for p in ps]
     end
     c.ysmooth == 1 || (ps = [update(p; ysmooth = c.ysmooth) for p in ps])
     if !isnan(cell.fL)
@@ -897,6 +897,9 @@ function floor_tax_of(c::SAGEConfig)
                      c0.beta_spread, c0.nbeta, c0.impatient_share, c0.beta_low, c0.lumptax, c0.subsidy, c0.levy_employed, c0.rho, c0.eta_z,
                      c0.nz, c0.na, c0.a_max, c0.pexp, c0.theta, c0.commute, c0.ctax, c0.time_bonus, c0.unemployment, c0.unemployed_ratio === nothing,
                      c0.sd_eps, c0.n_eps, c0.tax_mode, c0.tax_base, c0.beta_cell, c0.ysmooth, c0.rho_cell, c0.eta_cell, c0.sd_eps_cell, c0.Lambda, c0.perm_sd, c0.n_perm, c0.perm_f, c0.perm_w, c0.R_one, c0.ref_prop, c0.search, c0.search_gamma, c0.search_kU, c0.search_kL, c0.out_ls, c0.out_M, c0.out_betaY, c0.period, c0.nU, c0.chain, c0.hU_vec, c0.sU_vec, c0.sL, c0.withN, c0.iotaE, c0.nuE, c0.nuU, c0.eps_stay, c0.dread, c0.dread_mode, c0.dread_horizon, c0.rrU_vec, c0.rrU_pub_vec, c0.entN, c0.search_kq)))
+    # with two assets the outlay also holds the housing benefit, and both depend on how wealth is held
+    c0.illiquid && (key = hash((key, repr((c0.chi0, c0.illiquid_premium, c0.rent_share, c0.k_min, c0.hbU_vec, c0.hb_long, c0.nk,
+                                           c0.k_max, c0.k_sub, c0.k_mid, c0.nb, c0.b_max, c0.death, c0.k_payout, c0.r_liquid)))))
     haskey(FLOOR_TAX_CACHE, key) && return FLOOR_TAX_CACHE[key]
     base = c.lumptax + ui_only_tax_of(c)
     cs = cells_of(c0); _, bw = betas_by_cell(c0)
