@@ -9,7 +9,7 @@ include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = uppercase(ARGS[1]); H = length(ARGS) >= 2 ? parse(Int, ARGS[2]) : 0
 say(x...) = (println(x...); flush(stdout))
-c = quarterly_calibrated(code, "G")
+c = floor_effort(quarterly_calibrated(code, "G"))        # the job's hours, as the economy uses them
 p = params_of(c, cells_of(c)[1])[1]
 say(@sprintf("%s G: %d states, %d liquid points, floor %.4f, R %.5f, beta %.5f, social strength %.2f", code, p.nz, p.na, p.cfloor, p.R, p.β, p.social_strength))
 t1 = @elapsed s1 = solve_participation_egm(p, 1.0; full = true)

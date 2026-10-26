@@ -5,11 +5,12 @@
 # and illiquid wealth, the share adjusting). The fixed point is the same, so the differences should be of the order
 # of the tolerance (1e-9 on the span of the bounds).
 #
-#   JULIA_NUM_THREADS=4 julia --project=scripts/run_env scripts/test_egm2_howard.jl CODE NK KSUB NB H[,H...]
+#   JULIA_NUM_THREADS=4 julia --project=scripts/run_env scripts/test_egm2_howard.jl CODE NK KSUB NB H[,H...] [trace]
+# `trace`: the solver's trace (the bound, the relaxation and the share adjusting every 100 full steps).
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = uppercase(ARGS[1]); nk = parse(Int, ARGS[2]); ksub = parse(Int, ARGS[3]); nb = parse(Int, ARGS[4])
-Hs = parse.(Int, split(ARGS[5], ","))
+Hs = parse.(Int, split(ARGS[5], ",")); tr = length(ARGS) >= 6 && ARGS[6] == "trace"
 say(x...) = (println(x...); flush(stdout))
 ref = Dict{String,Float64}()
 for l in eachline(joinpath(@__DIR__, "calibration_v3fet_$(code)_G_I.txt"))
@@ -28,7 +29,7 @@ ENV["SAGE_WARM2"] = "0"
 solve_two_asset_egm(p2, 1.0; maxit = 2, howard = 0); solve_two_asset_egm(p2, 1.0; maxit = 2, howard = 2)     # compile
 s0 = nothing
 for H in vcat(0, Hs)
-    t = @elapsed s = solve_two_asset_egm(p2, 1.0; full = true, howard = H)
+    t = @elapsed s = solve_two_asset_egm(p2, 1.0; full = true, howard = H, trace = tr)
     g = agg(s)
     say(@sprintf("H %3d: %5d full steps, %6d Howard steps, %6.2f min (inner %.0f s, outer %.0f s, Howard %.0f s), stalled %.1e; liquid %.8f, illiquid %.8f, adjusting %.8f",
                  H, s.iters, s.timing.howard_steps, t / 60, s.timing.inner, s.timing.outer, s.timing.howard, s.stalled, g...))

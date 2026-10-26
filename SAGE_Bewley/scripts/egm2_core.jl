@@ -419,6 +419,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
             elseif dist < 1e-2
                 stalled = true
             end
+            trace && println("  full step ", itp, ": bound ", dist, ", relaxation now ", relax, stalled ? ", stall accepted" : "")
         end
         if dist < tol || stalled
             Vn .+= p.β / (1 - p.β) * 0.5 * (dmin + dmax)
