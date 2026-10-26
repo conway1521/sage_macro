@@ -291,6 +291,16 @@ Base.@kwdef struct SAGEConfig
     # differs from the engine's (NaN: the engine's; the illiquid return stays the engine's plus the premium).
     k_payout::Bool = false
     r_liquid::Float64 = NaN
+    # Tenure (version 2's two assets, design section 4.1; V3_START.md section 140; the user, 2026-10-26): a household
+    # whose illiquid wealth is below k_min (model units) is a tenant and pays rent_share times its persistent income
+    # in work (the basis of the benefits: alpha z Z E_REF, not current earnings, so job loss does not cut rent; Eurostat
+    # ilc_mded02). Tenants out of work get the housing benefit: the TaxBEN profile with housing benefit less the one
+    # without, hbU_vec by quarter of the entitled spell and hb_long beyond and in N (`housing_benefit_profile`).
+    # rent_share 0: nobody pays rent.
+    rent_share::Float64 = 0.0
+    k_min::Float64 = 0.0
+    hbU_vec::Vector{Float64} = Float64[]
+    hb_long::Float64 = 0.0
     death::Float64 = 1 / 45
     nk::Int = 24
     k_max::Float64 = 150.0        # 60 held 1% of the mass at the top at beta_bar 0.99 (2026-09-29)
@@ -554,7 +564,7 @@ function expand_transitory(p::SAGEParams, sd, nt; stay = 0.0)
     zp = sort(unique(z[z .> 0]))
     M = stay == 0 ? ones(nt) * w' : stay * Matrix(1.0I, nt, nt) + (1 - stay) * ones(nt) * w'
     update(p; nz = ns * nt, z_vals_override = [z[s] * ε[t] for s in 1:ns for t in 1:nt], Π_override = kron(Π, M),
-           α = ex(p.α), B = ex(p.B), transfer = ex(p.transfer), effort_set = ex(p.effort_set),
+           α = ex(p.α), B = ex(p.B), transfer = ex(p.transfer), effort_set = ex(p.effort_set), rent = ex(p.rent),
            belong_scale = ex(p.belong_scale), time_floor = ex(p.time_floor),
            dread_q = ex(p.dread_q), dread_hi = ex(p.dread_hi), dread_lo = ex(p.dread_lo), search_k = ex(p.search_k), out_cost = ex(p.out_cost),
            stype = ex(p.stype), lat = isempty(p.lat) ? p.lat : [(p.lat[s] - 1) * nt + t for s in 1:ns for t in 1:nt], dur = ex(p.dur), search_lam = ex(p.search_lam),
@@ -613,10 +623,11 @@ function _params_of(c::SAGEConfig, cell)
          [cell_params_chain(cell.α; δ = cell.δ, hU = chain_hU(c), hL = cell.fL, rrU = isempty(c.rrU_vec) ? fill(c.rr, c.nU) : c.rrU_vec, rrL = c.rr_long, chain_flows(c, cell.gi)...,
                             nU = c.nU, ppy = c.period, na = c.na, ne = c.ne, a_max = c.a_max, pexp = c.pexp, subsidy = c.subsidy,
                             lumptax = c.lumptax, partcredit = c.partcredit, β = b + cell.dβ, pcost = c.pcost, nz = c.nz,
-                            ρ = cell.ρ, η = cell.η) for b in bs]
+                            ρ = cell.ρ, η = cell.η, rent_share = c.illiquid ? c.rent_share : 0.0,
+                            hbU = isempty(c.hbU_vec) ? zeros(c.nU) : c.hbU_vec, hbL = c.hb_long) for b in bs]
     isnan(c.Lambda) || (ps = [update(p; Λ = c.Lambda) for p in ps])
     let (f, _) = perm_nodes(c), K = length(perm_nodes(c)[1])
-        K > 1 && (ps = [update(p; Z = p.Z * f[(j - 1) % K + 1], transfer = p.transfer .* f[(j - 1) % K + 1]) for (j, p) in enumerate(ps)])
+        K > 1 && (ps = [update(p; Z = p.Z * f[(j - 1) % K + 1], transfer = p.transfer .* f[(j - 1) % K + 1], rent = p.rent .* f[(j - 1) % K + 1]) for (j, p) in enumerate(ps)])
     end
     (!isnan(cell.fL) && c.illiquid) && error("the long-term state is not built for two assets")
     if c.tax_mode === :prop && c.lumptax != 0
@@ -625,7 +636,7 @@ function _params_of(c::SAGEConfig, cell)
         ps = [update(p; lumptax = p.lumptax - c.lumptax, subsidy = p.subsidy - τ) for p in ps]
     end
     if c.phi != 14.0 || c.e_ref != E_REF
-        ps = [update(p; ϕ = c.phi, transfer = p.transfer .* (c.e_ref / E_REF)) for p in ps]
+        ps = [update(p; ϕ = c.phi, transfer = p.transfer .* (c.e_ref / E_REF), rent = p.rent .* (c.e_ref / E_REF)) for p in ps]
     end
     c.ysmooth == 1 || (ps = [update(p; ysmooth = c.ysmooth) for p in ps])
     if !isnan(cell.fL)
@@ -673,7 +684,8 @@ function _params_of(c::SAGEConfig, cell)
     if c.illiquid
         c.solver === :egm || error("the illiquid asset needs solver = :egm")
         ps = [update(p; illiquid = true, Rk = p.R + c.illiquid_premium, chi0 = c.chi0, death = c.death,
-                     nk = c.nk, k_max = c.k_max, k_sub = c.k_sub, k_mid = c.k_mid, a_max = c.b_max, na = c.nb) for p in ps]
+                     nk = c.nk, k_max = c.k_max, k_sub = c.k_sub, k_mid = c.k_mid, a_max = c.b_max, na = c.nb,
+                     k_min = c.rent_share > 0 ? c.k_min : 0.0) for p in ps]
         c.k_payout && (ps = [update(p; k_payout = true) for p in ps])
         isnan(c.r_liquid) || (ps = [update(p; R = c.r_liquid) for p in ps])
     end

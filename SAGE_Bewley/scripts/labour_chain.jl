@@ -137,14 +137,20 @@ L, times α z Z E_REF, per period. Labels (type, duration, latent index) and per
 """
 function cell_params_chain(αg; δ, hU, hL, rrU, rrL, nU, ppy, na = 200, ne = 80, a_max = 4.0, pexp = 3.0,
                            subsidy = 0.0, lumptax = 0.0, partcredit = 0.0, β = 0.96, pcost = 0.0, nz = 11, ρ = 0.9, η = 0.1,
-                           sU = zeros(nU), sL = 0.0, ιE = 0.0, νE = 0.0, νU = 0.0, withN = false, entN = false)
+                           sU = zeros(nU), sL = 0.0, ιE = 0.0, νE = 0.0, νU = 0.0, withN = false, entN = false,
+                           rent_share = 0.0, hbU = zeros(nU), hbL = 0.0)
     base = SAGEParams(na = na, ne = ne, nz = nz, α = fill(αg, nz), B = fill(1.0, nz), a_max = a_max, pexp = pexp, ρ = ρ, η = η)
     ch = labour_chain(base; nU = nU, hU = hU, hL = hL, δ = δ, sU = sU, sL = sL, ιE = ιE, νE = νE, νU = νU, withN = withN, entN = entN)
     n = length(ch.z_vals)
     # the inactive state has the income of jobless households, as L (version 1's measured ratio)
     b = [ch.stype[i] === :E ? 0.0 : ((ch.stype[i] in (:L, :N) || ch.dur[i] > NONENT) ? rrL : rrU[ch.dur[i]]) * αg * ch.z_latent[i] * base.Z * E_REF for i in 1:n]
+    # tenure (two assets): a tenant's rent, a share of its persistent income in work (the benefits' basis), less the
+    # housing benefit out of work, by the same quarters as the benefit; the net cash cost of being a tenant
+    rent = rent_share > 0 ?
+        [(rent_share - (ch.stype[i] === :E ? 0.0 : (ch.stype[i] in (:L, :N) || ch.dur[i] > NONENT) ? hbL : hbU[ch.dur[i]])) *
+         αg * ch.z_latent[i] * base.Z * E_REF for i in 1:n] : Float64[]
     SAGEParams(na = na, ne = ne, nz = n, α = fill(αg, n), B = fill(1.0, n),
-               z_vals_override = ch.z_vals, Π_override = ch.Π, transfer = b,
+               z_vals_override = ch.z_vals, Π_override = ch.Π, transfer = b, rent = rent,
                a_max = a_max, pexp = pexp, subsidy = subsidy, lumptax = lumptax,
                partcredit = partcredit, β = β, pcost = pcost,
                stype = ch.stype, lat = ch.lat, dur = ch.dur, ppy = ppy)

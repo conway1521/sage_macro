@@ -145,6 +145,29 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, 
 end
 
 """
+    housing_benefit_profile(country, nU)
+
+The housing benefit of a tenant out of work as a replacement rate (V3_START.md section 140): TaxBEN's household-
+weighted profile with housing benefit (data/benefits/quarterly_profile_hb.csv, part (i)) less the one without
+(quarterly_profile.csv, part (h)), both without social assistance as the model uses them. By quarter of the entitled
+spell (nU), and the mean of months 25 to 60 for L, N and the spell without entitlement. TaxBEN computes the benefit
+at its own assumed rent, not the model's, a stated approximation.
+"""
+function housing_benefit_profile(country::AbstractString, nU::Int)
+    rd(file) = begin
+        pt = Dict{String,Float64}()
+        for (k, l) in enumerate(eachline(joinpath(@__DIR__, "..", "..", "data", "benefits", file)))
+            (k <= 2 || startswith(l, "#")) && continue
+            f = split(l, ","); (length(f) >= 6 && f[1] == country) || continue
+            a = tryparse(Float64, f[5]); a === nothing || (pt[String(f[2])] = a)
+        end
+        pt
+    end
+    w, wo = rd("quarterly_profile_hb.csv"), rd("quarterly_profile.csv")
+    ([max(w["q$d"] - wo["q$d"], 0.0) for d in 1:nU], max(w["months 25-60"] - wo["months 25-60"], 0.0))
+end
+
+"""
     quarterly_calibrated(code, cfg)
 
 Version 2's calibrated configuration (V3_START.md section 134): stage 1c's quarterly economy (`duration_config`) at

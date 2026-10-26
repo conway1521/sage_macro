@@ -484,6 +484,29 @@ with open(os.path.join(HERE, "quarterly_profile.csv"), "w") as fh:
     fh.write("country,item,household,public_part,household_no_sa,public_part_no_sa\n")
     for r_ in QROWS: fh.write(",".join(str(x) for x in r_) + "\n")
 
+# (i) the same profile with housing benefit, for the tenants of the two-asset model (V3_START.md section 140; design
+#     section 4.1): TaxBEN computes the benefit at its own assumed rent, so the model takes the difference between the
+#     two profiles as the housing benefit of a tenant out of work, owners getting none (a stated approximation).
+#     Same household weights and private part as (h).
+HROWS = []
+for c in ("FR", "DE", "IT"):
+    y, prev = 2023, "AW100"
+    _, cells3 = WRR[(c, y, prev, "YES", "NO", False)]
+    ws = [w for w, _ in cells3]
+    tp = [("S_C0", "_Z"), ("C_C0", "AW67"), ("C_C0", "NOEARN_UNEMP_WO_CONBEN")]
+    hwh = lambda m, sa="YES": sum(w * N[(c, y, h, prev, part, sa, "YES", m)] for w, (h, part) in zip(ws, tp))
+    priv = ws[1] * N[(c, y, "C_C0", prev, "AW67", "NO", "NO", 60)]
+    qh = lambda a, b, sa: sum(hwh(m, sa) for m in range(a, b + 1)) / (b - a + 1)
+    for q in range(1, 21):
+        v, v0 = qh(3 * q - 2, 3 * q, "YES"), qh(3 * q - 2, 3 * q, "NO")
+        HROWS.append([c, f"q{q}", round(v, 5), round(v - priv, 5), round(v0, 5), round(v0 - priv, 5)])
+    v, v0 = qh(25, 60, "YES"), qh(25, 60, "NO")
+    HROWS.append([c, "months 25-60", round(v, 5), round(v - priv, 5), round(v0, 5), round(v0 - priv, 5)])
+with open(os.path.join(HERE, "quarterly_profile_hb.csv"), "w") as fh:
+    fh.write("# OECD TaxBEN net replacement rates 2023 by month (DSD_TAXBEN_NRR), WITH housing benefit, three childless types weighted as in (f); script data/benefits/build_floor_and_replacement.py, part (i)\n")
+    fh.write("country,item,household,public_part,household_no_sa,public_part_no_sa\n")
+    for r_ in HROWS: fh.write(",".join(str(x) for x in r_) + "\n")
+
 with open(os.path.join(HERE, "computed_series.csv"), "w", newline="") as fh:
     w = csv.DictWriter(fh, fieldnames=["indicator", "country", "value", "unit", "year", "family_type", "source", "url", "status"], lineterminator="\n")
     w.writeheader(); w.writerows(OUT)
