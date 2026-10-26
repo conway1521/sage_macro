@@ -49,6 +49,26 @@ function exits(r)
     end
     num / den
 end
+# PBD (second argument `pbd`, then Q0 and Q1; V3_START.md section 138): potential benefit duration. Two economies, the
+# entitled benefit paid for Q0 and for Q1 quarters (each quarter's own replacement up to Q0, the last entitled quarter's
+# rate from Q0 to Q1, the post-exhaustion rate rr_long after), the tax held at the calibrated economy's. The estimand of
+# Schmieder, von Wachter and Bender (2012): extra months out of work (job loss to the next job, through every state out
+# of work, capped at 36 months) per extra month of entitlement. Germany's calibrated entitlement is four quarters, so
+# `pbd 4 6` is their 12 to 18 months at age 42.
+if mode == "pbd"
+    Q0 = parse(Int, ARGS[3]); Q1 = parse(Int, ARGS[4]); nU = cb.nU
+    rrq(Q) = [d <= Q0 ? c.rrU_vec[d] : d <= Q ? c.rrU_vec[Q0] : c.rr_long for d in 1:nU]
+    ra = solve_economy(SAGEConfig(c; rrU_vec = rrq(Q0)); cache = false)
+    rb = solve_economy(SAGEConfig(c; rrU_vec = rrq(Q1)); cache = false)
+    dP = 3.0 * (Q1 - Q0)
+    @printf("%s G+A, pbd: entitlement %d -> %d quarters (%.0f extra months) | months out of work after job loss, capped at 36: %.4f -> %.4f, %.4f a month of entitlement; capped at 48: %.4f -> %.4f, %.4f a month\n",
+            code, Q0, Q1, dP, ra.nonemp.months36, rb.nonemp.months36, (rb.nonemp.months36 - ra.nonemp.months36) / dP,
+            ra.nonemp.months48, rb.nonemp.months48, (rb.nonemp.months48 - ra.nonemp.months48) / dP)
+    @printf("  elasticity of capped duration to entitlement %.4f (arc, at 36 months) | hand-to-mouth %.4f -> %.4f | mean entitled chance %.5f -> %.5f\n",
+            log(rb.nonemp.months36 / ra.nonemp.months36) / log(Q1 / Q0), ra.hand_to_mouth_kvw, rb.hand_to_mouth_kvw, exits(ra), exits(rb))
+    println("  share still out of work by quarter: ", round.(ra.nonemp.surv[1:12], digits = 4), " -> ", round.(rb.nonemp.surv[1:12], digits = 4))
+    println("DONE"); exit()
+end
 r0 = solve_economy(c; cache = false)
 if mode == "cohort"
     lc = r0.lump_cohort

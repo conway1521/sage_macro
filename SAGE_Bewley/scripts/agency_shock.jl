@@ -134,6 +134,7 @@ function agency_summary(p::SAGEParams, sol)
     # measure it. Both follow the households' own choices forward: next assets a_d, participation P1, and the
     # transition the household chose where it searches (as welfare_parts).
     lumpm = zeros(ns)                                 # the lump sum's cohort (part 3 below)
+    nonem = zeros(ns)                                 # the job losers' time out of work (part 4 below)
     mpc12mass = zeros(ns); kz = zeros(ns)            # kz[1:5]: entrant mass, its pre-loss consumption, quarter-1 consumption, survivors to quarter 2, their consumption
     if p.ppy > 1
         srch2 = !isempty(p.search_k) && hasproperty(sol, :search_xs) && !isempty(sol.search_xs)
@@ -210,6 +211,25 @@ function agency_summary(p::SAGEParams, sol)
                     kz[4] += c1[i, s] * q; kz[5] += c1[i, s] * q * (wk * cbar[k, s2] + (1 - wk) * cbar[k+1, s2])
                 end
             end
+            # 4. Time out of work after job loss (V3_START.md section 138; the estimand of Schmieder, von Wachter and
+            #    Bender 2012: nonemployment, the time from job loss to the next job, whatever the state in between). The
+            #    job losers' cohort is followed through every state out of work (U, L, N) with the households' own
+            #    choices; nonem[t] is the cohort's mass still out of work in its t-th quarter (t = 1 the entry quarter),
+            #    for t up to min(ns, 40).
+            let cur = copy(c1), T = min(ns, 40)
+                for t in 1:T
+                    nxt = zeros(na, ns)
+                    for s in 1:ns, i in 1:na
+                        mm = cur[i, s]; mm > 0 || continue
+                        nonem[t] += mm
+                        step!(i, s) do q, k, wk, s2
+                            empv[s2] && return
+                            nxt[k, s2] += mm * q * wk; nxt[k+1, s2] += mm * q * (1 - wk)
+                        end
+                    end
+                    cur = nxt
+                end
+            end
             # 3. A lump sum at the start of the spell, for the current spell only (design section 7; V3_START.md section
             #    137): the job losers' assets on entry raised by SAGE_COHORT_LUMP times their last period's income in work
             #    (cash on hand up by that, assets by it over R), the policies the baseline's, since the future is
@@ -258,7 +278,7 @@ function agency_summary(p::SAGEParams, sol)
     end
     merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = zeros(ns),
            mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = zeros(ns), rmass = rmass, xmass = xmass, cmass = cmass,
-           kmass = kmass, smass = smass, mpc12mass = mpc12mass, kolmass = kz, lumpmass = lumpm),
+           kmass = kmass, smass = smass, mpc12mass = mpc12mass, kolmass = kz, lumpmass = lumpm, nonempmass = nonem),
           welfare_parts(p, sol))
 end
 
@@ -289,6 +309,7 @@ collapse_agency(ds, w) = (pmass = sum(w[i] .* ds[i].pmass for i in eachindex(ds)
                           mpc12mass = sum(w[i] .* ds[i].mpc12mass for i in eachindex(ds)),
                           kolmass  = sum(w[i] .* ds[i].kolmass  for i in eachindex(ds)),
                           lumpmass = sum(w[i] .* ds[i].lumpmass for i in eachindex(ds)),
+                          nonempmass = sum(w[i] .* ds[i].nonempmass for i in eachindex(ds)),
                           vdmass   = sum(w[i] .* ds[i].vdmass   for i in eachindex(ds)),
                           vkmass   = sum(w[i] .* ds[i].vkmass   for i in eachindex(ds)))
 collapse_all(ds, w) = merge(collapse(ds, w), collapse_agency(ds, w))

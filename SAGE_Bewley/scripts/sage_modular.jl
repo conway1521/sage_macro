@@ -1267,6 +1267,14 @@ function _solve(c::SAGEConfig, thr; fams = nothing, disk = true, any_thresholds 
                                                            1 - (13 * K[3] / K[1] + 7 * S2 * K[5] / K[4]) / ((13 + 7 * S2) * c0))),
             fall_q1 = (K = sum(cs[g].share .* pooled[g].kolmass[1:5] for g in 1:2); K[1] <= 0 ? NaN : 1 - K[3] / K[2]),
             fall_q2 = (K = sum(cs[g].share .* pooled[g].kolmass[1:5] for g in 1:2); K[4] <= 0 ? NaN : 1 - (K[5] / K[4]) / (K[2] / K[1])),
+            # the job losers' time out of work (agency_shock.jl, part 4): the share still out of work by quarter since job
+            # loss, and the mean time out of work in months, capped at 36 months (12 quarters, as Schmieder, von Wachter
+            # and Bender 2012) and at 48 (Scrutinio 2019)
+            nonemp = (hasproperty(pooled[1], :nonempmass) && c.period > 1 && sum(pooled[1].nonempmass) > 0) ?
+                     (M = sum(cs[g].share .* pooled[g].nonempmass for g in 1:2); S_ = M[1:min(40, length(M))] ./ M[1];
+                      (surv = S_, months36 = 12.0 / c.period * sum(S_[1:min(c.period * 3, length(S_))]),
+                       months48 = 12.0 / c.period * sum(S_[1:min(c.period * 4, length(S_))]))) :
+                     (surv = Float64[], months36 = NaN, months48 = NaN),
             # the job losers' cohort with a lump sum at the start of the spell (agency_shock.jl, part 3): its chance of
             # finding work over the entitled quarters, exits over the stock, without and with the lump sum, and by quarter
             lump_cohort = (hasproperty(pooled[1], :lumpmass) && c.period > 1 && 4 * c.nU <= length(pooled[1].lumpmass)) ?
