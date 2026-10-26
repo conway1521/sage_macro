@@ -1,0 +1,4 @@
+# search_v5q_DE_GA_g300.txt, calibrate_search_q.jl DE GA (run 40282284043, curvature TRIAL gamma 3.0, per quarter, NOT converged: worst error 0.090 after four rounds); a start, not a calibration (V3_START.md section 138)
+search_gamma = 3.0000
+search_kq_cell1 = 88.18924 157.35325 1200.54515 1338.51615 1631.62903 1702.37992 1777.51292 1873.79177 52972.48678
+search_kq_cell2 = 79.40347 137.04985 1010.12895 1124.45376 1387.81226 1473.59314 1565.06608 1670.69768 48023.49986

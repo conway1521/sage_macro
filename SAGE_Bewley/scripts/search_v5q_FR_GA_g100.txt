@@ -1,0 +1,4 @@
+# search_v5q_FR_GA_g100.txt, calibrate_search_q.jl FR GA (run 40273077285, curvature TRIAL gamma 1.0, by group as exits over stock: worst error 0.020); not a calibration (V3_START.md section 138)
+search_gamma = 1.0000
+search_kq_cell1 = 16.60607 21.06873 30.35725 30.35725 39.81024 39.81024 39.81024 39.81024 83.42004
+search_kq_cell2 = 22.52786 28.86590 41.76988 41.76988 53.54104 53.54104 53.54104 53.54104 155.56686

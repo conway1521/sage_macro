@@ -47,9 +47,11 @@ S && (c = SAGEConfig(c; kappa = parse(Float64, q["kappa"]), sigma_m = parse(Floa
 target = vcat(cb.hU_vec, cb.f_long[1])
 k = [fill(kU[g], cb.nU + 1) for g in 1:2]; for g in 1:2; k[g][end] = kL[g]; end
 if resume
-    sq = readkv(joinpath(@__DIR__, "search_v5q_$(code)_$(cfg).txt"))
+    # FROM (an argument from=SUFFIX): resume from search_v5q_<C>_<CFG>_<SUFFIX>.txt, a trial's own costs
+    fi = something(findfirst(a -> startswith(a, "from="), ARGS), 0)
+    sq = readkv(joinpath(@__DIR__, "search_v5q_$(code)_$(cfg)" * (fi > 0 ? "_" * split(ARGS[fi], "=")[2] : "") * ".txt"))
     k = [parse.(Float64, split(sq["search_kq_cell$g"])) for g in 1:2]
-    say("resuming from search_v5q_$(code)_$(cfg).txt")
+    say("resuming from search_v5q_$(code)_$(cfg)", fi > 0 ? "_" * split(ARGS[fi], "=")[2] : "", ".txt")
     if !isnan(γtrial)
         γ0 = parse(Float64, sq["search_gamma"])
         for g in 1:2; k[g] .*= target .^ (γ0 - γtrial); end
