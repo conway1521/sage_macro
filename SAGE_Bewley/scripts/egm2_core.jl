@@ -66,7 +66,9 @@ const K_ROUNDS = 2          # rounds of (value iteration at fixed refined target
 # of the inner arrays (slot j + off[m] for node j, off[m] = nk for a tenant node m, 0 otherwise). The continuation
 # depends on the node only; tenure is the current node's, so a buyer pays rent in the quarter it buys and not after.
 # With no rent the slots are the nodes and nothing changes.
-# HOWARD STEPS (V3_START.md section 139; `howard` = H, SAGE_HOWARD, 0 by default until tested). The iteration count,
+# HOWARD STEPS (V3_START.md section 139; `howard` = H, SAGE_HOWARD; 10 by default since 2026-10-27, tested: at 10 the
+# German test problem converges where H = 0 stalls, the aggregates within 1e-11 of H = 0's; SAGE_HOWARD=0 restores
+# the plain iteration). The iteration count,
 # 3,700 to 4,900 a problem, is the discount rate's: the span of the bounds falls at about beta a step. After each full
 # step that has not converged, H steps of the same policy's evaluation follow (modified policy iteration, Puterman
 # 1994, section 6.5): consumption, effort and next liquid wealth in each inner problem, the participation
@@ -138,7 +140,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                              theta_adj::Float64 = 0.01, full::Bool = false, tol::Float64 = 1e-9,
                              maxit::Int = 5000, warm = nothing, trace::Bool = false,
                              fast::Bool = get(ENV, "SAGE_EGM2_FAST", "1") == "1",
-                             howard::Int = parse(Int, get(ENV, "SAGE_HOWARD", "0")))
+                             howard::Int = parse(Int, get(ENV, "SAGE_HOWARD", "10")))
     # THE MEANS-TESTED FLOOR (V3_START.md section 141): as in the one-asset solver (`apply_floor!`), in each inner
     # problem, on the cash after rent, so a tenant on the floor has its rent covered (as Germany's Buergergeld covers
     # the housing costs on top of the standard rate); points on the floor have no marginal value of liquid wealth.
