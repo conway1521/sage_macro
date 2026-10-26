@@ -1,0 +1,4 @@
+# search_v5q_IT_GA_g300.txt, calibrate_search_q.jl IT GA (run 40373167370, curvature gamma 3.0 from the gamma-1 costs, per quarter; NOT converged: worst error 0.047 after 6 rounds at DAMP 0.15, stopped by the runner's time limit); resume costs (V3_START.md section 141)
+search_gamma = 3.0000
+search_kq_cell1 = 522.016 613.317 3172.353 3595.365 4080.88 4636.688 5262.14 5872.242 126716.953
+search_kq_cell2 = 832.201 953.726 4811.631 5305.765 5865.186 6495.11 7197.044 7941.25 175098.233
