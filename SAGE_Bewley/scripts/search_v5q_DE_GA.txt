@@ -1,4 +1,4 @@
-# search_v5q_DE_GA.txt, written by calibrate_search_q.jl DE GA (run 40062685335, FITTED: worst relative error 0.028 after 6 + 8 + 4 rounds); arrival rate one; G+S+A takes these costs
-search_gamma = 0.3500
-search_kq_cell1 = 17.02468 20.60228 27.94562 29.98061 30.95236 31.14233 31.21510 31.33983 36.17139
-search_kq_cell2 = 15.30360 17.82471 23.28720 24.89570 25.93012 26.38129 26.70501 27.02009 32.46965
+# search_v5q_DE_GA.txt, calibrate_search_q.jl DE GA at the curvature fitted to measured European evidence (V3_START.md sections 138 and 141): gamma 3.0, per quarter, FITTED: worst error 0.024 (runs 40282284043, 40360004671, 40379303853); tests: PBD 12-15 0.115, 12-18 0.109, level -0.229, liquidity share 0.26; G+S+A takes these costs. Replaces the gamma 0.35 fit (run 40062685335), in the history.
+search_gamma = 3.0000
+search_kq_cell1 = 69.99038 135.16472 1071.21247 1238.86775 1559.85401 1682.29331 1820.44768 1997.51479 62380.88521
+search_kq_cell2 = 63.46833 119.11853 914.25069 1057.89687 1353.45961 1492.86672 1650.87753 1838.11735 57207.08331
