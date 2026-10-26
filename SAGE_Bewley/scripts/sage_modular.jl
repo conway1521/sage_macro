@@ -684,7 +684,9 @@ function _params_of(c::SAGEConfig, cell)
     c.qbar == 0.10 || (ps = [update(p; qbar = c.qbar) for p in ps])
     if c.illiquid
         c.solver === :egm || error("the illiquid asset needs solver = :egm")
-        ps = [update(p; illiquid = true, Rk = p.R + c.illiquid_premium, chi0 = c.chi0, death = c.death,
+        # c.death is a YEARLY rate (1/45: a 45-year average lifetime); at a sub-annual period it is the period's
+        # equivalent (it went in unconverted at the quarterly period until 2026-10-27: V3_START.md section 141)
+        ps = [update(p; illiquid = true, Rk = p.R + c.illiquid_premium, chi0 = c.chi0, death = 1 - (1 - c.death)^(1 / c.period),
                      nk = c.nk, k_max = c.k_max, k_sub = c.k_sub, k_mid = c.k_mid, a_max = c.b_max, na = c.nb,
                      k_min = c.rent_share > 0 ? c.k_min : 0.0) for p in ps]
         c.k_payout && (ps = [update(p; k_payout = true) for p in ps])
