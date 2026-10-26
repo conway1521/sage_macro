@@ -216,6 +216,11 @@ Base.@kwdef struct SAGEParams
     # The illiquid return paid into liquid wealth every period instead of accruing to
     # illiquid wealth (egm2_core.jl). false reproduces every earlier result.
     k_payout::Bool = false
+    # Tenure (version 2's two assets, design section 4.1; V3_START.md section 139): a household whose illiquid
+    # wealth at the start of the period is below k_min is a tenant and pays rent[s] (per income state, in the
+    # model's income units) out of the period's cash. Empty rent or k_min = 0: nobody pays rent, as before.
+    k_min::Float64 = 0.0
+    rent::Vector{Float64} = Float64[]
     # Log distance between two neighbouring PERSISTENT productivity states, set when the states
     # also carry a transitory part (sage_modular.jl, expand_transitory), for the smoothed shares
     # below an income line. NaN: read from the states themselves, as before.
