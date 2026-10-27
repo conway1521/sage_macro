@@ -3691,3 +3691,5 @@ Liquidity share, Germany at gamma 3 (cohort 40399879775): lump sum 0.155, log ch
 **Italy's G+S+A account at gamma 3 hit the six-hour limit** (40442619625, two workers; the gamma 0.35 one took 4 hours 20 minutes). Relaunched on three workers (40478523899).
 
 **France's G+A account at gamma 3** (40474020279, dread in wellbeing only): dread -0.046 points per head and year (0.012 of consumption in work, 0.113 out of work), out of work beyond income -0.068, of which job search -0.010 (0.16 points a person out of work, against 0.43 at gamma 0.35) and the rest -0.057; inactive -0.007; air -0.049. The curvature moves the account's split between search and the rest (search's share falls by about 60 per cent, as in Germany and Italy), not the total out of work (-0.066 at gamma 0.35).
+
+**France's benefit level at gamma 3** (40473991613, dread in wellbeing only): elasticity of the entitled chance to a 10 per cent rise **-0.285** (mean chance 0.2341 to 0.2279; cohort log change -0.0370), against -1.43 at gamma 0.35; French level estimates 0.14 to 0.5 (Dares 2025, no standard errors), so inside the range. The fall 0.164 to 0.128, hand-to-mouth 0.270 to 0.267.
