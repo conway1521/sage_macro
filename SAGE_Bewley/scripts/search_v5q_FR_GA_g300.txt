@@ -1,4 +1,0 @@
-# search_v5q_FR_GA_g300.txt, calibrate_search_q.jl FR GA (run 40373151401, curvature gamma 3.0 from the gamma-1 costs, by group as exits over stock; NOT converged: worst error 0.173 after 5 rounds at DAMP 0.15, stopped by the runner's time limit); resume costs (V3_START.md section 141)
-search_gamma = 3.0000
-search_kq_cell1 = 131.472 279.064 765.802 765.802 1068.389 1068.389 1068.389 1068.389 17171.011
-search_kq_cell2 = 165.394 351.279 956.912 956.912 1272.098 1272.098 1272.098 1272.098 23651.016
