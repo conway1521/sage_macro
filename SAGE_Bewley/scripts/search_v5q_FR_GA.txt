@@ -1,4 +1,4 @@
-# search_v5q_FR_GA.txt, written by calibrate_search_q.jl FR GA (run 40180288568, FITTED by duration group as exits over stock: worst error 0.027; grouped, DAMP 2.2; dread in wellbeing only); arrival rate one
-search_gamma = 0.3500
-search_kq_cell1 = 9.85287 10.34625 11.63508 11.63508 13.58138 13.58138 13.58138 13.58138 13.45050
-search_kq_cell2 = 13.84602 14.46775 16.34059 16.34059 18.92796 18.92796 18.92796 18.92796 25.06253
+# search_v5q_FR_GA.txt, calibrate_search_q.jl FR GA at the curvature fitted to measured European evidence (V3_START.md sections 138 and 141): gamma 3.0, by duration group as exits over stock, dread in wellbeing only, FITTED: worst error 0.029 (run 40453033368); G+S+A takes these costs. Replaces the gamma 0.35 fit (run 40180288568), in the history.
+search_gamma = 3.0000
+search_kq_cell1 = 112.26558 237.06647 646.80853 646.80853 893.94767 893.94767 893.94767 893.94767 11733.53684
+search_kq_cell2 = 147.85100 316.13796 868.80125 868.80125 1176.88195 1176.88195 1176.88195 1176.88195 22344.23988

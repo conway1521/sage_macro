@@ -1,0 +1,4 @@
+# search_v5q_FR_GA_g300.txt, calibrate_search_q.jl FR GA (run 40453033368, dread in wellbeing only; curvature gamma 3.0 from the gamma-1 costs, by group as exits over stock, FITTED: worst error 0.029 after 3 rounds); the curvature the German PBD and level evidence select (V3_START.md sections 138 and 141)
+search_gamma = 3.0000
+search_kq_cell1 = 112.26558 237.06647 646.80853 646.80853 893.94767 893.94767 893.94767 893.94767 11733.53684
+search_kq_cell2 = 147.85100 316.13796 868.80125 868.80125 1176.88195 1176.88195 1176.88195 1176.88195 22344.23988
