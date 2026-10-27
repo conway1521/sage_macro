@@ -25,7 +25,8 @@ A = filter(a -> a != "trace" && !occursin("=", a), ARGS)
 # OVERRIDES (key=value arguments): beta=, gap= annual patience of the tertiary cell and the gap below it for the other
 # (as the quarterly calibration writes them), chi0= the fixed cost in model units (default: the transaction cost times
 # the house at k_min), chi0q= the same in units of the economy's mean persistent income in work a quarter (the design's
-# unit, which the calibration driver calib2q.yml passes). For probing and for the calibration's solves.
+# unit, which the calibration driver calib2q.yml passes). For probing and for the calibration's solves. Numerical
+# settings for diagnosis: theta_adj= (the keep-or-adjust smoothing, default 0.01), ksub= (targets per illiquid interval, 4).
 kv = Dict(split(a, "=")[1] => parse(Float64, split(a, "=")[2]) for a in ARGS if occursin("=", a))
 code = uppercase(A[1]); cfg = uppercase(A[2]); kyears = parse(Float64, A[3])
 H = length(A) >= 4 ? parse(Int, A[4]) : 0
@@ -64,7 +65,7 @@ say(@sprintf("%s %s: mean persistent income in work %.4f a quarter (cells %.4f, 
              code, cfg, ybarq, sum(wt[t] * ybar_type[(1, t)] for t in eachindex(wt)), sum(wt[t] * ybar_type[(2, t)] for t in eachindex(wt)),
              kmin, kyears, chi0, c.a_max, string(round.(wt, digits = 4))))
 c2 = SAGEConfig(c; illiquid = true, solver = :egm, chi0 = chi0, k_payout = false, rent_share = share[code], k_min = kmin,
-                hbU_vec = hbU, hb_long = hbL, nk = nk, k_max = 4 * kmax_years * ybarq, k_sub = 4, k_mid = 0.0, nb = nb, b_max = c.a_max)     # the liquid grid's top as the one-asset model's
+                hbU_vec = hbU, hb_long = hbL, nk = nk, k_max = 4 * kmax_years * ybarq, k_sub = round(Int, get(kv, "ksub", 4.0)), k_mid = 0.0, nb = nb, b_max = c.a_max)     # the liquid grid's top as the one-asset model's
 cl2 = cells_of(c2)
 # moments solved here, by weight: ownership, hand-to-mouth poor and wealthy, MPC quarter and 12 months, liquid, illiquid,
 # adjusting, outlay, and the Kolsrud masses (the fall is computed from the summed masses)
@@ -75,7 +76,7 @@ for ci in (csel == 0 ? (1:2) : (csel:csel)), t in (tsel == 0 ? eachindex(wt) : (
     w = cl2[ci].share * wt[t]
     say(@sprintf("cell %d type %d (income %.3f of the mean, weight %.4f): %d states, liquid %d x illiquid %d, R %.5f, Rk %.5f, floor %.4f, rent %.4f to %.4f, death %.5f, %d threads, Howard %d",
                  ci, t, ybar_type[(ci, t)] / ybarq, w, p.nz, p.na, p.nk, p.R, p.Rk, p.cfloor, minimum(p.rent), maximum(p.rent), p.death, Threads.nthreads(), H))
-    tt = @elapsed s = solve_two_asset_egm(p, 1.0; full = true, howard = H, trace = trace)
+    tt = @elapsed s = solve_two_asset_egm(p, 1.0; full = true, howard = H, trace = trace, theta_adj = get(kv, "theta_adj", 0.01))
     a = s.a; kg = s.k; λ = s.lambda
     own = sum(sum(λ[:, m, :]) for m in 1:length(kg) if !s.tenant[m]; init = 0.0)
     g = agency_summary(p, s); cs = cell_summary(p, s)
