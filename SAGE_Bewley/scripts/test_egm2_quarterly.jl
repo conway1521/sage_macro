@@ -15,21 +15,34 @@
 #
 #   JULIA_NUM_THREADS=4 julia --project=scripts/run_env scripts/test_egm2_quarterly.jl CODE CFG KMIN_YEARS [H] [CELL] [TYPE] [NK] [NB] [KMAX_YEARS] [trace]
 #   CELL 1 or 2, 0 for both (default); TYPE a permanent type's index, 0 for all (default); KMAX_YEARS the illiquid grid's
-#   top in years of mean income (default 150: the plain iteration then cycles in empty corners at the top of both grids)
+#   top in years of mean income. Default 40: at 150 the iteration cycled in empty corners (houses of 50 to 120 quarterly
+#   units at the top of the liquid grid) and ran to the cap, two hours a type; at 40 and 20 Germany's cell 1 type 4
+#   converges in 12 minutes with every moment equal to four decimals (runs 40425262978, 40442794029, 40442804781).
+#   A warning is printed when the top two illiquid nodes carry more than 0.1 per cent of the mass (raise it then).
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
-A = filter(!=("trace"), ARGS)
+A = filter(a -> a != "trace" && !occursin("=", a), ARGS)
+# OVERRIDES (key=value arguments): beta=, gap= annual patience of the tertiary cell and the gap below it for the other
+# (as the quarterly calibration writes them), chi0= the fixed cost in model units (default: the transaction cost times
+# the house at k_min). For probing the region the two-asset calibration will search; not a calibration.
+kv = Dict(split(a, "=")[1] => parse(Float64, split(a, "=")[2]) for a in ARGS if occursin("=", a))
 code = uppercase(A[1]); cfg = uppercase(A[2]); kyears = parse(Float64, A[3])
 H = length(A) >= 4 ? parse(Int, A[4]) : 0
 csel = length(A) >= 5 ? parse(Int, A[5]) : 0; tsel = length(A) >= 6 ? parse(Int, A[6]) : 0
 nk = length(A) >= 7 ? parse(Int, A[7]) : 24; nb = length(A) >= 8 ? parse(Int, A[8]) : 120
-kmax_years = length(A) >= 9 ? parse(Float64, A[9]) : 150.0     # the illiquid grid's top in years of mean income
+kmax_years = length(A) >= 9 ? parse(Float64, A[9]) : 40.0      # the illiquid grid's top in years of mean income
 trace = get(ENV, "SAGE_TRACE", "0") == "1" || "trace" in ARGS
 tcost = Dict("FR" => 0.1414, "DE" => 0.0782, "IT" => 0.1200)          # data/housing/housing_evidence.md, item 4
 say(x...) = (println(x...); flush(stdout))
 gain = Dict("FR" => 0.0192, "DE" => -0.0019, "IT" => 0.0103)          # data/housing/housing_evidence.md, JST R6 1980-2015
 share = Dict("FR" => 0.225, "DE" => 0.200, "IT" => 0.205)              # Eurostat ilc_mded02, 2025
 c = floor_effort(quarterly_calibrated(code, cfg))
+if haskey(kv, "beta") || haskey(kv, "gap")
+    qf = Dict(strip(split(l, "=")[1]) => parse(Float64, split(l, "=")[2]) for l in eachline(joinpath(@__DIR__, "calibration_v5q_$(code)_$(cfg).txt")) if occursin("=", l) && !startswith(l, "#"))
+    βa = get(kv, "beta", qf["beta_annual"]); ga = get(kv, "gap", qf["beta_gap_annual"])
+    c = SAGEConfig(c; beta_bar = βa^(1 / 4), beta_cell = ((βa - ga)^(1 / 4) - βa^(1 / 4), 0.0))
+    say(@sprintf("patience overridden: annual %.4f, gap %.4f (calibration %.4f, %.4f)", βa, ga, qf["beta_annual"], qf["beta_gap_annual"]))
+end
 hbU, hbL = housing_benefit_profile(code, c.nU)
 # the economy's mean persistent income in work a quarter (the rent's basis over the rent share), each type at the chain's
 # stationary distribution over its employed states, weighted by the cell's share and the type's weight
@@ -45,7 +58,7 @@ for ci in 1:2
     end
 end
 ybarq = sum(cl[ci].share * wt[t] * ybar_type[(ci, t)] for ci in 1:2, t in eachindex(wt)) / sum(cl[ci].share for ci in 1:2)
-kmin = 4 * kyears * ybarq; chi0 = tcost[code] * kmin
+kmin = 4 * kyears * ybarq; chi0 = get(kv, "chi0", tcost[code] * kmin)
 say(@sprintf("%s %s: mean persistent income in work %.4f a quarter (cells %.4f, %.4f); k_min %.3f (%.1f years), chi0 %.4f; liquid grid top %.2f; type weights %s",
              code, cfg, ybarq, sum(wt[t] * ybar_type[(1, t)] for t in eachindex(wt)), sum(wt[t] * ybar_type[(2, t)] for t in eachindex(wt)),
              kmin, kyears, chi0, c.a_max, string(round.(wt, digits = 4))))
@@ -72,6 +85,7 @@ for ci in (csel == 0 ? (1:2) : (csel:csel)), t in (tsel == 0 ? eachindex(wt) : (
                  mom[1:5]..., kz[4] > 0 ? 1 - (kz[5] / kz[4]) / (kz[2] / kz[1]) : NaN))
     say(@sprintf("  mean liquid %.4f, illiquid %.4f (quarterly income units), adjusting %.5f a quarter, public outlay (floor and housing benefit) %.5f", mom[6:9]...))
     say("  mass by illiquid node: ", join([@sprintf("%.3f", sum(λ[:, m, :])) for m in 1:length(kg)], " "), " (tenant nodes ", count(s.tenant), ")")
+    mtop = sum(λ[:, end-1:end, :]); mtop > 1e-3 && say(@sprintf("  WARNING: the top two illiquid nodes carry %.4f of the mass: raise KMAX_YEARS", mtop))
     acc .+= w .* mom; kacc .+= w .* kz[1:5]; global wsum += w
 end
 if wsum > 0
