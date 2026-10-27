@@ -93,11 +93,23 @@ function illiquid_grid(k_max, nk, pexp, k_mid = 0.0)
 end
 function illiquid_grid(p::SAGEParams)
     g = illiquid_grid(p.k_max, p.nk, p.pexp, p.k_mid)
-    # with tenure, the node nearest the ownership threshold is moved onto it (not the first or the last), so the
-    # tenant nodes are exactly those below k_min and ownership moves continuously with k_min between switches
     if p.k_min > 0 && !isempty(p.rent) && p.k_min < g[end]
-        j = argmin(abs.(g[2:end-1] .- p.k_min)) + 1
-        g[j] = p.k_min
+        if get(ENV, "SAGE_TENANT_NODES", "0") == "1"
+            # the first tenure grid: the node nearest the ownership threshold moved onto it, the nodes below it
+            # tenant nodes with some equity
+            j = argmin(abs.(g[2:end-1] .- p.k_min)) + 1
+            g[j] = p.k_min
+        else
+            # With tenure the asset is the main residence's equity (design section 4.1), so a tenant holds none:
+            # the grid is zero and then k_min to k_max (the same spacing on that range). The tenant nodes with some
+            # equity that the first grid had were empty, and the iteration cycled there and nowhere else (Germany,
+            # patience 0.985, run 40495661231: the bound held at 1 to 10 for 5,000 steps at illiquid node 2, with
+            # no mass at nodes 2 to 9), as it had in the empty corners at the grid's top. A kept house that falls
+            # below k_min (a real loss, Germany) is split between k_min and zero, which keeps its expected equity
+            # (Young 2010) and turns a small loss into a small chance of a large one. Without rent nothing changes,
+            # so the reductions stay exact. SAGE_TENANT_NODES=1 restores the first grid.
+            g = vcat(0.0, p.k_min .+ illiquid_grid(p.k_max - p.k_min, p.nk - 1, p.pexp, 0.0))
+        end
     end
     g
 end
