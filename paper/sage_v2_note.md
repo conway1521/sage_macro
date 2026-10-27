@@ -8,13 +8,13 @@ fontsize: 11pt
 linestretch: 1.15
 ---
 
-**Abstract.** Version 2 of SAGE keeps version 1's structure, a one-asset Bewley economy in partial equilibrium for France, Germany and Italy with three switchable dimensions of wellbeing, and changes how time and unemployment are represented. The period is a quarter. Exits from unemployment follow the duration bands of the Labour Force Survey, an inactive state holds jobless households outside unemployment, and benefits follow the household-weighted net replacement rates of OECD TaxBEN quarter by quarter, with entitlement running out at the statutory maximum. Dread of job loss is the coming year's lottery at Pagel's annual weight, and job search is refitted so that chosen exits match the duration-based hazards, with the arrival rate normalised as in DellaVigna and co-authors. Every configuration is recalibrated. Three results stand out. The marginal propensity to consume, measured over twelve months as the survey asks, is no longer too low: it is twice the survey value in France, above it in Germany and close to it in Italy. The fall in consumption on job loss, measured as Kolsrud and co-authors measure it, is 0.16 to 0.17 without dread and 0.21 to 0.23 with it, about four to five times their estimate, a gap that version 1's two-asset reference attributes largely to the absence of illiquid wealth. The response of job finding to benefits now carries moral hazard within the spell and comes out at about twice Chetty's estimate. France cannot carry dread in choices on the quarterly economy, and dread enters its wellbeing only.
+**Abstract.** Version 2 of SAGE keeps version 1's structure, a one-asset Bewley economy in partial equilibrium for France, Germany and Italy with three switchable dimensions of wellbeing, and changes how time and unemployment are represented. The period is a quarter. Exits from unemployment follow the duration bands of the Labour Force Survey, an inactive state holds jobless households outside unemployment, and benefits follow the household-weighted net replacement rates of OECD TaxBEN quarter by quarter, with entitlement running out at the statutory maximum. Dread of job loss is the coming year's lottery at Pagel's annual weight, and job search is refitted so that chosen exits match the duration-based hazards, with the arrival rate normalised as in DellaVigna and co-authors. Every configuration is recalibrated. Three results stand out. The marginal propensity to consume, measured over twelve months as the survey asks, is no longer too low: it is twice the survey value in France, above it in Germany and close to it in Italy. The fall in consumption on job loss, measured as Kolsrud and co-authors measure it, is 0.16 to 0.17 without dread and 0.21 to 0.23 with it, about four to five times their estimate, a gap that version 1's two-asset reference attributes largely to the absence of illiquid wealth. The response of job finding to benefits now carries moral hazard within the spell. With the curvature of the search cost set on German evidence on the potential duration of benefits, the response to the benefit level falls within each country's measured range, while the response to entitlement is about the same in the three countries, matching Germany and lying below the French and Italian estimates. France cannot carry dread in choices on the quarterly economy, and dread enters its wellbeing only.
 
 # 1. What version 2 changes, and why
 
 Version 1 (Conway 2026, model note) left three gaps stated rather than forced. The fall in consumption on job loss was about three times the Swedish register estimate, the response of job finding to benefits held no moral hazard within the spell, and the marginal propensity to consume was in range but misordered across countries. Each gap had a candidate cause in the annual period. With a year as the period, the first year's benefit is paid whatever the household does, so search effort cannot respond to it within the spell. The fall on job loss is measured over a whole year out of work, while the benchmark is the first 20 weeks. The survey asks about spending within twelve months, while an annual model reports the response within its period.
 
-Version 2 therefore moves to a quarter and brings in what a quarter makes measurable: unemployment durations, benefit profiles by month, and the timing of entitlement. The design was reviewed twice before it was built (`paper/sage_v2_design.md`). The second asset, planned as step 2, was not adopted: one quarterly two-asset household problem took two to three hours on the existing solver (Section 6), and the annual two-asset reference of version 1 already shows what illiquid wealth does to the fall on job loss. Version 2 is the quarterly one-asset model, and the annual two-asset reference remains the model for wealth.
+Version 2 therefore moves to a quarter and brings in what a quarter makes measurable: unemployment durations, benefit profiles by month, and the timing of entitlement. The design was reviewed twice before it was built (`paper/sage_v2_design.md`). The second asset, planned as step 2, follows this note. When version 2 was settled, one quarterly two-asset household problem took two to three hours on the existing solver (Section 6), and the annual two-asset reference of version 1 already shows what illiquid wealth does to the fall on job loss. Version 2 is the quarterly one-asset model, and the annual two-asset reference remains the model for wealth until the quarterly two-asset model is calibrated.
 
 # 2. The quarterly economy
 
@@ -44,9 +44,11 @@ Version 1's dread is the anticipatory loss of the coming year's employment lotte
 
 # 3. Job search
 
-The design fitted arrival rates by duration group and cost levels by cell to the duration bands. With the chance of work $\lambda_d x$ and effort chosen at cost $k x^{1+\gamma_s}/(1+\gamma_s)$, the chosen exit is proportional to $\lambda^{1+1/\gamma_s} k^{-1/\gamma_s}$ wherever effort is interior. Scaling $\lambda$ by $a$ and $k$ by $a^{1+\gamma_s}$ leaves every exit unchanged, so exits alone cannot separate the two. DellaVigna, Lindner, Reizer and Schmieder (2017), the source of $\gamma_s = 0.35$, define search intensity as the chance of finding work, an arrival rate of one, and I adopt their normalisation. Duration dependence then goes into the cost level, by quarter of the spell and education cell, fitted so that the chance chosen, averaged over the stationary distribution, equals the duration-based exit to work in every quarter. In France the costs vary by the data's duration groups rather than by quarter, because neighbouring quarters' costs alternated in the fit.
+The design fitted arrival rates by duration group and cost levels by cell to the duration bands. With the chance of work $\lambda_d x$ and effort chosen at cost $k x^{1+\gamma_s}/(1+\gamma_s)$, the chosen exit is proportional to $\lambda^{1+1/\gamma_s} k^{-1/\gamma_s}$ wherever effort is interior. Scaling $\lambda$ by $a$ and $k$ by $a^{1+\gamma_s}$ leaves every exit unchanged, so exits alone cannot separate the two. DellaVigna, Lindner, Reizer and Schmieder (2017) define search intensity as the chance of finding work, an arrival rate of one, and I adopt their normalisation. Duration dependence then goes into the cost level, by quarter of the spell and education cell, fitted so that the chance chosen, averaged over the stationary distribution, equals the duration-based exit to work in every quarter. In France the costs vary by the data's duration groups rather than by quarter, because neighbouring quarters' costs alternated in the fit, and they are fitted with dread in wellbeing only, as France's calibration requires (Section 4).
 
-The fitted costs rise with duration: in Germany's low-education cell from 17 in the first quarter to 31 from the third and 36 in the long-term state, in Italy's from 23 to 48 by the eighth quarter and 71 beyond. Rising costs are what a falling hazard needs once selection on wealth is accounted for. G+S+A takes G+A's costs, since a fit with S on rebuilds the participation families at every step, and its chosen exits are reported.
+The curvature $\gamma_s$ was first taken from DellaVigna and co-authors, at 0.35. With it the response of job finding to the benefit level was two to three times Chetty's (2008) US estimate in all three countries and well above the European ones. I therefore set the curvature on the best-measured European estimand, the effect of the potential duration of benefits on time out of work in Germany, where two designs agree: Schmieder, von Wachter and Bender (2012) find 0.10 to 0.13 extra months out of work per month of entitlement for extensions from 12 to 18 months, and Lichter and Schiprowski (2021) about 0.12 for 12 to 15 months. For 12 to 15 months the model gives 0.50, 0.25, 0.16 and 0.12 at curvatures of 0.35, 1, 2 and 3, falling about as $\gamma_s^{-0.65}$, and at $\gamma_s = 3$ on the fitted costs it gives 0.115 and, for 12 to 18 months, 0.109. The same curvature applies in France and Italy, whose entitlement and level estimates, with Germany's level response, are tests (Section 7.2).
+
+The fitted costs rise with duration in every country and cell, which is what a falling hazard needs once selection on wealth is accounted for. At this curvature the levels move steeply, since the chosen chance moves with the cost only to the power $-1/3$: in Germany's low-education cell the level in the eighth quarter is about 29 times the first quarter's. G+S+A takes G+A's costs, since a fit with S on rebuilds the participation families at every step, and its chosen exits are reported.
 
 # 4. Calibration
 
@@ -64,7 +66,7 @@ The quarterly economy needs far less patience than the annual one for the same b
 
 The household problem is solved by the endogenous grid method with an upper envelope and logit smoothing of discrete choices, as in version 1. At a quarterly period the stationary distribution is found by a sparse direct solve where power iteration has not settled, which took one problem from about four hours to under a minute. Version 1 is reproduced to $3.5 \times 10^{-13}$ after every change, by a regression harness of 183 moments. The chain written in version 2's labelled states reproduces version 1's annual chain to $3 \times 10^{-11}$.
 
-The two-asset solver (the nested endogenous grid method of Druedahl 2021) was sped up three to four times by running its inner and outer steps on threads with separate work arrays, leaving its answers unchanged to $10^{-14}$. One quarterly two-asset problem still takes about half an hour and 3,700 to 4,900 iterations, which a calibration of several problems a solve cannot afford on the runners used here. Midpoint extrapolation of the error bounds (MacQueen 1966; Porteus 1971) did not reduce the iteration count, since the stopping rule is the span of the bounds, which a common shift leaves unchanged. Policy-iteration steps would be the next step.
+The two-asset solver (the nested endogenous grid method of Druedahl 2021) was sped up three to four times by running its inner and outer steps on threads with separate work arrays, leaving its answers unchanged to $10^{-14}$. One quarterly two-asset problem then still took about half an hour and 3,700 to 4,900 iterations, which a calibration of several problems a solve could not afford on the runners used here. Midpoint extrapolation of the error bounds (MacQueen 1966; Porteus 1971) did not reduce the iteration count, since the stopping rule is the span of the bounds, which a common shift leaves unchanged. Since then the solver takes ten policy-evaluation steps between full steps (modified policy iteration, Puterman 1994, section 6.5), and a quarterly problem converges in 10 to 30 minutes once the illiquid grid covers only states that households can hold. The two-asset model is the subject of the next note.
 
 # 7. Results
 
@@ -75,8 +77,9 @@ The two-asset solver (the nested endogenous grid method of Druedahl 2021) was sp
 | France G | 0.273 (0.268) | 0.73 (0.33) | 0.165 |
 | Germany G | 0.253 (0.252) | 0.54 (0.46) | 0.168 |
 | Italy G | 0.194 (0.203) | 0.41 (0.49) | 0.170 |
-| Germany G+A, search fitted | 0.252 | 0.62 | 0.228 |
-| Italy G+A, search fitted | 0.194 | 0.52 | 0.226 |
+| France G+A, search fitted (dread in wellbeing only) | 0.270 | 0.71 | 0.164 |
+| Germany G+A, search fitted | 0.253 | 0.62 | 0.228 |
+| Italy G+A, search fitted | 0.199 | 0.53 | 0.220 |
 
 The MPC, measured as the survey asks it, has moved from too low in version 1 to too high in France and Germany, and close to the survey in Italy once dread is in. Much of version 1's MPC gap was the horizon. France's MPC is more than twice its survey value at the patience its hand-to-mouth share requires, and lowering patience further would raise it more, so in the one-asset model France's two moments pull against each other.
 
@@ -84,7 +87,21 @@ The fall on job loss is about four times Kolsrud and co-authors' estimate withou
 
 ## 7.2 The response of job finding to benefits
 
-With benefits paid by quarter, search effort can respond to them within the spell. Raising the entitled benefit by 10 per cent in every quarter, with taxes held fixed, lowers the mean chance of finding work with elasticities of $-1.43$ in France, $-0.85$ in Germany and $-1.05$ in Italy. Chetty (2008) estimates $-0.53$ for a weekly hazard, which converts to about $-0.47$, $-0.45$ and $-0.48$ for the three countries' quarterly chances (my conversion). The model therefore responds two to three times as strongly as the benchmark, where version 1 held only the liquidity part at about half of it. The overshoot is common to all three countries, which points to the cost curvature: with $\gamma_s = 0.35$, effort responds to the gain from work with an elasticity of about 2.9. The curvature is a published estimate and I do not tune it to the elasticity. Chetty's own comparison points the same way. I compute it as he does: the response of job finding among those who lose their job to a lump sum paid at the start of the spell, against the response to a benefit rise of the same expected cash value, both measured on the job losers' own spells. The ratio, the model's counterpart of his liquidity share, is 0.18 in France, 0.25 in Germany and 0.30 in Italy against his estimate of about 0.6. Cash on hand thus carries a smaller part of the model's response than of the data's, so the excess lies in the part beyond liquidity. Taking dread out of choices leaves Germany's ratio unchanged (0.26).
+With benefits paid by quarter, search effort can respond to them within the spell. Three measured responses serve as tests, all at the curvature set in Section 3 and on the fitted costs. The level response raises the entitled benefit by 10 per cent in every quarter with taxes held fixed. The entitlement response extends entitlement by the measured study's months, rounded to quarters, and counts months out of work after job loss, capped at 36 as Schmieder and co-authors cap them.
+
+| | France | Germany | Italy |
+|---|---|---|---|
+| benefit level, elasticity of the chance of work | -0.29 | -0.23 | -0.21 |
+| measured, duration elasticity | 0.14 to 0.5 | none credible (Europe, corrected: 0.21) | about 0.23 |
+| entitlement, months out of work per month | 0.100 (6 to 15 months) | 0.115 (12 to 15), 0.109 (12 to 18) | 0.113 (9 to 12) |
+| measured | about 0.19 | 0.10 to 0.13 (target) | 0.30 to 0.36 |
+| liquidity share | 0.19 | 0.26 | 0.30 |
+
+The response to the benefit level now lies within each country's measured range. The French range comes from the official evaluation of the 2019 to 2021 reform (Dares 2025), the Italian value from the one credible design (D'Ambrosio and Scrutinio 2022), and for Germany, which has no credible level estimate, the reference is the mean corrected for publication bias in Cohen and Ganong (2026). I set the model's elasticity of the chance of work against these duration elasticities, which have the same size when the hazard is roughly constant over the spell. At a curvature of 0.35 the responses were -1.43, -0.85 and -1.05, so the curvature chosen on the German entitlement evidence brings the level response into range in all three countries without being fitted to it.
+
+The response to entitlement is a different matter. The model's effect is nearly the same in the three countries, about 0.10 to 0.12 extra months out of work per month of entitlement, while the measured effects differ by a factor of three, so it matches Germany, where it is the target, and lies at about half the French estimate and a third of the Italian. Two features of the evidence temper the comparison. Le Barbanchon (2016) estimates the French effect for claimants with short work histories, whose response need not be the average claimant's. The two Italian designs at age 50 (Scrutinio 2019; D'Ambrosio and Scrutinio 2022, both working papers of the Italian social security institute) sit at a cutoff where Citino, Russ and Scrutinio (2026) document that the timing of layoffs is moved, which would bias them upward, and the peer-reviewed estimate (Sovera 2026, about 0.33) comes from a reform that changed eligibility and the benefit profile together. A curvature by country would fit Italy at about 1, but it would then rest on the weakest of the three bodies of evidence, so I keep one curvature and report the gap.
+
+Chetty's comparison is computed as he computes it: the response of job finding among those who lose their job to a lump sum paid at the start of the spell, against the response to a benefit rise of the same expected cash value, both on the job losers' own spells. The ratio, the model's counterpart of his liquidity share, is 0.19 in France, 0.26 in Germany and 0.30 in Italy against his estimate of about 0.6, and it hardly moves with the curvature (0.25 in Germany at 0.35). The curvature therefore changes the size of the response and leaves its split between cash on hand and the rest about where it was. Taking dread out of choices leaves Germany's ratio unchanged.
 
 ## 7.3 The wellbeing account
 
@@ -92,14 +109,14 @@ Version 1's account is kept, with one correction. Version 1's long-term state he
 
 | points per head and year | France | Germany | Italy |
 |---|---|---|---|
-| out of work beyond income, unemployed | -0.067 | -0.027 | -0.072 |
+| out of work beyond income, unemployed | -0.068 | -0.029 | -0.074 |
 | inactive beyond income | -0.007 | -0.017 | -0.007 |
-| dread of a change of status (G+A) | -0.047 (in wellbeing only) | -0.053 | -0.033 |
-| of which job search, within the unemployed's term | -0.027 | -0.007 | -0.046 |
+| dread of a change of status (G+A) | -0.046 (in wellbeing only) | -0.054 | -0.037 |
+| of which job search, within the unemployed's term | -0.010 | -0.003 | -0.016 |
 | taking part (G+S, Meier and Stutzer 2008) | +0.016 | +0.019 | +0.009 |
 | air quality | -0.049 | -0.058 | -0.103 |
 
-The cost of being out of work falls by a third to a half against version 1, most in Germany, where most jobless households are inactive. Dread roughly doubles in Germany, since it now covers the year's lottery at its full size. In Italy job search accounts for two thirds of the unemployed's measured gap, because matching Italy's slow exits takes high search costs, against two fifths in France and a quarter in Germany. The model's own value of belonging is 0.11, 0.55 and 0.20 points a participant against the evidence's 0.055 to 0.081, close in France and Italy and about seven times it in Germany, as in version 1. With all three dimensions on, the terms barely move: in G+S+A every A term lies within 3 per cent of its G+A value (2 per cent in Germany and Italy), taking part stays at +0.016, +0.019 and +0.008, and G+A's search costs give exits within about 3 per cent of the targets.
+The cost of being out of work falls by a third to a half against version 1, most in Germany, where most jobless households are inactive. Dread roughly doubles in Germany, since it now covers the year's lottery at its full size. Job search accounts for about a fifth of the unemployed's measured gap in Italy, a seventh in France and a tenth in Germany. At a curvature of 0.35 these shares were two thirds, two fifths and a quarter, since a steeper cost reaches the same exits at a smaller cost in wellbeing, and the unemployed's whole term moved by at most 0.002. The model's own value of belonging is 0.10, 0.54 and 0.17 points a participant against the evidence's 0.055 to 0.081, close in France and Italy and about seven times it in Germany, as in version 1. With all three dimensions on, the terms barely move: in G+S+A every A term lies within 1 per cent of its G+A value, taking part stays at +0.016, +0.019 and +0.009, and G+A's search costs give exits within about 3 per cent of the targets.
 
 ## 7.4 Exact switches
 
@@ -107,7 +124,7 @@ Each switch was tested at the calibrated parameters in the three countries. A co
 
 # 8. Limits and open decisions
 
-I state five limits. First, the MPC over twelve months is too high in France and Germany, and in France by more than double. Second, the fall on job loss remains four to five times the benchmark, a gap I attribute largely to the absence of illiquid wealth, on version 1's annual two-asset evidence rather than a quarterly two-asset model. Third, the response of job finding to benefits is about twice the benchmark, most plausibly through the search cost curvature. Fourth, the fixed quarterly persistence misses the second autocovariance of income by up to 12 per cent in France and about a quarter in Germany's low-education cell with the benefit profile. Fifth, Italy's patience gap with dread sits at the search's bound, and the budget gap of G+S+A is of order $10^{-4}$ because the floor's tax is set with S off, as in version 1.
+I state five limits. First, the MPC over twelve months is too high in France and Germany, and in France by more than double. Second, the fall on job loss remains four to five times the benchmark, a gap I attribute largely to the absence of illiquid wealth, on version 1's annual two-asset evidence rather than a quarterly two-asset model. Third, the response of job finding to entitlement is about the same in the three countries, matching Germany, where the curvature was set, and lying below the French and Italian estimates by factors of about two and three. Fourth, the fixed quarterly persistence misses the second autocovariance of income by up to 12 per cent in France and about a quarter in Germany's low-education cell with the benefit profile. Fifth, Italy's patience gap with dread sits at the search's bound, and the budget gap of G+S+A is of order $10^{-4}$ because the floor's tax is set with S off, as in version 1.
 
 Two decisions are open. The design's rule is that a country whose quarterly economy cannot meet the annual base's targets stays annual. France meets its targets with dread in wellbeing only, and its MPC test fails by the widest margin, so whether France is reported on the quarterly or the annual economy is a choice I put to review. The inactive's gap is pooled because the model's inactive state cannot be split by main activity, and the alternatives, no gap or the unemployed's, would understate or overstate the cost.
 
@@ -121,7 +138,15 @@ Ampudia, M., Cooper, R., Le Blanc, J. and Zhu, G. (2024). MPC heterogeneity and 
 
 Chetty, R. (2008). Moral hazard versus liquidity and optimal unemployment insurance. *Journal of Political Economy* 116(2), 173-234.
 
+Citino, L., Russ and Scrutinio, V. (2026). [title to check]. *Economic Journal* 136(678).
+
+Cohen, J. and Ganong, P. (2026). [title to check]. *American Economic Review: Insights*, listed by NBER; NBER Working Paper 32832.
+
+Comité d'évaluation de la réforme de l'assurance chômage 2019-2021 (2025). *Rapport final*. Dares, Ministère du Travail, April 2025. Cited as Dares (2025).
+
 Conway, A. (2020). Master's thesis, Sciences Po.
+
+D'Ambrosio and Scrutinio, V. (2022). [title to check]. CEP Discussion Paper 1835 and WorkINPS Paper 46 (working paper).
 
 DellaVigna, S., Lindner, A., Reizer, B. and Schmieder, J. (2017). Reference-dependent job search: evidence from Hungary. *Quarterly Journal of Economics* 132(4), 1969-2018.
 
@@ -137,6 +162,10 @@ Kolsrud, J., Landais, C., Nilsson, P. and Spinnewijn, J. (2018). The optimal tim
 
 Kőszegi, B. and Rabin, M. (2009). Reference-dependent consumption plans. *American Economic Review* 99(3), 909-936.
 
+Le Barbanchon, T. (2016). [title to check]. *Labour Economics*.
+
+Lichter, A. and Schiprowski, A. (2021). [title to check]. *Journal of Public Economics* 193, 104326.
+
 MacQueen, J. (1966). A modified dynamic programming method for Markovian decision problems. *Journal of Mathematical Analysis and Applications* 14(1), 38-43.
 
 Meier, S. and Stutzer, A. (2008). Is volunteering rewarding in itself? *Economica* 75(297), 39-59.
@@ -144,3 +173,11 @@ Meier, S. and Stutzer, A. (2008). Is volunteering rewarding in itself? *Economic
 Pagel, M. (2017). Expectations-based reference-dependent life-cycle consumption. *Review of Economic Studies* 84(2), 885-934.
 
 Porteus, E. (1971). Some bounds for discounted sequential decision processes. *Management Science* 18(1), 7-11.
+
+Puterman, M. (1994). *Markov Decision Processes: Discrete Stochastic Dynamic Programming*. Wiley.
+
+Schmieder, J., von Wachter, T. and Bender, S. (2012). The effects of extended unemployment insurance over the business cycle: evidence from regression discontinuity estimates over 20 years. *Quarterly Journal of Economics* 127(2), 701-752.
+
+Scrutinio, V. (2019). [title to check]. WorkINPS Paper 18 (working paper).
+
+Sovera (2026). [title to check]. *International Tax and Public Finance*.
