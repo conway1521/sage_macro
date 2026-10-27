@@ -1,0 +1,128 @@
+# The quarterly two-asset calibration of G (V3_START.md section 141; design section 4.2), one round per run, the
+# solves in parallel: each (point, cell, permanent type) is its own job (test_egm2_quarterly.jl, about 12 to 25
+# minutes), and a reduce job (calib2q_reduce.py) adds the weighted moments, updates the Jacobian and starts the next
+# round with the next point. The first round evaluates the point and a forward step in each of the four parameters.
+# Nothing is committed: each round uploads its state and logs; the calibrated point is committed by hand.
+name: calib2q
+on:
+  workflow_dispatch:
+    inputs:
+      code:
+        description: "Country code"
+        required: true
+      cfg:
+        description: "Configuration (G; GA later)"
+        default: "G"
+      point:
+        description: "beta_annual,gap_annual,kmin_years,chi0q (chi0 in mean quarterly income)"
+        required: true
+      round:
+        description: "Round (0: the forward-difference Jacobian; set automatically after)"
+        default: "0"
+      prev:
+        description: "Run id of the previous round, whose state this round reads (set automatically)"
+        default: ""
+      maxround:
+        description: "Last round to run"
+        default: "12"
+permissions:
+  actions: write
+  contents: read
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - id: m
+        run: |
+          python3 - <<'PY'
+          import json, math, os
+          p = [float(v) for v in os.environ["P"].split(",")]
+          pts = [p]
+          if os.environ["R"] == "0":
+              H = [0.005, 0.01, 0.15, 0.3]
+              for j in range(4):
+                  q = p[:]
+                  q[j] = q[j] + H[j] if j < 2 else q[j] * math.exp(H[j])
+                  pts.append(q)
+          json.dump(pts, open("points.json", "w"))
+          inc = [{"pt": i, "ci": ci, "t": t, "args": f"{os.environ['C']} {os.environ['G']} {q[2]:.6f} 10 {ci} {t} 24 120 40 beta={q[0]:.6f} gap={q[1]:.6f} chi0q={q[3]:.6f}"}
+                 for i, q in enumerate(pts) for ci in (1, 2) for t in range(1, 6)]
+          open(os.environ["GITHUB_OUTPUT"], "a").write("matrix=" + json.dumps({"include": inc}) + "\n")
+          PY
+        env:
+          P: ${{ inputs.point }}
+          R: ${{ inputs.round }}
+          C: ${{ inputs.code }}
+          G: ${{ inputs.cfg }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: points
+          path: points.json
+  solve:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: "1.7.2"
+      - uses: julia-actions/cache@v2
+      - name: Instantiate
+        run: julia --project=SAGE_Bewley/scripts/run_env -e 'using Pkg; Pkg.instantiate()'
+      - name: Solve point ${{ matrix.pt }}, cell ${{ matrix.ci }}, type ${{ matrix.t }}
+        env:
+          SAGE_WORKERS: "1"
+          SAGE_MEM: "1"
+          SAGE_SOLVER: egm
+          SAGE_DREAD_CHOICE: "0"
+          JULIA_NUM_THREADS: "4"
+        run: |
+          cd SAGE_Bewley
+          set -o pipefail
+          julia --project=scripts/run_env scripts/test_egm2_quarterly.jl ${{ matrix.args }} 2>&1 | tee scripts/probe_output.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: res-${{ matrix.pt }}-${{ matrix.ci }}-${{ matrix.t }}
+          path: SAGE_Bewley/scripts/probe_output.txt
+  reduce:
+    needs: solve
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect the round
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/round
+          gh run download ${{ github.run_id }} -D /tmp/round
+          cp /tmp/round/points/points.json /tmp/round/points.json
+          if [ -n "${{ inputs.prev }}" ]; then gh run download ${{ inputs.prev }} -n calib2q-state -D /tmp/prev && cp /tmp/prev/state.json /tmp/state_in.json; else echo none > /tmp/none; fi
+      - name: Reduce and step
+        run: |
+          si=none; [ -f /tmp/state_in.json ] && si=/tmp/state_in.json
+          python3 SAGE_Bewley/scripts/calib2q_reduce.py ${{ inputs.code }} ${{ inputs.round }} /tmp/round $si /tmp/state.json /tmp/next.txt | tee /tmp/reduce.log
+          echo "NEXT=$(cat /tmp/next.txt)" >> "$GITHUB_ENV"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: calib2q-state
+          path: |
+            /tmp/state.json
+            /tmp/reduce.log
+            /tmp/next.txt
+      - name: Start the next round
+        if: env.NEXT != 'done' && env.NEXT != 'fail' && fromJSON(inputs.round) < fromJSON(inputs.maxround)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run calib2q.yml --ref ${{ github.ref_name }} -f code=${{ inputs.code }} -f cfg=${{ inputs.cfg }} \
+            -f point="$NEXT" -f round=$(( ${{ inputs.round }} + 1 )) -f prev=${{ github.run_id }} -f maxround=${{ inputs.maxround }}
+          echo "started round $(( ${{ inputs.round }} + 1 )) at $NEXT"

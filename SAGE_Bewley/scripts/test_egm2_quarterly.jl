@@ -24,7 +24,8 @@ using Printf
 A = filter(a -> a != "trace" && !occursin("=", a), ARGS)
 # OVERRIDES (key=value arguments): beta=, gap= annual patience of the tertiary cell and the gap below it for the other
 # (as the quarterly calibration writes them), chi0= the fixed cost in model units (default: the transaction cost times
-# the house at k_min). For probing the region the two-asset calibration will search; not a calibration.
+# the house at k_min), chi0q= the same in units of the economy's mean persistent income in work a quarter (the design's
+# unit, which the calibration driver calib2q.yml passes). For probing and for the calibration's solves.
 kv = Dict(split(a, "=")[1] => parse(Float64, split(a, "=")[2]) for a in ARGS if occursin("=", a))
 code = uppercase(A[1]); cfg = uppercase(A[2]); kyears = parse(Float64, A[3])
 H = length(A) >= 4 ? parse(Int, A[4]) : 0
@@ -58,7 +59,7 @@ for ci in 1:2
     end
 end
 ybarq = sum(cl[ci].share * wt[t] * ybar_type[(ci, t)] for ci in 1:2, t in eachindex(wt)) / sum(cl[ci].share for ci in 1:2)
-kmin = 4 * kyears * ybarq; chi0 = get(kv, "chi0", tcost[code] * kmin)
+kmin = 4 * kyears * ybarq; chi0 = haskey(kv, "chi0q") ? kv["chi0q"] * ybarq : get(kv, "chi0", tcost[code] * kmin)     # chi0q: in mean quarterly income, as the design states it
 say(@sprintf("%s %s: mean persistent income in work %.4f a quarter (cells %.4f, %.4f); k_min %.3f (%.1f years), chi0 %.4f; liquid grid top %.2f; type weights %s",
              code, cfg, ybarq, sum(wt[t] * ybar_type[(1, t)] for t in eachindex(wt)), sum(wt[t] * ybar_type[(2, t)] for t in eachindex(wt)),
              kmin, kyears, chi0, c.a_max, string(round.(wt, digits = 4))))
