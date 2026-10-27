@@ -1,4 +1,4 @@
-# search_v5q_IT_GA_g300.txt, calibrate_search_q.jl IT GA (run 40373167370, curvature gamma 3.0 from the gamma-1 costs, per quarter; NOT converged: worst error 0.047 after 6 rounds at DAMP 0.15, stopped by the runner's time limit); resume costs (V3_START.md section 141)
+# search_v5q_IT_GA_g300.txt, calibrate_search_q.jl IT GA (runs 40373167370, 40422835463; curvature gamma 3.0, per quarter, FITTED: worst error 0.022 after 6 + 3 rounds); the curvature the German PBD and level evidence select (V3_START.md sections 138 and 141)
 search_gamma = 3.0000
-search_kq_cell1 = 522.016 613.317 3172.353 3595.365 4080.88 4636.688 5262.14 5872.242 126716.953
-search_kq_cell2 = 832.201 953.726 4811.631 5305.765 5865.186 6495.11 7197.044 7941.25 175098.233
+search_kq_cell1 = 483.34736 573.10893 2973.56052 3390.02676 3873.08253 4432.98219 5072.36745 5708.55745 124487.25984
+search_kq_cell2 = 755.28511 873.54672 4422.04533 4905.41021 5458.30480 6088.34166 6800.51115 7569.63894 170931.64271

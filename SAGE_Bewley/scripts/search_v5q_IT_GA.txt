@@ -1,4 +1,4 @@
-# search_v5q_IT_GA.txt, written by calibrate_search_q.jl IT GA (run 40074352288, FITTED: worst relative error 0.027 after 6 + 3 + 3 + 2 rounds); arrival rate one; G+S+A takes these costs
-search_gamma = 0.3500
-search_kq_cell1 = 22.50719 24.94817 32.17347 35.13099 38.32216 41.74286 45.31930 48.41296 71.21192
-search_kq_cell2 = 37.62513 40.43508 50.51288 53.43783 56.54325 59.81300 63.19381 66.40048 93.46198
+# search_v5q_IT_GA.txt, calibrate_search_q.jl IT GA at the curvature fitted to measured European evidence (V3_START.md sections 138 and 141): gamma 3.0, per quarter, FITTED: worst error 0.022 (runs 40373167370, 40422835463); G+S+A takes these costs. Replaces the gamma 0.35 fit (run 40074352288), in the history.
+search_gamma = 3.0000
+search_kq_cell1 = 483.34736 573.10893 2973.56052 3390.02676 3873.08253 4432.98219 5072.36745 5708.55745 124487.25984
+search_kq_cell2 = 755.28511 873.54672 4422.04533 4905.41021 5458.30480 6088.34166 6800.51115 7569.63894 170931.64271
