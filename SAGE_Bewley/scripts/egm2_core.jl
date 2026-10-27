@@ -81,12 +81,6 @@ const K_ROUNDS = 2          # rounds of (value iteration at fixed refined target
 const WARM2 = Dict{NTuple{4,Int},Any}()
 
 """
-Illiquid grid. With k_mid = 0: zero, then exponentially spaced to k_max. With
-k_mid > 0: three fifths of the nodes on [0, k_mid] with exponent 1.5 (a few
-close to zero, then near-even spacing where households hold their wealth), the
-rest geometric from k_mid to k_max for the tail.
-"""
-"""
 Owners' imputed rent in state s (the user-cost form, `k_yield > 0`): every household's housing costs the measured rent,
 the gross rent `rent + hb` (`rent` is the tenant's net of the housing benefit), and the asset pays `k_yield k` back. A
 tenant (no equity) pays its net rent as before; an owner pays the gross rent and receives the yield on its equity, so a
@@ -94,6 +88,12 @@ larger dwelling saves more, as housing services do. Zero without a yield: owners
 """
 owner_rent(p, s) = (p.k_yield > 0 && !isempty(p.rent)) ? p.rent[s] + (isempty(p.hb) ? 0.0 : p.hb[s]) : 0.0
 
+"""
+Illiquid grid. With k_mid = 0: zero, then exponentially spaced to k_max. With
+k_mid > 0: three fifths of the nodes on [0, k_mid] with exponent 1.5 (a few
+close to zero, then near-even spacing where households hold their wealth), the
+rest geometric from k_mid to k_max for the tail.
+"""
 function illiquid_grid(k_max, nk, pexp, k_mid = 0.0)
     k_mid > 0 || return SAGEBewley.exponential_grid(0.0, k_max, nk, pexp)
     n1 = max(2, round(Int, 0.6 * nk)); n2 = nk - n1
