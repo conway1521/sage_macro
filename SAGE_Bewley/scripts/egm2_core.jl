@@ -86,6 +86,14 @@ k_mid > 0: three fifths of the nodes on [0, k_mid] with exponent 1.5 (a few
 close to zero, then near-even spacing where households hold their wealth), the
 rest geometric from k_mid to k_max for the tail.
 """
+"""
+Owners' imputed rent in state s (the user-cost form, `k_yield > 0`): every household's housing costs the measured rent,
+the gross rent `rent + hb` (`rent` is the tenant's net of the housing benefit), and the asset pays `k_yield k` back. A
+tenant (no equity) pays its net rent as before; an owner pays the gross rent and receives the yield on its equity, so a
+larger dwelling saves more, as housing services do. Zero without a yield: owners pay nothing, the first design.
+"""
+owner_rent(p, s) = (p.k_yield > 0 && !isempty(p.rent)) ? p.rent[s] + (isempty(p.hb) ? 0.0 : p.hb[s]) : 0.0
+
 function illiquid_grid(k_max, nk, pexp, k_mid = 0.0)
     k_mid > 0 || return SAGEBewley.exponential_grid(0.0, k_max, nk, pexp)
     n1 = max(2, round(Int, 0.6 * nk)); n2 = nk - n1
@@ -166,7 +174,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     nk >= 2 || error("the illiquid grid needs at least two points")
 
     wv = [(1 + p.subsidy) * p.α[s] * z_vals[s] * p.Z for s in 1:nz]
-    oth = [(-p.lumptax + transfer_at(p, s), -p.lumptax + net_participation(p, p.α[s], z_vals[s]) + transfer_at(p, s))
+    oth = [(-p.lumptax + transfer_at(p, s) - owner_rent(p, s), -p.lumptax + net_participation(p, p.α[s], z_vals[s]) + transfer_at(p, s) - owner_rent(p, s))
            for s in 1:nz]
     tfl = [floor_at(p, s) for s in 1:nz]
     bel = [p.social_strength * p.Λ * p.B[s] * Q_agg * p.qbar * belong_at(p, s) for s in 1:nz]
@@ -176,7 +184,10 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     hasT = p.k_min > 0 && any(>(0), rentv) && any(<(p.k_min), kg)
     nsl = hasT ? 2 * nk : nk
     off = [hasT && kg[m] < p.k_min ? nk : 0 for m in 1:nk]
-    othT = [(oth[s][1] - rentv[s], oth[s][2] - rentv[s]) for s in 1:nz]
+    # with a yield, oth already carries the owners' gross rent; the tenant pays its net rent instead, so the tenant's
+    # extra over an owner is rentv - owner_rent (the housing benefit's negative in states out of work)
+    rentx = [rentv[s] - owner_rent(p, s) for s in 1:nz]
+    othT = [(oth[s][1] - rentx[s], oth[s][2] - rentx[s]) for s in 1:nz]
     D = zeros(na, nz); Dp = zeros(na, nz)
     if p.dread > 0 && !isempty(p.dread_q)
         for s in 1:nz, k in 1:na
@@ -204,7 +215,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     om = [clamp((kn[m] - kg[j0[m]]) / (kg[j0[m]+1] - kg[j0[m]]), 0.0, 1.0) for m in 1:nk]
     # With the return paid out (k_payout, 2026-10-06) a keeper holds k' = k and has (Rk - 1) k more
     # cash in hand: the inner solution at liquid wealth higher by ksh. An adjuster is as before.
-    ksh = [p.k_payout ? (p.Rk - 1) * kg[m] / p.R : 0.0 for m in 1:nk]
+    ksh = [((p.k_payout ? p.Rk - 1 : 0.0) + p.k_yield) * kg[m] / p.R for m in 1:nk]      # the return paid out, and the yield
     # adjusters: the shift in effective liquid wealth for each (current k_m, target k_j)
     # targets: (lower node, weight on the node above); k_sub = 1 gives the nodes themselves
     nsub = max(p.k_sub, 1); nf = (nk - 1) * nsub + 1
@@ -216,7 +227,8 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     tj = [f == nf ? nk - 1 : (f - 1) ÷ nsub + 1 for f in 1:nf]
     tw = [f == nf ? 1.0 : ((f - 1) % nsub) / nsub for f in 1:nf]
     kt = [(1 - tw[f]) * kg[tj[f]] + tw[f] * kg[tj[f]+1] for f in 1:nf]
-    shift = [(p.Rk * kg[m] - p.chi0 - kt[f]) / p.R for m in 1:nk, f in 1:nf]
+    RkA = p.Rk + p.k_yield            # an adjuster's cash from its dwelling: the sale at Rk k and the period's yield
+    shift = [(RkA * kg[m] - p.chi0 - kt[f]) / p.R for m in 1:nk, f in 1:nf]
 
     V = zeros(na, nk, nz); Vb = zeros(na, nk, nz)
     wkey = (na, nk, nz, max(p.k_sub, 1))
@@ -345,7 +357,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                 vmax = -Inf
                 if frozen && !polish
                     # the targets of the last refining pass, held fixed
-                    num_ = p.Rk * kg[m] - p.chi0
+                    num_ = RkA * kg[m] - p.chi0
                     for j in 1:nk
                         Vo[j], Mo[j] = adj_eval(a, Vin, muin, s, j, wsel[j, i, m, s], a[i], num_, kg, p.R, of)
                         Vo[j] > vmax && (vmax = Vo[j])
@@ -386,7 +398,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                 end
                 if polish && vmax > -Inf
                     # refine the options that carry weight: golden section around the best step
-                    num = p.Rk * kg[m] - p.chi0; cut = vmax - 20 * theta_adj
+                    num = RkA * kg[m] - p.chi0; cut = vmax - 20 * theta_adj
                     for j in 1:nk-1
                         (Vo[j] < cut || j == jT) && continue
                         w0 = wsel[j, i, m, s]
@@ -524,7 +536,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     fast && get(ENV, "SAGE_WARM2", "1") == "1" && (WARM2[wkey] = (V = copy(V), Vb = copy(Vb)))
     dist = two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Padj, qadj;
                                   wsel = wsel, ksh = ksh, death = p0.death, oth = oth, wv = wv, trs = [transfer_at(p, s) for s in 1:nz],
-                                  off = off, rent = rentv, sch = sch, Pf = Pf, Ps = Ps)
+                                  off = off, rent = rentx, sch = sch, Pf = Pf, Ps = Ps)
     λ = dist.lambda; P1s = dist.P1; es = dist.e
     trace && @printf("  distribution %.1f s\n", time() - t2)
     part = 0.0; meaninc = 0.0; partbase = 0.0
@@ -539,8 +551,8 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
      lambda = λ, P1 = P1s, e = es, e_d = dist.e_d, cbar = dist.cbar, ybar = dist.ybar, post = dist.post,
      Pi = Π, Padj = Padj, V = V, Vb = Vb, z_vals = z_vals,
      iters = iters, stalled = stall, relax = relax, theta = theta, inner = (c = cin, e = ein, bp = bpin, P1 = P1in), qadj = qadj,
-     j0 = j0, om = om, shift = shift, ksh = ksh, wsel = wsel, adjp = (Rk = p.Rk, chi0 = p.chi0, R = p.R),
-     off = off, rent = rentv, tenant = [kg[m] < p.k_min && hasT for m in 1:nk], floor = flr,
+     j0 = j0, om = om, shift = shift, ksh = ksh, wsel = wsel, adjp = (Rk = p.Rk + p.k_yield, chi0 = p.chi0, R = p.R),
+     off = off, rent = rentx, tenant = [kg[m] < p.k_min && hasT for m in 1:nk], floor = flr,
      search_xs = xs, Pf = Pf, Ps = Ps,
      timing = (inner = t_in, outer = t_out, howard = t_how, howard_steps = nhow, threads = nth, sparse = usesp))
 end
@@ -636,7 +648,7 @@ function howard_step!(Vout, V, Vin, p, a, kg, Π, Πts, usesp, flw, bpin, P1in, 
     end
     Threads.@threads for s in 1:nz
         @inbounds for m in 1:nk
-            jl = j0[m] + off[m]; w = om[m]; num = p.Rk * kg[m] - p.chi0; of = off[m]
+            jl = j0[m] + off[m]; w = om[m]; num = (p.Rk + p.k_yield) * kg[m] - p.chi0; of = off[m]
             for i in 1:na
                 if ksh[m] == 0
                     Vk = (1 - w) * Vin[i, jl, s] + w * Vin[i, jl+1, s]
@@ -753,7 +765,7 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
             for (j, wn) in ((o, 1 - ω), (o + 1, ω))
             wn <= 0 && continue
             wt = pa * q * wn; wt <= 1e-12 && continue
-            be = min(adj_liquid(a[i], kg[m], kg, o, ω, p.Rk, p.chi0, p.R), a[end])
+            be = min(adj_liquid(a[i], kg[m], kg, o, ω, p.Rk + p.k_yield, p.chi0, p.R), a[end])
             r = clamp(searchsortedlast(a, be), 1, na - 1)
             js = j + of
             p1 = clamp(lin_at(a, view(P1in, :, js, s), be, r), 0.0, 1.0)
@@ -912,7 +924,7 @@ function two_asset_welfare_parts(p0::SAGEParams, sol)
     na, nk, ns = length(a), length(kg), length(z)
     κ = 1.0 + p.commute
     wv = [(1 + p.subsidy) * p.α[s] * z[s] * p.Z for s in 1:ns]
-    oth = [(-p.lumptax + transfer_at(p, s), -p.lumptax + net_participation(p, p.α[s], z[s]) + transfer_at(p, s)) for s in 1:ns]
+    oth = [(-p.lumptax + transfer_at(p, s) - owner_rent(p, s), -p.lumptax + net_participation(p, p.α[s], z[s]) + transfer_at(p, s) - owner_rent(p, s)) for s in 1:ns]
     tfl = [floor_at(p, s) for s in 1:ns]
     bel = [p.social_strength * p.Λ * p.B[s] * p.qbar * belong_at(p, s) for s in 1:ns]
     idx(i, m, s) = i + (m - 1) * na + (s - 1) * na * nk
@@ -1029,7 +1041,7 @@ function two_asset_cell_summary(p::SAGEParams, sol; thresholds = nothing)
     # tenants; the tax that finances the floor (floor_tax_of) finances both
     fout = 0.0
     wvv = [(1 + p.subsidy) * p.α[s] * z[s] * p.Z for s in 1:nz]
-    othv = [(-p.lumptax + transfer_at(p, s), -p.lumptax + net_participation(p, p.α[s], z[s]) + transfer_at(p, s)) for s in 1:nz]
+    othv = [(-p.lumptax + transfer_at(p, s) - owner_rent(p, s), -p.lumptax + net_participation(p, p.α[s], z[s]) + transfer_at(p, s) - owner_rent(p, s)) for s in 1:nz]
     ten = hasproperty(sol, :tenant) ? sol.tenant : falses(nk)
     @inbounds for i_z in 1:nz, m in 1:nk, i_a in 1:na
         w = λ[i_a, m, i_z]

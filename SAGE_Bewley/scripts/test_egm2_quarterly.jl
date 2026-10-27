@@ -27,7 +27,7 @@ A = filter(a -> a != "trace" && !occursin("=", a), ARGS)
 # the house at k_min), chi0q= the same in units of the economy's mean persistent income in work a quarter (the design's
 # unit, which the calibration driver calib2q.yml passes). For probing and for the calibration's solves. Numerical
 # settings for diagnosis: theta_adj= (the keep-or-adjust smoothing, default 0.01), ksub= (targets per illiquid interval, 4).
-kv = Dict(split(a, "=")[1] => parse(Float64, split(a, "=")[2]) for a in ARGS if occursin("=", a))
+kv = Dict(split(a, "=")[1] => parse(Float64, split(a, "=")[2]) for a in ARGS if occursin("=", a) && a != "kyield=jst")
 code = uppercase(A[1]); cfg = uppercase(A[2]); kyears = parse(Float64, A[3])
 H = length(A) >= 4 ? parse(Int, A[4]) : 0
 csel = length(A) >= 5 ? parse(Int, A[5]) : 0; tsel = length(A) >= 6 ? parse(Int, A[6]) : 0
@@ -60,6 +60,12 @@ for ci in 1:2
     end
 end
 ybarq = sum(cl[ci].share * wt[t] * ybar_type[(ci, t)] for ci in 1:2, t in eachindex(wt)) / sum(cl[ci].share for ci in 1:2)
+# kyield=jst: the asset's net rental yield (Jorda and co-authors, 1980 to 2015, deflated rent component, per cent a year,
+# data/housing/housing_evidence.md), paid each quarter on equity, owners paying the gross rent (the user-cost form, the
+# user's decision of 27 October); kyield=X a given annual yield; absent: none, the first design
+yld = Dict("FR" => 0.0392, "DE" => 0.0430, "IT" => 0.0353)
+kyA = any(a -> a == "kyield=jst", ARGS) ? yld[code] : get(kv, "kyield", 0.0)
+kyq = (1 + kyA)^(1 / 4) - 1
 kmin = 4 * kyears * ybarq; chi0 = haskey(kv, "chi0q") ? kv["chi0q"] * ybarq : get(kv, "chi0", tcost[code] * kmin)     # chi0q: in mean quarterly income, as the design states it
 say(@sprintf("%s %s: mean persistent income in work %.4f a quarter (cells %.4f, %.4f); k_min %.3f (%.1f years), chi0 %.4f; liquid grid top %.2f; type weights %s",
              code, cfg, ybarq, sum(wt[t] * ybar_type[(1, t)] for t in eachindex(wt)), sum(wt[t] * ybar_type[(2, t)] for t in eachindex(wt)),
@@ -72,10 +78,10 @@ cl2 = cells_of(c2)
 acc = zeros(9); kacc = zeros(5); wsum = 0.0
 for ci in (csel == 0 ? (1:2) : (csel:csel)), t in (tsel == 0 ? eachindex(wt) : (tsel:tsel))
     p = params_of(c2, cl2[ci])[t]
-    p = update(p; Rk = (1 + gain[code])^(1 / 4))
+    p = update(p; Rk = (1 + gain[code])^(1 / 4), k_yield = kyq)
     w = cl2[ci].share * wt[t]
-    say(@sprintf("cell %d type %d (income %.3f of the mean, weight %.4f): %d states, liquid %d x illiquid %d, R %.5f, Rk %.5f, floor %.4f, rent %.4f to %.4f, death %.5f, %d threads, Howard %d",
-                 ci, t, ybar_type[(ci, t)] / ybarq, w, p.nz, p.na, p.nk, p.R, p.Rk, p.cfloor, minimum(p.rent), maximum(p.rent), p.death, Threads.nthreads(), H))
+    say(@sprintf("cell %d type %d (income %.3f of the mean, weight %.4f): %d states, liquid %d x illiquid %d, R %.5f, Rk %.5f, yield %.5f, floor %.4f, rent %.4f to %.4f, death %.5f, %d threads, Howard %d",
+                 ci, t, ybar_type[(ci, t)] / ybarq, w, p.nz, p.na, p.nk, p.R, p.Rk, p.k_yield, p.cfloor, minimum(p.rent), maximum(p.rent), p.death, Threads.nthreads(), H))
     tt = @elapsed s = solve_two_asset_egm(p, 1.0; full = true, howard = H, trace = trace, theta_adj = get(kv, "theta_adj", 0.01))
     a = s.a; kg = s.k; λ = s.lambda
     own = sum(sum(λ[:, m, :]) for m in 1:length(kg) if !s.tenant[m]; init = 0.0)

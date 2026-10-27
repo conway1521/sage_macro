@@ -25,6 +25,9 @@ on:
       maxround:
         description: "Last round to run"
         default: "12"
+      extra:
+        description: "Arguments added to every solve (e.g. kyield=jst, the asset's rental yield)"
+        default: ""
 permissions:
   actions: write
   contents: read
@@ -47,7 +50,7 @@ jobs:
                   q[j] = q[j] + H[j] if j < 2 else q[j] * math.exp(H[j])
                   pts.append(q)
           json.dump(pts, open("points.json", "w"))
-          inc = [{"pt": i, "ci": ci, "t": t, "args": f"{os.environ['C']} {os.environ['G']} {q[2]:.6f} 10 {ci} {t} 24 120 40 beta={q[0]:.6f} gap={q[1]:.6f} chi0q={q[3]:.6f}"}
+          inc = [{"pt": i, "ci": ci, "t": t, "args": f"{os.environ['C']} {os.environ['G']} {q[2]:.6f} 10 {ci} {t} 24 120 40 beta={q[0]:.6f} gap={q[1]:.6f} chi0q={q[3]:.6f} {os.environ['X']}".strip()}
                  for i, q in enumerate(pts) for ci in (1, 2) for t in range(1, 6)]
           open(os.environ["GITHUB_OUTPUT"], "a").write("matrix=" + json.dumps({"include": inc}) + "\n")
           PY
@@ -56,6 +59,7 @@ jobs:
           R: ${{ inputs.round }}
           C: ${{ inputs.code }}
           G: ${{ inputs.cfg }}
+          X: ${{ inputs.extra }}
       - uses: actions/upload-artifact@v4
         with:
           name: points
@@ -124,5 +128,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh workflow run calib2q.yml --ref ${{ github.ref_name }} -f code=${{ inputs.code }} -f cfg=${{ inputs.cfg }} \
-            -f point="$NEXT" -f round=$(( ${{ inputs.round }} + 1 )) -f prev=${{ github.run_id }} -f maxround=${{ inputs.maxround }}
+            -f point="$NEXT" -f round=$(( ${{ inputs.round }} + 1 )) -f prev=${{ github.run_id }} -f maxround=${{ inputs.maxround }} -f extra="${{ inputs.extra }}"
           echo "started round $(( ${{ inputs.round }} + 1 )) at $NEXT"
