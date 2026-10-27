@@ -13,8 +13,9 @@
 # moments as the cell's (run 40404864895: nobody saves). Now each (cell, type) is solved and reported with its
 # weight, and the moments solved in one job are aggregated by weight (the cell's share times the type's weight).
 #
-#   JULIA_NUM_THREADS=4 julia --project=scripts/run_env scripts/test_egm2_quarterly.jl CODE CFG KMIN_YEARS [H] [CELL] [TYPE] [NK] [NB] [trace]
-#   CELL 1 or 2, 0 for both (default); TYPE a permanent type's index, 0 for all (default)
+#   JULIA_NUM_THREADS=4 julia --project=scripts/run_env scripts/test_egm2_quarterly.jl CODE CFG KMIN_YEARS [H] [CELL] [TYPE] [NK] [NB] [KMAX_YEARS] [trace]
+#   CELL 1 or 2, 0 for both (default); TYPE a permanent type's index, 0 for all (default); KMAX_YEARS the illiquid grid's
+#   top in years of mean income (default 150: the plain iteration then cycles in empty corners at the top of both grids)
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 A = filter(!=("trace"), ARGS)
@@ -22,6 +23,7 @@ code = uppercase(A[1]); cfg = uppercase(A[2]); kyears = parse(Float64, A[3])
 H = length(A) >= 4 ? parse(Int, A[4]) : 0
 csel = length(A) >= 5 ? parse(Int, A[5]) : 0; tsel = length(A) >= 6 ? parse(Int, A[6]) : 0
 nk = length(A) >= 7 ? parse(Int, A[7]) : 24; nb = length(A) >= 8 ? parse(Int, A[8]) : 120
+kmax_years = length(A) >= 9 ? parse(Float64, A[9]) : 150.0     # the illiquid grid's top in years of mean income
 trace = get(ENV, "SAGE_TRACE", "0") == "1" || "trace" in ARGS
 tcost = Dict("FR" => 0.1414, "DE" => 0.0782, "IT" => 0.1200)          # data/housing/housing_evidence.md, item 4
 say(x...) = (println(x...); flush(stdout))
@@ -48,7 +50,7 @@ say(@sprintf("%s %s: mean persistent income in work %.4f a quarter (cells %.4f, 
              code, cfg, ybarq, sum(wt[t] * ybar_type[(1, t)] for t in eachindex(wt)), sum(wt[t] * ybar_type[(2, t)] for t in eachindex(wt)),
              kmin, kyears, chi0, c.a_max, string(round.(wt, digits = 4))))
 c2 = SAGEConfig(c; illiquid = true, solver = :egm, chi0 = chi0, k_payout = false, rent_share = share[code], k_min = kmin,
-                hbU_vec = hbU, hb_long = hbL, nk = nk, k_max = 4 * 150.0 * ybarq, k_sub = 4, k_mid = 0.0, nb = nb, b_max = c.a_max)     # the liquid grid's top as the one-asset model's
+                hbU_vec = hbU, hb_long = hbL, nk = nk, k_max = 4 * kmax_years * ybarq, k_sub = 4, k_mid = 0.0, nb = nb, b_max = c.a_max)     # the liquid grid's top as the one-asset model's
 cl2 = cells_of(c2)
 # moments solved here, by weight: ownership, hand-to-mouth poor and wealthy, MPC quarter and 12 months, liquid, illiquid,
 # adjusting, outlay, and the Kolsrud masses (the fall is computed from the summed masses)
