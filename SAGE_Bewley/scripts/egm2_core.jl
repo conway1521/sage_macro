@@ -208,6 +208,11 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     # adjusters: the shift in effective liquid wealth for each (current k_m, target k_j)
     # targets: (lower node, weight on the node above); k_sub = 1 gives the nodes themselves
     nsub = max(p.k_sub, 1); nf = (nk - 1) * nsub + 1
+    # With tenure, the interval that crosses k_min offers its lower node only: a target inside it would be a lottery
+    # between renting and owning (the split between the nodes), which no household can buy. With four targets to an
+    # interval such lotteries made ownership 0.68 where the nodes alone give 0.05 (Germany cell 2 type 4, runs
+    # 40504176503, 40504189298). Every other interval keeps its targets (a split between two dwellings' equity).
+    jT = hasT ? something(findlast(<(p.k_min), kg), 0) : 0
     tj = [f == nf ? nk - 1 : (f - 1) ÷ nsub + 1 for f in 1:nf]
     tw = [f == nf ? 1.0 : ((f - 1) % nsub) / nsub for f in 1:nf]
     kt = [(1 - tw[f]) * kg[tj[f]] + tw[f] * kg[tj[f]+1] for f in 1:nf]
@@ -372,7 +377,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                 end
                 # one option per node: the best target in [k_j, k_j+1) (the node itself when k_sub = 1)
                 for j in 1:nk
-                    f1 = (j - 1) * nsub + 1; f2 = j == nk ? nf : j * nsub
+                    f1 = (j - 1) * nsub + 1; f2 = j == nk ? nf : j == jT ? f1 : j * nsub
                     fb = f1
                     for f in f1+1:f2
                         Vj[f] > Vj[fb] && (fb = f)
@@ -383,7 +388,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                     # refine the options that carry weight: golden section around the best step
                     num = p.Rk * kg[m] - p.chi0; cut = vmax - 20 * theta_adj
                     for j in 1:nk-1
-                        Vo[j] < cut && continue
+                        (Vo[j] < cut || j == jT) && continue
                         w0 = wsel[j, i, m, s]
                         lo = max(w0 - 1 / nsub, 0.0); hi = min(w0 + 1 / nsub, 1.0)
                         x1 = hi - GOLD * (hi - lo); x2 = lo + GOLD * (hi - lo)
