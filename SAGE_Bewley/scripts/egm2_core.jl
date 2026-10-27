@@ -93,7 +93,7 @@ function illiquid_grid(k_max, nk, pexp, k_mid = 0.0)
 end
 function illiquid_grid(p::SAGEParams)
     g = illiquid_grid(p.k_max, p.nk, p.pexp, p.k_mid)
-    if p.k_min > 0 && !isempty(p.rent) && p.k_min < g[end]
+    if p.k_min > 0 && any(>(0), p.rent) && p.k_min < g[end]        # as hasT in the solver
         if get(ENV, "SAGE_TENANT_NODES", "0") == "1"
             # the first tenure grid: the node nearest the ownership threshold moved onto it, the nodes below it
             # tenant nodes with some equity
