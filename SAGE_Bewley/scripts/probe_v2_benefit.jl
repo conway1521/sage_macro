@@ -21,6 +21,12 @@
 # followed with the baseline's policies, its assets on entry raised by X (agency_shock.jl, part 3). X is the equal cash
 # value printed by the severance mode. Set before the workers start, which inherit it.
 length(ARGS) >= 3 && ARGS[2] == "cohort" && (ENV["SAGE_COHORT_LUMP"] = ARGS[3])
+# REVIEW OPTIONS (the methods review of 27 October): grp=LO,HI restricts the lump-sum cohort, with and without the lump
+# sum, to job losers with liquid wealth in [LO, HI) times their last income in work (agency_shock.jl, part 3), in the
+# cohort and benefit modes alike; entN gives those entering unemployment from inactivity no entitlement (the design's
+# spell without it, paid as L), so that a spell broken by inactivity does not restart the benefit clock.
+"dh1" in ARGS && (ENV["SAGE_DREAD_HORIZON"] = "1")      # dread of the coming quarter, not the year (sensitivity)
+let gi = findfirst(a -> startswith(a, "grp="), ARGS); gi === nothing || (ENV["SAGE_COHORT_GROUP"] = split(ARGS[gi], "=")[2]); end
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = uppercase(ARGS[1]); cfg = "GA"
@@ -34,11 +40,15 @@ sq = readkv(joinpath(@__DIR__, "search_v5q_$(code)_$(cfg)" * (ct > 0 ? "_" * spl
 γq = parse(Float64, sq["search_gamma"])
 kq = (parse.(Float64, split(sq["search_kq_cell1"])), parse.(Float64, split(sq["search_kq_cell2"])))
 ca = country_config(code; config = cfg, v3 = :v5m, S = false, A = true)
-cb = duration_config(ca)
+entN = "entN" in ARGS
+cb = duration_config(ca; entitle = entN)
 c = SAGEConfig(cb; beta_bar = β^(1 / 4), beta_cell = ((β - gap)^(1 / 4) - β^(1 / 4), 0.0), out_ls = 0.0, search = true, search_gamma = γq, search_kq = kq)
 get(q, "dread_mode", "") == "overlay" && (c = SAGEConfig(c; dread_mode = :overlay))
 nodread && (c = SAGEConfig(c; dread_mode = :overlay))
-println(code, " G+A, ", mode, ", dread ", c.dread_mode === :overlay ? "in wellbeing only" : "in choices")
+println(code, " G+A, ", mode, ", dread ", c.dread_mode === :overlay ? "in wellbeing only" : "in choices", entN ? ", no entitlement on entry from inactivity" : "",
+        haskey(ENV, "SAGE_COHORT_GROUP") ? ", lump cohort restricted to liquid wealth in [" * ENV["SAGE_COHORT_GROUP"] * ") of income" : "")
+"The MPC within the quarter, as the twelve-month one is pooled in sage_modular.jl."
+mpcq(r) = sum(cells_of(c)[g].share * sum(r.pooled[g].mpcmass) for g in 1:2) / sum(cells_of(c)[g].share * sum(r.pooled[g].mass) for g in 1:2)
 function exits(r)
     e = r.search_exit; nU = cb.nU
     # mass-weighted over the cells' unemployed in the entitled quarters: the cells' masses from the pooled distribution
@@ -99,6 +109,12 @@ el = log(x1 / x0) / log(1.1)
 # the basis of the cohort mode, so that the two compare like with like
 @printf("  job losers' cohort: chance over the entitled quarters %.6f -> %.6f, log change %.6f\n",
         r0.lump_cohort.base, r1.lump_cohort.base, log(r1.lump_cohort.base / r0.lump_cohort.base))
+# the duration elasticity the evidence reports (the review's first point): months out of work after job loss, through
+# every state out of work, capped at 36 and 48, without and with the change, against log(1.1)
+@printf("  time out of work after job loss, capped at 36 months: %.4f -> %.4f, duration elasticity %.4f; capped at 48: %.4f -> %.4f, %.4f\n",
+        r0.nonemp.months36, r1.nonemp.months36, log(r1.nonemp.months36 / r0.nonemp.months36) / log(1.1),
+        r0.nonemp.months48, r1.nonemp.months48, log(r1.nonemp.months48 / r0.nonemp.months48) / log(1.1))
+@printf("  MPC within the quarter %.4f, over twelve months %.4f (baseline)\n", mpcq(r0), r0.mpc12)
 for g in 1:2
     @printf("  cell %d chance by quarter: %s -> %s\n", g, string(round.(r0.search_exit[g], digits = 5)), string(round.(r1.search_exit[g], digits = 5)))
 end

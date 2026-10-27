@@ -27,7 +27,10 @@
 # solved once (no poverty thresholds, which the account does not use; a second pass would rebuild S's families). The
 # model's terms are shares of consumption, so they read the same at a quarterly period.
 #
-#   julia --project=scripts/run_env scripts/wellbeing_account.jl CODE [CFG] [q]        (CFG: G GA GS GSA; default GSA)
+#   julia --project=scripts/run_env scripts/wellbeing_account.jl CODE [CFG] [q] [dh1]        (CFG: G GA GS GSA; default GSA)
+# dh1 (the methods review of 27 October): dread of the coming QUARTER's lottery instead of the year's (dread_horizon 1,
+# SAGE_DREAD_HORIZON), every parameter held: a sensitivity of the dread term's horizon, not a calibration.
+"dh1" in ARGS && (ENV["SAGE_DREAD_HORIZON"] = "1")
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = uppercase(ARGS[1]); cfg = length(ARGS) >= 2 ? uppercase(ARGS[2]) : "GSA"; Q = length(ARGS) >= 3 && ARGS[3] == "q"

@@ -139,7 +139,7 @@ function duration_config(c::SAGEConfig; ppy::Int = 4, nU::Int = 8, nz::Int = 7, 
     dbq = ntuple(gi -> (c.beta_bar + c.beta_cell[gi])^(1 / ppy) - bq, 2)
     SAGEConfig(c; period = ppy, nU = nU, f_find = hU[1], hU_vec = hU, sU_vec = sU, f_long = (hL, hL), sL = sL,
                withN = true, iotaE = ιE, nuE = νE, nuU = νU, eps_stay = eps_stay, entN = entitle,
-               rrU_vec = profile ? rrU : Float64[], rrU_pub_vec = rrUp, rr_long = rrL, long_public_share = lps, dread_horizon = ppy, delta = δq, beta_bar = bq, beta_cell = dbq,
+               rrU_vec = profile ? rrU : Float64[], rrU_pub_vec = rrUp, rr_long = rrL, long_public_share = lps, dread_horizon = parse(Int, get(ENV, "SAGE_DREAD_HORIZON", string(ppy))), delta = δq, beta_bar = bq, beta_cell = dbq,
                rho_cell = (inc[1].ρq, inc[2].ρq), eta_cell = (inc[1].sηq, inc[2].sηq), sd_eps_cell = (inc[1].sεq, inc[2].sεq),
                R_one = isnan(c.R_one) ? NaN : c.R_one^(1 / ppy), a_max = ppy * c.a_max, na = max(c.na, 300))
 end

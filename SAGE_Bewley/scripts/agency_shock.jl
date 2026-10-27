@@ -236,13 +236,23 @@ function agency_summary(p::SAGEParams, sol)
             #    unchanged. The cohort is followed through the spell's quarters, with and without the lump sum: in
             #    lumpmass, the mass in each quarter of the spell and its exits to work, base then with the lump sum.
             LUMP = parse(Float64, get(ENV, "SAGE_COHORT_LUMP", "0.1"))
+            # GROUP (SAGE_COHORT_GROUP="lo,hi", the methods review of 27 October): the cohort restricted to job losers whose
+            # liquid wealth in their last period in work is in [lo, hi) times that period's income, both with and without
+            # the lump sum, so that the liquidity share can be read by buffer. Unset: every job loser (the fall and the
+            # time out of work above are never restricted).
+            grp = parse.(Float64, split(get(ENV, "SAGE_COHORT_GROUP", "-1e300,1e300"), ","))
+            ingrp(i, s) = grp[1] <= a[i] / max(ybar[i, s], 1e-12) < grp[2]
             ds_ = [stv[s] === :U && dur[s] < NONENT ? dur[s] : 0 for s in 1:ns]; nUq = maximum(ds_)
             if 4 * nUq <= ns && LUMP > 0
-                cl = zeros(na, ns)
+                cl = zeros(na, ns); c1g = zeros(na, ns)
                 for s in 1:ns
                     empv[s] || continue
                     for i in 1:na
-                        m = λ[i, s]; m <= 0 && continue
+                        m = λ[i, s]; (m <= 0 || !ingrp(i, s)) && continue
+                        step!(i, s) do q, k, wk, s2
+                            U1[s2] || return
+                            c1g[k, s2] += m * q * wk; c1g[k+1, s2] += m * q * (1 - wk)
+                        end
                         Δ = LUMP * ybar[i, s]
                         for d in (0, 1)
                             w = d == 1 ? P1[i, s] : 1 - P1[i, s]; w <= 0 && continue
@@ -255,7 +265,7 @@ function agency_summary(p::SAGEParams, sol)
                         end
                     end
                 end
-                for (j, c0) in enumerate((c1, cl))
+                for (j, c0) in enumerate((c1g, cl))
                     cur = c0
                     for dq in 1:nUq
                         nxt = zeros(na, ns)
