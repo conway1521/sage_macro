@@ -221,6 +221,11 @@ Base.@kwdef struct SAGEParams
     # the housing services of a dwelling of equity k (Jorda, Knoll, Kuvshinov, Schularick and Taylor 2019, net rental
     # yields). With k_yield > 0 owners pay the gross rent too (egm2_core.jl, owner_rent). 0 reproduces every earlier result.
     k_yield::Float64 = 0.0
+    # MORTGAGES (version 3, the user's decision of 27 October; Berger, Guerrieri, Lorenzoni and Vavra 2018): liquid
+    # wealth may fall to -ltv times next period's illiquid wealth, at the gross rate Rm a period on the negative part
+    # (Rm = 0: the liquid rate R). ltv = 0: no borrowing, every earlier result unchanged. Used only by egm2_core.jl.
+    ltv::Float64 = 0.0
+    Rm::Float64 = 0.0
     # Tenure (version 2's two assets, design section 4.1; V3_START.md section 139): a household whose illiquid
     # wealth at the start of the period is below k_min is a tenant and pays rent[s] (per income state, in the
     # model's income units) out of the period's cash. Empty rent or k_min = 0: nobody pays rent, as before.

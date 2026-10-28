@@ -23,6 +23,14 @@
 
 using SparseArrays, LinearAlgebra
 
+# MORTGAGES (version 3): the gross rate on liquid wealth is R above zero and Rm below (Rm = 0: R throughout). xcash is
+# the cash a period's liquid wealth gives, binv the liquid wealth that gives a cash amount; with Rm = 0 they are R b and
+# x / R exactly, the forms used before.
+@inline Rm_of(p) = p.Rm > 0 ? p.Rm : p.R
+@inline xcash(p, b) = b >= 0 ? p.R * b : Rm_of(p) * b
+@inline binv(p, x) = x >= 0 ? x / p.R : x / Rm_of(p)
+@inline Rb_at(p, b) = b >= 0 ? p.R : Rm_of(p)
+
 """
     egm_constrained(p, a_i, w, other, tfl, d)
 
@@ -70,20 +78,22 @@ upper-envelope rule where the endogenous grid is not monotone.
 """
 function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::Int,
                      w::Float64, other::Float64, tfl::Float64, belong::Float64,
-                     con_c, con_e, aend, cend, eend, Ds, Dps)
+                     con_c, con_e, aend, cend, eend, Ds, Dps; k0::Int = 1)
+    # k0 (mortgages): the first feasible next-asset node, the borrowing limit of this problem's next illiquid wealth;
+    # con_c and con_e are then the solutions with next assets at a[k0]. k0 = 1: as before.
     na = length(a)
     κ = 1.0 + p.commute
     tmax = (1.0 - tfl - p.qbar * d) / κ
     efix = (isempty(p.effort_set) || w <= 0) ? NaN : p.effort_set[s]      # effort set by the job, if any
     if tmax < 0 || (!isnan(efix) && efix > tmax)
         @inbounds for i in 1:na
-            cd[i, s] = NaN; ed[i, s] = 0.0; apd[i, s] = a[1]; vd[i, s] = -Inf
+            cd[i, s] = NaN; ed[i, s] = 0.0; apd[i, s] = a[k0]; vd[i, s] = -Inf
         end
         return
     end
     # --- endogenous grid: one point per next-asset node ---------------------
     monotone = true
-    @inbounds for k in 1:na
+    @inbounds for k in k0:na
         # dread (behavioural mode) falls as savings rise, so it adds to the
         # marginal value of saving: Gamma c^-gamma = beta E V_a - D'(a')
         m = max(p.β * EVas[k] - Dps[k], 1e-12)     # zero where every next state is on the floor
@@ -95,23 +105,23 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
             T = (w * c^(-p.γ) / (p.ϕ * κ * p.pc))^(1 / p.ψ)
             e = clamp((T - tfl - p.qbar * d) / κ, 0.0, tmax)
         end
-        aend[k] = (p.pc * c + a[k] - w * e - other) / p.R
+        aend[k] = binv(p, p.pc * c + a[k] - w * e - other)
         cend[k] = c; eend[k] = e
-        k > 1 && aend[k] <= aend[k-1] && (monotone = false)
+        k > k0 && aend[k] <= aend[k-1] && (monotone = false)
     end
     # --- back onto the fixed grid ---------------------------------------------
     # every grid point starts from the constrained candidate (next assets at the
     # lowest node)
     @inbounds for i in 1:na
         cc = con_c[i, s]; ec = con_e[i, s]
-        cd[i, s] = cc; ed[i, s] = ec; apd[i, s] = a[1]
-        vd[i, s] = isnan(cc) ? -Inf : egm_flow(p, cc, tfl + κ * ec + p.qbar * d) + belong * d - Ds[1] + p.β * EVs[1]
+        cd[i, s] = cc; ed[i, s] = ec; apd[i, s] = a[k0]
+        vd[i, s] = isnan(cc) ? -Inf : egm_flow(p, cc, tfl + κ * ec + p.qbar * d) + belong * d - Ds[k0] + p.β * EVs[k0]
     end
     if monotone
-        j = 1
+        j = k0
         @inbounds for i in 1:na
             ai = a[i]
-            ai >= aend[1] || continue
+            ai >= aend[k0] || continue
             while j < na - 1 && aend[j+1] <= ai
                 j += 1
             end
@@ -123,7 +133,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
                 # THE TOP OF THE GRID (2026-10-16; V3_START.md section 100). Past the last endogenous point the
                 # interpolation runs beyond the grid's top. Next assets stay at the top, and consumption and
                 # hours come from the budget there, so the budget holds; until now only a' was capped.
-                cc, ec = egm_constrained(p, p.R * ai - a[end] + other, w, tfl, d; efix = efix)
+                cc, ec = egm_constrained(p, xcash(p, ai) - a[end] + other, w, tfl, d; efix = efix)
                 isnan(cc) && continue
                 c = cc; e = ec; ap = a[end]
             end
@@ -132,16 +142,16 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
             # constrained candidate there made the iteration cycle between two
             # approximations of the same point (2026-09-28).
             if c > 0
-                vd[i, s] = egm_flow(p, c, tfl + κ * e + p.qbar * d) + belong * d - dread_at(p, s, max(ap, a[1])) +
+                vd[i, s] = egm_flow(p, c, tfl + κ * e + p.qbar * d) + belong * d - dread_at(p, s, max(ap, a[k0])) +
                            p.β * SAGEBewley.interp_lin(a, EVs, ap)
-                cd[i, s] = c; ed[i, s] = e; apd[i, s] = max(ap, a[1])
+                cd[i, s] = c; ed[i, s] = e; apd[i, s] = max(ap, a[k0])
             end
         end
     else
         # upper envelope: each endogenous segment is compared only at the grid
         # points it covers (2026-09-29; the same comparisons, in segment order,
         # as the point-by-point loop it replaces, which was O(na^2))
-        @inbounds for k in 1:na-1
+        @inbounds for k in k0:na-1
             lo, hi = minmax(aend[k], aend[k+1])
             hi == lo && continue
             ilo = searchsortedfirst(a, lo); ihi = searchsortedlast(a, hi)
@@ -151,7 +161,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
                 c = cend[k] + t * (cend[k+1] - cend[k])
                 e = eend[k] + t * (eend[k+1] - eend[k])
                 ap = a[k] + t * (a[k+1] - a[k])
-                (c <= 0 || ap < a[1]) && continue
+                (c <= 0 || ap < a[k0]) && continue
                 v = egm_flow(p, c, tfl + κ * e + p.qbar * d) + belong * d - dread_at(p, s, ap) +
                     p.β * SAGEBewley.interp_lin(a, EVs, ap)
                 if v > vd[i, s]
@@ -159,8 +169,8 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
                 end
             end
         end
-        amax = maximum(aend)
-        km = argmax(aend); km = km == 1 ? 1 : km - 1
+        amax = maximum(view(aend, k0:na))
+        km = k0 - 1 + argmax(view(aend, k0:na)); km = km == k0 ? k0 : km - 1
         @inbounds for i in 1:na
             ai = a[i]
             ai > amax || continue     # beyond the endogenous grid: extrapolate the top segment
@@ -168,7 +178,7 @@ function egm_branch!(cd, ed, apd, vd, p::SAGEParams, a, EVs, EVas, s::Int, d::In
             c = cend[km] + t * (cend[km+1] - cend[km]); e = clamp(eend[km] + t * (eend[km+1] - eend[km]), 0.0, tmax)
             ap = a[km] + t * (a[km+1] - a[km])
             if ap > a[end]                      # the top of the grid, as in the monotone case
-                cc, ec = egm_constrained(p, p.R * ai - a[end] + other, w, tfl, d; efix = efix)
+                cc, ec = egm_constrained(p, xcash(p, ai) - a[end] + other, w, tfl, d; efix = efix)
                 isnan(cc) && continue
                 c = cc; e = ec; ap = a[end]
             end
@@ -190,7 +200,7 @@ saving is taxed away one for one next period while it stays on the floor).
 `fl` marks the points on the floor: their marginal value of assets is zero.
 """
 function apply_floor!(cd, ed, apd, vd, fl, p::SAGEParams, a, EVs, s::Int, d::Int,
-                      w::Float64, other::Float64, tfl::Float64, belong::Float64, Ds)
+                      w::Float64, other::Float64, tfl::Float64, belong::Float64, Ds; k0::Int = 1)
     na = length(a)
     @inbounds for i in 1:na; fl[i, s] = false; end
     # HOURS CHOSEN BY THE HOUSEHOLD (A, 2026-10-11): `effort_set` empty. On the floor every euro earned is taken
@@ -203,10 +213,16 @@ function apply_floor!(cd, ed, apd, vd, fl, p::SAGEParams, a, EVs, s::Int, d::Int
     T = tfl + κ * e + p.qbar * d
     T > 1.0 && return
     X = p.cfloor                                  # resources guaranteed
-    af = (X - w * e - other) / p.R                # assets below which the transfer is paid
-    af <= a[1] && return
-    best = -Inf; kb = 1
-    @inbounds for k in 1:na
+    af = binv(p, X - w * e - other)               # assets below which the transfer is paid
+    af <= a[k0] && return
+    # a household on the floor does not borrow (mortgages): assistance expects its own means used first, and with the
+    # floor paying the interest it would otherwise borrow to the limit every period. Without mortgages kf = k0.
+    kf = k0
+    while kf < na && a[kf] < 0
+        kf += 1
+    end
+    best = -Inf; kb = kf
+    @inbounds for k in kf:na
         c = (X - a[k]) / p.pc
         c > 1e-10 || break
         v = egm_flow(p, c, T) + belong * d - Ds[k] + p.β * EVs[k]
@@ -218,7 +234,7 @@ function apply_floor!(cd, ed, apd, vd, fl, p::SAGEParams, a, EVs, s::Int, d::Int
         a[i] < af || break
         if chosen && w > 0
             # the choice found without the floor stands where it lifts the household above the floor and is worth more
-            (p.R * a[i] + w * ed[i, s] + other >= X && vd[i, s] >= best) && continue
+            (xcash(p, a[i]) + w * ed[i, s] + other >= X && vd[i, s] >= best) && continue
         end
         cd[i, s] = cf; ed[i, s] = e; apd[i, s] = a[kb]; vd[i, s] = best; fl[i, s] = true
     end

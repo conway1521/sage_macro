@@ -78,10 +78,13 @@ cl2 = cells_of(c2)
 acc = zeros(9); kacc = zeros(5); wsum = 0.0
 for ci in (csel == 0 ? (1:2) : (csel:csel)), t in (tsel == 0 ? eachindex(wt) : (tsel:tsel))
     p = params_of(c2, cl2[ci])[t]
-    p = update(p; Rk = (1 + gain[code])^(1 / 4), k_yield = kyq)
+    # mortgages: ltv= the borrowing limit as a share of next period's illiquid wealth, mspread= the mortgage rate's spread
+    # over the liquid rate, per cent a year (data/housing/mortgage_evidence.md); absent: no borrowing
+    ltv_ = get(kv, "ltv", 0.0); Rm_ = ltv_ > 0 ? (p.R^4 + get(kv, "mspread", 0.0))^(1 / 4) : 0.0
+    p = update(p; Rk = (1 + gain[code])^(1 / 4), k_yield = kyq, ltv = ltv_, Rm = Rm_)
     w = cl2[ci].share * wt[t]
-    say(@sprintf("cell %d type %d (income %.3f of the mean, weight %.4f): %d states, liquid %d x illiquid %d, R %.5f, Rk %.5f, yield %.5f, floor %.4f, rent %.4f to %.4f, death %.5f, %d threads, Howard %d",
-                 ci, t, ybar_type[(ci, t)] / ybarq, w, p.nz, p.na, p.nk, p.R, p.Rk, p.k_yield, p.cfloor, minimum(p.rent), maximum(p.rent), p.death, Threads.nthreads(), H))
+    say(@sprintf("cell %d type %d (income %.3f of the mean, weight %.4f): %d states, liquid %d x illiquid %d, R %.5f, Rm %.5f, ltv %.2f, Rk %.5f, yield %.5f, floor %.4f, rent %.4f to %.4f, death %.5f, %d threads, Howard %d",
+                 ci, t, ybar_type[(ci, t)] / ybarq, w, p.nz, p.na, p.nk, p.R, p.Rm, p.ltv, p.Rk, p.k_yield, p.cfloor, minimum(p.rent), maximum(p.rent), p.death, Threads.nthreads(), H))
     tt = @elapsed s = solve_two_asset_egm(p, 1.0; full = true, howard = H, trace = trace, theta_adj = get(kv, "theta_adj", 0.01))
     a = s.a; kg = s.k; λ = s.lambda
     own = sum(sum(λ[:, m, :]) for m in 1:length(kg) if !s.tenant[m]; init = 0.0)
