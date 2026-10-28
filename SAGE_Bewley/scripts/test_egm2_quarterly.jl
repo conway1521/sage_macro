@@ -27,7 +27,7 @@ A = filter(a -> a != "trace" && !occursin("=", a), ARGS)
 # the house at k_min), chi0q= the same in units of the economy's mean persistent income in work a quarter (the design's
 # unit, which the calibration driver calib2q.yml passes). For probing and for the calibration's solves. Numerical
 # settings for diagnosis: theta_adj= (the keep-or-adjust smoothing, default 0.01), ksub= (targets per illiquid interval, 4).
-kv = Dict(split(a, "=")[1] => parse(Float64, split(a, "=")[2]) for a in ARGS if occursin("=", a) && a != "kyield=jst")
+kv = Dict(split(a, "=")[1] => parse(Float64, split(a, "=")[2]) for a in ARGS if occursin("=", a) && a != "kyield=jst" && a != "mort=data")
 code = uppercase(A[1]); cfg = uppercase(A[2]); kyears = parse(Float64, A[3])
 H = length(A) >= 4 ? parse(Int, A[4]) : 0
 csel = length(A) >= 5 ? parse(Int, A[5]) : 0; tsel = length(A) >= 6 ? parse(Int, A[6]) : 0
@@ -80,7 +80,11 @@ for ci in (csel == 0 ? (1:2) : (csel:csel)), t in (tsel == 0 ? eachindex(wt) : (
     p = params_of(c2, cl2[ci])[t]
     # mortgages: ltv= the borrowing limit as a share of next period's illiquid wealth, mspread= the mortgage rate's spread
     # over the liquid rate, per cent a year (data/housing/mortgage_evidence.md); absent: no borrowing
-    ltv_ = get(kv, "ltv", 0.0); Rm_ = ltv_ > 0 ? (p.R^4 + get(kv, "mspread", 0.0))^(1 / 4) : 0.0
+    # mort=data: each country's average LTV at origination and the 2003-2019 MIR spread over 3-month Euribor
+    # (data/housing/mortgage_evidence.md; V3_START.md section 141)
+    mltv = Dict("FR" => 0.89, "DE" => 0.84, "IT" => 0.70); msp = Dict("FR" => 0.0201, "DE" => 0.0213, "IT" => 0.0213)
+    md = any(==("mort=data"), ARGS)
+    ltv_ = md ? mltv[code] : get(kv, "ltv", 0.0); Rm_ = ltv_ > 0 ? (p.R^4 + (md ? msp[code] : get(kv, "mspread", 0.0)))^(1 / 4) : 0.0
     p = update(p; Rk = (1 + gain[code])^(1 / 4), k_yield = kyq, ltv = ltv_, Rm = Rm_)
     w = cl2[ci].share * wt[t]
     say(@sprintf("cell %d type %d (income %.3f of the mean, weight %.4f): %d states, liquid %d x illiquid %d, R %.5f, Rm %.5f, ltv %.2f, Rk %.5f, yield %.5f, floor %.4f, rent %.4f to %.4f, death %.5f, %d threads, Howard %d",
