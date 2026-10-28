@@ -503,7 +503,19 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
         dist = p.β / (1 - p.β) * (dmax - dmin)
         # a state with no feasible choice (value -Inf: resources after rent and tax not positive) leaves NaN changes,
         # which the bounds skip; said at once rather than read as convergence (the flat-rent test, section 141)
-        isfinite(dist) || error("the two-asset household problem has a state with no feasible choice at iteration $it (value -Inf or NaN): check rent, benefits and the tax")
+        if !isfinite(dist)
+            # name the states (the mortgage build, 27 October): where the change is not finite, the first few
+            nbad = 0
+            for x in eachindex(V)
+                δ = Vn[x] - V[x]
+                isfinite(δ) && continue
+                ci = Tuple(CartesianIndices(V)[x]); nbad += 1
+                nbad <= 12 && println("  not finite at b = ", a[ci[1]], " (node ", ci[1], "), k = ", kg[ci[2]], " (node ", ci[2], "), s = ", ci[3],
+                                      ": V ", V[x], " -> ", Vn[x], ", adjust ", Padj[x], ", limit there ", -p.ltv * kg[ci[2]])
+            end
+            println("  ", nbad, " states not finite of ", length(V))
+            error("the two-asset household problem has a state with no feasible choice at iteration $it (value -Inf or NaN): check rent, benefits and the tax")
+        end
         # RELAXATION. The kinks that the keep-or-adjust choice puts in the liquid
         # problem can make the plain iteration cycle (Italy and France,
         # 2026-09-29). Convergence is judged on the full Bellman step (the bound
