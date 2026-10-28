@@ -274,7 +274,8 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
         for s in 1:nz, m in 1:nk, i in 1:na
             c = con_c[1][i, s]; e = con_e[1][i, s]
             isnan(c) && (c = con_c[2][i, s]; e = con_e[2][i, s])
-            c = isnan(c) ? 1e-6 : c + (p.Rk - 1) * kg[m]
+            isnan(c) && (e = 0.0)              # neither branch affordable (deep in debt, mortgages): no hours either
+            c = isnan(c) ? 1e-6 : (p.ltv > 0 ? max(c + (p.Rk - 1) * kg[m], 1e-6) : c + (p.Rk - 1) * kg[m])
             V[i, m, s] = egm_flow(p, c, tfl[s] + e) / (1 - p.β)
             Vb[i, m, s] = p.R * p.Γ * c^(-p.γ)
         end
