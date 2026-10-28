@@ -232,6 +232,7 @@ function apply_floor!(cd, ed, apd, vd, fl, p::SAGEParams, a, EVs, s::Int, d::Int
     cf = (X - a[kb]) / p.pc
     @inbounds for i in 1:na
         a[i] < af || break
+        a[i] < 0 && continue          # mortgages: assistance tops up income, not debt; a household in debt that cannot pay sells
         if chosen && w > 0
             # the choice found without the floor stands where it lifts the household above the floor and is worth more
             (xcash(p, a[i]) + w * ed[i, s] + other >= X && vd[i, s] >= best) && continue

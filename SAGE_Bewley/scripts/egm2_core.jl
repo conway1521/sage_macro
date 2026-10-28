@@ -166,9 +166,11 @@ wealth, weighted linearly. (-Inf, 0) when the target is not affordable.
 """
 # liquid wealth after a cash flow cf, at rate R above zero and Rm below (Rm = 0: ai + cf / R, as before)
 @inline liq_cf(ai, cf, R, Rm) = Rm == 0 ? ai + cf / R : (x = (ai >= 0 ? R * ai : Rm * ai) + cf; x >= 0 ? x / R : x / Rm)
-@inline function adj_eval(a, Vin, muin, s, o, ω, ai, num, kg, R, off = 0, Rm = 0.0)
-    be = liq_cf(ai, num - (ω == 0 ? kg[o] : (1 - ω) * kg[o] + ω * kg[o+1]), R, Rm)
-    be < a[1] && return (-Inf, 0.0)
+@inline function adj_eval(a, Vin, muin, s, o, ω, ai, num, kg, R, off = 0, Rm = 0.0, ltv = 0.0)
+    kt_ = ω == 0 ? kg[o] : (1 - ω) * kg[o] + ω * kg[o+1]
+    be = liq_cf(ai, num - kt_, R, Rm)
+    # mortgages: a purchase must leave debt within the new dwelling's limit (otherwise unaffordable)
+    be < (ltv > 0 ? -ltv * kt_ : a[1]) && return (-Inf, 0.0)
     be = min(be, a[end])
     q = clamp(searchsortedlast(a, be), 1, length(a) - 1)
     (ω == 0 || ω == 1) && (n_ = (ω == 0 ? o : o + 1) + off;
@@ -413,13 +415,13 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                     # the targets of the last refining pass, held fixed
                     num_ = RkE[m, s] * kg[m] - p.chi0
                     for j in 1:nk
-                        Vo[j], Mo[j] = adj_eval(a, Vin, muin, s, j, wsel[j, i, m, s], a[i], num_, kg, p.R, of, p.Rm)
+                        Vo[j], Mo[j] = adj_eval(a, Vin, muin, s, j, wsel[j, i, m, s], a[i], num_, kg, p.R, of, p.Rm, p.ltv)
                         Vo[j] > vmax && (vmax = Vo[j])
                     end
                 else
                 for j in 1:nf
                     be = liq_after(p, a[i], shift[m, j, s])
-                    if be < a[1]
+                    if be < (p.ltv > 0 ? -p.ltv * kt[j] : a[1])      # mortgages: debt within the new dwelling's limit
                         Vj[j] = -Inf; Mj[j] = 0.0; continue
                     end
                     be = min(be, a[end])
@@ -459,15 +461,15 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                         w0 = wsel[j, i, m, s]
                         lo = max(w0 - 1 / nsub, 0.0); hi = min(w0 + 1 / nsub, 1.0)
                         x1 = hi - GOLD * (hi - lo); x2 = lo + GOLD * (hi - lo)
-                        v1, m1 = adj_eval(a, Vin, muin, s, j, x1, a[i], num, kg, p.R, of, p.Rm)
-                        v2, m2 = adj_eval(a, Vin, muin, s, j, x2, a[i], num, kg, p.R, of, p.Rm)
+                        v1, m1 = adj_eval(a, Vin, muin, s, j, x1, a[i], num, kg, p.R, of, p.Rm, p.ltv)
+                        v2, m2 = adj_eval(a, Vin, muin, s, j, x2, a[i], num, kg, p.R, of, p.Rm, p.ltv)
                         for _ in 1:10
                             if v1 < v2
                                 lo = x1; x1 = x2; v1 = v2; m1 = m2; x2 = lo + GOLD * (hi - lo)
-                                v2, m2 = adj_eval(a, Vin, muin, s, j, x2, a[i], num, kg, p.R, of, p.Rm)
+                                v2, m2 = adj_eval(a, Vin, muin, s, j, x2, a[i], num, kg, p.R, of, p.Rm, p.ltv)
                             else
                                 hi = x2; x2 = x1; v2 = v1; m2 = m1; x1 = hi - GOLD * (hi - lo)
-                                v1, m1 = adj_eval(a, Vin, muin, s, j, x1, a[i], num, kg, p.R, of, p.Rm)
+                                v1, m1 = adj_eval(a, Vin, muin, s, j, x1, a[i], num, kg, p.R, of, p.Rm, p.ltv)
                             end
                         end
                         v1 < v2 && (v1 = v2; m1 = m2; x1 = x2)
@@ -630,9 +632,10 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
 end
 
 "Value only of adjusting to option o at share ω (`adj_eval` without the marginal value)."
-@inline function adj_value(a, Vin, s, o, ω, ai, num, kg, R, off = 0, Rm = 0.0)
-    be = liq_cf(ai, num - (ω == 0 ? kg[o] : (1 - ω) * kg[o] + ω * kg[o+1]), R, Rm)
-    be < a[1] && return -Inf
+@inline function adj_value(a, Vin, s, o, ω, ai, num, kg, R, off = 0, Rm = 0.0, ltv = 0.0)
+    kt_ = ω == 0 ? kg[o] : (1 - ω) * kg[o] + ω * kg[o+1]
+    be = liq_cf(ai, num - kt_, R, Rm)
+    be < (ltv > 0 ? -ltv * kt_ : a[1]) && return -Inf
     be = min(be, a[end])
     q = clamp(searchsortedlast(a, be), 1, length(a) - 1)
     v = ω == 0 ? lin_at(a, view(Vin, :, o + off, s), be, q) : ω == 1 ? lin_at(a, view(Vin, :, o + 1 + off, s), be, q) :
@@ -735,7 +738,7 @@ function howard_step!(Vout, V, Vin, p, a, kg, Π, Πts, usesp, flw, bpin, P1in, 
                 Va = 0.0; ent = 0.0
                 for o in 1:nk
                     q = qadj[o, i, m, s]; q == 0 && continue
-                    Va += q * adj_value(a, Vin, s, o, wsel[o, i, m, s], a[i], num, kg, p.R, of, p.Rm); ent += xlogx(q)
+                    Va += q * adj_value(a, Vin, s, o, wsel[o, i, m, s], a[i], num, kg, p.R, of, p.Rm, p.ltv); ent += xlogx(q)
                 end
                 out = pa * (Va - theta_adj * ent) - theta_adj * xlogx(pa)
                 pa < 1 && (out += (1 - pa) * Vk - theta_adj * xlogx(1 - pa))
