@@ -560,10 +560,11 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
         end
         trace && (it % 100 == 0 || it < 4) && println("  it ", it, " dist ", dist, " relax ", relax, " adjusting ", sum(Padj) / length(Padj))
         if trace && it % 500 == 0
-            dm = 0.5 * (dmin + dmax); worst = sortperm(vec(abs.((Vn .- V) .- dm)), rev = true)[1:6]
+            dm = 0.5 * (dmin + dmax); dv = vec(abs.((Vn .- V) .- dm)); dv[.!isfinite.(dv)] .= 0.0
+            worst = sortperm(dv, rev = true)[1:6]
             for x in worst
                 ci = Tuple(CartesianIndices(V)[x])
-                println("    cycling at (b ", ci[1], ", k ", ci[2], ", s ", ci[3], "): change ", Vn[x] - V[x] - dm, ", adjust prob ", Padj[x])
+                println("    cycling at (b ", ci[1], " = ", round(a[ci[1]], digits = 3), ", k ", ci[2], " = ", round(kg[ci[2]], digits = 3), ", s ", ci[3], "): change ", Vn[x] - V[x] - dm, ", adjust prob ", Padj[x], ", limit ", round(-p.ltv * kg[ci[2]], digits = 3))
             end
         end
         V, Vn = Vn, V; Vb, Vbn = Vbn, Vb

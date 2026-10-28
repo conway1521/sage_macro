@@ -90,7 +90,7 @@ for ci in (csel == 0 ? (1:2) : (csel:csel)), t in (tsel == 0 ? eachindex(wt) : (
     w = cl2[ci].share * wt[t]
     say(@sprintf("cell %d type %d (income %.3f of the mean, weight %.4f): %d states, liquid %d x illiquid %d, R %.5f, Rm %.5f, ltv %.2f, Rk %.5f, yield %.5f, floor %.4f, rent %.4f to %.4f, death %.5f, %d threads, Howard %d",
                  ci, t, ybar_type[(ci, t)] / ybarq, w, p.nz, p.na, p.nk, p.R, p.Rm, p.ltv, p.Rk, p.k_yield, p.cfloor, minimum(p.rent), maximum(p.rent), p.death, Threads.nthreads(), H))
-    tt = @elapsed s = solve_two_asset_egm(p, 1.0; full = true, howard = H, trace = trace, theta_adj = get(kv, "theta_adj", 0.01))
+    tt = @elapsed s = solve_two_asset_egm(p, 1.0; full = true, howard = H, trace = trace, theta_adj = get(kv, "theta_adj", 0.01), maxit = round(Int, get(kv, "maxit", 5000.0)))
     a = s.a; kg = s.k; λ = s.lambda
     own = sum(sum(λ[:, m, :]) for m in 1:length(kg) if !s.tenant[m]; init = 0.0)
     g = agency_summary(p, s); cs = cell_summary(p, s)
