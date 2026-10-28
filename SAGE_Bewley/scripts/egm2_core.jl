@@ -327,6 +327,8 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     hist = zeros(maxit + 1); stall = 0.0; relax = 1.0; stalled = false
     polish = false                        # a refining pass, k_sub > 1: targets refined, value kept
     frozen = false; rounds = 0; itp = 0; hitmax = false     # value iteration at the refined targets; iterations in this phase
+    nandbg = get(ENV, "SAGE_NANDBG", "0") == "1" && p.ltv > 0      # the mortgage build: where NaN first appears
+    nandbg && println("  NaN at start: V ", count(isnan, V), ", Vb ", count(isnan, Vb), ", -Inf V ", count(==(-Inf), V))
     for it in 1:(K_ROUNDS+1)*(maxit+1)
         polish || (itp += 1)
         t0 = time()
@@ -373,6 +375,9 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
             muin[x] = p.Γ * ((1 - P1in[x]) * mu0 + P1in[x] * mu1) / p.pc   # marginal value of a euro: u'(c) / pc
         end
         t1 = time(); t_in += t1 - t0
+        nandbg && it <= 2 && println("  it ", it, " inner: NaN vin ", count(isnan, vin[1]), "/", count(isnan, vin[2]), ", cin ", count(isnan, cin[1]),
+                                     ", Vin ", count(isnan, Vin), " (-Inf ", count(==(-Inf), Vin), "), muin ", count(isnan, muin), ", P1in ", count(isnan, P1in),
+                                     ", EV of last thread ", count(isnan, EV_t[1]), ", EVb ", count(isnan, EVb_t[1]))
         # outer: keep or adjust
         let Vn = Vn, Vbn = Vbn, polish = polish, frozen = frozen
         Threads.@threads for s in 1:nz
@@ -496,6 +501,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
             rounds += 1; frozen = true; itp = 0; relax = 1.0; stalled = false
             continue
         end
+        nandbg && it <= 2 && println("  it ", it, " outer: NaN Vn ", count(isnan, Vn), " (-Inf ", count(==(-Inf), Vn), "), Vbn ", count(isnan, Vbn), ", Padj ", count(isnan, Padj))
         dmin = Inf; dmax = -Inf
         @inbounds for x in eachindex(V)
             δ = Vn[x] - V[x]; δ < dmin && (dmin = δ); δ > dmax && (dmax = δ)
