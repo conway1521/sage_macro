@@ -429,6 +429,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
                         Vj[j] = (1 - wn) * lin_at(a, view(Vin, :, jn, s), be, q) + wn * lin_at(a, view(Vin, :, jn + 1, s), be, q)
                         Mj[j] = max((1 - wn) * lin_at(a, view(muin, :, jn, s), be, q) + wn * lin_at(a, view(muin, :, jn + 1, s), be, q), 0.0)
                     end
+                    isnan(Vj[j]) && (Vj[j] = -Inf; Mj[j] = 0.0)      # an unaffordable node next to an affordable one
                     Vj[j] > vmax && (vmax = Vj[j])
                 end
                 # one option per node: the best target in [k_j, k_j+1) (the node itself when k_sub = 1)
@@ -505,7 +506,10 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
         nandbg && it <= 2 && println("  it ", it, " outer: NaN Vn ", count(isnan, Vn), " (-Inf ", count(==(-Inf), Vn), "), Vbn ", count(isnan, Vbn), ", Padj ", count(isnan, Padj))
         dmin = Inf; dmax = -Inf
         @inbounds for x in eachindex(V)
-            δ = Vn[x] - V[x]; δ < dmin && (dmin = δ); δ > dmax && (dmax = δ)
+            # states with no feasible choice (value -Inf: with mortgages, a tenant deep in debt, which no household
+            # reaches) carry no change; if every state is infeasible the bounds stay infinite and the error below fires
+            δ = Vn[x] - V[x]; isfinite(δ) || continue
+            δ < dmin && (dmin = δ); δ > dmax && (dmax = δ)
         end
         dist = p.β / (1 - p.β) * (dmax - dmin)
         # a state with no feasible choice (value -Inf: resources after rent and tax not positive) leaves NaN changes,
