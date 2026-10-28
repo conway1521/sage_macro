@@ -21,7 +21,8 @@
 #   A warning is printed when the top two illiquid nodes carry more than 0.1 per cent of the mass (raise it then).
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
-A = filter(a -> a != "trace" && !occursin("=", a), ARGS)
+A = filter(a -> a != "trace" && a != "nandbg" && !occursin("=", a), ARGS)
+"nandbg" in ARGS && (ENV["SAGE_NANDBG"] = "1")
 # OVERRIDES (key=value arguments): beta=, gap= annual patience of the tertiary cell and the gap below it for the other
 # (as the quarterly calibration writes them), chi0= the fixed cost in model units (default: the transaction cost times
 # the house at k_min), chi0q= the same in units of the economy's mean persistent income in work a quarter (the design's
