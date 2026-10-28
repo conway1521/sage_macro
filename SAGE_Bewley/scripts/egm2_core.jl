@@ -1187,7 +1187,9 @@ with the rest otherwise, as in the distribution.
 function two_asset_agency_summary(p::SAGEParams, sol)
     a = sol.a; kg = sol.k; λ = sol.lambda; z = sol.z_vals; Π = sol.Pi
     na, nk, ns = length(a), length(kg), length(z)
-    cbar = sol.cbar; ybar = sol.ybar; ppy = p.ppy
+    # states no household reaches (with mortgages, below their own borrowing limit) have no consumption (NaN); they carry
+    # no mass, but a zero weight times NaN would still spoil the sums (the fall came out NaN), so they count as zero
+    cbar = any(isnan, sol.cbar) ? map(x -> isnan(x) ? 0.0 : x, sol.cbar) : sol.cbar; ybar = sol.ybar; ppy = p.ppy
     pmass = zeros(ns); pinc = zeros(ns); dmass = zeros(ns); hmass = zeros(ns); whmass = zeros(ns)
     mpcmass = zeros(ns); mpchmass = zeros(ns); mpcwmass = zeros(ns); rmass = zeros(ns); xmass = zeros(ns); cmass = zeros(ns)
     stv = stypes(p); empv = stv .== :E
