@@ -771,7 +771,7 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
     cbar = zeros(na, nk, nz); ybar = zeros(na, nk, nz)
     haveC = oth !== nothing
     X = p.cfloor                      # with the floor, resources below it are topped up to it (0: no floor)
-    cc(res, bp) = ((X > 0 ? max(res, X) : res) - bp) / p.pc    # consumption from the budget with the policies, as agency_summary does for
+    cc(res, bp, b) = ((X > 0 && b >= 0 ? max(res, X) : res) - bp) / p.pc     # the floor tops up income, not debt (b < 0: none)    # consumption from the budget with the policies, as agency_summary does for
     # one asset, so the two agree exactly when the illiquid asset is inert
     # with job search a searching branch's mass is split, before the income step, into the part that goes on with
     # the transition towards work (weight pw, the chance chosen at its next wealth) and the rest (`rowsS`)
@@ -809,8 +809,8 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
                 es[i, m, s] += wt * ((1 - p1) * e0 + p1 * e1)
                 e0s[i, m, s] += wt * (1 - p1) * e0; e1s[i, m, s] += wt * p1 * e1
                 if haveC
-                    c0 = cc(xcash(p, be) + wv[s] * e0 + oth[s][1] - rt, b0)
-                    c1 = cc(xcash(p, be) + wv[s] * e1 + oth[s][2] - rt, b1)
+                    c0 = cc(xcash(p, be) + wv[s] * e0 + oth[s][1] - rt, b0, be)
+                    c1 = cc(xcash(p, be) + wv[s] * e1 + oth[s][2] - rt, b1, be)
                     p1 < 1 && (cbar[i, m, s] += wt * (1 - p1) * c0; ybar[i, m, s] += wt * (1 - p1) * (wv[s] * e0 + trs[s]))
                     p1 > 0 && (cbar[i, m, s] += wt * p1 * c1; ybar[i, m, s] += wt * p1 * (wv[s] * e1 + trs[s]))
                 end
@@ -823,8 +823,8 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
             es[i, m, s] += wt * ((1 - p1) * ein[1][i, jj, s] + p1 * ein[2][i, jj, s])
             e0s[i, m, s] += wt * (1 - p1) * ein[1][i, jj, s]; e1s[i, m, s] += wt * p1 * ein[2][i, jj, s]
             if haveC
-                c0 = cc(xcash(p, a[i]) + wv[s] * ein[1][i, jj, s] + oth[s][1] - rt, bpin[1][i, jj, s])   # real consumption
-                c1 = cc(xcash(p, a[i]) + wv[s] * ein[2][i, jj, s] + oth[s][2] - rt, bpin[2][i, jj, s])
+                c0 = cc(xcash(p, a[i]) + wv[s] * ein[1][i, jj, s] + oth[s][1] - rt, bpin[1][i, jj, s], a[i])   # real consumption
+                c1 = cc(xcash(p, a[i]) + wv[s] * ein[2][i, jj, s] + oth[s][2] - rt, bpin[2][i, jj, s], a[i])
                 p1 < 1 && (cbar[i, m, s] += wt * (1 - p1) * c0; ybar[i, m, s] += wt * (1 - p1) * (wv[s] * ein[1][i, jj, s] + trs[s]))
                 p1 > 0 && (cbar[i, m, s] += wt * p1 * c1; ybar[i, m, s] += wt * p1 * (wv[s] * ein[2][i, jj, s] + trs[s]))
             end
@@ -851,8 +851,8 @@ function two_asset_distribution(p, a, kg, Π, j0, om, shift, P1in, ein, bpin, Pa
             es[i, m, s] += wt * ((1 - p1) * e0 + p1 * e1)
             e0s[i, m, s] += wt * (1 - p1) * e0; e1s[i, m, s] += wt * p1 * e1
             if haveC
-                c0 = cc(xcash(p, be) + wv[s] * e0 + oth[s][1] - rt, b0)
-                c1 = cc(xcash(p, be) + wv[s] * e1 + oth[s][2] - rt, b1)
+                c0 = cc(xcash(p, be) + wv[s] * e0 + oth[s][1] - rt, b0, be)
+                c1 = cc(xcash(p, be) + wv[s] * e1 + oth[s][2] - rt, b1, be)
                 p1 < 1 && (cbar[i, m, s] += wt * (1 - p1) * c0; ybar[i, m, s] += wt * (1 - p1) * (wv[s] * e0 + trs[s]))
                 p1 > 0 && (cbar[i, m, s] += wt * p1 * c1; ybar[i, m, s] += wt * p1 * (wv[s] * e1 + trs[s]))
             end
@@ -1016,7 +1016,7 @@ function two_asset_welfare_parts(p0::SAGEParams, sol)
         rt = hasproperty(sol, :tenant) && sol.tenant[m] ? sol.rent[s] : 0.0
         each_branch_full(sol, i, m, s) do wt, d, bp, j, e, be
             res = xcash(p, be) + wv[s] * e + oth[s][d+1] - rt
-            c = max(((p.cfloor > 0 ? max(res, p.cfloor) : res) - bp) / p.pc, 1e-10)   # the floor's top-up
+            c = max(((p.cfloor > 0 && be >= 0 ? max(res, p.cfloor) : res) - bp) / p.pc, 1e-10)   # the floor's top-up (income, not debt)
             T = tfl[s] + κ * e + p.qbar * d
             uc[x] += wt * p.Γ * c^(1 - p.γ) / (1 - p.γ)
             ue[x] -= wt * p.Γ * p.ϕ * T^(1 + p.ψ) / (1 + p.ψ)
@@ -1132,7 +1132,7 @@ function two_asset_cell_summary(p::SAGEParams, sol; thresholds = nothing)
             rt = ten[m] ? sol.rent[i_z] : 0.0
             each_branch_full(sol, i_a, m, i_z) do wt, d, bp, j, e, be
                 res = xcash(p, be) + wvv[i_z] * e + othv[i_z][d+1] - rt
-                res < p.cfloor && (fout += w * wt * (p.cfloor - res))
+                (res < p.cfloor && be >= 0) && (fout += w * wt * (p.cfloor - res))      # no top-up of debt
             end
         end
         α = p.α[i_z]; zz = z[i_z]
