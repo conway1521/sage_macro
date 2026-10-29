@@ -19,6 +19,11 @@ Writes STATE_OUT (json) and NEXT_OUT (one line: "done", "fail", or the next poin
 import csv, glob, json, math, os, re, sys
 
 code, rnd, logdir, state_in, state_out, next_out = sys.argv[1], int(sys.argv[2]), sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6]
+# MODE kv (the user's reset of 28 October; Kaplan and Violante 2014): no tenure, so k_min is idle and ownership is a
+# test; three parameters (patience, gap, log chi0) to three moments (hand-to-mouth, its gap, wealthy hand-to-mouth)
+MODE = sys.argv[7] if len(sys.argv) > 7 else "house"
+PI = [0, 1, 2, 3] if MODE != "kv" else [0, 1, 3]       # the parameters fitted
+MI = [0, 1, 2, 3] if MODE != "kv" else [0, 1, 3]       # the moments targeted
 here = os.path.dirname(os.path.abspath(__file__))
 
 def hfcs(moment, gv, g):
@@ -87,37 +92,41 @@ if missing:
     print(f"FAIL: no complete result for points {missing}; not stepping"); open(next_out, "w").write("fail\n")
     json.dump(st, open(state_out, "w")); sys.exit(0)
 
-x0 = to_x(points[0]); F0 = [M[0][0][i] - T[i] for i in range(4)]
+n = len(PI)
+xa = to_x(points[0]); x0 = [xa[k] for k in PI]
+F0 = [M[0][0][i] - T[i] for i in MI]
 if rnd == 0:
-    J = [[(M[j + 1][0][i] - T[i] - F0[i]) / H[j] for j in range(4)] for i in range(4)]
+    J = [[(M[j + 1][0][MI[r]] - T[MI[r]] - F0[r]) / H[PI[j]] for j in range(n)] for r in range(n)]
 else:
     J = st["J"]; xp, Fp = st["x"], st["F"]
-    dx = [x0[i] - xp[i] for i in range(4)]; dF = [F0[i] - Fp[i] for i in range(4)]
+    dx = [x0[i] - xp[i] for i in range(n)]; dF = [F0[i] - Fp[i] for i in range(n)]
     nn = sum(v * v for v in dx)
     if nn > 0:
-        Jdx = [sum(J[i][j] * dx[j] for j in range(4)) for i in range(4)]
-        J = [[J[i][j] + (dF[i] - Jdx[i]) * dx[j] / nn for j in range(4)] for i in range(4)]
+        Jdx = [sum(J[i][j] * dx[j] for j in range(n)) for i in range(n)]
+        J = [[J[i][j] + (dF[i] - Jdx[i]) * dx[j] / nn for j in range(n)] for i in range(n)]
 st["history"].append({"round": rnd, "point": points[0], "moments": M[0][0], "F": F0, "tests": M[0][1]})
 best = min(st["history"], key=lambda h: max(abs(v) for v in h["F"]))
-print("Jacobian (rows: moments; columns: patience, gap, log k_min, log chi0):")
-for i in range(4): print("  " + " ".join(f"{v:9.4f}" for v in J[i]))
+print("Jacobian (rows: moments " + str([NAMES[i] for i in MI]) + "; columns: " + str([["patience", "gap", "log k_min", "log chi0"][k] for k in PI]) + "):")
+for i in range(n): print("  " + " ".join(f"{v:9.4f}" for v in J[i]))
 if max(abs(v) for v in F0) <= TOL:
     print(f"CALIBRATED at round {rnd}: {points[0]}, worst miss {max(abs(v) for v in F0):.4f}")
     open(next_out, "w").write("done\n")
 else:
     # damped least squares (Levenberg-Marquardt, damping 0.1 of the diagonal): a near-singular Jacobian gives a short
     # step along what is identified rather than a long one along noise; then each component is capped
-    JtJ = [[sum(J[k][i] * J[k][j] for k in range(4)) for j in range(4)] for i in range(4)]
-    A = [[JtJ[i][j] + (0.1 * JtJ[i][i] + 1e-8 if i == j else 0.0) for j in range(4)] + [-sum(J[k][i] * F0[k] for k in range(4))] for i in range(4)]
-    for c in range(4):
-        piv = max(range(c, 4), key=lambda r: abs(A[r][c])); A[c], A[piv] = A[piv], A[c]
-        for r in range(4):
+    JtJ = [[sum(J[k][i] * J[k][j] for k in range(n)) for j in range(n)] for i in range(n)]
+    A = [[JtJ[i][j] + (0.1 * JtJ[i][i] + 1e-8 if i == j else 0.0) for j in range(n)] + [-sum(J[k][i] * F0[k] for k in range(n))] for i in range(n)]
+    for c in range(n):
+        piv = max(range(c, n), key=lambda r: abs(A[r][c])); A[c], A[piv] = A[piv], A[c]
+        for r in range(n):
             if r != c:
-                f = A[r][c] / A[c][c]; A[r] = [A[r][k] - f * A[c][k] for k in range(5)]
-    dx = [A[i][4] / A[i][i] for i in range(4)]
-    sc = max(1.0, max(abs(dx[i]) / CAP[i] for i in range(4)))
+                f = A[r][c] / A[c][c]; A[r] = [A[r][k] - f * A[c][k] for k in range(n + 1)]
+    dx = [A[i][n] / A[i][i] for i in range(n)]
+    sc = max(1.0, max(abs(dx[i]) / CAP[PI[i]] for i in range(n)))
     dx = [v / sc for v in dx]
-    pn = to_p([x0[i] + dx[i] for i in range(4)])
+    xn = xa[:]
+    for i, k in enumerate(PI): xn[k] = x0[i] + dx[i]
+    pn = to_p(xn)
     print(f"step (scaled by 1/{sc:.2f}): next point {', '.join(f'{v:.5f}' for v in pn)}; worst miss now {max(abs(v) for v in F0):.4f}; best so far round {best['round']} {best['point']}")
     open(next_out, "w").write(",".join(f"{v:.6f}" for v in pn) + "\n")
 st.update({"x": x0, "F": F0, "J": J, "round": rnd})

@@ -21,7 +21,11 @@
 #   A warning is printed when the top two illiquid nodes carry more than 0.1 per cent of the mass (raise it then).
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
-A = filter(a -> a != "trace" && a != "nandbg" && !occursin("=", a), ARGS)
+A = filter(a -> a != "trace" && a != "nandbg" && a != "kvmodel" && !occursin("=", a), ARGS)
+# KVMODEL (the user's reset of 28 October; Kaplan and Violante 2014): a generic illiquid asset with no tenure, rent,
+# minimum dwelling or mortgage, earning the measured real housing total return (JST 1980 to 2015) inside the asset,
+# with the fixed adjustment cost chi0. Ownership is then a reported test, not a target.
+kvm = "kvmodel" in ARGS
 "nandbg" in ARGS && (ENV["SAGE_NANDBG"] = "1")
 # OVERRIDES (key=value arguments): beta=, gap= annual patience of the tertiary cell and the gap below it for the other
 # (as the quarterly calibration writes them), chi0= the fixed cost in model units (default: the transaction cost times
@@ -71,7 +75,7 @@ kmin = 4 * kyears * ybarq; chi0 = haskey(kv, "chi0q") ? kv["chi0q"] * ybarq : ge
 say(@sprintf("%s %s: mean persistent income in work %.4f a quarter (cells %.4f, %.4f); k_min %.3f (%.1f years), chi0 %.4f; liquid grid top %.2f; type weights %s",
              code, cfg, ybarq, sum(wt[t] * ybar_type[(1, t)] for t in eachindex(wt)), sum(wt[t] * ybar_type[(2, t)] for t in eachindex(wt)),
              kmin, kyears, chi0, c.a_max, string(round.(wt, digits = 4))))
-c2 = SAGEConfig(c; illiquid = true, solver = :egm, chi0 = chi0, k_payout = false, rent_share = share[code], k_min = kmin,
+c2 = SAGEConfig(c; illiquid = true, solver = :egm, chi0 = chi0, k_payout = false, rent_share = kvm ? 0.0 : share[code], k_min = kvm ? 0.0 : kmin,
                 hbU_vec = hbU, hb_long = hbL, nk = nk, k_max = 4 * kmax_years * ybarq, k_sub = round(Int, get(kv, "ksub", 4.0)), k_mid = 0.0, nb = nb, b_max = c.a_max)     # the liquid grid's top as the one-asset model's
 cl2 = cells_of(c2)
 # moments solved here, by weight: ownership, hand-to-mouth poor and wealthy, MPC quarter and 12 months, liquid, illiquid,
@@ -86,7 +90,10 @@ for ci in (csel == 0 ? (1:2) : (csel:csel)), t in (tsel == 0 ? eachindex(wt) : (
     mltv = Dict("FR" => 0.89, "DE" => 0.84, "IT" => 0.70); msp = Dict("FR" => 0.0201, "DE" => 0.0213, "IT" => 0.0213)
     md = any(==("mort=data"), ARGS)
     ltv_ = md ? mltv[code] : get(kv, "ltv", 0.0); Rm_ = ltv_ > 0 ? (p.R^4 + (md ? msp[code] : get(kv, "mspread", 0.0)))^(1 / 4) : 0.0
-    p = update(p; Rk = (1 + gain[code])^(1 / 4), k_yield = kyq, ltv = ltv_, Rm = Rm_)
+    # the real housing total return (capital gain and rental yield, JST 1980 to 2015, data/housing/housing_evidence.md)
+    totret = Dict("FR" => 0.0584, "DE" => 0.0411, "IT" => 0.0457)
+    p = kvm ? update(p; Rk = (1 + totret[code])^(1 / 4), k_yield = 0.0, ltv = 0.0, Rm = 0.0) :
+              update(p; Rk = (1 + gain[code])^(1 / 4), k_yield = kyq, ltv = ltv_, Rm = Rm_)
     w = cl2[ci].share * wt[t]
     say(@sprintf("cell %d type %d (income %.3f of the mean, weight %.4f): %d states, liquid %d x illiquid %d, R %.5f, Rm %.5f, ltv %.2f, Rk %.5f, yield %.5f, floor %.4f, rent %.4f to %.4f, death %.5f, %d threads, Howard %d",
                  ci, t, ybar_type[(ci, t)] / ybarq, w, p.nz, p.na, p.nk, p.R, p.Rm, p.ltv, p.Rk, p.k_yield, p.cfloor, minimum(p.rent), maximum(p.rent), p.death, Threads.nthreads(), H))

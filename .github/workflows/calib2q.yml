@@ -26,8 +26,11 @@ on:
         description: "Last round to run"
         default: "12"
       extra:
-        description: "Arguments added to every solve (e.g. kyield=jst, the asset's rental yield)"
+        description: "Arguments added to every solve (e.g. kyield=jst, the asset's rental yield; kvmodel)"
         default: ""
+      mode:
+        description: "house: four parameters incl. k_min to ownership; kv: Kaplan-Violante asset, three (patience, gap, chi0)"
+        default: "house"
 permissions:
   actions: write
   contents: read
@@ -45,7 +48,7 @@ jobs:
           pts = [p]
           if os.environ["R"] == "0":
               H = [0.005, 0.01, 0.15, 0.3]
-              for j in range(4):
+              for j in (range(4) if os.environ["M"] != "kv" else (0, 1, 3)):
                   q = p[:]
                   q[j] = q[j] + H[j] if j < 2 else q[j] * math.exp(H[j])
                   pts.append(q)
@@ -60,6 +63,7 @@ jobs:
           C: ${{ inputs.code }}
           G: ${{ inputs.cfg }}
           X: ${{ inputs.extra }}
+          M: ${{ inputs.mode }}
       - uses: actions/upload-artifact@v4
         with:
           name: points
@@ -113,7 +117,7 @@ jobs:
       - name: Reduce and step
         run: |
           si=none; [ -f /tmp/state_in.json ] && si=/tmp/state_in.json
-          python3 SAGE_Bewley/scripts/calib2q_reduce.py ${{ inputs.code }} ${{ inputs.round }} /tmp/round $si /tmp/state.json /tmp/next.txt | tee /tmp/reduce.log
+          python3 SAGE_Bewley/scripts/calib2q_reduce.py ${{ inputs.code }} ${{ inputs.round }} /tmp/round $si /tmp/state.json /tmp/next.txt ${{ inputs.mode }} | tee /tmp/reduce.log
           echo "NEXT=$(cat /tmp/next.txt)" >> "$GITHUB_ENV"
       - uses: actions/upload-artifact@v4
         with:
@@ -128,5 +132,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh workflow run calib2q.yml --ref ${{ github.ref_name }} -f code=${{ inputs.code }} -f cfg=${{ inputs.cfg }} \
-            -f point="$NEXT" -f round=$(( ${{ inputs.round }} + 1 )) -f prev=${{ github.run_id }} -f maxround=${{ inputs.maxround }} -f extra="${{ inputs.extra }}"
+            -f point="$NEXT" -f round=$(( ${{ inputs.round }} + 1 )) -f prev=${{ github.run_id }} -f maxround=${{ inputs.maxround }} -f extra="${{ inputs.extra }}" -f mode=${{ inputs.mode }}
           echo "started round $(( ${{ inputs.round }} + 1 )) at $NEXT"
