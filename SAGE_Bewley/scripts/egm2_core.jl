@@ -388,7 +388,7 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
             muin[x] = p.Γ * ((1 - P1in[x]) * mu0 + P1in[x] * mu1) / p.pc   # marginal value of a euro: u'(c) / pc
         end
         t1 = time(); t_in += t1 - t0
-        nandbg && it <= 2 && println("  it ", it, " inner: NaN vin ", count(isnan, vin[1]), "/", count(isnan, vin[2]), ", cin ", count(isnan, cin[1]),
+        nandbg && it <= 3 && println("  it ", it, " inner: NaN vin ", count(isnan, vin[1]), "/", count(isnan, vin[2]), ", cin ", count(isnan, cin[1]),
                                      ", Vin ", count(isnan, Vin), " (-Inf ", count(==(-Inf), Vin), "), muin ", count(isnan, muin), ", P1in ", count(isnan, P1in),
                                      ", EV of last thread ", count(isnan, EV_t[1]), ", EVb ", count(isnan, EVb_t[1]))
         # outer: keep or adjust
@@ -515,7 +515,15 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
             rounds += 1; frozen = true; itp = 0; relax = 1.0; stalled = false
             continue
         end
-        nandbg && it <= 2 && println("  it ", it, " outer: NaN Vn ", count(isnan, Vn), " (-Inf ", count(==(-Inf), Vn), "), Vbn ", count(isnan, Vbn), ", Padj ", count(isnan, Padj))
+        nandbg && it <= 3 && println("  it ", it, " outer: NaN Vn ", count(isnan, Vn), " (-Inf ", count(==(-Inf), Vn), "), Vbn ", count(isnan, Vbn), ", Padj ", count(isnan, Padj))
+        if nandbg && it <= 3 && any(isnan, Vn)
+            x = findfirst(isnan, Vn); ci = Tuple(CartesianIndices(Vn)[x])
+            println("    first NaN Vn at b ", a[ci[1]], " (", ci[1], "), k ", kg[ci[2]], " (", ci[2], "), s ", ci[3], "; V there ", V[x], ", Vin row ", Vin[ci[1], j0[ci[2]] + off[ci[2]], ci[3]], ", qadj sum ", sum(qadj[:, ci[1], ci[2], ci[3]]))
+        end
+        if nandbg && it <= 3 && any(isnan, Vbn)
+            x = findfirst(isnan, Vbn); ci = Tuple(CartesianIndices(Vbn)[x])
+            println("    first NaN Vbn at b ", a[ci[1]], " (", ci[1], "), k ", kg[ci[2]], " (", ci[2], "), s ", ci[3], "; Vn ", Vn[x], ", muin row ", muin[ci[1], j0[ci[2]] + off[ci[2]], ci[3]])
+        end
         dmin = Inf; dmax = -Inf
         @inbounds for x in eachindex(V)
             # states with no feasible choice (value -Inf: with mortgages, a tenant deep in debt, which no household
