@@ -602,6 +602,11 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
         if howard > 0 && relax == 1 && !(dist < tol || stalled || itp == maxit)
             th = time()
             for _ in 1:howard
+                if p.ltv > 0               # as at the top of each iteration: no -Inf into the expectation
+                    @inbounds for x in eachindex(V)
+                        V[x] < -1e10 && (V[x] = -1e10)
+                    end
+                end
                 howard_step!(Vn, V, Vin, p, a, kg, Π, Πts, usesp, flw, bpin, P1in, j0, om, ksh, RkE, qadj, wsel, Padj,
                              theta, theta_adj, EV_t, Vc_t, off, hasT, sch, oc)
                 V, Vn = Vn, V
