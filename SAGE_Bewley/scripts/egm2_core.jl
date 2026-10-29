@@ -344,6 +344,15 @@ function solve_two_asset_egm(p0::SAGEParams, Q_agg::Float64; theta::Float64 = 0.
     nandbg && println("  NaN at start: V ", count(isnan, V), ", Vb ", count(isnan, Vb), ", -Inf V ", count(==(-Inf), V))
     for it in 1:(K_ROUNDS+1)*(maxit+1)
         polish || (itp += 1)
+        # mortgages: infeasible states (a tenant deep in debt) have value -Inf, and the expectation over next period's
+        # state multiplies V by a dense transition matrix, where 0 times -Inf is NaN, which then spread to every state
+        # (Germany cell 1 type 3, run 40793604607). Values are held at -1e10 instead, far below any feasible one; zero
+        # times it is zero. Without mortgages no value is -Inf and nothing changes.
+        if p.ltv > 0
+            @inbounds for x in eachindex(V)
+                V[x] < -1e10 && (V[x] = -1e10)
+            end
+        end
         t0 = time()
         # inner: the liquid problem for every illiquid node taken as k'
         let V = V, Vb = Vb          # bound for the threads (V and Vb are swapped below)
