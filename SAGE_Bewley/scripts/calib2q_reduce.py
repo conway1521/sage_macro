@@ -27,7 +27,7 @@ MODE = sys.argv[7] if len(sys.argv) > 7 else "house"
 # HFCS the education gap in hand-to-mouth is mostly wealthy (Germany, all households: poor 0.10 and 0.03, wealthy 0.18
 # and 0.09), which a patience gap cannot make (it makes the less patient poor, and their illiquid wealth vanishes), so
 # the patience gap goes to the poor gap and the total gap and wealthy hand-to-mouth by education are tests. The split by
-# education is reported for all households only.
+# education among households not retired is in the 2021 run of 8 October (education_nr), used from round 1 of 30 October.
 PI = [0, 1, 2, 3] if MODE not in ("kv", "kv2") else [0, 1, 3]       # the parameters fitted
 MI = [0, 1, 2, 3] if MODE not in ("kv", "kv2") else [0, 1, 3]       # the moments targeted
 here = os.path.dirname(os.path.abspath(__file__))
@@ -46,8 +46,9 @@ T = [hfcs("htm_model_narrow_total", "not_retired", "not retired"),
      hfcs("htm_model_narrow_wealthy", "not_retired", "not retired")]
 if MODE == "kv2":
     T[0] = hfcs("htm_model_narrow_poor", "not_retired", "not retired")
-    T[1] = hfcs("htm_model_narrow_poor", "education", "below tertiary") - hfcs("htm_model_narrow_poor", "education", "tertiary")
-    TW = (hfcs("htm_model_narrow_wealthy", "education", "below tertiary"), hfcs("htm_model_narrow_wealthy", "education", "tertiary"))
+    # the split by education among households not retired (out_degurba_nr run, appended 30 October), the model's population
+    T[1] = hfcs("htm_model_narrow_poor", "education_nr", "below tertiary") - hfcs("htm_model_narrow_poor", "education_nr", "tertiary")
+    TW = (hfcs("htm_model_narrow_wealthy", "education_nr", "below tertiary"), hfcs("htm_model_narrow_wealthy", "education_nr", "tertiary"))
 NAMES = ["hand-to-mouth", "gap by education", "ownership", "wealthy hand-to-mouth"]
 if MODE == "kv2": NAMES = ["poor hand-to-mouth", "poor gap by education", "ownership", "wealthy hand-to-mouth"]
 TOL = 0.01                                   # about one standard error of each share
@@ -89,7 +90,7 @@ def moments(pt):
     if MODE == "kv2":
         m = [tot[2] / w, poor_c[1] - poor_c[2], tot[1] / w, tot[3] / w]
     k = tot[10:15]
-    tests = {"MPC quarter": tot[4] / w, "MPC 12 months": tot[5] / w, "mean liquid": tot[6] / w, "mean illiquid": tot[7] / w,
+    tests = {**({"wealthy target cell 1": TW[0], "wealthy target cell 2": TW[1]} if MODE == "kv2" else {}), "MPC quarter": tot[4] / w, "MPC 12 months": tot[5] / w, "mean liquid": tot[6] / w, "mean illiquid": tot[7] / w,
              "adjusting": tot[8] / w, "outlay": tot[9] / w, "fall": 1 - (k[4] / k[3]) / (k[1] / k[0]) if k[3] > 0 else float("nan"),
              "htm cell 1": htm_c[1], "htm cell 2": htm_c[2], "htm total": (tot[2] + tot[3]) / w, "htm gap": htm_c[1] - htm_c[2],
              "poor cell 1": poor_c[1], "poor cell 2": poor_c[2], "wealthy cell 1": wh_c[1], "wealthy cell 2": wh_c[2]}
@@ -114,7 +115,8 @@ F0 = [M[0][0][i] - T[i] for i in MI]
 if rnd == 0:
     J = [[(M[j + 1][0][MI[r]] - T[MI[r]] - F0[r]) / H[PI[j]] for j in range(n)] for r in range(n)]
 else:
-    J = st["J"]; xp, Fp = st["x"], st["F"]
+    J = st["J"]; xp = st["x"]
+    Fp = [st["history"][-1]["moments"][i] - T[i] for i in MI]    # recomputed, so a change of target does not enter the update
     dx = [x0[i] - xp[i] for i in range(n)]; dF = [F0[i] - Fp[i] for i in range(n)]
     nn = sum(v * v for v in dx)
     if nn > 0:

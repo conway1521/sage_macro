@@ -3113,3 +3113,15 @@ htm_model_narrow_poor,IT,2021,education,below tertiary,0.07218,0.03487,4400
 htm_model_narrow_wealthy,IT,2021,education,below tertiary,0.12411,0.01558,4400
 htm_model_narrow_poor,IT,2021,education,tertiary,0.03199,0.02456,1839
 htm_model_narrow_wealthy,IT,2021,education,tertiary,0.06261,0.01921,1839
+htm_model_narrow_poor,FR,2021,education_nr,below tertiary,0.06601,0.00618,3095
+htm_model_narrow_wealthy,FR,2021,education_nr,below tertiary,0.27631,0.01148,3095
+htm_model_narrow_poor,FR,2021,education_nr,tertiary,0.01184,0.00295,3820
+htm_model_narrow_wealthy,FR,2021,education_nr,tertiary,0.15326,0.01048,3820
+htm_model_narrow_poor,DE,2021,education_nr,below tertiary,0.11865,0.01478,1127
+htm_model_narrow_wealthy,DE,2021,education_nr,below tertiary,0.21072,0.01482,1127
+htm_model_narrow_poor,DE,2021,education_nr,tertiary,0.02770,0.00752,1354
+htm_model_narrow_wealthy,DE,2021,education_nr,tertiary,0.10140,0.01687,1354
+htm_model_narrow_poor,IT,2021,education_nr,below tertiary,0.10057,0.04833,2624
+htm_model_narrow_wealthy,IT,2021,education_nr,below tertiary,0.12846,0.01621,2624
+htm_model_narrow_poor,IT,2021,education_nr,tertiary,0.03761,0.02739,1415
+htm_model_narrow_wealthy,IT,2021,education_nr,tertiary,0.06557,0.02197,1415
