@@ -12,7 +12,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 rows = []
 for f in sorted(glob.glob(os.path.join(HERE, "policy_results_*.csv"))):
     with open(f) as fh:
-        rows += list(csv.DictReader(fh))
+        got = list(csv.DictReader(fh))
+    # results from before the audit lack the new columns: left out, and said so
+    if got and "d_room" not in got[0]:
+        print(f"(skipping {os.path.basename(f)}: produced before the 2026-09-28 audit)")
+        continue
+    rows += got
 
 def pick(code, cfg, pol, tech):
     for r in rows:
