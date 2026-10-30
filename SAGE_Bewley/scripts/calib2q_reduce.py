@@ -22,8 +22,14 @@ code, rnd, logdir, state_in, state_out, next_out = sys.argv[1], int(sys.argv[2])
 # MODE kv (the user's reset of 28 October; Kaplan and Violante 2014): no tenure, so k_min is idle and ownership is a
 # test; three parameters (patience, gap, log chi0) to three moments (hand-to-mouth, its gap, wealthy hand-to-mouth)
 MODE = sys.argv[7] if len(sys.argv) > 7 else "house"
-PI = [0, 1, 2, 3] if MODE != "kv" else [0, 1, 3]       # the parameters fitted
-MI = [0, 1, 2, 3] if MODE != "kv" else [0, 1, 3]       # the moments targeted
+# MODE kv2 (30 October, after the diagnosis): the same parameters to the poor hand-to-mouth, its gap by education and
+# the wealthy hand-to-mouth (Kaplan, Violante and Weidner 2014 split the two; Kaplan and Violante 2014 target both). In the
+# HFCS the education gap in hand-to-mouth is mostly wealthy (Germany, all households: poor 0.10 and 0.03, wealthy 0.18
+# and 0.09), which a patience gap cannot make (it makes the less patient poor, and their illiquid wealth vanishes), so
+# the patience gap goes to the poor gap and the total gap and wealthy hand-to-mouth by education are tests. The split by
+# education is reported for all households only.
+PI = [0, 1, 2, 3] if MODE not in ("kv", "kv2") else [0, 1, 3]       # the parameters fitted
+MI = [0, 1, 2, 3] if MODE not in ("kv", "kv2") else [0, 1, 3]       # the moments targeted
 here = os.path.dirname(os.path.abspath(__file__))
 
 def hfcs(moment, gv, g):
@@ -38,7 +44,12 @@ T = [hfcs("htm_model_narrow_total", "not_retired", "not retired"),
      hfcs("htm_model_narrow_total", "education_nr", "below tertiary") - hfcs("htm_model_narrow_total", "education_nr", "tertiary"),
      hfcs("home_ownership_rate", "all", "all"),
      hfcs("htm_model_narrow_wealthy", "not_retired", "not retired")]
+if MODE == "kv2":
+    T[0] = hfcs("htm_model_narrow_poor", "not_retired", "not retired")
+    T[1] = hfcs("htm_model_narrow_poor", "education", "below tertiary") - hfcs("htm_model_narrow_poor", "education", "tertiary")
+    TW = (hfcs("htm_model_narrow_wealthy", "education", "below tertiary"), hfcs("htm_model_narrow_wealthy", "education", "tertiary"))
 NAMES = ["hand-to-mouth", "gap by education", "ownership", "wealthy hand-to-mouth"]
+if MODE == "kv2": NAMES = ["poor hand-to-mouth", "poor gap by education", "ownership", "wealthy hand-to-mouth"]
 TOL = 0.01                                   # about one standard error of each share
 H = [0.005, 0.01, 0.15, 0.3]                 # forward steps in (patience, gap, log k_min, log chi0)
 CAP = [0.01, 0.02, 0.4, 0.6]                 # largest step a round may take in each
@@ -73,10 +84,15 @@ def moments(pt):
     htm_c = {c: sum(r[2] + r[3] for r in v) / sum(r[0] for r in v) for c, v in cells.items()}
     w = tot[0]
     m = [(tot[2] + tot[3]) / w, htm_c[1] - htm_c[2], tot[1] / w, tot[3] / w]
+    poor_c = {c: sum(r[2] for r in v) / sum(r[0] for r in v) for c, v in cells.items()}
+    wh_c = {c: sum(r[3] for r in v) / sum(r[0] for r in v) for c, v in cells.items()}
+    if MODE == "kv2":
+        m = [tot[2] / w, poor_c[1] - poor_c[2], tot[1] / w, tot[3] / w]
     k = tot[10:15]
     tests = {"MPC quarter": tot[4] / w, "MPC 12 months": tot[5] / w, "mean liquid": tot[6] / w, "mean illiquid": tot[7] / w,
              "adjusting": tot[8] / w, "outlay": tot[9] / w, "fall": 1 - (k[4] / k[3]) / (k[1] / k[0]) if k[3] > 0 else float("nan"),
-             "htm cell 1": htm_c[1], "htm cell 2": htm_c[2]}
+             "htm cell 1": htm_c[1], "htm cell 2": htm_c[2], "htm total": (tot[2] + tot[3]) / w, "htm gap": htm_c[1] - htm_c[2],
+             "poor cell 1": poor_c[1], "poor cell 2": poor_c[2], "wealthy cell 1": wh_c[1], "wealthy cell 2": wh_c[2]}
     return m, tests
 
 for n in notes: print(n)

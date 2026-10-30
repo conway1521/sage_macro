@@ -3101,3 +3101,15 @@ share_with_mortgage,IT,2014,all,all,0.10173,0.00511,8156
 share_with_mortgage,IT,2017,all,all,0.08903,0.00538,7420
 share_with_mortgage,IT,2021,all,all,0.10893,0.01382,6239
 share_with_mortgage,IT,2023,all,all,0.12422,0.00728,9641
+htm_model_narrow_poor,FR,2021,education,below tertiary,0.05058,0.00443,5250
+htm_model_narrow_wealthy,FR,2021,education,below tertiary,0.20519,0.00796,5250
+htm_model_narrow_poor,FR,2021,education,tertiary,0.01098,0.00256,5003
+htm_model_narrow_wealthy,FR,2021,education,tertiary,0.13993,0.00901,5003
+htm_model_narrow_poor,DE,2021,education,below tertiary,0.10052,0.01084,1960
+htm_model_narrow_wealthy,DE,2021,education,below tertiary,0.18440,0.01145,1960
+htm_model_narrow_poor,DE,2021,education,tertiary,0.02592,0.00600,2149
+htm_model_narrow_wealthy,DE,2021,education,tertiary,0.09196,0.01330,2149
+htm_model_narrow_poor,IT,2021,education,below tertiary,0.07218,0.03487,4400
+htm_model_narrow_wealthy,IT,2021,education,below tertiary,0.12411,0.01558,4400
+htm_model_narrow_poor,IT,2021,education,tertiary,0.03199,0.02456,1839
+htm_model_narrow_wealthy,IT,2021,education,tertiary,0.06261,0.01921,1839
