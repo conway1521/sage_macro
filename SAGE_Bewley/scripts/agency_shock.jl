@@ -134,6 +134,7 @@ function agency_summary(p::SAGEParams, sol)
     # measure it. Both follow the households' own choices forward: next assets a_d, participation P1, and the
     # transition the household chose where it searches (as welfare_parts).
     lumpm = zeros(ns)                                 # the lump sum's cohort (part 3 below)
+    impcm = Float64[]; mpc12a = Float64[]; lama = Float64[]   # the windfall's profile and the MPC by asset node (part 1)
     nonem = zeros(ns)                                 # the job losers' time out of work (part 4 below)
     mpc12mass = zeros(ns); kz = zeros(ns)            # kz[1:5]: entrant mass, its pre-loss consumption, quarter-1 consumption, survivors to quarter 2, their consumption
     if p.ppy > 1
@@ -165,8 +166,14 @@ function agency_summary(p::SAGEParams, sol)
         # 1. The twelve-month MPC (the HFCS question: a windfall of one month's income, how much spent within twelve
         #    months). G_t(a, s) is expected consumption t periods on from (a, s); C is its sum over the year's periods, and
         #    the MPC the change in C from the windfall over the windfall, as the within-period MPC above.
-        G = copy(cbar); C = copy(cbar)
-        for t in 1:p.ppy-1
+        #    IMPC (SAGE_IMPC_H = H > 0, the macro review of 31 October): the same windfall followed for H periods, the
+        #    share of it spent in each period since receipt (the intertemporal MPCs of Auclert, Rognlie and Straub, to
+        #    set against Fagereng, Holm and Natvik 2021), in impcmass; and the twelve-month MPC by asset node, pooled
+        #    over states, in mpc12a with the mass in lama, for the MPC by liquid wealth quintile (the HFCS's own split).
+        #    H = 0 leaves both empty and the twelve-month MPC as before.
+        HI = parse(Int, get(ENV, "SAGE_IMPC_H", "0"))
+        G = copy(cbar); C = copy(cbar); Gs = HI > 0 ? [copy(cbar)] : Matrix{Float64}[]
+        for t in 1:max(p.ppy, HI)-1
             Gn = zeros(na, ns)
             let Gc = G
                 for s in 1:ns, i in 1:na
@@ -175,12 +182,22 @@ function agency_summary(p::SAGEParams, sol)
                     end
                 end
             end
-            G = Gn; C .+= G
+            G = Gn; t < p.ppy && (C .+= G); HI > 0 && t < HI && push!(Gs, G)
         end
+        impcm = zeros(HI); mpc12a = zeros(HI > 0 ? na : 0); lama = zeros(HI > 0 ? na : 0)
         for s in 1:ns, i in 1:na
             m = λ[i, s]; m <= 0 && continue
+            HI > 0 && (lama[i] += m)
             Δ = ybar[i, s] * p.ppy / 12
-            Δ > 0 && (mpc12mass[s] += m * p.pc * (interp_ext(a, view(C, :, s), a[i] + Δ / p.R) - C[i, s]) / Δ)
+            Δ > 0 || continue
+            x12 = m * p.pc * (interp_ext(a, view(C, :, s), a[i] + Δ / p.R) - C[i, s]) / Δ
+            mpc12mass[s] += x12
+            if HI > 0
+                mpc12a[i] += x12
+                for t in 1:HI
+                    impcm[t] += m * p.pc * (interp_ext(a, view(Gs[t], :, s), a[i] + Δ / p.R) - Gs[t][i, s]) / Δ
+                end
+            end
         end
         # 2. The fall as Kolsrud and co-authors measure it: the cohort that loses its job (from work into the first
         #    period out of work), its consumption in its last period in work, and in the first and second periods out
@@ -288,7 +305,8 @@ function agency_summary(p::SAGEParams, sol)
     end
     merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = zeros(ns),
            mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = zeros(ns), rmass = rmass, xmass = xmass, cmass = cmass,
-           kmass = kmass, smass = smass, mpc12mass = mpc12mass, kolmass = kz, lumpmass = lumpm, nonempmass = nonem),
+           kmass = kmass, smass = smass, mpc12mass = mpc12mass, kolmass = kz, lumpmass = lumpm, nonempmass = nonem,
+           impcmass = impcm, mpc12a = mpc12a, lama = lama),
           welfare_parts(p, sol))
 end
 
@@ -320,6 +338,9 @@ collapse_agency(ds, w) = (pmass = sum(w[i] .* ds[i].pmass for i in eachindex(ds)
                           kolmass  = sum(w[i] .* ds[i].kolmass  for i in eachindex(ds)),
                           lumpmass = sum(w[i] .* ds[i].lumpmass for i in eachindex(ds)),
                           nonempmass = sum(w[i] .* ds[i].nonempmass for i in eachindex(ds)),
+                          impcmass = (hasproperty(ds[1], :impcmass) ? sum(w[i] .* ds[i].impcmass for i in eachindex(ds)) : Float64[]),
+                          mpc12a   = (hasproperty(ds[1], :mpc12a) ? sum(w[i] .* ds[i].mpc12a for i in eachindex(ds)) : Float64[]),
+                          lama     = (hasproperty(ds[1], :lama) ? sum(w[i] .* ds[i].lama for i in eachindex(ds)) : Float64[]),
                           vdmass   = sum(w[i] .* ds[i].vdmass   for i in eachindex(ds)),
                           vkmass   = sum(w[i] .* ds[i].vkmass   for i in eachindex(ds)))
 collapse_all(ds, w) = merge(collapse(ds, w), collapse_agency(ds, w))
