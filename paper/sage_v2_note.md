@@ -83,6 +83,16 @@ The two-asset solver (the nested endogenous grid method of Druedahl 2021) was sp
 
 The MPC, measured as the survey asks it, has moved from too low in version 1 to too high in France and Germany, and close to the survey in Italy once dread is in. Much of version 1's MPC gap was the horizon. Within a quarter the MPC of G+A with search is 0.31, 0.24 and 0.21 in France, Germany and Italy, against 0.71, 0.62 and 0.53 over twelve months, so most of the twelve-month response comes after the first quarter. France's MPC is more than twice its survey value at the patience its hand-to-mouth share requires, and lowering patience further would raise it more, so in the one-asset model France's two moments pull against each other.
 
+Version 2 is a one-asset model calibrated to liquid wealth, the route Kaplan and Violante (2022) find gets MPCs about right in one-asset models, and its hand-to-mouth households are the poor hand-to-mouth of Kaplan, Violante and Weidner (2014). Two further tests follow the windfall over time and across liquid wealth, both on G+A with search fitted and both untargeted.
+
+| | year 1 | year 2 | year 3 | five years | MPC 12 months by liquid wealth quintile, model | the same, HFCS 2021 |
+|---|---|---|---|---|---|---|
+| France | 0.71 | 0.15 | 0.04 | 0.92 | 0.73, 0.82, 0.75, 0.69, 0.56 | 0.35, 0.36, 0.38, 0.41, 0.48 |
+| Germany | 0.62 | 0.18 | 0.06 | 0.89 | 0.63, 0.71, 0.66, 0.60, 0.51 | 0.50, 0.47, 0.45, 0.47, 0.44 |
+| Italy | 0.53 | 0.18 | 0.07 | 0.83 | 0.44, 0.66, 0.60, 0.52, 0.42 | 0.53, 0.50, 0.46, 0.45, 0.40 |
+
+The windfall is one month of the household's own income, as in the survey. Spending peaks in the year of receipt and has almost stopped by the fourth year, the shape Fagereng, Holm and Natvik (2021) find for Norwegian lottery winners, whose spending returns to normal within five years. From the second quintile of liquid wealth to the fifth, the model's MPC falls by 28 to 36 per cent. Over the same quintiles the survey's MPC is flat in Germany, falls by a fifth in Italy and rises in France, so the model's gradient is steeper than the survey's everywhere and closest to it in Italy. I read this gradient with care, since survey answers about gains show weak links to liquidity (Fuster, Kaplan and Zafar 2021), while the lottery evidence shows strong ones. The lowest quintile spends less than the second in all three countries, which I have not yet traced to its cause. The level remains the open issue: above the survey in France and Germany, close to it in Italy.
+
 The fall on job loss is about four times Kolsrud and co-authors' estimate without dread and five times with it, against about six and a half times in version 1 on the same benchmark. Version 2's lower fall came in two steps that pulled in opposite directions: durations from the data lowered it, and benefits following the real profile raised it again, since earlier stages had been more generous than the rules. In version 1's annual two-asset reference the fall was 0.07 to 0.11 in the three countries against 0.15 to 0.25 on one asset, because households with illiquid wealth behind them absorb a job loss. That reference still left 1.6 to 2.5 times the benchmark, and a second asset with wealthy hand-to-mouth households can raise the MPC, so how much of the gap illiquid wealth closes is a hypothesis for the quarterly two-asset model to test. The benchmark is Swedish. Whether these countries' falls should be larger or smaller depends on replacement at the cap, wealth and who stays out of work, so I use it as a benchmark and claim no ordering.
 
 ## 7.2 The response of job finding to benefits
@@ -156,6 +166,12 @@ Druedahl, J. (2021). A guide on solving non-convex consumption-saving models. *C
 Elsby, M., Hobijn, B. and Şahin, A. (2015). On the importance of the participation margin for labor market fluctuations. *Journal of Monetary Economics* 72, 64-82.
 
 Hubbard, R. G., Skinner, J. and Zeldes, S. (1995). Precautionary saving and social insurance. *Journal of Political Economy* 103(2), 360-399.
+
+Fagereng, A., Holm, M. B. and Natvik, G. J. (2021). MPC heterogeneity and household balance sheets. *American Economic Journal: Macroeconomics*, 13(4), 1-54.
+
+Fuster, A., Kaplan, G. and Zafar, B. (2021). What would you do with \$500? Spending responses to gains, losses, news, and loans. *Review of Economic Studies*, 88(4), 1760-1795.
+
+Kaplan, G. and Violante, G. L. (2022). The marginal propensity to consume in heterogeneous agent models. *Annual Review of Economics*, 14, 747-775.
 
 Kaplan, G., Violante, G. and Weidner, J. (2014). The wealthy hand-to-mouth. *Brookings Papers on Economic Activity*, Spring, 77-138.
 
