@@ -61,7 +61,7 @@ function agency_summary(p::SAGEParams, sol)
     # Expected consumption and labour-plus-benefit income at every grid point,
     # mixing the participation choice with its own probability, from the same
     # budget the solver uses.
-    cbar = zeros(na, ns); ybar = zeros(na, ns)
+    cbar = zeros(na, ns); ybar = zeros(na, ns); onfl = zeros(na, ns)   # onfl: the chance the floor tops the household up
     for s in 1:ns
         α = p.α[s]; credit = net_participation(p, α, z[s]); tr = transfer_at(p, s)
         for i in 1:na, d in (0, 1)
@@ -71,6 +71,7 @@ function agency_summary(p::SAGEParams, sol)
             x = p.R * a[i] + lab - p.lumptax + credit * d + tr
             cbar[i, s] += w * (x + floor_transfer(p, x) - sol.a_d[d+1][i, s]) / p.pc   # real consumption
             ybar[i, s] += w * (lab + tr)
+            floor_transfer(p, x) > 0 && (onfl[i, s] += w)
         end
     end
     for s in 1:ns, i in 1:na
@@ -134,7 +135,7 @@ function agency_summary(p::SAGEParams, sol)
     # measure it. Both follow the households' own choices forward: next assets a_d, participation P1, and the
     # transition the household chose where it searches (as welfare_parts).
     lumpm = zeros(ns)                                 # the lump sum's cohort (part 3 below)
-    impcm = Float64[]; mpc12a = Float64[]; lama = Float64[]   # the windfall's profile and the MPC by asset node (part 1)
+    impcm = Float64[]; mpc12a = Float64[]; lama = Float64[]; mpc12f = Float64[]; lamf = Float64[]; lamz = Float64[]   # the windfall's profile and the MPC by asset node (part 1)
     nonem = zeros(ns)                                 # the job losers' time out of work (part 4 below)
     mpc12mass = zeros(ns); kz = zeros(ns)            # kz[1:5]: entrant mass, its pre-loss consumption, quarter-1 consumption, survivors to quarter 2, their consumption
     if p.ppy > 1
@@ -185,15 +186,18 @@ function agency_summary(p::SAGEParams, sol)
             G = Gn; t < p.ppy && (C .+= G); HI > 0 && t < HI && push!(Gs, G)
         end
         impcm = zeros(HI); mpc12a = zeros(HI > 0 ? na : 0); lama = zeros(HI > 0 ? na : 0)
+        mpc12f = zeros(HI > 0 ? na : 0); lamf = zeros(HI > 0 ? na : 0)   # the same for those the floor tops up now
+        lamz = zeros(HI > 0 ? na : 0)                                     # the mass with no income, so no windfall
         for s in 1:ns, i in 1:na
             m = λ[i, s]; m <= 0 && continue
-            HI > 0 && (lama[i] += m)
+            HI > 0 && (lama[i] += m; lamf[i] += m * onfl[i, s])
             Δ = ybar[i, s] * p.ppy / 12
+            HI > 0 && Δ <= 0 && (lamz[i] += m)
             Δ > 0 || continue
             x12 = m * p.pc * (interp_ext(a, view(C, :, s), a[i] + Δ / p.R) - C[i, s]) / Δ
             mpc12mass[s] += x12
             if HI > 0
-                mpc12a[i] += x12
+                mpc12a[i] += x12; mpc12f[i] += x12 * onfl[i, s]
                 for t in 1:HI
                     impcm[t] += m * p.pc * (interp_ext(a, view(Gs[t], :, s), a[i] + Δ / p.R) - Gs[t][i, s]) / Δ
                 end
@@ -306,7 +310,7 @@ function agency_summary(p::SAGEParams, sol)
     merge((pmass = pmass, pinc = pinc, dmass = dmass, hmass = hmass, whmass = zeros(ns),
            mpcmass = mpcmass, mpchmass = mpchmass, mpcwmass = zeros(ns), rmass = rmass, xmass = xmass, cmass = cmass,
            kmass = kmass, smass = smass, mpc12mass = mpc12mass, kolmass = kz, lumpmass = lumpm, nonempmass = nonem,
-           impcmass = impcm, mpc12a = mpc12a, lama = lama),
+           impcmass = impcm, mpc12a = mpc12a, lama = lama, mpc12f = mpc12f, lamf = lamf, lamz = lamz),
           welfare_parts(p, sol))
 end
 
@@ -341,6 +345,9 @@ collapse_agency(ds, w) = (pmass = sum(w[i] .* ds[i].pmass for i in eachindex(ds)
                           impcmass = (hasproperty(ds[1], :impcmass) ? sum(w[i] .* ds[i].impcmass for i in eachindex(ds)) : Float64[]),
                           mpc12a   = (hasproperty(ds[1], :mpc12a) ? sum(w[i] .* ds[i].mpc12a for i in eachindex(ds)) : Float64[]),
                           lama     = (hasproperty(ds[1], :lama) ? sum(w[i] .* ds[i].lama for i in eachindex(ds)) : Float64[]),
+                          mpc12f   = (hasproperty(ds[1], :mpc12f) ? sum(w[i] .* ds[i].mpc12f for i in eachindex(ds)) : Float64[]),
+                          lamf     = (hasproperty(ds[1], :lamf) ? sum(w[i] .* ds[i].lamf for i in eachindex(ds)) : Float64[]),
+                          lamz     = (hasproperty(ds[1], :lamz) ? sum(w[i] .* ds[i].lamz for i in eachindex(ds)) : Float64[]),
                           vdmass   = sum(w[i] .* ds[i].vdmass   for i in eachindex(ds)),
                           vkmass   = sum(w[i] .* ds[i].vkmass   for i in eachindex(ds)))
 collapse_all(ds, w) = merge(collapse(ds, w), collapse_agency(ds, w))

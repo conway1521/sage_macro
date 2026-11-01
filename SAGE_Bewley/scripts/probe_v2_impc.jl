@@ -37,12 +37,21 @@ ny = H ÷ 4
 # mass point (at the borrowing limit) is shared between quintiles as a survey's tied ranks would be
 lam = sum(cs[g].share .* P[g].lama for g in 1:2); num = sum(cs[g].share .* P[g].mpc12a for g in 1:2)
 F = cumsum(lam) ./ sum(lam); F0 = [0.0; F[1:end-1]]
-qm = zeros(5); qn = zeros(5)
+lf = sum(cs[g].share .* P[g].lamf for g in 1:2); nf = sum(cs[g].share .* P[g].mpc12f for g in 1:2)
+lz = sum(cs[g].share .* P[g].lamz for g in 1:2)
+qm = zeros(5); qn = zeros(5); qfm = zeros(5); qfn = zeros(5); qz = zeros(5)
 for i in eachindex(lam), k in 1:5
     lo, hi = (k - 1) / 5, k / 5
     ov = max(0.0, min(F[i], hi) - max(F0[i], lo)); w = F[i] > F0[i] ? ov / (F[i] - F0[i]) : 0.0
-    qm[k] += w * num[i]; qn[k] += w * lam[i]
+    qm[k] += w * num[i]; qn[k] += w * lam[i]; qfm[k] += w * nf[i]; qfn[k] += w * lf[i]; qz[k] += w * lz[i]
 end
+# the floor's part (the poorest-quintile check, 1 November): the share of each quintile the floor tops up now, their
+# MPC, and the MPC of the rest
+@printf("  share with no income (no windfall, counted at zero), by quintile: %s; MPC by quintile without them: %s\n",
+        string(round.(qz ./ qn, digits = 4)), string(round.(qm ./ (qn .- qz), digits = 4)))
+@printf("  share topped up by the floor, by quintile: %s\n", string(round.(qfn ./ qn, digits = 4)))
+@printf("  MPC of those topped up: %s; of the rest: %s\n", string(round.(qfm ./ max.(qfn, 1e-300), digits = 4)),
+        string(round.((qm .- qfm) ./ max.(qn .- qfn, 1e-300), digits = 4)))
 @printf("  twelve-month MPC by liquid wealth quintile Q1..Q5: %s (pooled %.4f)\n", string(round.(qm ./ qn, digits = 4)), sum(num) / sum(lam))
 @printf("  mass at the lowest asset node %.4f\n", lam[1] / sum(lam))
 println("DONE")
