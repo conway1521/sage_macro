@@ -149,15 +149,15 @@ Ampudia, M., Cooper, R., Le Blanc, J. and Zhu, G. (2024). MPC heterogeneity and 
 
 Chetty, R. (2008). Moral hazard versus liquidity and optimal unemployment insurance. *Journal of Political Economy* 116(2), 173-234.
 
-Citino, L., Russ and Scrutinio, V. (2026). [title to check]. *Economic Journal* 136(678).
+Citino, L., Russ, K. and Scrutinio, V. (2026). Manipulation and selection in unemployment insurance. *Economic Journal*, 136(678), 2092-2130.
 
-Cohen, J. and Ganong, P. (2026). [title to check]. *American Economic Review: Insights*, listed by NBER; NBER Working Paper 32832.
+Cohen, J. P. and Ganong, P. (2026). Disemployment effects of unemployment insurance: a meta-analysis. *American Economic Review: Insights*, 8(1), 1-18.
 
 Comité d'évaluation de la réforme de l'assurance chômage 2019-2021 (2025). *Rapport final*. Dares, Ministère du Travail, April 2025. Cited as Dares (2025).
 
 Conway, A. (2020). Master's thesis, Sciences Po.
 
-D'Ambrosio and Scrutinio, V. (2022). [title to check]. CEP Discussion Paper 1835 and WorkINPS Paper 46 (working paper).
+D'Ambrosio, A. and Scrutinio, V. (2022). A few Euro more: benefit generosity and the optimal path of unemployment benefits. CEP Discussion Paper 1835, London School of Economics, also WorkINPS Paper 46 (working paper).
 
 DellaVigna, S., Lindner, A., Reizer, B. and Schmieder, J. (2017). Reference-dependent job search: evidence from Hungary. *Quarterly Journal of Economics* 132(4), 1969-2018.
 
@@ -181,9 +181,9 @@ Kolsrud, J., Landais, C., Nilsson, P. and Spinnewijn, J. (2018). The optimal tim
 
 Kőszegi, B. and Rabin, M. (2009). Reference-dependent consumption plans. *American Economic Review* 99(3), 909-936.
 
-Le Barbanchon, T. (2016). [title to check]. *Labour Economics*.
+Le Barbanchon, T. (2016). The effect of the potential duration of unemployment benefits on unemployment exits to work and match quality in France. *Labour Economics*, 42, 16-29.
 
-Lichter, A. and Schiprowski, A. (2021). [title to check]. *Journal of Public Economics* 193, 104326.
+Lichter, A. and Schiprowski, A. (2021). Benefit duration, job search behavior and re-employment. *Journal of Public Economics*, 193, 104326.
 
 MacQueen, J. (1966). A modified dynamic programming method for Markovian decision problems. *Journal of Mathematical Analysis and Applications* 14(1), 38-43.
 
@@ -197,6 +197,6 @@ Puterman, M. (1994). *Markov Decision Processes: Discrete Stochastic Dynamic Pro
 
 Schmieder, J., von Wachter, T. and Bender, S. (2012). The effects of extended unemployment insurance over the business cycle: evidence from regression discontinuity estimates over 20 years. *Quarterly Journal of Economics* 127(2), 701-752.
 
-Scrutinio, V. (2019). [title to check]. WorkINPS Paper 18 (working paper).
+Scrutinio, V. (2019). The medium-term effects of unemployment benefits. WorkINPS Paper 18 (working paper).
 
-Sovera (2026). [title to check]. *International Tax and Public Finance*.
+Sovera, A. (2026). Evaluating the impact of unemployment benefit reforms on career stability in Italy: evidence from a regression discontinuity analysis. *International Tax and Public Finance*, online first [volume and pages not yet assigned].
