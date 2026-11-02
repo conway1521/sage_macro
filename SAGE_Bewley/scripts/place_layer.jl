@@ -204,6 +204,9 @@ channel is the same under every typology:
   1990; Italy by region, non-profit institutions per 10,000 in 2011 (ISTAT BES
   05REL008). Elsewhere national omega. epsilon 0.3 to 0.5, 0.4 by default.
 """
+odds(x) = x / (1 - x)
+inv_odds(o) = o / (1 + o)
+
 function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (:composition, :access), epsilon = 0.4,
                           weekly_hours = Dict("FR" => 37.6, "DE" => 35.4, "IT" => 37.2))
     d = place_data(code; typology = typology)
@@ -242,7 +245,6 @@ function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (
         cellrate(v, i) = v[i] === nothing ? nothing : v[i] / 100
         nat(v) = (h = [x !== nothing for x in v]; any(h) ? sum(w[i] * v[i] / 100 for i in 1:n if h[i]) / sum(w[h]) : nothing)
         ul_n, uh_n = nat(ul), nat(uh)
-        odds(x) = x / (1 - x)
         for i in 1:n
             f = have[i] ? min(0.99, c.f_find * q[i] / qn) : c.f_find
             s = odds(uu[i]) * f / (odds(un) * c.f_find)
@@ -277,9 +279,8 @@ function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (
         mk(hU, hL, δ, ι) = labour_chain(SAGEParams(nz = 2, α = fill(1.0, 2), B = fill(1.0, 2)); nU = c.nU, hU = hU, hL = hL, δ = δ,
                                         sU = c.sU_vec, sL = c.sL, ιE = ι, νE = c.nuE, νU = c.nuU, withN = true, entN = c.entN)
         shares(ch) = (mu = sum(ch.mass[ch.iU]) + ch.mass[ch.iL]; (u = mu / (mu + ch.mass[ch.iE]), j = mu + ch.mass[ch.iN], mu = mu))
-        nat = [shares(mk(hU0, hL0, c.delta[g], c.iotaE[g])) for g in 1:2]
-        jn = [nat[g].j for g in 1:2]; Sn = c.share[1] * jn[1] + c.share[2] * jn[2]; Jbar = sum(w .* J)
-        odds(x) = x / (1 - x); inv_odds(o) = o / (1 + o)
+        natq = [shares(mk(hU0, hL0, c.delta[g], c.iotaE[g])) for g in 1:2]
+        jn = [natq[g].j for g in 1:2]; Sn = c.share[1] * jn[1] + c.share[2] * jn[2]; Jbar = sum(w .* J)
         function bis(f, lo, hi)
             for _ in 1:80
                 m = (lo + hi) / 2; f(m) < 0 ? (lo = m) : (hi = m)
@@ -298,7 +299,7 @@ function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (
             hU = min.(hU0 .* r, 0.95); hL = min(hL0 * r, 0.95)
             k = (J[i] / Jbar) * Sn / (sh[1] * jn[1] + sh[2] * jn[2])
             fit = ntuple(2) do g
-                ut = inv_odds(odds(nat[g].u) * odds(uu[i]) / odds(un))
+                ut = inv_odds(odds(natq[g].u) * odds(uu[i]) / odds(un))
                 jt = min(k * jn[g], 0.9)
                 δfor(ι) = bis(δ -> shares(mk(hU, hL, δ, ι)).u - ut, 1e-7, 0.3)
                 ι = bis(ι -> (ch = mk(hU, hL, δfor(ι), ι); ch.mass[ch.iN] - max(jt - shares(ch).mu, 0.005)), 0.0, 0.2)
