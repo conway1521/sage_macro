@@ -14,10 +14,13 @@ on:
         description: "Configuration: G, GA, GS or GSA (E is added)"
         required: true
       resume_from:
-        description: "Run id of an earlier run of this workflow whose finished stages are reused (optional)"
+        description: "Run id of an earlier run of this workflow whose finished stages and household families are reused (set automatically on a handoff)"
         default: ""
+      hop:
+        description: "How many times this run has been handed over (set automatically; stops at 4)"
+        default: "0"
 permissions:
-  actions: read
+  actions: write
   contents: read
 env:
   SAGE_WORKERS: "3"
@@ -77,8 +80,12 @@ jobs:
         if: inputs.resume_from != ''
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh run download ${{ inputs.resume_from }} -n stage-r1-${{ matrix.i }} -D /tmp/st || true
+        run: |
+          gh run download ${{ inputs.resume_from }} -n stage-r1-${{ matrix.i }} -D /tmp/st || true
+          gh run download ${{ inputs.resume_from }} -n fam-r1-${{ matrix.i }} -D SAGE_Bewley/scripts/cache_families || true
+          ls SAGE_Bewley/scripts/cache_families 2>/dev/null | wc -l | xargs echo "families restored:"
       - name: First pass, ${{ matrix.i }}
+        timeout-minutes: 335
         env:
           SAGE_DREAD_CHOICE: ${{ contains(inputs.cfg, 'A') && '1' || '0' }}
         run: |
@@ -92,6 +99,16 @@ jobs:
             /tmp/st/r1_${{ matrix.i }}.jls
             /tmp/st/log_r1_${{ matrix.i }}.txt
           if-no-files-found: error
+      - name: Keep the families built so far and the log, for a handoff
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fam-r1-${{ matrix.i }}
+          path: |
+            SAGE_Bewley/scripts/cache_families
+            /tmp/st/log_r1_${{ matrix.i }}.txt
+          if-no-files-found: ignore
+          retention-days: 7
   pass2:
     needs: pass1
     runs-on: ubuntu-latest
@@ -117,8 +134,12 @@ jobs:
         if: inputs.resume_from != ''
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh run download ${{ inputs.resume_from }} -n stage-r2-${{ matrix.i }} -D /tmp/st || true
+        run: |
+          gh run download ${{ inputs.resume_from }} -n stage-r2-${{ matrix.i }} -D /tmp/st || true
+          gh run download ${{ inputs.resume_from }} -n fam-r2-${{ matrix.i }} -D SAGE_Bewley/scripts/cache_families || true
+          ls SAGE_Bewley/scripts/cache_families 2>/dev/null | wc -l | xargs echo "families restored:"
       - name: Second pass, ${{ matrix.i }}
+        timeout-minutes: 335
         env:
           SAGE_DREAD_CHOICE: ${{ contains(inputs.cfg, 'A') && '1' || '0' }}
         run: |
@@ -132,6 +153,16 @@ jobs:
             /tmp/st/r2_${{ matrix.i }}.jls
             /tmp/st/log_r2_${{ matrix.i }}.txt
           if-no-files-found: error
+      - name: Keep the families built so far and the log, for a handoff
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fam-r2-${{ matrix.i }}
+          path: |
+            SAGE_Bewley/scripts/cache_families
+            /tmp/st/log_r2_${{ matrix.i }}.txt
+          if-no-files-found: ignore
+          retention-days: 7
   aggregate:
     needs: pass2
     runs-on: ubuntu-latest
@@ -163,3 +194,15 @@ jobs:
           path: |
             /tmp/st/log_*.txt
             /tmp/st/result.jls
+  handoff:
+    needs: [setup, pass1, pass2, aggregate]
+    if: always() && (contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')) && fromJSON(inputs.hop) < 4
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start the next run from this one's finished stages and families
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run places.yml --repo ${{ github.repository }} --ref ${{ github.ref_name }} -f code=${{ inputs.code }} -f cfg=${{ inputs.cfg }} \
+            -f resume_from=${{ github.run_id }} -f hop=$(( ${{ inputs.hop }} + 1 ))
+          echo "handed over to hop $(( ${{ inputs.hop }} + 1 ))"

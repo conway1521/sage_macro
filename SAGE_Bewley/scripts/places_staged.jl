@@ -28,7 +28,7 @@ if stage == "setup"
 elseif stage == "pass1"
     s = deserialize(f("setup.jls"))
     cp = idx == 0 ? s.nation : s.st.cps[idx]
-    t = @elapsed r1 = _solve(cp, nothing; disk = false, any_thresholds = true)
+    t = @elapsed r1 = _solve(cp, nothing; disk = true, any_thresholds = true)   # disk: a killed job keeps each cell it finished
     serialize(f("r1_$(idx).jls"), r1)
     say(@sprintf("%s %s pass 1, %s [%.1f min]: mean income %.5f, median %.5f", code, cfg, idx == 0 ? "the nation" : s.st.places[idx].name,
                  t / 60, r1.mean_income, r1.median_income))
@@ -42,7 +42,7 @@ elseif stage == "pass2"
         thr = places_thresholds(s.st, [deserialize(f("r1_$(i).jls")) for i in eachindex(s.st.cps)])
         cp = s.st.cps[idx]
     end
-    t = @elapsed r = solve_economy(cp; thresholds = thr, cache = false)
+    t = @elapsed r = solve_economy(cp; thresholds = thr, cache = true)
     serialize(f("r2_$(idx).jls"), (r = r, thr = thr))
     say(@sprintf("%s %s pass 2, %s [%.1f min]: unemployment %.4f, hand-to-mouth %.4f, participation %.4f", code, cfg,
                  idx == 0 ? "the nation" : s.st.places[idx].name, t / 60, r.unemployment, r.hand_to_mouth_kvw, r.rate))
