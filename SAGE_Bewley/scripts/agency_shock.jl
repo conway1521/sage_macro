@@ -212,24 +212,34 @@ function agency_summary(p::SAGEParams, sol)
             stv[s] === :U && dur[s] == 1 && (U1[s] = true); stv[s] === :U && dur[s] == 2 && (U2[s] = true)
         end
         if any(U1) && any(U2)
-            c1 = zeros(na, ns)
+            # BY BUFFER (the fall diagnosis, 2 November): the same five sums for job losers who were hand-to-mouth in
+            # their last period in work (liquid wealth at most a week of their own income) in kz[6:10], and for the
+            # rest in kz[11:15]; kz[1:5] stay all job losers, unchanged.
+            ns >= 15 || error("the fall by buffer needs at least 15 states")
+            c1 = zeros(na, ns); c1h = zeros(na, ns)
             for s in 1:ns
                 empv[s] || continue
                 for i in 1:na
                     m = λ[i, s]; m <= 0 && continue
+                    hb = a[i] <= ybar[i, s] * p.ppy / 52
                     step!(i, s) do q, k, wk, s2
                         U1[s2] || return
                         kz[1] += m * q; kz[2] += m * q * cbar[i, s]
+                        o = hb ? 5 : 10
+                        kz[o+1] += m * q; kz[o+2] += m * q * cbar[i, s]
                         c1[k, s2] += m * q * wk; c1[k+1, s2] += m * q * (1 - wk)
+                        hb && (c1h[k, s2] += m * q * wk; c1h[k+1, s2] += m * q * (1 - wk))
                     end
                 end
             end
-            for s in 1:ns, i in 1:na
-                c1[i, s] > 0 || continue
-                kz[3] += c1[i, s] * cbar[i, s]
-                step!(i, s) do q, k, wk, s2
-                    U2[s2] || return
-                    kz[4] += c1[i, s] * q; kz[5] += c1[i, s] * q * (wk * cbar[k, s2] + (1 - wk) * cbar[k+1, s2])
+            for (cc, o) in ((c1, 0), (c1h, 5), (c1 .- c1h, 10))
+                for s in 1:ns, i in 1:na
+                    cc[i, s] > 1e-300 || continue
+                    kz[o+3] += cc[i, s] * cbar[i, s]
+                    step!(i, s) do q, k, wk, s2
+                        U2[s2] || return
+                        kz[o+4] += cc[i, s] * q; kz[o+5] += cc[i, s] * q * (wk * cbar[k, s2] + (1 - wk) * cbar[k+1, s2])
+                    end
                 end
             end
             # 4. Time out of work after job loss (V3_START.md section 138; the estimand of Schmieder, von Wachter and
