@@ -30,6 +30,8 @@ function place_base(c::SAGEConfig, pl)
     haskey(pl, :f_find) && (kw[:f_find] = pl.f_find)
     haskey(pl, :delta) && (kw[:delta] = pl.delta)
     haskey(pl, :f_long) && (kw[:f_long] = pl.f_long)
+    haskey(pl, :hU_vec) && (kw[:hU_vec] = pl.hU_vec)      # the quarterly economy's hazards by duration (:access_q)
+    haskey(pl, :iotaE) && (kw[:iotaE] = pl.iotaE)
     haskey(pl, :omega) && (kw[:omega] = pl.omega)
     haskey(pl, :commute) && (kw[:commute] = pl.commute)
     if haskey(pl, :conv)
@@ -247,6 +249,63 @@ function places_from_data(code, c::SAGEConfig; typology = :degurba, channels = (
             sl = (ul_n === nothing || cellrate(ul, i) === nothing) ? s : odds(cellrate(ul, i)) * f / (odds(ul_n) * c.f_find)
             sh = (uh_n === nothing || cellrate(uh, i) === nothing) ? s : odds(cellrate(uh, i)) * f / (odds(uh_n) * c.f_find)
             specs[i][:f_find] = f; specs[i][:delta] = (c.delta[1] * sl, c.delta[2] * sh)
+        end
+    end
+    if :access_q in channels
+        # ACCESS TO WORK ON THE QUARTERLY ECONOMY (version 2's E, decided by the user 2 November 2026; V3_START.md).
+        # The annual channels scale one job-finding rate and one job-loss rate. The quarterly economy has exit hazards
+        # by quarter of the spell, flows into and out of inactivity, and job loss and the inflow to inactivity fitted
+        # by cell to unemployment and the jobless share (duration_config). By place, nothing fitted beyond that rule:
+        #  - every exit hazard to work (hU by duration, hL) scaled by the place's quarterly probability of moving from
+        #    unemployment to work (Eurostat, 25 to 54, 2015 to 2018) over the national mean weighted by the unemployed;
+        #    the exits to inactivity and the flows out of inactivity stay national;
+        #  - unemployment by cell: the national cell's odds times the place's odds over the national (as the annual
+        #    channel), and the jobless share by cell: the national cell's times the place's share of people in very
+        #    low work intensity households over the population-weighted mean, at the place's education mix (as the
+        #    annual :out_of_work channel);
+        #  - job loss and the inflow to inactivity by cell refitted to these two shares by the national rule.
+        # The income process net of job loss stays national. A place identical to the nation keeps the nation's values.
+        (c.period > 1 && !isempty(c.hU_vec)) || error(":access_q needs the quarterly configuration (duration_config)")
+        :access in channels && error(":access and :access_q are alternatives")
+        J = [latest(d, "low_work_intensity", p) for (_, p) in pl]
+        any(isnothing, J) && error("no jobless shares by place for $code ($typology)")
+        qq = typology === :degurba ? [meanyrs(d, "q_unemp_to_emp_25_54", p, 2015:2018) for (_, p) in pl] : fill(nothing, n)
+        haveq = [x !== nothing for x in qq]
+        uu = u ./ 100; un = sum(w .* uu); wu = w .* uu
+        qn = any(haveq) ? sum(wu[i] * qq[i] for i in 1:n if haveq[i]) / sum(wu[haveq]) : 1.0
+        hU0 = c.hU_vec; hL0 = c.f_long[1]
+        mk(hU, hL, δ, ι) = labour_chain(SAGEParams(nz = 2, α = fill(1.0, 2), B = fill(1.0, 2)); nU = c.nU, hU = hU, hL = hL, δ = δ,
+                                        sU = c.sU_vec, sL = c.sL, ιE = ι, νE = c.nuE, νU = c.nuU, withN = true, entN = c.entN)
+        shares(ch) = (mu = sum(ch.mass[ch.iU]) + ch.mass[ch.iL]; (u = mu / (mu + ch.mass[ch.iE]), j = mu + ch.mass[ch.iN], mu = mu))
+        nat = [shares(mk(hU0, hL0, c.delta[g], c.iotaE[g])) for g in 1:2]
+        jn = [nat[g].j for g in 1:2]; Sn = c.share[1] * jn[1] + c.share[2] * jn[2]; Jbar = sum(w .* J)
+        odds(x) = x / (1 - x); inv_odds(o) = o / (1 + o)
+        function bis(f, lo, hi)
+            for _ in 1:80
+                m = (lo + hi) / 2; f(m) < 0 ? (lo = m) : (hi = m)
+            end
+            (lo + hi) / 2
+        end
+        for i in 1:n
+            r = haveq[i] ? qq[i] / qn : 1.0
+            t = get(specs[i], :tertiary, c.share[2]); sh = (1 - t, t)
+            same = r == 1.0 && uu[i] == un && J[i] == Jbar && t == c.share[2]
+            if same
+                specs[i][:hU_vec] = copy(hU0); specs[i][:f_find] = hU0[1]; specs[i][:f_long] = c.f_long
+                specs[i][:delta] = c.delta; specs[i][:iotaE] = c.iotaE
+                continue
+            end
+            hU = min.(hU0 .* r, 0.95); hL = min(hL0 * r, 0.95)
+            k = (J[i] / Jbar) * Sn / (sh[1] * jn[1] + sh[2] * jn[2])
+            fit = ntuple(2) do g
+                ut = inv_odds(odds(nat[g].u) * odds(uu[i]) / odds(un))
+                jt = min(k * jn[g], 0.9)
+                δfor(ι) = bis(δ -> shares(mk(hU, hL, δ, ι)).u - ut, 1e-7, 0.3)
+                ι = bis(ι -> (ch = mk(hU, hL, δfor(ι), ι); ch.mass[ch.iN] - max(jt - shares(ch).mu, 0.005)), 0.0, 0.2)
+                (δ = δfor(ι), ι = ι)
+            end
+            specs[i][:hU_vec] = hU; specs[i][:f_find] = hU[1]; specs[i][:f_long] = (hL, hL)
+            specs[i][:delta] = (fit[1].δ, fit[2].δ); specs[i][:iotaE] = (fit[1].ι, fit[2].ι)
         end
     end
     if :jobless in channels
