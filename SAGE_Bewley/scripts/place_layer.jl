@@ -465,19 +465,34 @@ cell, `slope` from the population-weighted multiplier, `welfare`, `by_place`,
 `places` and `weights`.
 """
 function solve_economy_places(c::SAGEConfig; thresholds = nothing, cache = true)
+    st = places_setup(c)
+    thr = thresholds
+    thr === nothing && (thr = places_thresholds(st, [_solve(cp, nothing; disk = cache, any_thresholds = true) for cp in st.cps]))
+    rs = [solve_economy(cp; thresholds = thr, cache = cache) for cp in st.cps]
+    places_aggregate(st, rs, thr)
+end
+
+# The three steps of `solve_economy_places`, apart so that a run longer than one job can hand each over to the next
+# (places_staged.jl): the places and their configurations under the national tax, the poverty thresholds from the
+# first pass of every place, and the national aggregates from the second.
+"The places, their weights, the national total per head and each place's configuration (`cps`), as `solve_economy_places` builds them."
+function places_setup(c::SAGEConfig)
     isempty(c.country) && error("E needs the country code: build the config with country_config")
     c0 = SAGEConfig(c; E = false)
     places, w = places_from_data(c.country, c0; typology = c.typology, channels = c.e_channels, epsilon = c.epsilon)
     T_nat = national_tax(c0, places, w)
-    cps = [place_config(c0, pl, T_nat) for pl in places]
-    thr = thresholds
-    if thr === nothing
-        r1 = [_solve(cp, nothing; disk = cache, any_thresholds = true) for cp in cps]
-        ym = sum(w[i] * r1[i].mean_income for i in eachindex(w))
-        med = c0.poverty_line === :anchored ? c0.median_to_mean * ym : sum(w[i] * r1[i].median_income for i in eachindex(w))
-        thr = [(0.5 * med, hardship_threshold(med; months = c0.months))]
-    end
-    rs = [solve_economy(cp; thresholds = thr, cache = cache) for cp in cps]
+    (c = c, c0 = c0, places = places, w = w, T_nat = T_nat, cps = [place_config(c0, pl, T_nat) for pl in places])
+end
+"The national poverty thresholds from each place's first pass (`r1`, solved with any thresholds)."
+function places_thresholds(st, r1)
+    w = st.w; c0 = st.c0
+    ym = sum(w[i] * r1[i].mean_income for i in eachindex(w))
+    med = c0.poverty_line === :anchored ? c0.median_to_mean * ym : sum(w[i] * r1[i].median_income for i in eachindex(w))
+    [(0.5 * med, hardship_threshold(med; months = c0.months))]
+end
+"The national aggregates of the places' second-pass results `rs` at thresholds `thr`."
+function places_aggregate(st, rs, thr)
+    c = st.c; places = st.places; w = st.w; T_nat = st.T_nat; cps = st.cps
     nat = Dict{Symbol,Any}()
     wE = [w[i] * (1 - rs[i].unemployment) for i in eachindex(rs)]; wE ./= sum(wE)
     wU = [w[i] * rs[i].unemployment for i in eachindex(rs)]; wU ./= max(sum(wU), eps())

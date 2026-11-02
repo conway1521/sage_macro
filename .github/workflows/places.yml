@@ -1,0 +1,165 @@
+# E on the quarterly economy in stages (places_staged.jl), for configurations whose solve with places is longer than
+# one job (G+S+E, G+S+A+E). Each stage hands its result to the next as an artifact: setup, then the first pass of the
+# nation (0) and of each place in parallel, then the second pass the same way, then the aggregates. No job is near the
+# six-hour limit (one family build is 100 to 185 minutes). With resume_from, any stage whose result that earlier run
+# already holds is taken from it and not solved again. Nothing is committed.
+name: places
+on:
+  workflow_dispatch:
+    inputs:
+      code:
+        description: "Country code"
+        required: true
+      cfg:
+        description: "Configuration: G, GA, GS or GSA (E is added)"
+        required: true
+      resume_from:
+        description: "Run id of an earlier run of this workflow whose finished stages are reused (optional)"
+        default: ""
+permissions:
+  actions: read
+  contents: read
+env:
+  SAGE_WORKERS: "3"
+  SAGE_MEM: "1"
+  SAGE_SOLVER: egm
+  JULIA_NUM_THREADS: "1"
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: "1.7.2"
+      - uses: julia-actions/cache@v2
+      - name: Instantiate
+        run: julia --project=SAGE_Bewley/scripts/run_env -e 'using Pkg; Pkg.instantiate()'
+      - name: Reuse an earlier run's setup
+        if: inputs.resume_from != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download ${{ inputs.resume_from }} -n stage-setup -D /tmp/st || true
+      - name: Setup
+        env:
+          SAGE_DREAD_CHOICE: ${{ contains(inputs.cfg, 'A') && '1' || '0' }}
+        run: |
+          mkdir -p /tmp/st
+          if [ -f /tmp/st/setup.jls ]; then echo "setup reused from run ${{ inputs.resume_from }}"; exit 0; fi
+          cd SAGE_Bewley && set -o pipefail
+          julia --project=scripts/run_env scripts/places_staged.jl ${{ inputs.code }} ${{ inputs.cfg }} setup /tmp/st 2>&1 | tee /tmp/st/log_setup.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stage-setup
+          path: /tmp/st
+  pass1:
+    needs: setup
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    strategy:
+      fail-fast: false
+      matrix:
+        i: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: "1.7.2"
+      - uses: julia-actions/cache@v2
+      - name: Instantiate
+        run: julia --project=SAGE_Bewley/scripts/run_env -e 'using Pkg; Pkg.instantiate()'
+      - uses: actions/download-artifact@v4
+        with:
+          name: stage-setup
+          path: /tmp/st
+      - name: Reuse an earlier run's first pass
+        if: inputs.resume_from != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download ${{ inputs.resume_from }} -n stage-r1-${{ matrix.i }} -D /tmp/st || true
+      - name: First pass, ${{ matrix.i }}
+        env:
+          SAGE_DREAD_CHOICE: ${{ contains(inputs.cfg, 'A') && '1' || '0' }}
+        run: |
+          if [ -f /tmp/st/r1_${{ matrix.i }}.jls ]; then echo "first pass ${{ matrix.i }} reused"; exit 0; fi
+          cd SAGE_Bewley && set -o pipefail
+          julia --project=scripts/run_env scripts/places_staged.jl ${{ inputs.code }} ${{ inputs.cfg }} pass1 ${{ matrix.i }} /tmp/st 2>&1 | tee /tmp/st/log_r1_${{ matrix.i }}.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stage-r1-${{ matrix.i }}
+          path: |
+            /tmp/st/r1_${{ matrix.i }}.jls
+            /tmp/st/log_r1_${{ matrix.i }}.txt
+          if-no-files-found: error
+  pass2:
+    needs: pass1
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    strategy:
+      fail-fast: false
+      matrix:
+        i: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: "1.7.2"
+      - uses: julia-actions/cache@v2
+      - name: Instantiate
+        run: julia --project=SAGE_Bewley/scripts/run_env -e 'using Pkg; Pkg.instantiate()'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: stage-*
+          path: /tmp/st
+          merge-multiple: true
+      - name: Reuse an earlier run's second pass
+        if: inputs.resume_from != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download ${{ inputs.resume_from }} -n stage-r2-${{ matrix.i }} -D /tmp/st || true
+      - name: Second pass, ${{ matrix.i }}
+        env:
+          SAGE_DREAD_CHOICE: ${{ contains(inputs.cfg, 'A') && '1' || '0' }}
+        run: |
+          if [ -f /tmp/st/r2_${{ matrix.i }}.jls ]; then echo "second pass ${{ matrix.i }} reused"; exit 0; fi
+          cd SAGE_Bewley && set -o pipefail
+          julia --project=scripts/run_env scripts/places_staged.jl ${{ inputs.code }} ${{ inputs.cfg }} pass2 ${{ matrix.i }} /tmp/st 2>&1 | tee /tmp/st/log_r2_${{ matrix.i }}.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stage-r2-${{ matrix.i }}
+          path: |
+            /tmp/st/r2_${{ matrix.i }}.jls
+            /tmp/st/log_r2_${{ matrix.i }}.txt
+          if-no-files-found: error
+  aggregate:
+    needs: pass2
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: "1.7.2"
+      - uses: julia-actions/cache@v2
+      - name: Instantiate
+        run: julia --project=SAGE_Bewley/scripts/run_env -e 'using Pkg; Pkg.instantiate()'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: stage-*
+          path: /tmp/st
+          merge-multiple: true
+      - name: Aggregate
+        env:
+          SAGE_WORKERS: "1"
+          SAGE_DREAD_CHOICE: ${{ contains(inputs.cfg, 'A') && '1' || '0' }}
+        run: |
+          cd SAGE_Bewley && set -o pipefail
+          julia --project=scripts/run_env scripts/places_staged.jl ${{ inputs.code }} ${{ inputs.cfg }} aggregate /tmp/st 2>&1 | tee /tmp/st/log_aggregate.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: places-${{ inputs.code }}-${{ inputs.cfg }}
+          path: |
+            /tmp/st/log_*.txt
+            /tmp/st/result.jls

@@ -7,16 +7,16 @@
 #               against the HFCS 2021 (households not retired), untargeted
 #
 #   julia --project=scripts/run_env scripts/run_places_q.jl CODE [reduction | places] [G | GS]
+# For G+S and G+S+A the solve with places is longer than one job: use places_staged.jl (workflow places.yml).
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf
 code = uppercase(ARGS[1]); mode = length(ARGS) >= 2 ? ARGS[2] : "places"; cfg = length(ARGS) >= 3 ? uppercase(ARGS[3]) : "G"
 S_ON = occursin('S', cfg)
 readkv(f) = (d = Dict{String,String}(); for l in eachline(f); t = strip(l); (isempty(t) || startswith(t, "#") || !occursin("=", t)) && continue;
                  k, v = strip.(split(t, "=", limit = 2)); d[k] = v; end; d)
-q = readkv(joinpath(@__DIR__, "calibration_v5q_$(code)_$(cfg).txt")); β = parse(Float64, q["beta_annual"]); gap = parse(Float64, q["beta_gap_annual"])
-ca = country_config(code; config = cfg, v3 = :v5m, S = S_ON, A = false)
-cb = duration_config(ca)
-c = SAGEConfig(cb; beta_bar = β^(1 / 4), beta_cell = ((β - gap)^(1 / 4) - β^(1 / 4), 0.0), out_ls = 0.0)
+# the calibrated configuration as every other version 2 script reads it: with S, kappa and sigma_m from the file and the
+# 22 belonging scales it was calibrated on (without them a G+S solve did not finish in six hours, 2 November)
+c = quarterly_calibrated(code, cfg)
 ch = S_ON ? (:composition, :access_q, :commute, :community) : (:composition, :access_q, :commute)
 t0 = @elapsed r0 = solve_economy(c; cache = false)
 @printf("%s %s quarterly, the nation [%.1f min]: unemployment %.4f, hand-to-mouth %.4f, MPC 12 months %.4f, fall %.4f, participation %.4f\n",
