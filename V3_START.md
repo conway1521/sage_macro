@@ -3768,3 +3768,9 @@ E on the quarterly economy (option a). New channel `:access_q` in place_layer.jl
 Fall diagnosis (G+A, nothing fitted). HtM job losers (19-25% of losers) fall LESS than the rest: FR 0.130 v 0.173, DE 0.198 v 0.235, IT 0.127 v 0.232 (floor tops them up). Version 1 patience: FR 0.164 to 0.149, DE 0.228 to 0.144, IT 0.220 to 0.207. Replacement rates already household-level. Gap left stated (Section 7.1).
 
 Remaining: read FR/IT reductions, user's read of note, tag v2.1.
+
+## 3 November: G+S+E done, G+S+A+E with handoffs
+
+G+S+E runs in stages (`places_staged.jl`, workflow `places.yml`): setup, first pass of the nation and each place in parallel, second pass, aggregates. Results are in note Section 7.5. G+S+A+E needs more than one job per pass, so each pass saves every finished education cell's family to disk, uploads them even when the job dies, and a `handoff` job relaunches the workflow with `resume_from` (up to hop 4). Cancelling a run also triggers a handoff: use the force-cancel API to stop one for good. Families are restored by moving every `fam_*.jls` into `cache_families` (the artifact keeps the runner's full path). France's runners lost contact at 2 to 5 hours (memory, most likely), so France runs with `workers=2`.
+
+Germany G+S+A+E (run 41463856189): nation without E unemployment 0.0992, HtM 0.2523, participation 0.2787. With E: unemployment 0.0994, HtM 0.2583, participation 0.2779, multiplier 1.381. Cities, towns, rural: HtM 0.193, 0.272, 0.358; participation 0.276, 0.278, 0.282; unemployment 0.132, 0.089, 0.055. HtM moves 0.006 with E, more than under G+E or G+S+E. France (run 41583006773) and Italy (41583004269) were relaunched on 3 November from their earlier runs' finished stages.
