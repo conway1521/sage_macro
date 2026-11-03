@@ -19,11 +19,14 @@ on:
       hop:
         description: "How many times this run has been handed over (set automatically; stops at 4)"
         default: "0"
+      workers:
+        description: "Julia workers per job (3; 2 where a runner runs short of memory)"
+        default: "3"
 permissions:
   actions: write
   contents: read
 env:
-  SAGE_WORKERS: "3"
+  SAGE_WORKERS: ${{ inputs.workers }}
   SAGE_MEM: "1"
   SAGE_SOLVER: egm
   JULIA_NUM_THREADS: "1"
@@ -82,8 +85,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh run download ${{ inputs.resume_from }} -n stage-r1-${{ matrix.i }} -D /tmp/st || true
-          gh run download ${{ inputs.resume_from }} -n fam-r1-${{ matrix.i }} -D SAGE_Bewley/scripts/cache_families || true
-          ls SAGE_Bewley/scripts/cache_families 2>/dev/null | wc -l | xargs echo "families restored:"
+          gh run download ${{ inputs.resume_from }} -n fam-r1-${{ matrix.i }} -D /tmp/fam || true
+          mkdir -p SAGE_Bewley/scripts/cache_families
+          find /tmp/fam -name 'fam_*.jls' -exec mv {} SAGE_Bewley/scripts/cache_families/ \; 2>/dev/null || true
+          ls SAGE_Bewley/scripts/cache_families | wc -l | xargs echo "families restored:"
       - name: First pass, ${{ matrix.i }}
         timeout-minutes: 335
         env:
@@ -136,8 +141,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh run download ${{ inputs.resume_from }} -n stage-r2-${{ matrix.i }} -D /tmp/st || true
-          gh run download ${{ inputs.resume_from }} -n fam-r2-${{ matrix.i }} -D SAGE_Bewley/scripts/cache_families || true
-          ls SAGE_Bewley/scripts/cache_families 2>/dev/null | wc -l | xargs echo "families restored:"
+          gh run download ${{ inputs.resume_from }} -n fam-r2-${{ matrix.i }} -D /tmp/fam || true
+          mkdir -p SAGE_Bewley/scripts/cache_families
+          find /tmp/fam -name 'fam_*.jls' -exec mv {} SAGE_Bewley/scripts/cache_families/ \; 2>/dev/null || true
+          ls SAGE_Bewley/scripts/cache_families | wc -l | xargs echo "families restored:"
       - name: Second pass, ${{ matrix.i }}
         timeout-minutes: 335
         env:
@@ -204,5 +211,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh workflow run places.yml --repo ${{ github.repository }} --ref ${{ github.ref_name }} -f code=${{ inputs.code }} -f cfg=${{ inputs.cfg }} \
-            -f resume_from=${{ github.run_id }} -f hop=$(( ${{ inputs.hop }} + 1 ))
+            -f resume_from=${{ github.run_id }} -f hop=$(( ${{ inputs.hop }} + 1 )) -f workers=${{ inputs.workers }}
           echo "handed over to hop $(( ${{ inputs.hop }} + 1 ))"
