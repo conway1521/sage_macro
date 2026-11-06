@@ -9,6 +9,9 @@
 #                against the HFCS 2021 households not retired (France only; untargeted)
 #
 #   julia --project=scripts/run_env scripts/places_staged.jl CODE CFG STAGE [I] DIR
+#
+# SAGE_PLACES_VARIANT (unset by default, which gives the calibrated configuration) takes one channel of A out at the
+# same calibration, to decompose a result: `overlay` keeps dread in wellbeing only, `nosearch` switches job search off.
 include(joinpath(@__DIR__, "modular_workers.jl"))
 using Printf, Serialization
 code = uppercase(ARGS[1]); cfg = uppercase(ARGS[2]); stage = ARGS[3]
@@ -19,6 +22,11 @@ f(name) = joinpath(dir, name)
 
 if stage == "setup"
     c = quarterly_calibrated(code, cfg)
+    variant = get(ENV, "SAGE_PLACES_VARIANT", "")
+    variant == "overlay" && (c = SAGEConfig(c; dread_mode = :overlay))
+    variant == "nosearch" && (c = SAGEConfig(c; search = false))
+    variant in ("", "overlay", "nosearch") || error("unknown variant $variant")
+    isempty(variant) || say("variant: $variant (dread $(c.dread_mode), search $(c.search))")
     ch = c.S ? (:composition, :access_q, :commute, :community) : (:composition, :access_q, :commute)
     cE = SAGEConfig(c; E = true, typology = :degurba, e_channels = ch)
     t = @elapsed st = places_setup(cE)

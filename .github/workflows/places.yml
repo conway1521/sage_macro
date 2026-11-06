@@ -22,11 +22,15 @@ on:
       workers:
         description: "Julia workers per job (3; 2 where a runner runs short of memory)"
         default: "3"
+      variant:
+        description: "Empty for the calibrated configuration; overlay (dread in wellbeing only) or nosearch, to decompose A"
+        default: ""
 permissions:
   actions: write
   contents: read
 env:
   SAGE_WORKERS: ${{ inputs.workers }}
+  SAGE_PLACES_VARIANT: ${{ inputs.variant }}
   SAGE_MEM: "1"
   SAGE_SOLVER: egm
   JULIA_NUM_THREADS: "1"
@@ -197,7 +201,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: places-${{ inputs.code }}-${{ inputs.cfg }}
+          name: places-${{ inputs.code }}-${{ inputs.cfg }}${{ inputs.variant != '' && format('-{0}', inputs.variant) || '' }}
           path: |
             /tmp/st/log_*.txt
             /tmp/st/result.jls
@@ -211,5 +215,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh workflow run places.yml --repo ${{ github.repository }} --ref ${{ github.ref_name }} -f code=${{ inputs.code }} -f cfg=${{ inputs.cfg }} \
-            -f resume_from=${{ github.run_id }} -f hop=$(( ${{ inputs.hop }} + 1 )) -f workers=${{ inputs.workers }}
+            -f resume_from=${{ github.run_id }} -f hop=$(( ${{ inputs.hop }} + 1 )) -f workers=${{ inputs.workers }} -f variant=${{ inputs.variant }}
           echo "handed over to hop $(( ${{ inputs.hop }} + 1 ))"
